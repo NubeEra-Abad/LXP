@@ -1,0 +1,11 @@
+{% extends 'ilmsapp/adminbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <form action="{% url 'syncyoutube-start' %}">
+    <button type="submit" class="btn btn-primary">Start</button>
+</form>
+</head>  
+<br><br><br><br><br><br>
+{% endblock content %}
