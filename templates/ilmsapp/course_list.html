@@ -1,0 +1,20 @@
+{% extends 'cto/ctobase.html' %} {% load widget_tweaks %} {% block content %}
+
+    <h2>Here are all Course: </h2>
+    <div>
+        <ul>
+            {% for profile in object_list %}
+                <li>{{ profile.course_name }} | <a
+                        href="{% url 'profile-update' profile.pk %}">edit</a>
+                    <a href="{% url 'profile-delete' profile.pk %}">delete</a>
+                </li>
+            {% empty %}
+                <li>No Courses Created.</li>
+            {% endfor %}
+
+        </ul>
+        <p>
+            <a href="{% url 'profile-add' %}">add a Course</a>
+        </p>
+    </div>
+{% endblock %}

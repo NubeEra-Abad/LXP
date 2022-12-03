@@ -1,4 +1,4 @@
-{% extends 'ilmsapp/adminbase.html' %}
+{% extends 'cfo/cfobase.html' %}
 {% block content %}
 {%load static%}
 
@@ -32,14 +32,14 @@
   <div class="panel panel-primary">
     <div class="panel-heading">
       <input type=button value="Back" onClick="javascript:history.go(-1);" class="btn btn-primary">
-      <h6 class="panel-title">Please Assgin User Type</h6>
+      <h6 class="panel-title">Please Assgin Course to Learner</h6>
     </div>
-        <form action="{% url 'admin-mark-usertype' uid  %}" method="post">
-            <select name="newtype">
-                <option value="1">Trainer</option>
-                <option value="2">Learner</option>
-                <option value="3">cto</option>
-                <option value="4">cfo</option>
+        <form action="{% url 'cfo-update-learner-course' uid  %}" method="post">
+          <!-- <td> <input type="text" name="newcourse" value="{{c.course_name}}"> -->
+            <select name="newcourse">
+              {% for entry in courses %}
+                  <option value="{{ entry.id }}">{{ entry.course_name}}</option>
+              {% endfor %}
               </select>
           <button type="submit" class="btn btn-primary">update</button>
       </form>

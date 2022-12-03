@@ -14,7 +14,11 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/styles.css" rel="stylesheet">
   </head>
-<br><br>
+  <body>
+  <ol class="breadcrumb text-right">
+    <li><a href="cto-dashboard">Dashboard</a></li>
+    <li class="active">Course</li>
+  </ol>
 
   <div class="container">
     <div class="row">
@@ -31,7 +35,7 @@
       <div class="col-md-4 col-xl-6">
         <div class="card bg-c-green order-card" onclick="location.href='cto-view-course'">
           <div class="card-block">
-            <h6 class="m-b-20"><a href="cto-view-course" style="text-decoration: none;color:white;">View Courses</a> </h6>
+            <h6 class="m-b-20"><a href="cto-view-course" style="text-decoration: none;color:white;">View Course</a> </h6>
             <h2 class="text-right"><i class="fas fa-eye f-left"></i></h2>
             
           </div>
@@ -42,3 +46,4 @@
 <br><br><br><br><br><br><br><br><br><br>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 {% endblock content %}
+</body>

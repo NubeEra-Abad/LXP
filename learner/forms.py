@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from . import models
-from ilmsapp import models as QMODEL
+from ilmsapp import models as ILMSMODEL
 
 
 class LearnerUserForm(forms.ModelForm):

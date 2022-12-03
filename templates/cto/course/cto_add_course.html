@@ -1,0 +1,126 @@
+{% extends 'cto/ctobase.html' %} {% load widget_tweaks %} {% block content %}
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    a:link {
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <ol class="breadcrumb text-right">
+      <li><a href="cto-dashboard">Dashboard</a></li>
+      <li><a href="cto-view-course">View Courses</a></li>
+      <li class="active">Add Course</li>
+    </ol>
+  </div>
+  <BR><BR>
+  <h2 style="text-align: center; color: blue">Add Course</h2>
+  <form method="POST" autocomplete="off" style="margin: 100px; margin-top: 0px">
+    {%csrf_token%}
+        <label for="course_name">Course Name</label>
+        {% render_field courseForm.course_name class="form-control" placeholder="Course Name" %}
+        {{ coursedetailsForm.management_form }}
+        <table class="table table-hover" id="dev-table">
+          <thead>
+            <tr>
+              <th>Subject Name</th>
+              <th>Chapter Name</th>
+              <th>Topic Name</th>
+              <th>Remove</th>
+              <th>Add New</th>
+            </tr>
+          </thead>
+          {% for iform in coursedetailsForm %}
+          <tr>
+            <td> {{iform.subject}}</td>
+            <td> {{iform.chapter}}</td>
+            <td> {{iform.topic}}</td>
+            <td><a class="btn btn-danger btn-xs" href="#" ><span class="glyphicon glyphicon-trash"></span></a></td>
+            <td><a class="btn btn-primary btn-xs" href="#" ><span class="glyphicon glyphicon-pencil"></span></a></td>
+          </tr>
+          {% endfor %}
+        </table>
+       
+    <button type="submit" class="btn btn-primary">ADD</button>
+  </form>
+  <br />
+  {% if messages %}
+  {% for message in messages %}
+  {{ message }}
+  {% endfor %}
+  {% endif %}
+  <br /><br /><br />
+  {% endblock content %}
+  <script type="text/javascript" src="/static/js/jquery-3.2.1.slim.min.js"></script>
+  <script type="text/javascript" src="/static/js/dialogbox.js"></script>
+    <script type="text/javascript">
+      //stores the total no of item forms
+        var total = 1;
+
+        function cloneMore(selector, prefix) {
+            var newElement = $(selector).clone(true);
+            //var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+            newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+                var name = $(this).attr('name')
+                if(name) {
+                    name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+                    var id = 'id_' + name;
+                    $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+                }
+            });
+            newElement.find('label').each(function() {
+                var forValue = $(this).attr('for');
+                if (forValue) {
+                forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+                $(this).attr({'for': forValue});
+                }
+            });
+            total++;
+            $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+            $(selector).after(newElement);
+            return false;
+        }
+        
+        function deleteForm(prefix, btn) {
+            //var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            if (total > 1){
+                btn.closest('.form-row').remove();
+                var forms = $('.form-row');
+                $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+                for (var i=0, formCount=forms.length; i<formCount; i++) {
+                    $(forms.get(i)).find(':input').each(function() {
+                        updateElementIndex(this, prefix, i);
+                    });
+                }
+                total--;
+            } else {
+                custom_alert.render('Field cannot be deleted');
+            }
+            return false;
+        }
+        
+        $(document).on('click', '.add-form-row', function(e){
+            e.preventDefault();
+            cloneMore('.form-row:last', 'form');
+            return false;
+        });
+        
+        $(document).on('click', '.remove-form-row', function(e){
+            e.preventDefault();
+            deleteForm('form', $(this));
+            return false;
+        });
+    </script>
+</body>

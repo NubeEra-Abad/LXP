@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'cto/ctobase.html' %}
 {% load static %}
 
 {% block title %}{% endblock %}
@@ -45,7 +45,7 @@
     <script src="{% static 'formset/jquery.formset.js' %}"></script>
     <script type="text/javascript">
         $('.formset_row').formset({
-            addText: 'add family member',
+            addText: 'add row',
             deleteText: 'remove',
             prefix: 'familymember_set'
         });

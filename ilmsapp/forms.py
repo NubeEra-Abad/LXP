@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from . import models
 from django import forms
 from .models import (
-    Course
+    Course,CourseDetails,Subject,Chapter, Topic
 )
 from django.forms import inlineformset_factory
 class ContactusForm(forms.Form):
@@ -28,15 +28,21 @@ class TopicForm(forms.ModelForm):
     class Meta:
         model=models.Topic
         fields=['topic_name']
-
+from django.forms import ModelForm, inlineformset_factory
 from django.forms import formset_factory
-class CourseForm(forms.ModelForm):
+class CourseForm(ModelForm):
     class Meta:
-        model=Course
-        fields=['course_name']
-CourseDetailsFormset = formset_factory(CourseForm, extra=1)
-#VariantFormSet = inlineformset_factory(Course, Course, form= CourseForm,extra=1, can_delete=True,can_delete_extra=True)
-        
+        model = Course
+        exclude = ()
+
+class CourseDetailsForm(ModelForm):
+    class Meta:
+        model = CourseDetails
+        exclude = ()
+
+CourseDetailsFormset = inlineformset_factory(Course, CourseDetails,
+                                            form=CourseDetailsForm, extra=1)
+
 class UserCourseForm(forms.ModelForm):
     courseid=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
     class Meta:

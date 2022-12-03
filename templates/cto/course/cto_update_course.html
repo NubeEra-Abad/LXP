@@ -50,23 +50,23 @@ a:link {
   <div>
   <ol class="breadcrumb text-right">
     <li><a href="../cto-dashboard">Dashboard</a></li>
-    <li><a href="../cto-view-topic">View Topics</a></li>
-    <li class="active">Update Topic</li>
+    <li><a href="../cto-view-course">View Courses</a></li>
+    <li class="active">Update Course</li>
   </ol>
 </div>
 <br><br>
-<h3 style="text-align:center;">UPDATE TOPIC</h3>
+<h3 style="text-align:center;">UPDATE CORUSE</h3>
 <div>
   <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">
       {% csrf_token %}
       <label for="subject_name">Subject Name</label>
-      {% render_field topicForm.subjectID|attr:'required:true' class="form-control"  %}
+      {% render_field courseForm.subject|attr:'required:true' class="form-control"  %}
         <br>
         <label for="chapter_name">Chapter Name</label>
-        {% render_field topicForm.chapterID|attr:'required:true' class="form-control"  %}
+        {% render_field courseForm.chapter|attr:'required:true' class="form-control"  %}
           <br>
         <label for="topic_name">Topic Name</label>
-          {% render_field topicForm.topic_name class="form-control" placeholder="Topic Name" %}
+          {% render_field courseForm.topic class="form-control" placeholder="Topic Name" %}
 <br><br>
     <input type="submit" value="Update">
   </form>
