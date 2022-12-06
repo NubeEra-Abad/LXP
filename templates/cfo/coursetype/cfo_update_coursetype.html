@@ -1,4 +1,4 @@
-{% extends 'cto/ctobase.html' %}
+{% extends 'cfo/cfobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
 <head>
@@ -27,8 +27,6 @@
   input[type=submit]:hover {
     background-color: #45a049;
   }
-
-
   </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,22 +46,18 @@
 <body>
   <div>
   <ol class="breadcrumb text-right">
-    <li><a href="../cto-dashboard">Dashboard</a></li>
-    <li><a href="../cto-view-chapter">View Chapters</a></li>
-    <li class="active">Update Chapter</li>
+    <li><a href="../cfo-dashboard">Dashboard</a></li>
+    <li><a href="../cfo-view-coursetype">View Course Types</a></li>
+    <li class="active">Update Course Type</li>
   </ol>
 </div>
-
 <br><br>
-<h3 style="text-align:center;">UPDATE CHAPTER</h3>
+<h3 style="text-align:center;">UPDATE COURSE TYPE</h3>
 <div>
   <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">
       {% csrf_token %}
-      <label for="subject_name">Subject Name</label>
-      {% render_field chapterForm.subjectID|attr:'required:true' class="form-control"  %}
-        <br>
-        <label for="chapter_name">Chapter Name</label>
-          {% render_field chapterForm.chapter_name class="form-control" placeholder="Chapter Name" value=sub %}
+        <label for="coursetype_name">Course Type Name</label>
+          {% render_field coursetypeForm.coursetype_name class="form-control" placeholder="Course Type Name" value=sub  %}
 <br><br>
     <input type="submit" value="Update">
   </form>

@@ -1,0 +1,20 @@
+{% extends "ilmsapp/adminbase.html" %}
+
+{% block title %}{% endblock %}
+{% block content %}
+
+<head>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'  type='text/css'>
+</head>
+    <h2></h2>
+    <hr>
+    <div>
+        <form action="" method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ object }}"?</p>
+            <input type="submit" value="Confirm"/>
+        </form>
+    </div>
+{% endblock %}

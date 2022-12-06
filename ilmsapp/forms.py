@@ -41,11 +41,25 @@ class CourseDetailsForm(ModelForm):
         exclude = ()
 
 CourseDetailsFormset = inlineformset_factory(Course, CourseDetails,
-                                            form=CourseDetailsForm, extra=1)
+                                            form=CourseDetailsForm, extra=2)
 
 class UserCourseForm(forms.ModelForm):
     courseid=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
     class Meta:
         model=models.UserCourse
         fields=['remarks']
-    
+class CourseTypeForm(forms.ModelForm):
+    class Meta:
+        model=models.CourseType
+        fields=['coursetype_name']
+ 
+class BatchForm(forms.ModelForm):
+    coursetypeID=forms.ModelChoiceField(queryset=models.CourseType.objects.all(),empty_label="Course Type Name", to_field_name="id")
+    courseID=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
+    class Meta:
+        model=models.Batch
+        fields=['batch_name','stdate','enddate']
+        widgets = {
+            'stdate': forms.DateInput(format='%d/%m/%Y'),
+            'enddate': forms.DateInput(format='%d/%m/%Y')
+        }

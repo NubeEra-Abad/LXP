@@ -29,29 +29,27 @@
 <body>
   <ol class="breadcrumb text-right">
     <li><a href="cto-dashboard">Dashboard</a></li>
-    <li><a href="{% url 'course-add' %}">Add Course</a></li>
-    <li class="active">View Course</li>
+    <li><a href="cto-add-course">Add Course</a></li>
+    <li class="active">View Course Details</li>
   </ol>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Course</h6>
+      <h6 class="panel-title">Course Details of {{cname}}</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-          <th>Course Name</th>
-          <th>Preview/Print</th>
-          <th>Update</th>
-          <th>Delete</th>
+          <th>Subject Name</th>
+          <th>Chapter Name</th>
+          <th>Topic Name</th>
         </tr>
       </thead>
-      {% for course in object_list %}
+      {% for t in courses %}
       <tr>
-        <td> {{course.course_name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-print-course-preview' course.course_name  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'course-update' course.pk  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'course-delete' course.pk %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td> {{t.subject}}</td>
+        <td> {{t.chapter}}</td>
+        <td> {{t.topic}}</td>
       </tr>
       {% endfor %}
     </table>
@@ -60,4 +58,3 @@
 
 <br><br><br><br><br><br>
 {% endblock content %}
-</body>

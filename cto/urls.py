@@ -26,15 +26,15 @@ urlpatterns = [
     path('cto-view-topic', views.cto_view_topic_view,name='cto-view-topic'),
     path('cto-delete-topic/<int:pk>', views.cto_delete_topic_view,name='cto-delete-topic'),
 
-    # path('cto-course', views.cto_course_view,name='cto-course'),
- 
-    # path('cto-add-course', views.cto_add_course_view,name='cto-add-course'),
-    # path('cto-update-course/<int:pk>', views.cto_update_course_view,name='cto-update-course'),
-    # path('cto-view-course', views.cto_view_course_view,name='cto-view-course'),
-    # path('cto-delete-course/<int:pk>', views.cto_delete_course_view,name='cto-delete-course'),
+    path('cto-course', views.cto_course_view,name='cto-course'),
+    path('cto-add-course', views.cto_add_course_view,name='cto-add-course'),
+    path('cto-view-course', views.cto_view_course_view,name='cto-view-course'),
+    path('cto-view-course-details/<cname>', views.cto_view_course_details_view,name='cto-view-course-details'),
+    path('cto-delete-course/<int:pk>', views.cto_delete_course_view,name='cto-delete-course'),
 
     path('course-list', views.CourseList.as_view(), name='course-list'),
-    path('profile/add/', views.CDetailsCreate.as_view(), name='profile-add'),
-    path('profile/<int:pk>', views.CDetailsUpdate.as_view(), name='profile-update'),
-    path('profile/<int:pk>', views.ProfileDelete.as_view(), name='profile-delete'),
+    path('course-add', views.CDetailsCreate.as_view(), name='course-add'),
+    path('course-update/<int:pk>', views.CDetailsUpdate.as_view(), name='course-update'),
+    path('course-delete/<int:pk>', views.courseDelete.as_view(), name='course-delete'),
+    path('cto-print-course-preview/<cname>', views.cto_print_course_preview_view,name='cto-print-course-preview'),
 ]

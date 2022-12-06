@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render,redirect
 from time import gmtime, strftime
 from . import models
-from ilmsapp import models as ILMSMODEL
+from ilmsapp import models as iLMSModel
 from ilmsapp import forms as ILMSFORM
 from django.db.models import Sum
 from django.contrib.auth.models import Group

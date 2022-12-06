@@ -57,7 +57,7 @@
   <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">
       {% csrf_token %}
         <label for="subject_name">Subject Name</label>
-          {% render_field subjectForm.subject_name class="form-control" placeholder="Subject Name" %}
+          {% render_field subjectForm.subject_name class="form-control" placeholder="Subject Name" value=sub %}
 <br><br>
     <input type="submit" value="Update">
   </form>
