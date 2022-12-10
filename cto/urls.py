@@ -37,4 +37,26 @@ urlpatterns = [
     path('course-update/<int:pk>', views.CDetailsUpdate.as_view(), name='course-update'),
     path('course-delete/<int:pk>', views.courseDelete.as_view(), name='course-delete'),
     path('cto-print-course-preview/<cname>', views.cto_print_course_preview_view,name='cto-print-course-preview'),
+
+    path('cto-passionateskill', views.cto_passionateskill_view,name='cto-passionateskill'),
+    path('cto-add-passionateskill', views.cto_add_passionateskill_view,name='cto-add-passionateskill'),
+    path('cto-update-passionateskill/<int:pk>', views.cto_update_passionateskill_view,name='cto-update-passionateskill'),
+    path('cto-view-passionateskill', views.cto_view_passionateskill_view,name='cto-view-passionateskill'),
+    path('cto-delete-passionateskill/<int:pk>', views.cto_delete_passionateskill_view,name='cto-delete-passionateskill'),
+
+    path('cto-knownskill', views.cto_knownskill_view,name='cto-knownskill'),
+    path('cto-add-knownskill', views.cto_add_knownskill_view,name='cto-add-knownskill'),
+    path('cto-update-knownskill/<int:pk>', views.cto_update_knownskill_view,name='cto-update-knownskill'),
+    path('cto-view-knownskill', views.cto_view_knownskill_view,name='cto-view-knownskill'),
+    path('cto-delete-knownskill/<int:pk>', views.cto_delete_knownskill_view,name='cto-delete-knownskill'),
+
+    path('cto-playlist', views.cto_playlist_view,name='cto-playlist'),
+    path('cto-add-playlist', views.cto_add_playlist_view,name='cto-add-playlist'),
+    path('cto-update-playlist/<int:pk>', views.cto_update_playlist_view,name='cto-update-playlist'),
+    path('cto-view-playlist', views.cto_view_playlist_view,name='cto-view-playlist'),
+    path('cto-delete-playlist/<int:pk>', views.cto_delete_playlist_view,name='cto-delete-playlist'),
+    
+    path('cto-sync-youtube', views.cto_sync_youtube_view,name='cto-sync-youtube'),
+    path('cto-sync-youtube-start', views.cto_sync_youtube_start_view,name='cto-sync-youtube-start'),
+    path('cto-sync-youtube-byselected-playlist-start', views.cto_sync_youtube_byselected_playlist_start_view,name='cto-sync-youtube-byselected-playlist-start'),
 ]

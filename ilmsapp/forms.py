@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from . import models
 from django import forms
 from .models import (
-    Course,CourseDetails,Subject,Chapter, Topic
+    Course,CourseDetails
 )
+from django.forms import ModelForm, inlineformset_factory
 from django.forms import inlineformset_factory
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)
@@ -14,7 +15,7 @@ class ContactusForm(forms.Form):
 class SubjectForm(forms.ModelForm):
     class Meta:
         model=models.Subject
-        fields=['subject_name']
+        fields=['subject_name','playlist_id']
 
 class ChapterForm(forms.ModelForm):
     subjectID=forms.ModelChoiceField(queryset=models.Subject.objects.all(),empty_label="Subject Name", to_field_name="id")
@@ -28,8 +29,7 @@ class TopicForm(forms.ModelForm):
     class Meta:
         model=models.Topic
         fields=['topic_name']
-from django.forms import ModelForm, inlineformset_factory
-from django.forms import formset_factory
+
 class CourseForm(ModelForm):
     class Meta:
         model = Course
@@ -63,3 +63,47 @@ class BatchForm(forms.ModelForm):
             'stdate': forms.DateInput(format='%d/%m/%Y'),
             'enddate': forms.DateInput(format='%d/%m/%Y')
         }
+
+class PassionateSkillForm(forms.ModelForm):
+    class Meta:
+        model=models.PassionateSkill
+        fields=['passionateskill_name']
+
+class KnownSkillForm(forms.ModelForm):
+    class Meta:
+        model=models.KnownSkill
+        fields=['knownskill_name']
+
+class LearnerDetailsForm(forms.ModelForm):
+    class Meta:
+        model=models.LearnerDetails
+        fields=['user_full_name','mobile','iswhatsapp','whatsappno']
+
+class ExamForm(forms.ModelForm):
+    courseID=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
+    class Meta:
+        model=models.Exam
+        fields=['exam_name','questiontpye']
+
+class McqQuestionForm(forms.ModelForm):
+    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='MCQ'),empty_label="Exam Name", to_field_name="id")
+    class Meta:
+        model=models.McqQuestion
+        fields=['marks','question','option1','option2','option3','option4','answer']
+        widgets = {
+            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50})
+        }
+
+class ShortQuestionForm(forms.ModelForm):
+    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='MCQ'),empty_label="Exam Name", to_field_name="id")
+    class Meta:
+        model=models.McqQuestion
+        fields=['marks','question']
+        widgets = {
+            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50})
+        }
+
+class PlayListForm(forms.ModelForm):
+    class Meta:
+        model=models.PlayList
+        fields=['playlist_name','playlist_id']

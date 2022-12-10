@@ -61,8 +61,8 @@
         <td> {{t.uid}}</td>
         <td> {{t.first_name}}  {{t.last_name}}</td>
         <td> {{t.course_name}}</td>
-        <td> {{t.status}}</td>
-        <td><center><a class="btn btn-success btn-xs" href="{% url 'cfo-active-learner' t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center></td>
+        <td> {{t.status}}</td> 
+        <td><center><a class="btn btn-success btn-xs" href="{% url 'cfo-active-learner' t.user_id t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center></td>
         <td><center><a class="btn btn-danger btn-xs" href="{% url 'cfo-inactive-learner' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center></td>
         <td><center><a class="btn btn-primary btn-xs" href="{% url 'cfo-update-learner-course' t.user_id  %}"><span class="glyphicon glyphicon-user"></span></a></center></td>
       </tr>

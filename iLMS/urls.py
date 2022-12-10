@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
 
     path('admin-view-user', views.admin_view_user_view,name='admin-view-user'),
-    path('active-user/<int:pk>', views.active_user_view,name='active-user'),
+    path('active-user/<userid>/<int:pk>', views.active_user_view,name='active-user'),
     path('inactive-user/<int:pk>', views.inactive_user_view,name='inactive-user'),
     path('admin-update-course/<int:pk>', views.admin_update_course_view,name='admin-update-course'),
     path('admin-mark-usertype/<int:pk>', views.admin_mark_usertype_view,name='admin-mark-usertype'),

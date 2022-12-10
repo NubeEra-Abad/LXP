@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<style media="screen">
+  .jumbotron {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  .jumbotron h1 {
+    text-align: center;
+  }
+
+  .alert {
+    margin: 0px;
+  }
+
+  th {
+    text-align: center;
+  }
+
+  #select2,
+  #select1,#select3,#select4 {
+    height: 250px;
+    width: 250px;
+  }
+
+  .approveTermsContainer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .transferBtns {
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+
+  .transferBtns {
+    float: left;
+    align-self: center;
+  }
+</style>
+
+<script type="text/javascript">
+  $().ready(function () {
+    $('#add').click(function () {
+      return !$('#select1 option:selected').remove().appendTo('#select2');
+    });
+
+    $('#add1').click(function () {
+      return !$('#select3 option:selected').remove().appendTo('#select4');
+    });
+
+    $('#remove').click(function () {
+      return !$('#select2 option:selected').remove().appendTo('#select1');
+    });
+
+    $('#remove1').click(function () {
+      return !$('#select4 option:selected').remove().appendTo('#select3');
+    });
+  });
+</script>
+
+<body>
+  {% include "ilmsapp/navbar.html" %}
+  <br>
+  <br>
+  <br>
+  <h2 style="text-align:center; color:blue;">ADD DETAILS</h2>
+  <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    <div class="form-group">
+      <label for="user_full_name">Full Name</label>
+      {% render_field learnerdetailsForm.user_full_name class="form-control" value=username%}
+      <label for="mobile">Mobile No.</label>
+      {% render_field learnerdetailsForm.mobile class="form-control"%}
+      <label for="iswhatsapp">Is Above No. is WhatsApp No.</label>
+      {% render_field learnerdetailsForm.iswhatsapp class="form-control"%}
+      <label for="whatsappno">If no, please provide WhatsApp No.</label>
+      {% render_field learnerdetailsForm.whatsappno class="form-control"%}
+      <br>
+      <table>
+        <tr>
+          <th colspan="2">Play List</th>
+          <th colspan="2">Selected</th>
+          <th colspan="2">Passionate Skills</th>
+          <th colspan="2">Selected</th>
+        </tr>
+        <tr>
+          <td>
+            <select multiple="multiple" name="listbox1" id="select1">
+              {% for t in kskills %}
+              <option value="{{ t.id }}">{{t.playlist_name}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <button id="add">&gt;&gt;</button>
+          </td>
+          <td>
+            <button id="remove">&lt;&lt;</button>
+          </td>
+          <td>
+            <select multiple="multiple" name="listbox2" id="select2"></select>
+          </td>
+          <td>
+            <select multiple="multiple" name="listbox3" id="select3">
+              {% for t in pskills %}
+              <option value="{{ t.id }}">{{t.passionateskill_name}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <button id="add1">&gt;&gt;</button>
+          </td>
+          <td>
+            <button id="remove1">&lt;&lt;</button>
+          </td>
+          <td>
+            <select multiple="multiple" name="listbox4" id="select4"></select>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+  <div class="jumbotron" style="margin-top: 0px;  margin-bottom: 0px;">
+    <p>Check Later</p>
+    <p class="lead">
+      <a class="btn btn-primary btn-lg" href="/logout" role="button">Logout For Now</a>
+    </p>
+  </div>
+
+  {% include "ilmsapp/footer.html" %}
+</body>
+
+</html>

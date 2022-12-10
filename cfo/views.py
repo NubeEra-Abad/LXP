@@ -33,12 +33,16 @@ def cfo_manage_learner_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
-def cfo_active_learner_view(request,pk):
+def cfo_active_learner_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'cfo':
             cursor = connection.cursor()
             cursor.execute("UPDATE social_auth_usersocialauth SET status = 1 WHERE id = " + str(pk))
-            users = iLMSModel.Course.objects.raw("SELECT social_auth_usersocialauth.id,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 1 THEN 'Trainer' WHEN social_auth_usersocialauth.utype = 2 THEN 'learner' WHEN social_auth_usersocialauth.utype = 3 THEN 'cto' WHEN social_auth_usersocialauth.utype = 4 THEN 'cfo' END AS utype,  CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,  ilmsapp_course.course_name,auth_user.id as user_id FROM  social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id)  LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id) WHERE social_auth_usersocialauth.utype = 2 OR social_auth_usersocialauth.utype = 0 ")
+            users = UserSocialAuth.objects.all()
+            isfirstlogin =iLMSModel.IsFirstLogIn.objects.all().filter(user_id = userid)
+            if not isfirstlogin:
+                isfirstlogin =iLMSModel.IsFirstLogIn.objects.create(user_id = userid)
+                isfirstlogin.save()
             return render(request,'cfo/cfo_manage_learner.html',{'users':users})
     except:
         return render(request,'ilmsapp/404page.html')

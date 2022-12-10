@@ -43,9 +43,7 @@
           <th>Full Name</th>
           <th>Type</th>
           <th>Course Name</th>
-          <th>status</th>
-            <th>Active</th>
-          <th>Inactive</th>
+          <th>Active</th>
           <th>Update Course</th>
           <th>Update User Type</th>
         </tr>
@@ -61,12 +59,26 @@
           {% endif %}
         </td> 
         <td> {{t.uid}}</td>
-        <td> {{t.first_name}}  {{t.last_name}}</td>
-        <td> {{t.utype}}</td>
+        <td> {{t.user.first_name}}  {{t.user.last_name}}</td>
+        <td> 
+          {% if t.utype == 0 or t.utype == 2 %}
+            Learner
+          {% elif t.utype == 1 %}
+            Trainer
+          {% elif t.utype == 3 %}
+            CTO
+          {% elif t.utype == 4 %}
+            CFO
+          {% endif %}
+        </td>
         <td> {{t.course_name}}</td>
-        <td> {{t.status}}</td>
-        <td><center><a class="btn btn-success btn-xs" href="{% url 'active-user' t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center></td>
-        <td><center><a class="btn btn-danger btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center></td>
+        <td> 
+          {% if t.status == 0 %}
+          <center><a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center>
+          {% elif t.status == 1 %}
+          <center><a class="btn btn-success btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center>
+          {% endif %}
+        </td>
         <td><center><a class="btn btn-primary btn-xs" href="{% url 'admin-update-course' t.user_id  %}"><span class="glyphicon glyphicon-user"></span></a></center></td>
         <td><center><a class="btn btn-primary btn-xs" href="{% url 'admin-mark-usertype' t.id  %}"><span class="glyphicon glyphicon-user"></span></a></center></td>
       </tr>

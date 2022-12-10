@@ -1,3 +1,10 @@
+import os
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+import googleapiclient.errors
+from urllib.parse import parse_qs, urlparse
+import googleapiclient.discovery
+scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 from django.core.mail import send_mail
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
 from django.forms import formset_factory
@@ -42,7 +49,7 @@ def cto_subject_view(request):
         return render(request,'ilmsapp/404page.html')
 
 def cto_add_subject_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 subjectForm=ILMSFORM.SubjectForm(request.POST)
@@ -59,7 +66,7 @@ def cto_add_subject_view(request):
                     print("form is invalid")
             subjectForm=ILMSFORM.SubjectForm()
             return render(request,'cto/subject/cto_add_subject.html',{'subjectForm':subjectForm})
-    except:
+    #except:
         return render(request,'ilmsapp/404page.html')
 
 def cto_update_subject_view(request,pk):
@@ -78,7 +85,7 @@ def cto_update_subject_view(request,pk):
                         subjectForm.save()
                         subjects = iLMSModel.Subject.objects.all()
                         return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
-            return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm,'sub':subject.subject_name})
+            return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm,'sub':subject.subject_name,'pl':subject.playlist_id})
     #except:
         return render(request,'ilmsapp/404page.html')
 
@@ -406,3 +413,327 @@ def cto_print_course_preview_view(request,cname):
         return render(request,'cto/course/cto_print_course_preview.html',{'coursedetails':coursedetails,'cname':cname})
     except:
         return render(request,'ilmsapp/404page.html')
+
+def cto_passionateskill_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            return render(request,'cto/passionateskill/cto_passionateskill.html')
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_add_passionateskill_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                passionateskillForm=ILMSFORM.PassionateSkillForm(request.POST)
+                if passionateskillForm.is_valid(): 
+                    passionateskilltext = passionateskillForm.cleaned_data["passionateskill_name"]
+                    passionateskill = iLMSModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext)
+                    if passionateskill:
+                        messages.info(request, 'PassionateSkill Name Already Exist')
+                        passionateskillForm=ILMSFORM.PassionateSkillForm()
+                        return render(request,'cto/passionateskill/cto_add_passionateskill.html',{'passionateskillForm':passionateskillForm})                  
+                    else:
+                        passionateskillForm.save()
+                else:
+                    print("form is invalid")
+            passionateskillForm=ILMSFORM.PassionateSkillForm()
+            return render(request,'cto/passionateskill/cto_add_passionateskill.html',{'passionateskillForm':passionateskillForm})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_update_passionateskill_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            passionateskill = iLMSModel.PassionateSkill.objects.get(id=pk)
+            passionateskillForm=ILMSFORM.PassionateSkillForm(request.POST,instance=passionateskill)
+            if request.method=='POST':
+                if passionateskillForm.is_valid(): 
+                    passionateskilltext = passionateskillForm.cleaned_data["passionateskill_name"]
+                    passionateskill = iLMSModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext).exclude(id=pk)
+                    if passionateskill:
+                        messages.info(request, 'PassionateSkill Name Already Exist')
+                        return render(request,'cto/passionateskill/cto_update_passionateskill.html',{'passionateskillForm':passionateskillForm})
+                    else:
+                        passionateskillForm.save()
+                        passionateskills = iLMSModel.PassionateSkill.objects.all()
+                        return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
+            return render(request,'cto/passionateskill/cto_update_passionateskill.html',{'passionateskillForm':passionateskillForm,'sub':passionateskill.passionateskill_name})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_view_passionateskill_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            passionateskills = iLMSModel.PassionateSkill.objects.all()
+            return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_delete_passionateskill_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            passionateskill=iLMSModel.PassionateSkill.objects.get(id=pk)
+            passionateskill.delete()
+            return HttpResponseRedirect('/cto/passionateskill/cto-view-passionateskill')
+        passionateskills = iLMSModel.PassionateSkill.objects.all()
+        return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+
+def cto_knownskill_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            return render(request,'cto/knownskill/cto_knownskill.html')
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_add_knownskill_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                knownskillForm=ILMSFORM.KnownSkillForm(request.POST)
+                if knownskillForm.is_valid(): 
+                    knownskilltext = knownskillForm.cleaned_data["knownskill_name"]
+                    knownskill = iLMSModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext)
+                    if knownskill:
+                        messages.info(request, 'KnownSkill Name Already Exist')
+                        knownskillForm=ILMSFORM.KnownSkillForm()
+                        return render(request,'cto/knownskill/cto_add_knownskill.html',{'knownskillForm':knownskillForm})                  
+                    else:
+                        knownskillForm.save()
+                else:
+                    print("form is invalid")
+            knownskillForm=ILMSFORM.KnownSkillForm()
+            return render(request,'cto/knownskill/cto_add_knownskill.html',{'knownskillForm':knownskillForm})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_update_knownskill_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            knownskill = iLMSModel.KnownSkill.objects.get(id=pk)
+            knownskillForm=ILMSFORM.KnownSkillForm(request.POST,instance=knownskill)
+            if request.method=='POST':
+                if knownskillForm.is_valid(): 
+                    knownskilltext = knownskillForm.cleaned_data["knownskill_name"]
+                    knownskill = iLMSModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext).exclude(id=pk)
+                    if knownskill:
+                        messages.info(request, 'KnownSkill Name Already Exist')
+                        return render(request,'cto/knownskill/cto_update_knownskill.html',{'knownskillForm':knownskillForm})
+                    else:
+                        knownskillForm.save()
+                        knownskills = iLMSModel.KnownSkill.objects.all()
+                        return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
+            return render(request,'cto/knownskill/cto_update_knownskill.html',{'knownskillForm':knownskillForm,'sub':knownskill.knownskill_name})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_view_knownskill_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            knownskills = iLMSModel.KnownSkill.objects.all()
+            return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_delete_knownskill_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            knownskill=iLMSModel.KnownSkill.objects.get(id=pk)
+            knownskill.delete()
+            return HttpResponseRedirect('/cto/knownskill/cto-view-knownskill')
+        knownskills = iLMSModel.KnownSkill.objects.all()
+        return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_playlist_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            return render(request,'cto/playlist/cto_playlist.html')
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_add_playlist_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                playlistForm=ILMSFORM.PlayListForm(request.POST)
+                if playlistForm.is_valid(): 
+                    playlisttext = playlistForm.cleaned_data["playlist_name"]
+                    playlist = iLMSModel.PlayList.objects.all().filter(playlist_name__iexact = playlisttext)
+                    if playlist:
+                        messages.info(request, 'PlayList Name Already Exist')
+                        playlistForm=ILMSFORM.PlayListForm()
+                        return render(request,'cto/playlist/cto_add_playlist.html',{'playlistForm':playlistForm})                  
+                    else:
+                        playlistForm.save()
+                else:
+                    print("form is invalid")
+            playlistForm=ILMSFORM.PlayListForm()
+            return render(request,'cto/playlist/cto_add_playlist.html',{'playlistForm':playlistForm})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_update_playlist_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            playlist = iLMSModel.PlayList.objects.get(id=pk)
+            playlistForm=ILMSFORM.PlayListForm(request.POST,instance=playlist)
+            if request.method=='POST':
+                if playlistForm.is_valid(): 
+                    playlisttext = playlistForm.cleaned_data["playlist_name"]
+                    playlist = iLMSModel.PlayList.objects.all().filter(playlist_name__iexact = playlisttext).exclude(id=pk)
+                    if playlist:
+                        messages.info(request, 'PlayList Name Already Exist')
+                        return render(request,'cto/playlist/cto_update_playlist.html',{'playlistForm':playlistForm})
+                    else:
+                        playlistForm.save()
+                        playlists = iLMSModel.PlayList.objects.all()
+                        return render(request,'cto/playlist/cto_view_playlist.html',{'playlists':playlists})
+            return render(request,'cto/playlist/cto_update_playlist.html',{'playlistForm':playlistForm,'sub':playlist.playlist_name})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_view_playlist_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            playlists = iLMSModel.PlayList.objects.all()
+            return render(request,'cto/playlist/cto_view_playlist.html',{'playlists':playlists})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_delete_playlist_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            playlist=iLMSModel.PlayList.objects.get(id=pk)
+            playlist.delete()
+            return HttpResponseRedirect('/cto/playlist/cto-view-playlist')
+        playlists = iLMSModel.PlayList.objects.all()
+        return render(request,'cto/playlist/cto_view_playlist.html',{'playlists':playlists})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def cto_sync_youtube_view(request):
+    pllist = iLMSModel.Subject.objects.all().order_by('subject_name')
+    return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
+
+def cto_sync_youtube_start_view(request):
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+    api_service_name = "youtube"
+    api_version = "v3"
+    client_secrets_file = "GoogleCredV1.json"
+    # Get credentials and create an API client
+    xxx = 0
+    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        client_secrets_file, scopes)
+    flow.run_local_server()
+    credentials = flow.credentials
+    youtube = googleapiclient.discovery.build(
+        api_service_name, api_version, credentials=credentials)
+    
+    pllist = models.PlayList.objects.all()
+    for plyLstitem in pllist:
+        url = 'https://www.youtube.com/playlist?list=' + str(plyLstitem.playlist_id)
+        query = parse_qs(urlparse(url).query, keep_blank_values=True)
+        playlist_id = query["list"][0]
+        youtube = googleapiclient.discovery.build(
+        api_service_name, api_version, credentials=credentials)
+        request1 = youtube.playlistItems().list(
+            part = "snippet",
+            playlistId = playlist_id,
+            maxResults = 5000
+        )
+        response1 = request1.execute()
+        playlist_items = []
+        playlistname = plyLstitem.playlist_name
+        while request1 is not None:
+            response1 = request1.execute()
+            playlist_items += response1["items"]
+            request1 = youtube.playlistItems().list_next(request1, response1)
+        for t in playlist_items:
+            xxx += 1
+            currenturl = 'https://www.youtube.com/embed/' + t["snippet"]["resourceId"]["videoId"]
+            tochk= models.VideoLinks.objects.all().filter(Url=currenturl)
+            published = t["snippet"]["publishedAt"]
+            if tochk:
+                a=''
+            else:
+                y = models.VideoLinks.objects.create(SrNo=xxx,TopicName=t["snippet"]['title'],Url='https://www.youtube.com/embed/' + t["snippet"]["resourceId"]["videoId"],CourseName=playlistname,TopicCovered=0)
+                y.save()
+    print ('all done')
+    learner = models.Question.objects.raw("SELECT id, count(id) as _count FROM social_auth_usersocialauth WHERE utype = 0")
+    a = 0
+    b=0
+    for countA in learner:
+            a=countA._count
+    for countA in learner:
+            b=countA._count
+    dict={
+    'total_learner':a,
+    'total_trainer':b,
+    'total_exam':models.Exam.objects.all().count(),
+    'total_question':models.Question.objects.all().count(),
+    }
+    return render(request,'ilmsapp/admin_dashboard.html',context=dict)
+
+######################################################################
+def cto_sync_youtube_byselected_playlist_start_view(request):
+    if request.method=='POST':
+        os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+        api_service_name = "youtube"
+        api_version = "v3"
+        client_secrets_file = "GoogleCredV1.json"
+        # Get credentials and create an API client
+        xxx = 0
+        flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+            client_secrets_file, scopes)
+        flow.run_local_server()
+        credentials = flow.credentials
+        youtube = googleapiclient.discovery.build(
+            api_service_name, api_version, credentials=credentials)
+        subject_id = None
+        selectedlist = request.POST.getlist('playlist[]')
+        for plyLstitem in selectedlist:
+            print(plyLstitem)
+            pllist = iLMSModel.Subject.objects.all().filter(subject_name=plyLstitem)
+            playlist_id=''
+            for xxyy in pllist:
+                playlist_id = xxyy.playlist_id
+                subject_id= xxyy.id
+            youtube = googleapiclient.discovery.build(
+            api_service_name, api_version, credentials=credentials)
+            request1 = youtube.playlistItems().list(
+                part = "snippet",
+                playlistId = playlist_id,
+                maxResults = 5000
+            )
+            response1 = request1.execute()
+            playlist_items = []
+            playlistname = plyLstitem
+            while request1 is not None:
+                playlist_items += response1["items"]
+                request1 = youtube.playlistItems().list_next(request1, response1)
+            for t in playlist_items:
+                xxx += 1
+                currenturl = 'https://www.youtube.com/embed/' + t["snippet"]["resourceId"]["videoId"]
+                print(t["snippet"]["title"])
+                tochk= iLMSModel.Chapter.objects.all().filter(chapter_name=t["snippet"]["title"],subject_id=subject_id)
+                published = t["snippet"]["publishedAt"]
+                if tochk:
+                    a=''
+                else:
+                    chapter= iLMSModel.Chapter.objects.create(chapter_name=t["snippet"]["title"],subject_id=subject_id)
+                    chapter.save()
+                    y = iLMSModel.VideoLinks.objects.create(subject_id=subject_id,chapter_id=chapter.id,SrNo=xxx,Url='https://www.youtube.com/embed/' + t["snippet"]["resourceId"]["videoId"],TopicCovered=0,video_id=t["snippet"]["resourceId"]["videoId"])
+                    y.save()
+    print ('all done')
+    dict={
+    'total_learner':0,
+    'total_trainer':0,
+    'total_exam':0,
+    'total_question':0,
+    }
+    return render(request,'cto/cto_dashboard.html',context=dict)

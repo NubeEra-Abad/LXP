@@ -19,6 +19,7 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
 import googleapiclient.discovery
+from social_django.models import UserSocialAuth
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def login(request):
@@ -29,31 +30,67 @@ def home(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')  
     return render(request,'ilmsapp/404page.html')
-
+import datetime
 def afterlogin_view(request):
-    das = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
-    if not das:
+    user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
+    if not user:
         request.session['utype'] = 'admin'
         return redirect('admin-dashboard')
-    elif das:
-        for xx in das:
-            if xx.utype == 0:
-                send_mail('New User Login Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                return render(request,'ilmsapp/user_wait_for_approval.html')
-            elif xx.utype == 1:
+    elif user:
+        for xx in user:
+            if xx.utype == 1:
                 if xx.status:
                     request.session['utype'] = 'trainer'
                     return render(request,'trainer/trainer_dashboard.html')
                 else:
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                    return render(request,'trainer/trainer_wait_for_approval.html')
-            elif xx.utype == 2:
+                    return render(request,'loginrelated/wait_for_approval.html')
+            elif xx.utype == 2  or xx.utype == 0 :
                 if xx.status:
                     request.session['utype'] = 'learner'
                     return render(request,'learner/learner_dashboard.html')
                 else:
-                    send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                    return render(request,'learner/learner_wait_for_approval.html')
+                    learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
+                    if learnerdetails:
+                        isfirstlogin = models.IsFirstLogIn.objects.all().filter(user_id = request.user.id)
+                        if not isfirstlogin:
+                            return render(request,'loginrelated/wait_for_approval.html')
+                        return render(request,'loginrelated/on_hold.html')
+                    else:
+                        if request.method=='POST':
+                            learnerdetailsForm=forms.LearnerDetailsForm(request.POST)
+                            if learnerdetailsForm.is_valid():
+                                user_full_name = learnerdetailsForm.cleaned_data["user_full_name"]
+                                mobile = learnerdetailsForm.cleaned_data["mobile"]
+                                iswhatsapp = learnerdetailsForm.cleaned_data["iswhatsapp"]
+                                whatsappno = learnerdetailsForm.cleaned_data["whatsappno"]
+                                learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
+                                                                                    user_full_name= user_full_name,
+                                                                                    mobile=mobile,
+                                                                                    iswhatsapp=iswhatsapp,
+                                                                                    whatsappno=whatsappno)
+                                learnerdetails.save()
+                                
+                                obj = models.LearnerDetails.objects.latest('id')
+                                selectedlist = request.POST.getlist('listbox2')
+                                for x in selectedlist:
+                                    knownskillid = str(x)
+                                    knownskilltable = models.LearnerDetailsKSkill.objects.create(learnerdetails_id=obj.id,knownskill_id=knownskillid)
+                                    knownskilltable.save()
+                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
+                            else:
+                                print("form is invalid")
+                                return render(request,'ilmsapp/404page.html')
+                            return render(request,'loginrelated/wait_for_approval.html')
+                        learnerdetailsForm=forms.LearnerDetailsForm()
+                        pskills = models.PassionateSkill.objects.all()
+                        kskills = models.KnownSkill.objects.all()
+                        
+                        user =  User.objects.all().filter(id = request.user.id)
+                        username=''
+                        for u in user:
+                            username = u.first_name + ' ' + u.last_name
+                        return render(request,'loginrelated/add_learnerdetails.html',{'learnerdetailsForm':learnerdetailsForm,'pskills':pskills,'kskills':kskills,'username':username})
             elif xx.utype == 3:
                 if xx.status:
                     request.session['utype'] = 'cto'
@@ -161,17 +198,23 @@ def contactus_view(request):
 def admin_view_user_view(request):
     #try:    
         if str(request.session['utype']) == 'admin':
-            users = models.Course.objects.raw("SELECT social_auth_usersocialauth.id,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 1 THEN 'Trainer' WHEN social_auth_usersocialauth.utype = 2 THEN 'learner' WHEN social_auth_usersocialauth.utype = 3 THEN 'cto' WHEN social_auth_usersocialauth.utype = 4 THEN 'cfo' END AS utype,  CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,  ilmsapp_course.course_name,auth_user.id as user_id FROM  social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id)  LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id)")
+            users = UserSocialAuth.objects.annotate().filter(user_id__in=User.objects.all())
+            users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, ilmsapp_course.course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id) LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id)')
+            #users = models.Course.objects.raw("SELECT social_auth_usersocialauth.id,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 1 THEN 'Trainer' WHEN social_auth_usersocialauth.utype = 2 THEN 'learner' WHEN social_auth_usersocialauth.utype = 3 THEN 'cto' WHEN social_auth_usersocialauth.utype = 4 THEN 'cfo' END AS utype,  CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,  ilmsapp_course.course_name,auth_user.id as user_id FROM  social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id)  LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id)")
             return render(request,'ilmsapp/admin_view_user.html',{'users':users})
     #except:
         return render(request,'ilmsapp/404page.html')
 
-def active_user_view(request,pk):
+def active_user_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'admin':
             cursor = connection.cursor()
             cursor.execute("UPDATE social_auth_usersocialauth SET status = 1 WHERE id = " + str(pk))
-            users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
+            users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(pk))
+            isfirstlogin =models.IsFirstLogIn.objects.all().filter(user_id = userid)
+            if not isfirstlogin:
+                isfirstlogin =models.IsFirstLogIn.objects.create(user_id = userid)
+                isfirstlogin.save()
             return HttpResponseRedirect('/admin-view-user',{'users':users})
     except:
         return render(request,'ilmsapp/404page.html')
@@ -190,7 +233,6 @@ def admin_update_course_view(request,pk):
         if str(request.session['utype']) == 'admin':
             if request.method=="POST":
                 course=request.POST['newcourse']
-                print(course)
                 usercouse = models.UserCourse.objects.all().filter(user_id=pk)
                 usercouse.delete()
                 usercouse = models.UserCourse.objects.create(user_id=pk,course_id=course,remarks='')

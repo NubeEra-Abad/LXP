@@ -42,6 +42,7 @@
       <thead>
         <tr>
           <th>Subject Name</th>
+          <th>Play List ID</th>
           <th>Update</th>
           <th>Delete</th>
         </tr>
@@ -49,6 +50,7 @@
       {% for t in subjects %}
       <tr>
         <td> {{t.subject_name}}</td>
+        <td> {{t.playlist_id}}</td>
         <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-subject' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-subject' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
