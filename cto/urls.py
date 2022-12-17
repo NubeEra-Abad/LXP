@@ -50,12 +50,6 @@ urlpatterns = [
     path('cto-view-knownskill', views.cto_view_knownskill_view,name='cto-view-knownskill'),
     path('cto-delete-knownskill/<int:pk>', views.cto_delete_knownskill_view,name='cto-delete-knownskill'),
 
-    path('cto-playlist', views.cto_playlist_view,name='cto-playlist'),
-    path('cto-add-playlist', views.cto_add_playlist_view,name='cto-add-playlist'),
-    path('cto-update-playlist/<int:pk>', views.cto_update_playlist_view,name='cto-update-playlist'),
-    path('cto-view-playlist', views.cto_view_playlist_view,name='cto-view-playlist'),
-    path('cto-delete-playlist/<int:pk>', views.cto_delete_playlist_view,name='cto-delete-playlist'),
-    
     path('cto-sync-youtube', views.cto_sync_youtube_view,name='cto-sync-youtube'),
     path('cto-sync-youtube-start', views.cto_sync_youtube_start_view,name='cto-sync-youtube-start'),
     path('cto-sync-youtube-byselected-playlist-start', views.cto_sync_youtube_byselected_playlist_start_view,name='cto-sync-youtube-byselected-playlist-start'),

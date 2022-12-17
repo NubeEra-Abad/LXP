@@ -622,11 +622,8 @@ def cto_sync_youtube_view(request):
 
 def cto_sync_youtube_start_view(request):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-    api_service_name = "youtube"
-    api_version = "v3"
     client_secrets_file = "GoogleCredV1.json"
     # Get credentials and create an API client
-    xxx = 0
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
         client_secrets_file, scopes)
     flow.run_local_server()
