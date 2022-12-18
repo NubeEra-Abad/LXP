@@ -293,6 +293,8 @@ class Topic(models.Model):
       return self.topic_name
 class Course(models.Model):
    course_name = models.CharField(max_length=50)
+   def __str__(self):
+    return self.course_name
    
    def get_absolute_url(self):
         return reverse('course-update', kwargs={'pk': self.pk})
@@ -410,10 +412,32 @@ class ShortResultDetails(models.Model):
     answer=models.CharField(max_length=200)
     feedback=models.CharField(max_length=200,default='')
    
-class VideoLinks(models.Model):
-   subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-   chapter=models.ForeignKey(Chapter,on_delete=models.CASCADE)
-   SrNo=models.PositiveIntegerField()
-   Url=models.CharField(max_length=200)
-   video_id=models.CharField(max_length=200)
+class VideoTopicCount(models.Model):
+   video=models.ForeignKey(Video,on_delete=models.CASCADE)
    TopicCovered=models.PositiveIntegerField(default=0)
+
+class VideoTimeLine(models.Model):
+    video=models.ForeignKey(Video,on_delete=models.CASCADE)
+    learner_id=models.PositiveIntegerField(default=0)
+    TopicName=models.CharField(max_length=600)
+    VideoTime=models.CharField(max_length=600)
+    cat=(('Approved','Approved'),('Rejected','Rejected'),('Pending','Pending'))
+    status=models.CharField(max_length=200,choices=cat, default= 'Pending')
+
+class VideoToUnlock(models.Model):
+    video=models.ForeignKey(Video,on_delete=models.CASCADE)
+    learner=models.ForeignKey(User,on_delete=models.CASCADE)
+
+class VideoWatched(models.Model):
+    video=models.ForeignKey(Video,on_delete=models.CASCADE)
+    learner=models.ForeignKey(User,on_delete=models.CASCADE)
+
+class WaringMail(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.CASCADE)
+    usermailid=models.TextField()
+    mailed=models.TextField()
+    totvideo = models.IntegerField(default=0)
+    watched = models.IntegerField(default=0)
+    watchedperc = models.DecimalField(max_digits=5, decimal_places=2)
+    pending = models.IntegerField(default=0)
+    datetimestamp = models.DateTimeField()

@@ -35,7 +35,7 @@ class CourseForm(ModelForm):
         exclude = ()
 
 class CourseDetailsForm(ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().filter(playlist_id = ''),empty_label="Subject Name", to_field_name="id")
+    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all(),empty_label="Subject Name", to_field_name="id")
     chapterID=forms.ModelChoiceField(queryset=models.Chapter.objects.all(),empty_label="Chapter Name", to_field_name="id")
     topicID=forms.ModelChoiceField(queryset=models.Topic.objects.all(),empty_label="Topic Name", to_field_name="id")
     class Meta:
@@ -84,8 +84,14 @@ class LearnerDetailsForm(forms.ModelForm):
         model=models.LearnerDetails
         fields=['user_full_name','mobile','iswhatsapp','whatsappno']
 
+# class ExamForm(forms.ModelForm):
+#     courseID=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
+#     class Meta:
+#         model=models.Exam
+#         fields=['exam_name','questiontpye']
+
 class ExamForm(forms.ModelForm):
-    courseID=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
+    courseID=forms.ModelChoiceField(queryset=models.Course.objects.all() ,empty_label="Course Name", to_field_name="id")
     class Meta:
         model=models.Exam
         fields=['exam_name','questiontpye']

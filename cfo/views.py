@@ -29,7 +29,7 @@ def cfo_dashboard_view(request):
         return render(request,'cfo/cfo_dashboard.html',context=dict)
     except:
         return render(request,'ilmsapp/404page.html')
-
+ 
 @login_required
 def cfo_manage_learner_view(request):
     #try:    

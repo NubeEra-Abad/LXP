@@ -10,7 +10,6 @@
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
   <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
-  <script src="/static/datatableconfig.js"></script>
   <style media="screen">
     a:link {
       text-decoration: none;
@@ -25,6 +24,29 @@
     table.dataTable tr.odd { background-color: #E2E4FF; }
     table.dataTable tr.even { background-color: white; }
   </style>
+  <style id="table_style" type="text/css">
+    body
+    {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+    table
+    {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+    }
+    table th
+    {
+        background-color: #F7F7F7;
+        color: #333;
+        font-weight: bold;
+    }
+    table th, table td
+    {
+        padding: 5px;
+        border: 1px solid #ccc;
+    }
+</style>
 </head>
 <body>
   <ol class="breadcrumb text-right">
@@ -33,7 +55,7 @@
     <li class="active">View Course Details</li>
   </ol>
 <div class="container">
-  <div class="panel panel-primary">
+  <div id="dvContents" class="panel panel-primary">
     <div class="panel-heading">
       <h6 class="panel-title">Course Details of {{cname}}</h6>
     </div>
@@ -56,5 +78,28 @@
   </div>
 </div>
 <input type="button" onclick="PrintTable();" value="Print"/>
+<script type="text/javascript">
+  function PrintTable() {
+      var printWindow = window.open('', '', 'height=200,width=400');
+      printWindow.document.write('<html><head><title>Table Contents</title>');
+
+      //Print the Table CSS.
+      var table_style = document.getElementById("table_style").innerHTML;
+      printWindow.document.write('<style type = "text/css">');
+      printWindow.document.write(table_style);
+      printWindow.document.write('</style>');
+      printWindow.document.write('</head>');
+
+      //Print the DIV contents i.e. the HTML Table.
+      printWindow.document.write('<body>');
+      var divContents = document.getElementById("dvContents").innerHTML;
+      printWindow.document.write(divContents);
+      printWindow.document.write('</body>');
+
+      printWindow.document.write('</html>');
+      printWindow.document.close();
+      printWindow.print();
+  }
+</script>
 <br><br><br><br><br><br>
 {% endblock content %}

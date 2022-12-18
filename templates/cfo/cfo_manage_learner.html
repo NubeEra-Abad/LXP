@@ -42,14 +42,12 @@
           <th>User Id</th>
           <th>Full Name</th>
           <th>Course Name</th>
-          <th>status</th>
-            <th>Active</th>
-          <th>Inactive</th>
+          <th>Active</th>
           <th>Update Course</th>
         </tr>
       </thead>
       {% for t in users %}
-      <tr>
+      <tr> 
         <!-- google-oauth2 -->
         <td>
           {% if t.provider == "google-oauth2" %}
@@ -61,9 +59,13 @@
         <td> {{t.uid}}</td>
         <td> {{t.first_name}}  {{t.last_name}}</td>
         <td> {{t.course_name}}</td>
-        <td> {{t.status}}</td> 
-        <td><center><a class="btn btn-success btn-xs" href="{% url 'cfo-active-learner' t.user_id t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center></td>
-        <td><center><a class="btn btn-danger btn-xs" href="{% url 'cfo-inactive-learner' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center></td>
+        <td> 
+          {% if t.status == 'Active' %}
+          <center><a class="btn btn-danger btn-xs" href="{% url 'cfo-inactive-learner' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center>
+          {% else %}
+          <center><a class="btn btn-success btn-xs" href="{% url 'cfo-active-learner' t.user_id t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center>
+          {% endif %}
+        </td>
         <td><center><a class="btn btn-primary btn-xs" href="{% url 'cfo-update-learner-course' t.user_id  %}"><span class="glyphicon glyphicon-user"></span></a></center></td>
       </tr>
       {% endfor %}

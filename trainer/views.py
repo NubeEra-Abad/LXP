@@ -103,7 +103,7 @@ def trainer_delete_exam_view(request,pk):
         return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
     #except:
         return render(request,'ilmsapp/404page.html')
-
+ 
 def trainer_mcqquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':

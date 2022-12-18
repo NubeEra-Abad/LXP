@@ -198,9 +198,7 @@ def contactus_view(request):
 def admin_view_user_view(request):
     #try:    
         if str(request.session['utype']) == 'admin':
-            users = UserSocialAuth.objects.annotate().filter(user_id__in=User.objects.all())
-            users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, ilmsapp_course.course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id) LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id)')
-            #users = models.Course.objects.raw("SELECT social_auth_usersocialauth.id,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 1 THEN 'Trainer' WHEN social_auth_usersocialauth.utype = 2 THEN 'learner' WHEN social_auth_usersocialauth.utype = 3 THEN 'cto' WHEN social_auth_usersocialauth.utype = 4 THEN 'cfo' END AS utype,  CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,  ilmsapp_course.course_name,auth_user.id as user_id FROM  social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id)  LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id)")
+            users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(ilmsapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id) LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
             return render(request,'ilmsapp/admin_view_user.html',{'users':users})
     #except:
         return render(request,'ilmsapp/404page.html')
@@ -232,11 +230,12 @@ def admin_update_course_view(request,pk):
     #try:    
         if str(request.session['utype']) == 'admin':
             if request.method=="POST":
-                course=request.POST['newcourse']
+                course = request.POST.getlist('playlist[]')
                 usercouse = models.UserCourse.objects.all().filter(user_id=pk)
                 usercouse.delete()
-                usercouse = models.UserCourse.objects.create(user_id=pk,course_id=course,remarks='')
-                usercouse.save()
+                for c in course:
+                    usercouse = models.UserCourse.objects.create(user_id=pk,course_id=c,remarks='')
+                    usercouse.save()
                 users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
             course = models.Course.objects.all()

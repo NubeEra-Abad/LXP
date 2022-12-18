@@ -18,4 +18,8 @@ path('learner-start-short-exam/<int:pk>', views.learner_start_short_exam_view,na
 path('learner-show-short-exam-reuslt/<int:pk>', views.learner_show_short_exam_reuslt_view,name='learner-show-short-exam-reuslt'),
 path('learner-show-short-exam-reuslt-details/<int:pk>', views.learner_show_short_exam_reuslt_details_view,name='learner-show-short-exam-reuslt-details'),
 
+path('learner-video-course', views.learner_video_Course_view,name='learner-video-course'),
+path('learner-video/<pk>', views.learner_video_view,name='learner-video'),
+path('learner-show-video/<int:pk>', views.learner_show_video_view,name='learner-show-video'),
+
 ]

@@ -343,14 +343,14 @@ def cto_add_course_view(request):
                             subject = None
                             chapter = None
                             topic = None
-                            refid = form.cleaned_data['subject']
+                            refid = form.cleaned_data['subjectID']
                             if refid:
                                 subject=iLMSModel.Playlist.objects.get(id=refid.id)
-                            refid = form.cleaned_data['chapter']
+                            refid = form.cleaned_data['chapterID']
                             
                             if refid:
                                 chapter=iLMSModel.Chapter.objects.get(id=refid.id)
-                            refid = form.cleaned_data['topic']
+                            refid = form.cleaned_data['topicID']
                             if refid:
                                 topic=iLMSModel.Topic.objects.get(id=refid.id)
                             if subject and chapter and topic :
