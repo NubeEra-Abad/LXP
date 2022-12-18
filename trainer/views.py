@@ -1,19 +1,26 @@
-from django.core.mail import send_mail
 from django.shortcuts import render,redirect
-from time import gmtime, strftime
 from django.contrib import messages
 from ilmsapp import models as iLMSModel
 from ilmsapp import forms as ILMSFORM
-from django.db.models import Sum
-from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required,user_passes_test
-from django.conf import settings
-from datetime import datetime
+from django.contrib.auth.models import User
+from django.db.models import Sum,Count
+from youtubemanager import PlaylistManager
+from django.http import HttpResponse
+from django.template import loader
+import os
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+import googleapiclient.errors
+from urllib.parse import parse_qs, urlparse
+import googleapiclient.discovery
+scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 def trainerclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
     return render(request,'trainer/trainerclick.html')
+
 def trainer_dashboard_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
@@ -209,6 +216,8 @@ def trainer_update_shortquestion_view(request,pk):
                         messages.info(request, 'ShortQuestion Name Already Exist')
                         return render(request,'trainer/shortquestion/trainer_update_shortquestion.html',{'shortquestionForm':shortquestionForm})
                     else:
+                        examid = iLMSModel.Exam.objects.all().filter(id=request.POST['examID'])
+                        shortquestionForm.examID=examid
                         shortquestionForm.save()
                         shortquestions = iLMSModel.ShortQuestion.objects.all()
                         return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
@@ -235,3 +244,149 @@ def trainer_delete_shortquestion_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+def trainer_pending_short_exam_result_view(request):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            pending = iLMSModel.ShortResult.objects.all().filter( learner_id__in = User.objects.all(),exam_id__in = iLMSModel.Exam.objects.all(),status = False)
+            return render(request,'trainer/shortexam/trainer_pending_short_exam_reuslt.html',{'pending':pending})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+def trainer_update_short_question_result_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            resultdetails = iLMSModel.ShortResultDetails.objects.all().filter( question_id__in = iLMSModel.ShortQuestion.objects.all(),shortresult_id = pk)
+            return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+def trainer_save_short_question_result_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            if request.method=="POST":
+                feedback=request.POST['newfeedback']
+                marks=request.POST['newmarks']
+                rid=request.POST['newid']
+                qid=request.POST['newqid']
+                answer=request.POST['newanswer']
+                mainid=request.POST['newmainid']
+                resupdate = iLMSModel.ShortResultDetails.objects.all().filter(id=pk)
+                resupdate.delete()
+                resupdate = iLMSModel.ShortResultDetails.objects.create(id=pk,marks=marks,feedback=feedback,question_id=qid,answer=answer,shortresult_id=mainid)
+                resupdate.save()
+                
+                totmarks=iLMSModel.ShortResultDetails.objects.all().filter(shortresult_id=mainid).aggregate(stars=Sum('marks'))['stars']
+                maintbl=iLMSModel.ShortResult.objects.get(id=mainid)
+                tot=iLMSModel.ShortResultDetails.objects.all().filter(shortresult_id=mainid).aggregate(stars=Count('marks'))['stars']
+                totgiven=iLMSModel.ShortResultDetails.objects.all().filter(shortresult_id=mainid,marks__gt=0).aggregate(stars=Count('marks'))['stars']
+                if tot == totgiven:
+                    maintbl.status=True
+                maintbl.marks = totmarks
+                maintbl.save()
+                if tot == totgiven:
+                    resultdetails = iLMSModel.ShortResultDetails.objects.all().filter( question_id__in = iLMSModel.ShortQuestion.objects.all(),shortresult_id = pk)
+                    return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
+                else:
+                    resultdetails = iLMSModel.ShortResultDetails.objects.all().filter( question_id__in = iLMSModel.ShortQuestion.objects.all(),shortresult_id = mainid)
+                    return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
+    #except:
+        return render(request,'ilmsapp/404page.html') 
+
+@login_required
+def getcredentials(request):
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+    client_secrets_file = "GoogleCredV1.json"
+
+    # Get credentials and create an API client
+    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        client_secrets_file, scopes)
+    flow.run_local_server()
+    credentials = flow.credentials
+    return credentials
+
+@login_required
+def trainer_sync_youtube_view(request):
+    pllist = iLMSModel.Playlist.objects.all().exclude(playlist_id='').order_by('name')
+    return render(request,'trainer/youtube/trainer_sync_youtube.html',{'pllist':pllist})
+
+@login_required
+def trainer_sync_youtube_start_view(request):
+    if request.method=='POST':
+        pm = PlaylistManager()
+        credentials = pm.getCredentials()
+        alllist = pm.initializePlaylist(credentials)
+        plcount = 1
+        maxcount = alllist.__len__()
+        for PL_ID in alllist:
+                PL_NAME = ''#iLMSModel.Playlist.objects.values('name').filter(playlist_id = PL_ID)
+                print(str(plcount) + ' ' + PL_NAME)
+                pm.getAllVideosForPlaylist(PL_ID,credentials,maxcount,plcount,PL_NAME)
+                plcount = plcount + 1
+                HttpResponse(loader.get_template('trainer/youtube/trainer_sync_youtube.html').render(
+                    {
+                        "plname": PL_NAME,
+                        "maxcount": maxcount,
+                        "plcount": plcount
+                    }
+                    ))
+        dict={
+        'total_learner':0,
+        'total_trainer':0,
+        'total_exam':0,
+        'total_question':0,
+        }
+        return render(request,'trainer/trainer_dashboard.html',context=dict)
+    pllist = iLMSModel.Playlist.objects.all().order_by('name')
+    return render(request,'trainer/youtube/trainer_sync_youtube.html',{'pllist':pllist})    
+######################################################################
+
+@login_required
+def trainer_sync_youtube_byselected_playlist_start_view(request):
+    if request.method=='POST':  
+        if 'dblist' in request.POST:
+            pllist = iLMSModel.Playlist.objects.all().order_by('name')
+            return render(request,'trainer/youtube/trainer_sync_youtube.html',{'pllist':pllist})
+        elif 'cloudlist' in request.POST:
+            pm = PlaylistManager()
+            credentials = pm.getCredentials()
+            pl =  pm.initializePlaylist(credentials)
+            pllist = iLMSModel.Playlist.objects.all().order_by('name')
+            return render(request,'trainer/youtube/trainer_sync_youtube.html',{'pllist':pllist})
+        elif 'startselected' in request.POST:
+            pm = PlaylistManager()
+            selectedlist = request.POST.getlist('playlist[]')
+            maxcount = selectedlist.__len__()
+            plcount = 1
+            credentials = getcredentials(request)
+            for PL_NAME in selectedlist:
+                print(str(plcount) + ' ' + PL_NAME)
+                PL_ID = iLMSModel.Playlist.objects.all().filter(name = PL_NAME)
+                _id = ''
+                for z in PL_ID:
+                    _id = z.playlist_id
+                    break
+                pm.getAllVideosForPlaylist(_id,credentials,maxcount,plcount,PL_NAME)
+                plcount= plcount + 1
+    dict={
+    'total_learner':0,
+    'total_trainer':0,
+    'total_exam':0,
+    'total_question':0,
+    }
+    return render(request,'trainer/trainer_dashboard.html',context=dict)
+
+@login_required
+def get_message_from_httperror(e):
+    return e.error_details[0]['message']
+
+def Import_excel(request):
+    from tablib import Dataset
+    if request.method == 'POST' :
+        mcqquestion =iLMSModel.McqQuestionResource()
+        dataset = Dataset()
+        new_employee = request.FILES['myfile']
+        data_import = dataset.load(new_employee.read())
+        result = iLMSModel.McqQuestionResource.import_data(dataset,dry_run=True)
+        if not result.has_errors():
+            iLMSModel.McqQuestionResource.import_data(dataset,dry_run=False)        
+    return render(request, 'Import_excel_db.html',{})

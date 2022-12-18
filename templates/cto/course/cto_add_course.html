@@ -17,7 +17,7 @@
       <thead>
         <tr>
           {% for field in form.visible_fields %}
-          <th>{{ field.label|capfirst }}</th>
+          <th>{{ field.label|capfirst|cut:"id" }}</th>
           {% endfor %}
         </tr>
       </thead>

@@ -35,3 +35,7 @@ boto3
 python-utils
 Flask
 Werkzeug
+django-allauth
+humanize
+pandas
+Django-import-export

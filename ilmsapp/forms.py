@@ -6,7 +6,6 @@ from .models import (
     Course,CourseDetails
 )
 from django.forms import ModelForm, inlineformset_factory
-from django.forms import inlineformset_factory
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)
     Email = forms.EmailField()
@@ -14,17 +13,17 @@ class ContactusForm(forms.Form):
 
 class SubjectForm(forms.ModelForm):
     class Meta:
-        model=models.Subject
-        fields=['subject_name','playlist_id']
+        model=models.Playlist
+        fields=['name']
 
 class ChapterForm(forms.ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Subject.objects.all(),empty_label="Subject Name", to_field_name="id")
+    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().filter(playlist_id = '') ,empty_label="Subject Name", to_field_name="id")
     class Meta:
         model=models.Chapter
         fields=['chapter_name']
 
 class TopicForm(forms.ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Subject.objects.all(),empty_label="Subject Name", to_field_name="id")
+    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().filter(playlist_id = ''),empty_label="Subject Name", to_field_name="id")
     chapterID=forms.ModelChoiceField(queryset=models.Chapter.objects.all(),empty_label="Chapter Name", to_field_name="id")
     class Meta:
         model=models.Topic
@@ -36,8 +35,14 @@ class CourseForm(ModelForm):
         exclude = ()
 
 class CourseDetailsForm(ModelForm):
+    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().filter(playlist_id = ''),empty_label="Subject Name", to_field_name="id")
+    chapterID=forms.ModelChoiceField(queryset=models.Chapter.objects.all(),empty_label="Chapter Name", to_field_name="id")
+    topicID=forms.ModelChoiceField(queryset=models.Topic.objects.all(),empty_label="Topic Name", to_field_name="id")
     class Meta:
         model = CourseDetails
+        fields=['subject']
+        fields=['chapter']
+        fields=['topic']
         exclude = ()
 
 CourseDetailsFormset = inlineformset_factory(Course, CourseDetails,
@@ -95,7 +100,7 @@ class McqQuestionForm(forms.ModelForm):
         }
 
 class ShortQuestionForm(forms.ModelForm):
-    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='MCQ'),empty_label="Exam Name", to_field_name="id")
+    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='ShortAnswer'),empty_label="Exam Name", to_field_name="id")
     class Meta:
         model=models.McqQuestion
         fields=['marks','question']
@@ -105,5 +110,5 @@ class ShortQuestionForm(forms.ModelForm):
 
 class PlayListForm(forms.ModelForm):
     class Meta:
-        model=models.PlayList
-        fields=['playlist_name','playlist_id']
+        model=models.Playlist
+        fields=['name','playlist_id']

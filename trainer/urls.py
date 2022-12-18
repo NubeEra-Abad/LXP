@@ -25,4 +25,13 @@ urlpatterns = [
     path('trainer-update-shortquestion/<int:pk>', views.trainer_update_shortquestion_view,name='trainer-update-shortquestion'),
     path('trainer-view-shortquestion', views.trainer_view_shortquestion_view,name='trainer-view-shortquestion'),
     path('trainer-delete-shortquestion/<int:pk>', views.trainer_delete_shortquestion_view,name='trainer-delete-shortquestion'),
+    
+    path('trainer-pending-short-exam-reuslt', views.trainer_pending_short_exam_result_view,name='trainer-pending-short-exam-reuslt'),
+    path('trainer-update-short-question-result/<int:pk>', views.trainer_update_short_question_result_view,name='trainer-update-short-question-result'),
+    path('trainer-save-short-question-result/<int:pk>', views.trainer_save_short_question_result_view,name='trainer-save-short-question-result'),
+
+    path('trainer-sync-youtube', views.trainer_sync_youtube_view,name='trainer-sync-youtube'),
+    path('trainer-sync-youtube-start', views.trainer_sync_youtube_start_view,name='trainer-sync-youtube-start'),
+    path('trainer-sync-youtube-byselected-playlist-start', views.trainer_sync_youtube_byselected_playlist_start_view,name='trainer-sync-youtube-byselected-playlist-start'),
+    
 ]

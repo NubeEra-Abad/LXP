@@ -45,6 +45,14 @@ INSTALLED_APPS = [
     'learner',
     'widget_tweaks',
     'social_django',        #add this
+    'django.contrib.humanize',  # A set of Django template filters useful for adding a “human touch” to data.
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # specifies google as OAuth provider
+
 ]
 USE_L10N = False
 DATE_FORMAT = "%d/%m/%Y"
@@ -120,16 +128,11 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
-
-USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+SITE_ID = 1
 STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 STATICFILES_DIRS=[
@@ -162,12 +165,12 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 ##########                  Dev
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '709424261438-iq2t80mcempggouuh8t9os1afuhq2h3l.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '709424261438-iq2t80mcempggouuh8t9os1afuhq2h3l.apps.googleusercontent.com'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 ##########                  Prod
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
    'https://www.googleapis.com/auth/userinfo.email',
    'https://www.googleapis.com/auth/userinfo.profile',

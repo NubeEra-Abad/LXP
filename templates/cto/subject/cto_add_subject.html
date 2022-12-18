@@ -29,12 +29,9 @@
 <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <div class="form-group">
-      <label for="subject_name">Subject Name</label>
-      {% render_field subjectForm.subject_name class="form-control" placeholder="subject Name" %}
-      <br>
-      <label for="playlist_id">Play List ID</label>
-      {% render_field subjectForm.playlist_id class="form-control" placeholder="playlist ID" %}
-    </div>
+      <label for="name">Subject Name</label>
+      {% render_field subjectForm.name class="form-control" placeholder="subject Name" %}
+      </div>
     <button type="submit" class="btn btn-primary">ADD</button>
     
   </form>

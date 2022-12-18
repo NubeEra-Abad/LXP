@@ -7,10 +7,15 @@ from django.db import connection
 from django.contrib import messages
 from django.contrib.auth.models import User
 from social_django.models import UserSocialAuth
+from django.contrib.auth.decorators import login_required,user_passes_test
+
+@login_required
 def cfoclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
     return render(request,'cfo/cfoclick.html')
+
+@login_required    
 def cfo_dashboard_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
@@ -25,6 +30,7 @@ def cfo_dashboard_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_manage_learner_view(request):
     #try:    
         if str(request.session['utype']) == 'cfo':
@@ -33,6 +39,7 @@ def cfo_manage_learner_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_active_learner_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'cfo':
@@ -47,6 +54,7 @@ def cfo_active_learner_view(request,userid,pk):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_inactive_learner_view(request,pk):
     try:    
         if str(request.session['utype']) == 'cfo':
@@ -57,6 +65,7 @@ def cfo_inactive_learner_view(request,pk):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_update_learner_course_view(request,pk):
     #try:    
         if str(request.session['utype']) == 'cfo':
@@ -74,6 +83,7 @@ def cfo_update_learner_course_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_coursetype_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
@@ -81,6 +91,7 @@ def cfo_coursetype_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_add_coursetype_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
@@ -102,6 +113,7 @@ def cfo_add_coursetype_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_update_coursetype_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cfo':
@@ -122,6 +134,7 @@ def cfo_update_coursetype_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_view_coursetype_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
@@ -130,6 +143,7 @@ def cfo_view_coursetype_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_delete_coursetype_view(request,pk):
     try:
         if str(request.session['utype']) == 'cfo':  
@@ -141,6 +155,7 @@ def cfo_delete_coursetype_view(request,pk):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_batch_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
@@ -148,6 +163,7 @@ def cfo_batch_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_add_batch_view(request):
     #try:
         if str(request.session['utype']) == 'cfo':
@@ -183,6 +199,7 @@ def cfo_add_batch_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_update_batch_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cfo':
@@ -203,6 +220,7 @@ def cfo_update_batch_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_view_batch_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
@@ -211,6 +229,7 @@ def cfo_view_batch_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def cfo_delete_batch_view(request,pk):
     try:
         if str(request.session['utype']) == 'cfo':  

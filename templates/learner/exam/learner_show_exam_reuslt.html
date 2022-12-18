@@ -1,4 +1,4 @@
-{% extends 'cto/ctobase.html' %}
+{% extends 'learner/learnerbase.html' %}
 {% block content %}
 {%load static%}
 
@@ -11,6 +11,7 @@
   <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
   <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
   <script src="/static/datatableconfig.js"></script>
+  
   <style media="screen">
     a:link {
       text-decoration: none;
@@ -26,36 +27,43 @@
     table.dataTable tr.even { background-color: white; }
   </style>
 </head>
-<body>
-  <ol class="breadcrumb text-right">
-    <li><a href="cto-dashboard">Dashboard</a></li>
-    <li><a href="cto-add-subject">Add Subject</a></li>
-    <li class="active">View Subject</li>
-  </ol>
-<br><br>
+<ol class="breadcrumb text-right">
+  <li><a href="learner-dashboard">Dashboard</a></li>
+  <li><a href="/learner/learner-exam">Exams</a></li>
+  <li class="active">Exam Details</li>
+</ol>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Subject</h6>
+      <h6 class="panel-title">Exams Details</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-          <th>Subject Name</th>
-          <th>Update</th>
-          <th>Delete</th>
+
+          <th>Exam Name</th>
+          <th>Attempt</th>
+          <th>Exam Date</th>
+          <th>Total Marks</th>
+          <th>Taken Time</th>
+          <th>View Details</th>
         </tr>
       </thead>
-      {% for t in subjects %}
+      {% for t in exams %}
       <tr>
-        <td> {{t.name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-subject' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-subject' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td> {{t.exam}}</td>
+        <td>Attemp {{ forloop.counter }}</td>
+        <td> {{t.date}}</td>
+        <td> {{t.marks}}</td>
+        <td> {{t.timetaken}} Sec</td>
+        <td><a class="btn btn-primary" href="{% url 'learner-show-exam-reuslt-details' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
       </tr>
       {% endfor %}
     </table>
   </div>
 </div>
+<canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 <br><br><br><br><br><br>
 {% endblock content %}

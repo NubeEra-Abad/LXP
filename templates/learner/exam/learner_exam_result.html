@@ -1,0 +1,106 @@
+{% extends 'learner/learnerbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
+    <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
+    <script src="/static/datatableconfig.js"></script>
+    
+    <style media="screen">
+      canvas {
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      width: 800px;
+  }
+  .form-center {
+    display:flex;
+    justify-content: center;
+  }
+      a:link {
+        text-decoration: none;
+      }
+      h6 {
+        text-align: center;
+      }
+      .row {
+        margin: 100px;
+      }
+  
+      table.dataTable tr.odd { background-color: #E2E4FF; }
+      table.dataTable tr.even { background-color: white; }
+    </style>
+  </head>
+<ol class="breadcrumb text-right">
+    <li><a href="learner-dashboard">Dashboard</a></li>
+    <li><a href="/learner/learner-exam">Exams</a></li>
+    <li class="active">Result</li>
+</ol>
+<div class="container ">
+    <div class="card-columns" style="padding: 10px; margin: 20px;">
+        <div class="card" align="centre " style="width: 32rem; border:5px black solid">
+            <img src="/static/image/results.jpg" alt="Card image cap" width="300">
+            <div class="card-body">
+                <h5 class="card-title">Score: {{score}}</h5>
+                <p class="card-text">Percentage: {{percent}}%</p>
+                <p class="card-text">Time Taken: {{time}} seconds</p>
+                <p class="card-text">Correct answers: {{correct}}</p>
+                <p class="card-text">Incorrect answers: {{wrong}}</p>
+                <p class="card-text">Total questions: {{total}}</p>
+                <h5>All the best for next quiz!</h5>
+            </div>
+        </div>
+    </div>
+    <div class="panel-heading">
+        <h6 class="panel-title">Exams Answered</h6>
+      </div>
+    <table class="table table-hover" id="dev-table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answered</th>
+                <th>Correct</th>
+            </tr>
+        </thead>
+        {% for q in resdetobj %}
+        {% if q.answered == q.Correct %}
+        <tr bgcolor="#5DBF3D">
+            {% else %}
+        <tr bgcolor="#F47A5F">
+            {% endif %}
+            <td>{{q.q}}</td>
+            {% if q.answered == '1' %}
+            <td>{{q.o1}}</td>
+            {% elif q.answered == '2' %}
+            <td>{{q.o2}}</td>
+            {% elif q.answered == '3' %}
+            <td>{{q.o3}}</td>
+            {% elif q.answered == '4' %}
+            <td>{{q.o4}}</td>
+            {% endif %}
+
+            {% if q.Correct == '1' %}
+            <td>{{q.o1}}</td>
+            {% elif q.Correct == '2' %}
+            <td>{{q.o2}}</td>
+            {% elif q.Correct == '3' %}
+            <td>{{q.o3}}</td>
+            {% elif q.Correct == '4' %}
+            <td>{{q.o4}}</td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
