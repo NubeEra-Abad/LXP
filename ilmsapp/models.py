@@ -297,9 +297,6 @@ class Course(models.Model):
    def get_absolute_url(self):
         return reverse('course-update', kwargs={'pk': self.pk})
 
-   def __str__(self):
-        return f"{self.course_name}"
-
 class CourseDetails(models.Model):
    course=models.ForeignKey(Course,on_delete=models.CASCADE)
    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
