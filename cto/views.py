@@ -162,16 +162,35 @@ def cto_add_chapter_view(request):
             if request.method=='POST':
                 chapterForm=ILMSFORM.ChapterForm(request.POST)
                 if chapterForm.is_valid(): 
-                    chaptertext = chapterForm.cleaned_data["chapter_name"]
-                    chapter = iLMSModel.Chapter.objects.all().filter(chapter_name__iexact = chaptertext)
+                    chaptertext = chapterForm.cleaned_data["name"]
+                    chapter = iLMSModel.Video.objects.all().filter(name__iexact = chaptertext)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
                         chapterForm=ILMSFORM.ChapterForm()
                         return render(request,'cto/chapter/cto_add_chapter.html',{'chapterForm':chapterForm})                  
                     else:
-
                         subject=iLMSModel.Playlist.objects.get(id=request.POST.get('subjectID'))
-                        chapter = iLMSModel.Chapter.objects.create(subject_id = subject.id,chapter_name = chaptertext)
+                        chapter = iLMSModel.Video.objects.create(
+                            video_id = '',
+                            name = chaptertext,
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = '',
+                            video_id = ''
+                            )
                         chapter.save()
                 else:
                     print("form is invalid")

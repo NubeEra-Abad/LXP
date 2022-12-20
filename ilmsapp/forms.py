@@ -17,14 +17,14 @@ class SubjectForm(forms.ModelForm):
         fields=['name']
 
 class ChapterForm(forms.ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().filter(playlist_id = '') ,empty_label="Subject Name", to_field_name="id")
+    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all() ,empty_label="Subject Name", to_field_name="id")
     class Meta:
-        model=models.Chapter
-        fields=['chapter_name']
+        model=models.Video
+        fields=['name']
 
 class TopicForm(forms.ModelForm):
     subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().filter(playlist_id = ''),empty_label="Subject Name", to_field_name="id")
-    chapterID=forms.ModelChoiceField(queryset=models.Chapter.objects.all(),empty_label="Chapter Name", to_field_name="id")
+    chapterID=forms.ModelChoiceField(queryset=models.Video.objects.all(),empty_label="Chapter Name", to_field_name="id")
     class Meta:
         model=models.Topic
         fields=['topic_name']
@@ -36,7 +36,7 @@ class CourseForm(ModelForm):
 
 class CourseDetailsForm(ModelForm):
     subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all(),empty_label="Subject Name", to_field_name="id")
-    chapterID=forms.ModelChoiceField(queryset=models.Chapter.objects.all(),empty_label="Chapter Name", to_field_name="id")
+    chapterID=forms.ModelChoiceField(queryset=models.Video.objects.all(),empty_label="Chapter Name", to_field_name="id")
     topicID=forms.ModelChoiceField(queryset=models.Topic.objects.all(),empty_label="Topic Name", to_field_name="id")
     class Meta:
         model = CourseDetails

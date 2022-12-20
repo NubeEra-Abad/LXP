@@ -279,14 +279,8 @@ class Pin(models.Model):
 
 ##############################################################################
 
-class Chapter(models.Model):
-   subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-   chapter_name = models.CharField(max_length=50)
-   def __str__(self):
-      return self.chapter_name
-
 class Topic(models.Model):
-   chapter=models.ForeignKey(Chapter,on_delete=models.CASCADE)
+   chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
    topic_name = models.CharField(max_length=50)
    def __str__(self):
@@ -302,7 +296,7 @@ class Course(models.Model):
 class CourseDetails(models.Model):
    course=models.ForeignKey(Course,on_delete=models.CASCADE)
    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-   chapter=models.ForeignKey(Chapter,on_delete=models.CASCADE)
+   chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
    topic=models.ForeignKey(Topic,on_delete=models.CASCADE)
 
 class UserCourse(models.Model):
