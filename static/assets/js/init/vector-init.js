@@ -9,7 +9,7 @@
         map: 'world_en',
         backgroundColor: null,
         color: '#ffffff',
-        hoverOpacity: 0.7,
+        hoverOpavideo: 0.7,
         selectedColor: '#1de9b6',
         enableZoom: true,
         showTooltip: true,
@@ -23,7 +23,7 @@
         color: '#007BFF',
         borderColor: '#fff',
         backgroundColor: '#fff',
-        borderOpacity: 1,
+        borderOpavideo: 1,
         enableZoom: true,
         showTooltip: true
     } );
@@ -111,7 +111,7 @@
         color: '#007BFF',
         borderColor: '#fff',
         backgroundColor: '#fff',
-        hoverOpacity: 0.7,
+        hoverOpavideo: 0.7,
         selectedColor: '#999999',
         enableZoom: true,
         showTooltip: true,

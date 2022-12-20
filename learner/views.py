@@ -203,58 +203,66 @@ def learner_show_short_exam_reuslt_details_view(request,pk):
 def learner_video_Course_view(request):
 #    try:    
         if str(request.session['utype']) == 'learner':
-            users = iLMSModel.CourseDetails.objects.raw("SELECT id, course_name FROM social_auth_usersocialauth WHERE user_id = " + str(request.user.id))
-            for course in users:
-                videos1=iLMSModel.CourseDetails.objects.raw(" SELECT ff.id, ff.coursedetails_name, (SELECT count(g.id) AS vw FROM ilmsapp_videowatched as g  WHERE g.learner_id = " + str(request.user.id) + " and g.CourseName = ff.coursedetails_name) as vw, (SELECT count(x.id) AS vw FROM ilmsapp_videolinks as x  WHERE  x.CourseName = ff.coursedetails_name) as ctotal FROM  ilmsapp_coursedetails  as ff LEFT OUTER JOIN ilmsapp_course as a ON (ff.course_id = a.id) LEFT outer JOIN social_auth_usersocialauth as b ON (a.course_name = b.course_name) WHERE   a.course_name = '" + str(course.course_name) + "' and b.user_id = " + str(request.user.id))
-                return render(request,'learner/learner_video_course.html',{'videos':videos1, 'coursename':str(course.course_name)})
+            # users = iLMSModel.Course.objects.all().filter(id__in = iLMSModel.UserCourse.objects.all().filter(user_id=str(request.user.id)))  
+            # for course in users:
+            #     videos1=iLMSModel.CourseDetails.objects.raw(" SELECT ff.id, ff.coursedetails_name, (SELECT count(g.id) AS vw FROM ilmsapp_videowatched as g  WHERE g.learner_id = " + str(request.user.id) + " and g.CourseName = ff.coursedetails_name) as vw, (SELECT count(x.id) AS vw FROM ilmsapp_videolinks as x  WHERE  x.CourseName = ff.coursedetails_name) as ctotal FROM  ilmsapp_coursedetails  as ff LEFT OUTER JOIN ilmsapp_course as a ON (ff.course_id = a.id) LEFT outer JOIN social_auth_usersocialauth as b ON (a.course_name = b.course_name) WHERE   a.course_name = '" + str(course.course_name) + "' and b.user_id = " + str(request.user.id))
+            #     return render(request,'learner/learner_video_course.html',{'videos':videos1, 'coursename':str(course.course_name)})
+            videos1 = iLMSModel.UserCourse.objects.all().filter(course_id__in = iLMSModel.Course.objects.all(),user_id=str(request.user.id))  
+            return render(request,'learner/video/learner_video_course.html',{'videos':videos1})
+ #   except:
+        return render(request,'ilmsapp/404page.html')
+
+def learner_video_Course_subject_view(request,course_id):
+#    try:    
+        if str(request.session['utype']) == 'learner':
+            coursename = iLMSModel.Course.objects.only('course_name').get(id=course_id).course_name
+            subject = iLMSModel.CourseDetails.objects.all().filter(subject_id__in = iLMSModel.Playlist.objects.all(),course_id=str(course_id))
+            subject = iLMSModel.Playlist.objects.raw('SELECT y.id,  y.name  , (SELECT COUNT (PLI.id) FROM ilmsapp_playlistitem PLI LEFT OUTER JOIN ilmsapp_video PLIV ON (PLI.video_id = PLIV.id)  WHERE  PLI.playlist_id = y.id) as Vtotal  , (SELECT COUNT(WC.id) FROM  ilmsapp_videowatched WC  LEFT OUTER JOIN ilmsapp_video WCV ON (WC.video_id = WCV.id)  LEFT OUTER JOIN ilmsapp_playlistitem WCPL ON (WCV.id = WCPL.video_id) WHERE WCPL.playlist_id = y.id) as VWatched FROM  ilmsapp_coursedetails  LEFT OUTER JOIN ilmsapp_playlist y ON (ilmsapp_coursedetails.subject_id = y.id)  WHERE ilmsapp_coursedetails.course_id = ' + str(course_id))
+            tc = iLMSModel.Video.objects.raw('SELECT 1 as id, count(ilmsapp_video.id) AS FIELD_1 FROM  ilmsapp_coursedetails  LEFT OUTER JOIN ilmsapp_playlist ON (ilmsapp_coursedetails.subject_id = ilmsapp_playlist.id)  LEFT OUTER JOIN ilmsapp_playlistitem ON (ilmsapp_playlist.id = ilmsapp_playlistitem.playlist_id)  LEFT OUTER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id) WHERE   ilmsapp_coursedetails.course_id = ' + str(course_id))
+            wc = iLMSModel.VideoWatched.objects.raw('SELECT 1 as id, count(ilmsapp_videowatched.id) AS FIELD_1 FROM  ilmsapp_videowatched  LEFT OUTER JOIN ilmsapp_video ON (ilmsapp_videowatched.video_id = ilmsapp_video.id)  LEFT OUTER  JOIN ilmsapp_playlistitem ON (ilmsapp_video.id = ilmsapp_playlistitem.video_id)  LEFT OUTER  JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)  LEFT OUTER  JOIN ilmsapp_coursedetails ON (ilmsapp_playlist.id = ilmsapp_coursedetails.subject_id) WHERE   ilmsapp_coursedetails.course_id = ' + str(course_id))
+            per = 0
+            for x in tc:
+                tc = x.FIELD_1
+
+            for x in wc:
+                wc = x.FIELD_1
+            try:
+                per = (100*wc)/tc
+            except:
+                per =0
+            dif = tc-wc
+
+            return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
  #   except:
         return render(request,'ilmsapp/404page.html')
  
-def learner_video_view(request,pk):
+def learner_video_list_view(request,subject_id,course_id):
     try:     
         if str(request.session['utype']) == 'learner':
-            #videos1=iLMSModel.VideoLinks.objects.all().filter(learner_id=request.user.id)#(" Select id, TopicName, TopicCovered, d, ifnull(c,'') as c, cc, CASE WHEN yn IS NULL THEN 'NO' ELSE 'YES' END  as yn from ( SELECT a1.id, a1.srno, a1.TopicName, a1.TopicCovered, ( SELECT Count(id) from ilmsapp_videotimeline WHERE videolinks_id = a1.id AND learner_id = " + str(request.user.id) + " ) as d, ( SELECT status FROM ilmsapp_videotimeline WHERE videolinks_id = a1.id AND learner_id = " + str(request.user.id) + " AND status = 'unlock') AS c, ( SELECT TopicName FROM ilmsapp_videowatched WHERE videolinks_id = a1.id AND learner_id = " + str(request.user.id) + ") AS yn, ( SELECT COUNT(id) As a from ilmsapp_material m1 where TopicName = a1.TopicName ) as cc FROM ilmsapp_videolinks a1 WHERE CourseName = '" + pk + "' ) asd ORDER BY srno")
-            videos1=iLMSModel.VideoLinks.objects.raw(" Select id, TopicName, TopicCovered, d, ifnull(c,'') as c, cc, CASE WHEN yn IS NULL THEN 'NO' ELSE 'YES' END  as yn from ( SELECT a1.id, a1.srno, a1.TopicName, a1.TopicCovered, ( SELECT Count(id) from ilmsapp_videotimeline WHERE videolinks_id = a1.id AND learner_id = " + str(request.user.id) + " ) as d, ( SELECT status FROM ilmsapp_videotimeline WHERE videolinks_id = a1.id AND learner_id = " + str(request.user.id) + " AND status = 'unlock') AS c, ( SELECT TopicName FROM ilmsapp_videowatched WHERE videolinks_id = a1.id AND learner_id = " + str(request.user.id) + ") AS yn, ( SELECT COUNT(id) As a from ilmsapp_material m1 where TopicName = a1.TopicName ) as cc FROM ilmsapp_videolinks a1 WHERE CourseName = '" + pk + "' ) asd ORDER BY TopicName")
-            return render(request,'learner/learner_video.html',{'videos':videos1,'xyzz':pk})
+            subjectname = iLMSModel.Playlist.objects.only('name').get(id=subject_id).name
+            coursename = iLMSModel.Course.objects.only('course_name').get(id=course_id).course_name
+            list = iLMSModel.PlaylistItem.objects.all().filter(video_id__in = iLMSModel.Video.objects.all(),playlist_id=str(subject_id))  
+            return render(request,'learner/video/learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
     except:
         return render(request,'ilmsapp/404page.html')
 
-def learner_show_video_view(request,pk):
+def learner_show_video_view(request,subject_id,course_id,video_id):
     #try:    
         if str(request.session['utype']) == 'learner':
-            Videos=iLMSModel.VideoLinks.objects.all().filter(id=pk)
-            z=''
+            subjectname = iLMSModel.Playlist.objects.only('name').get(id=subject_id).name
+            coursename = iLMSModel.Course.objects.only('course_name').get(id=course_id).course_name
+            Videos=iLMSModel.Video.objects.all().filter(id=video_id)
+            topicname =''
+            url=''
             for x in Videos:
-                videocount = iLMSModel.VideoWatched.objects.all().filter(videolinks_id = pk,learner_id=request.user.id,CourseName=x.CourseName)
-                z= x.CourseName
+                videocount = iLMSModel.VideoWatched.objects.all().filter(video_id = video_id,learner_id=request.user.id)
+                topicname =x.name
+                url = "https://www.youtube.com/embed/" + x.video_id
+                
             if not videocount:
                 for x in Videos:
-                    vw=  iLMSModel.VideoWatched.objects.create(videolinks_id = pk,learner_id=request.user.id,TopicName=x.TopicName,CourseName=z)
+                    vw=  iLMSModel.VideoWatched.objects.create(video_id = video_id,learner_id=request.user.id)
                     vw.save()
-            if request.method=="POST":
-                topicname=request.POST['topicname']
-                if str(topicname).upper().strip()=='':
-                    Videos=iLMSModel.VideoLinks.objects.all().filter(id=pk)
-                    messages.info(request, 'Please enter Topic Name')
-                    return render(request,'learner/show_video.html',{'Videos':Videos})
-                videotime=request.POST['videotime']
-                if str(videotime).upper().strip()=='':
-                    Videos=iLMSModel.VideoLinks.objects.all().filter(id=pk)
-                    messages.info(request, 'Please enter Time line')
-                    return render(request,'learner/show_video.html',{'Videos':Videos})
-                videolinks = iLMSModel.VideoLinks.objects.get(id=pk)
-                studid = request.user.id
-                timeline=iLMSModel.VideoTimeLine.objects.create (TopicName=topicname,status='Pending',learner_id = studid,videolinks_id = videolinks.id,VideoTime = videotime)
-                timeline.save()
-                timeline=iLMSModel.VideoTimeLine.objects.filter(videolinks_id=pk,learner_id=studid).count()
-                nextvdo = iLMSModel.VideoLinks.objects.filter(id__gt=pk).values_list('id', flat=True)[0]
-                number = iLMSModel.VideoLinks.objects.filter(id=pk).values_list('TopicCovered', flat=True)[0]
-                if int(timeline) >= number:
-                    unlock = iLMSModel.VideoTimeLine.objects.filter(videolinks_id=nextvdo,learner_id=studid,TopicName='forunlock').count()
-                    if int(unlock) == 0:
-                        unlock = iLMSModel.VideoTimeLine.objects.create(TopicName='forunlock',VideoTime=strftime("%H:%M", gmtime()),status='unlock',learner_id=studid,videolinks_id=nextvdo)
-                        unlock.save()
-            Videos=iLMSModel.VideoLinks.objects.raw("SELECT a.id,a.SrNo,a.TopicName,a.Url, a.CourseName, a.TopicCovered, (SELECT count(id) as coun FROM ilmsapp_videowatched WHERE ilmsapp_videowatched.TopicName = a.TopicName) as conn FROM  ilmsapp_videolinks as a where a.id = " + str(pk))
-            return render(request,'learner/show_video.html',{'Videos':Videos})
+            return render(request,'learner/video/learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
     #except:
         return render(request,'ilmsapp/404page.html')

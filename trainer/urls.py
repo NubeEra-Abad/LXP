@@ -33,5 +33,10 @@ urlpatterns = [
     path('trainer-sync-youtube', views.trainer_sync_youtube_view,name='trainer-sync-youtube'),
     path('trainer-sync-youtube-start', views.trainer_sync_youtube_start_view,name='trainer-sync-youtube-start'),
     path('trainer-sync-youtube-byselected-playlist-start', views.trainer_sync_youtube_byselected_playlist_start_view,name='trainer-sync-youtube-byselected-playlist-start'),
-    
+
+    path('trainer-view-learner-video', views.trainer_view_learner_video_view,name='trainer-view-learner-video'),
+    path('trainer-learner-video-course/<int:user_id>/<userfirstname>/<userlastname>', views.trainer_learner_video_Course_view,name='trainer-learner-video-course'),
+    path('trainer-learner-video-course-subject/<int:course_id>', views.trainer_learner_video_Course_subject_view,name='trainer-learner-video-course-subject'),
+    path('trainer-learner-video-list/<int:subject_id>,/<int:course_id>', views.trainer_learner_video_list_view,name='trainer-learner-video-list'),
+    path('trainer-learner-show-video/<int:subject_id>,/<int:course_id>,/<int:video_id>', views.trainer_learner_show_video_view,name='trainer-learner-show-video'),
 ]

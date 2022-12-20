@@ -19,7 +19,8 @@ path('learner-show-short-exam-reuslt/<int:pk>', views.learner_show_short_exam_re
 path('learner-show-short-exam-reuslt-details/<int:pk>', views.learner_show_short_exam_reuslt_details_view,name='learner-show-short-exam-reuslt-details'),
 
 path('learner-video-course', views.learner_video_Course_view,name='learner-video-course'),
-path('learner-video/<pk>', views.learner_video_view,name='learner-video'),
-path('learner-show-video/<int:pk>', views.learner_show_video_view,name='learner-show-video'),
+path('learner-video-course-subject/<int:course_id>', views.learner_video_Course_subject_view,name='learner-video-course-subject'),
+path('learner-video-list/<int:subject_id>,/<int:course_id>', views.learner_video_list_view,name='learner-video-list'),
+path('learner-show-video/<int:subject_id>,/<int:course_id>,/<int:video_id>', views.learner_show_video_view,name='learner-show-video'),
 
 ]

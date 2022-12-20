@@ -48,10 +48,18 @@
       </thead>
       {% for t in chapters %}
       <tr>
-        <td> {{t.subject}}</td>
-        <td> {{t.chapter_name}}</td>
+        <td> {{t.plname}}</td>
+        <td> {{t.name}}</td>
+        {% if t.video_id == '' %}
         <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-chapter' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if t.video_id == '' %}
         <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-chapter' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        {% else %}
+        <td></td>
+        {% endif %}
       </tr>
       {% endfor %}
     </table>

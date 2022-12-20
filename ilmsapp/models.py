@@ -88,7 +88,8 @@ class Video(models.Model):
     # for new videos added/modified/deleted in the playlist
     video_details_modified = models.BooleanField(
         default=False)  # is true for videos whose details changed after playlist update
-
+    def __str__(self):
+        return str(self.name)
 
 class Playlist(models.Model):
     tags = models.ManyToManyField(Tag, related_name="playlists")

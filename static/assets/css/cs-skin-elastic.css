@@ -35,7 +35,7 @@ div.cs-skin-elastic {
 .cs-skin-elastic .cs-options {
 	overflow: visible;
 	background: transparent;
-	opacity: 1;
+	opavideo: 1;
 	visibility: visible;
 	padding-bottom: 1.25em;
 	pointer-events: none;
@@ -71,17 +71,17 @@ div.cs-skin-elastic {
 }
 
 .cs-skin-elastic .cs-options ul li {
-	opacity: 0;
+	opavideo: 0;
 	-webkit-transform: translate3d(0,-25px,0);
 	transform: translate3d(0,-25px,0);
-	-webkit-transition: opacity 0.15s, -webkit-transform 0.15s;
-	transition: opacity 0.15s, transform 0.15s;
+	-webkit-transition: opavideo 0.15s, -webkit-transform 0.15s;
+	transition: opavideo 0.15s, transform 0.15s;
 }
 
 .cs-skin-elastic.cs-active .cs-options ul li {
 	-webkit-transform: translate3d(0,0,0);
 	transform: translate3d(0,0,0);
-	opacity: 1;
+	opavideo: 1;
 	-webkit-transition: none;
 	transition: none;
 	-webkit-animation: bounce 0.6s ease-out;
@@ -164,19 +164,19 @@ div.cs-skin-elastic {
 
 
 @-webkit-keyframes bounce { 
-	0% { -webkit-transform: translate3d(0,-25px,0); opacity:0; }
+	0% { -webkit-transform: translate3d(0,-25px,0); opavideo:0; }
 	25% { -webkit-transform: translate3d(0,10px,0); }
 	50% { -webkit-transform: translate3d(0,-6px,0); }
 	75% { -webkit-transform: translate3d(0,2px,0); }
-	100% { -webkit-transform: translate3d(0,0,0); opacity: 1; }
+	100% { -webkit-transform: translate3d(0,0,0); opavideo: 1; }
 }
 
 @keyframes bounce { 
-	0% { -webkit-transform: translate3d(0,-25px,0); transform: translate3d(0,-25px,0); opacity:0; }
+	0% { -webkit-transform: translate3d(0,-25px,0); transform: translate3d(0,-25px,0); opavideo:0; }
 	25% { -webkit-transform: translate3d(0,10px,0); transform: translate3d(0,10px,0); }
 	50% { -webkit-transform: translate3d(0,-6px,0); transform: translate3d(0,-6px,0); }
 	75% { -webkit-transform: translate3d(0,2px,0); transform: translate3d(0,2px,0); }
-	100% { -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0); opacity: 1; }
+	100% { -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0); opavideo: 1; }
 }
 
 

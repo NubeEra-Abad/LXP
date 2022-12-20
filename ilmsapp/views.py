@@ -255,3 +255,4 @@ def admin_mark_usertype_view(request,pk):
             return render(request,'ilmsapp/admin_mark_usertype.html',{'courses':'course','uid':pk})
     #except:
         return render(request,'ilmsapp/404page.html')
+

@@ -49,8 +49,17 @@
       {% for t in subjects %}
       <tr>
         <td> {{t.name}}</td>
+        {% if t.playlist_id == '' %}
         <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-subject' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if t.playlist_id == '' %}
         <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-subject' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        
       </tr>
       {% endfor %}
     </table>

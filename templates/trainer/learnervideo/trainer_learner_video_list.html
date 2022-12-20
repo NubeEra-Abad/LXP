@@ -1,9 +1,8 @@
-{% extends 'learner/learnerbase.html' %}
+{% extends 'trainer/trainerbase.html' %}
 {% block content %}
 {%load static%}
 
 <head>
-  
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
   <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
@@ -14,18 +13,6 @@
   <script src="/static/datatableconfig.js"></script>
   
   <style media="screen">
-    canvas {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    width: 800px;
-}
-.form-center {
-  display:flex;
-  justify-content: center;
-}
     a:link {
       text-decoration: none;
     }
@@ -35,38 +22,36 @@
     .row {
       margin: 100px;
     }
-
     table.dataTable tr.odd { background-color: #E2E4FF; }
     table.dataTable tr.even { background-color: white; }
   </style>
 </head>
 <ol class="breadcrumb text-right">
-  <li><a href="learner-dashboard">Dashboard</a></li>
-  <li class="active">Exams</li>
+  <li><a href="/trainer/trainer-dashboard">Dashboard</a></li>
+  <li><a href="/trainer/trainer-learner-video-course">Learner Courses for Recorded Videos</a></li>
+  <li><a href="/trainer/trainer-learner-video-course-subject/{{course_id}}">Video Subject List of Course : {{coursename}}</a></li>
+  <li class="active">Video List of Subject : {{subjectname}} </li>
 </ol>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Exams</h6>
+      <h6 class="panel-title">Video List of Subject : {{subjectname}}</h6>
     </div>
-    <table class="table table-hover" id="dev-table">
+    <table class="table table-hover display" id="dev-table">
       <thead>
         <tr>
-          <th>Exam Name</th>
-          <th>Take Exam</th>
-          <th>Results</th>
+          <th>Topic Name</th>
+          <th>Show</th>
         </tr>
       </thead>
-      {% for t in exams %}
+      {% for t in list %}
       <tr>
-        <td> {{t.exam_name}}</td>
-        <td><a class="btn btn-success" href="{% url 'learner-take-exam' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-up"></span></a></td>
-        <td><a class="btn btn-primary" href="{% url 'learner-show-exam-reuslt' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
-      </tr>
+        <td>{{t.video.name}}</td>
+        <td><a class="btn btn-success" href="{% url 'trainer-learner-show-video' subject_id course_id t.video.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+
       {% endfor %}
     </table>
   </div>
 </div>
-
 <br><br><br><br><br><br>
 {% endblock content %}

@@ -446,7 +446,7 @@ aside.left-panel {
                     }
                     .sub-menu {
                         max-height: 1000px;
-                        opacity: 1;
+                        opavideo: 1;
                         position: static !important;
                     }
                 }
@@ -612,7 +612,7 @@ aside.left-panel {
             .menu-title {
                 font-size: 0;
                 line-height: 0;
-                opacity: 0;
+                opavideo: 0;
                 padding: 0;
             }
         }
@@ -1135,7 +1135,7 @@ header .form-inline {
             position: relative;
             height: 80px;  
             color: #333648;
-            .city {   
+            .video {   
                 padding-top: 15px;
                 width: 100%;
                 font-weight: 700;
@@ -1330,7 +1330,7 @@ header .form-inline {
 //     top: 0;
 // }
 .traffic-chart .ct-area {
-  fill-opacity: .7; 
+  fill-opavideo: .7; 
 }
 .traffic-chart .ct-series-a .ct-area,
 .traffic-chart .ct-series-a .ct-slice-donut-solid,
@@ -2451,7 +2451,7 @@ footer.site-footer {
                 .menu-title {
                     font-size: 0;
                     line-height: 0;
-                    opacity: 0;
+                    opavideo: 0;
                     padding: 0;
                 }
             }
@@ -2489,7 +2489,7 @@ footer.site-footer {
                         padding-right: 30px;
                         font-size: 14px;
                         line-height: 50px;
-                        opacity: 1;
+                        opavideo: 1;
                     }
                 }
             }

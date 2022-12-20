@@ -16,6 +16,7 @@ import googleapiclient.errors
 from urllib.parse import parse_qs, urlparse
 import googleapiclient.discovery
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+from social_django.models import UserSocialAuth
 def trainerclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -390,3 +391,69 @@ def Import_excel(request):
         if not result.has_errors():
             iLMSModel.McqQuestionResource.import_data(dataset,dry_run=False)        
     return render(request, 'Import_excel_db.html',{})
+
+def trainer_view_learner_video_view(request):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            #learner = UserSocialAuth.objects.raw("SELECT social_auth_usersocialauth.id,social_auth_usersocialauth.provider,social_auth_usersocialauth.uid,auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 0 THEN 'Learner' ELSE 'Trainer' END AS utype,CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,IFNULL(course_name,'') AS course_name,auth_user.id as user_id FROM social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  WHERE social_auth_usersocialauth.utype = 0 AND social_auth_usersocialauth.status = 1 Order by social_auth_usersocialauth.uid")
+            learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(ilmsapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id) LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id) WHERE (social_auth_usersocialauth.utype = 0 OR social_auth_usersocialauth.utype = 2) AND social_auth_usersocialauth.status = 1 GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name ')
+            return render(request,'trainer/learnervideo/trainer_view_learner_video.html',{'learner':learner})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+def trainer_learner_video_Course_view(request,user_id,userfirstname,userlastname):
+#    try:    
+        if str(request.session['utype']) == 'trainer':
+            videos1 = iLMSModel.UserCourse.objects.all().filter(course_id__in = iLMSModel.Course.objects.all(),user_id=user_id)  
+            return render(request,'trainer/learnervideo/trainer_learner_video_course.html',{'videos':videos1,'userfirstname':userfirstname,'userlastname':userlastname})
+ #   except:
+        return render(request,'ilmsapp/404page.html')
+
+def trainer_learner_video_Course_subject_view(request,course_id):
+#    try:    
+        if str(request.session['utype']) == 'trainer':
+            coursename = iLMSModel.Course.objects.only('course_name').get(id=course_id).course_name
+            subject = iLMSModel.CourseDetails.objects.all().filter(subject_id__in = iLMSModel.Playlist.objects.all(),course_id=str(course_id))
+            subject = iLMSModel.Playlist.objects.raw('SELECT y.id,  y.name  , (SELECT COUNT (PLI.id) FROM ilmsapp_playlistitem PLI LEFT OUTER JOIN ilmsapp_video PLIV ON (PLI.video_id = PLIV.id)  WHERE  PLI.playlist_id = y.id) as Vtotal  , (SELECT COUNT(WC.id) FROM  ilmsapp_videowatched WC  LEFT OUTER JOIN ilmsapp_video WCV ON (WC.video_id = WCV.id)  LEFT OUTER JOIN ilmsapp_playlistitem WCPL ON (WCV.id = WCPL.video_id) WHERE WCPL.playlist_id = y.id) as VWatched FROM  ilmsapp_coursedetails  LEFT OUTER JOIN ilmsapp_playlist y ON (ilmsapp_coursedetails.subject_id = y.id)  WHERE ilmsapp_coursedetails.course_id = ' + str(course_id))
+            tc = iLMSModel.Video.objects.raw('SELECT 1 as id, count(ilmsapp_video.id) AS FIELD_1 FROM  ilmsapp_coursedetails  LEFT OUTER JOIN ilmsapp_playlist ON (ilmsapp_coursedetails.subject_id = ilmsapp_playlist.id)  LEFT OUTER JOIN ilmsapp_playlistitem ON (ilmsapp_playlist.id = ilmsapp_playlistitem.playlist_id)  LEFT OUTER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id) WHERE   ilmsapp_coursedetails.course_id = ' + str(course_id))
+            wc = iLMSModel.VideoWatched.objects.raw('SELECT 1 as id, count(ilmsapp_videowatched.id) AS FIELD_1 FROM  ilmsapp_videowatched  LEFT OUTER JOIN ilmsapp_video ON (ilmsapp_videowatched.video_id = ilmsapp_video.id)  LEFT OUTER  JOIN ilmsapp_playlistitem ON (ilmsapp_video.id = ilmsapp_playlistitem.video_id)  LEFT OUTER  JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)  LEFT OUTER  JOIN ilmsapp_coursedetails ON (ilmsapp_playlist.id = ilmsapp_coursedetails.subject_id) WHERE   ilmsapp_coursedetails.course_id = ' + str(course_id))
+            per = 0
+            for x in tc:
+                tc = x.FIELD_1
+
+            for x in wc:
+                wc = x.FIELD_1
+            try:
+                per = (100*wc)/tc
+            except:
+                per =0
+            dif = tc-wc
+
+            return render(request,'trainer/learnervideo/trainer_learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
+ #   except:
+        return render(request,'ilmsapp/404page.html')
+ 
+def trainer_learner_video_list_view(request,subject_id,course_id):
+    try:     
+        if str(request.session['utype']) == 'trainer':
+            subjectname = iLMSModel.Playlist.objects.only('name').get(id=subject_id).name
+            coursename = iLMSModel.Course.objects.only('course_name').get(id=course_id).course_name
+            list = iLMSModel.PlaylistItem.objects.all().filter(video_id__in = iLMSModel.Video.objects.all(),playlist_id=str(subject_id))  
+            return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+def trainer_learner_show_video_view(request,subject_id,course_id,video_id):
+    #try:    
+        if str(request.session['utype']) == 'trainer':
+            subjectname = iLMSModel.Playlist.objects.only('name').get(id=subject_id).name
+            coursename = iLMSModel.Course.objects.only('course_name').get(id=course_id).course_name
+            Videos=iLMSModel.Video.objects.all().filter(id=video_id)
+            topicname =''
+            url=''
+            for x in Videos:
+                topicname =x.name
+                url = "https://www.youtube.com/embed/" + x.video_id
+            return render(request,'trainer/learnervideo/trainer_learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
+    #except:
+        return render(request,'ilmsapp/404page.html')

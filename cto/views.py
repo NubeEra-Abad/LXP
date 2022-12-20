@@ -120,7 +120,7 @@ def cto_update_subject_view(request,pk):
                         return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm})
                     else:
                         subjectForm.save()
-                        subjects = iLMSModel.Playlist.objects.all().filter(playlist_id = '')
+                        subjects = iLMSModel.Playlist.objects.all()
                         return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
             return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm,'sub':subject.name,'pl':subject.playlist_id})
     #except:
@@ -130,7 +130,7 @@ def cto_update_subject_view(request,pk):
 def cto_view_subject_view(request):
     try:
         if str(request.session['utype']) == 'cto':
-            subjects = iLMSModel.Playlist.objects.all().filter(playlist_id = '')
+            subjects = iLMSModel.Playlist.objects.all()
             return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
     except:
         return render(request,'ilmsapp/404page.html')
@@ -173,25 +173,46 @@ def cto_add_chapter_view(request):
                         chapter = iLMSModel.Video.objects.create(
                             video_id = '',
                             name = chaptertext,
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = '',
-                            video_id = ''
+                            duration = '',
+                            duration_in_seconds = 0,
+                            thumbnail_url = '',
+                            published_at = datetime.now(),
+                            description = '',
+                            has_cc = False,
+                            liked = False,
+                            public_stats_viewable = False,
+                            view_count = 0,
+                            like_count = 0,
+                            dislike_count = 0,
+                            comment_count = 0,
+                            yt_player_HTML = '',
+                            channel_id = '',
+                            channel_name = '',
+                            is_unavailable_on_yt = False,
+                            was_deleted_on_yt = False,
+                            is_planned_to_watch = False,
+                            is_marked_as_watched = False,
+                            is_favorite = False,
+                            num_of_accesses = 0,
+                            user_label = '',
+                            user_notes = '',
+                            video_details_modified = False,
+                            untube_user_id = request.user.id
                             )
                         chapter.save()
+                        PLItems = iLMSModel.PlaylistItem.objects.create(
+                            playlist_item_id = '',
+                            video_position = 0,
+                            published_at = datetime.now(),
+                            channel_id = '',
+                            channel_name = '',
+                            is_duplicate = False,
+                            is_marked_as_watched = False,
+                            num_of_accesses = 0,
+                            playlist_id = subject.id,
+                            video_id = chapter.id
+                        )
+                        PLItems.save()
                 else:
                     print("form is invalid")
             chapterForm=ILMSFORM.ChapterForm()
@@ -203,26 +224,30 @@ def cto_add_chapter_view(request):
 def cto_update_chapter_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            chapter = iLMSModel.Chapter.objects.get(id=pk)
+            chapter = iLMSModel.Video.objects.get(id=pk)
             chapterForm=ILMSFORM.ChapterForm(request.POST,instance=chapter)
             if request.method=='POST':
                 if chapterForm.is_valid(): 
-                    chaptertext = chapterForm.cleaned_data["chapter_name"]
+                    chaptertext = chapterForm.cleaned_data["name"]
                     subjecttext = chapterForm.cleaned_data["subjectID"]
                     
-                    chapter = iLMSModel.Chapter.objects.all().filter(chapter_name__iexact = chaptertext).exclude(id=pk)
+                    chapter = iLMSModel.Video.objects.all().filter(name__iexact = chaptertext).exclude(id=pk)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
                         return render(request,'cto/chapter/cto_update_chapter.html',{'chapterForm':chapterForm})
                     else:
                         subject = iLMSModel.Playlist.objects.get(name=subjecttext)
-                        chapter = iLMSModel.Chapter.objects.get(id=pk)
-                        chapter.chapter_name = chaptertext
-                        chapter.subject_id = subject.id
+                        
+                        chapter = iLMSModel.Video.objects.get(id=pk)
+                        oldsubject =iLMSModel.PlaylistItem.objects.get(video_id=pk)
+                        chapter.name = chaptertext
                         chapter.save()
-                        c_list = iLMSModel.Chapter.objects.filter(subject_id__in=iLMSModel.Playlist.objects.all())
+                        PLItems = iLMSModel.PlaylistItem.objects.get(video_id=pk,playlist_id = oldsubject.playlist_id)
+                        PLItems.playlist_id =subject.id
+                        PLItems.save()
+                        c_list = iLMSModel.Video.objects.raw('SELECT   ilmsapp_video.id,  ilmsapp_video.name,  ilmsapp_video.video_id,  ilmsapp_playlist.name AS plname FROM  ilmsapp_playlistitem  INNER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id)  INNER JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)')
                         return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':c_list})
-            return render(request,'cto/chapter/cto_update_chapter.html',{'chapterForm':chapterForm,'sub':chapter.chapter_name})
+            return render(request,'cto/chapter/cto_update_chapter.html',{'chapterForm':chapterForm,'sub':chapter.name})
     #except:
         return render(request,'ilmsapp/404page.html')
 
@@ -230,7 +255,7 @@ def cto_update_chapter_view(request,pk):
 def cto_view_chapter_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.Chapter.objects.filter(subject_id__in=iLMSModel.Playlist.objects.all())
+            c_list = iLMSModel.Video.objects.raw('SELECT   ilmsapp_video.id,  ilmsapp_video.name,  ilmsapp_video.video_id,  ilmsapp_playlist.name AS plname FROM  ilmsapp_playlistitem  INNER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id)  INNER JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)')
             return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':c_list})
     #except:
         return render(request,'ilmsapp/404page.html')
@@ -239,10 +264,12 @@ def cto_view_chapter_view(request):
 def cto_delete_chapter_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':  
-            chapter=iLMSModel.Chapter.objects.get(id=pk)
+            chapter=iLMSModel.Video.objects.get(id=pk)
             chapter.delete()
+            PLItem = iLMSModel.PlaylistItem.objects.get(video_id = pk)
+            PLItem.delete()
             return HttpResponseRedirect('/cto/chapter/cto-view-chapter')
-        chapters = iLMSModel.Chapter.objects.all()
+        chapters = iLMSModel.Video.objects.all()
         return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':chapters})
     except:
         return render(request,'ilmsapp/404page.html')
@@ -270,7 +297,7 @@ def cto_add_topic_view(request):
                         return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})                  
                     else:
 
-                        chapter=iLMSModel.Chapter.objects.get(id=request.POST.get('chapterID'))
+                        chapter=iLMSModel.Video.objects.get(id=request.POST.get('chapterID'))
                         subject=iLMSModel.Playlist.objects.get(id=request.POST.get('subjectID'))
                         topic = iLMSModel.Topic.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_name = topictext)
                         topic.save()
@@ -297,14 +324,14 @@ def cto_update_topic_view(request,pk):
                         messages.info(request, 'Topic Name Already Exist')
                         return render(request,'cto/topic/cto_update_topic.html',{'topicForm':topicForm})
                     else:
-                        chapter = iLMSModel.Chapter.objects.get(chapter_name=chaptertext)
+                        chapter = iLMSModel.Video.objects.get(chapter_name=chaptertext)
                         subject = iLMSModel.Playlist.objects.get(subject_name=subjecttext)
                         topic = iLMSModel.Topic.objects.get(id=pk)
                         topic.topic_name = topictext
                         topic.subject_id = subject.id
                         topic.chapter_id = chapter.id
                         topic.save()
-                        c_list = iLMSModel.Topic.objects.filter(chapter_id__in=iLMSModel.Chapter.objects.all())
+                        c_list = iLMSModel.Topic.objects.filter(chapter_id__in=iLMSModel.Video.objects.all())
                         return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
             return render(request,'cto/topic/cto_update_topic.html',{'topicForm':topicForm,'sub':topic.topic_name})
     #except:
@@ -314,7 +341,7 @@ def cto_update_topic_view(request,pk):
 def cto_view_topic_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.Topic.objects.filter(chapter_id__in=iLMSModel.Chapter.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all())
+            c_list = iLMSModel.Topic.objects.filter(chapter_id__in=iLMSModel.Video.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all())
             return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
     #except:
         return render(request,'ilmsapp/404page.html')
@@ -368,7 +395,7 @@ def cto_add_course_view(request):
                             refid = form.cleaned_data['chapterID']
                             
                             if refid:
-                                chapter=iLMSModel.Chapter.objects.get(id=refid.id)
+                                chapter=iLMSModel.Video.objects.get(id=refid.id)
                             refid = form.cleaned_data['topicID']
                             if refid:
                                 topic=iLMSModel.Topic.objects.get(id=refid.id)
@@ -396,7 +423,7 @@ def cto_view_course_view(request):
 def cto_view_course_details_view(request,cname):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.CourseDetails.objects.filter(course_id__in=iLMSModel.Course.objects.all().filter(course_name=cname),chapter_id__in=iLMSModel.Chapter.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all(),topic_id__in=iLMSModel.Topic.objects.all())
+            c_list = iLMSModel.CourseDetails.objects.filter(course_id__in=iLMSModel.Course.objects.all().filter(course_name=cname),chapter_id__in=iLMSModel.Video.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all(),topic_id__in=iLMSModel.Topic.objects.all())
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
     #except:
         return render(request,'ilmsapp/404page.html')
@@ -487,7 +514,7 @@ def cto_print_course_view(request):
 @login_required
 def cto_print_course_preview_view(request,cname):
     try:
-        coursedetails = iLMSModel.CourseDetails.objects.filter(course_id__in=iLMSModel.Course.objects.all().filter(course_name =cname),chapter_id__in=iLMSModel.Chapter.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all(),topic_id__in=iLMSModel.Topic.objects.all())
+        coursedetails = iLMSModel.CourseDetails.objects.filter(course_id__in=iLMSModel.Course.objects.all().filter(course_name =cname),chapter_id__in=iLMSModel.Video.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all(),topic_id__in=iLMSModel.Topic.objects.all())
         return render(request,'cto/course/cto_print_course_preview.html',{'coursedetails':coursedetails,'cname':cname})
     except:
         return render(request,'ilmsapp/404page.html')

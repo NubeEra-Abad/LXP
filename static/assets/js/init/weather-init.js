@@ -15,7 +15,7 @@
 
 
                 html += '<div class="middle">';
-                html += '<div class="city">' + weather.city + '  <span> '+ weather.region + '</span></div>';
+                html += '<div class="video">' + weather.video + '  <span> '+ weather.region + '</span></div>';
                 html += '<div class="temp">' + weather.alt.temp + '<span>&deg;C</span> </div>'; 
                 html += '</div>';
                 
@@ -38,7 +38,7 @@
 
 
     // init
-    loadWeather('New York City', '');
+    loadWeather('New York Video', '');
 
 })(jQuery);
 
@@ -54,7 +54,7 @@
             success: function (weather) {
 
                 html = '<i class="wi wi-yahoo-' + weather.code + '"></i><h2> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
-                html += '<div class="city">' + weather.city + ', ' + weather.region + '</div>';
+                html += '<div class="video">' + weather.video + ', ' + weather.region + '</div>';
                 html += '<div class="currently">' + weather.currently + '</div>';
                 html += '<div class="celcious">' + weather.alt.temp + '&deg;C</div>';
 
@@ -68,7 +68,7 @@
 
 
     // init
-    loadWeather('New York City', '');
+    loadWeather('New York Video', '');
 
 })(jQuery);
 
@@ -85,7 +85,7 @@
             success: function (weather) {
 
                 html = '<i class="wi wi-yahoo-' + weather.code + '"></i><h2> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
-                html += '<div class="city">' + weather.city + ', ' + weather.region + '</div>';
+                html += '<div class="video">' + weather.video + ', ' + weather.region + '</div>';
                 html += '<div class="currently">' + weather.currently + '</div>';
                 html += '<div class="celcious">' + weather.alt.temp + '&deg;C</div>';
 
@@ -115,7 +115,7 @@
             success: function (weather) {
 
                 html = '<i class="wi wi-yahoo-' + weather.code + '"></i><h2> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
-                html += '<div class="city">' + weather.city + ', ' + weather.region + '</div>';
+                html += '<div class="video">' + weather.video + ', ' + weather.region + '</div>';
                 html += '<div class="currently">' + weather.currently + '</div>';
                 html += '<div class="celcious">' + weather.alt.temp + '&deg;C</div>';
 

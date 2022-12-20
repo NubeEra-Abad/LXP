@@ -43,7 +43,7 @@ body:after {
   bottom: 0;
   left: 0;
   right: 35%;
-  opacity: 0;
+  opavideo: 0;
   color: white;
   -webkit-animation: noise-1 .2s linear infinite;
           animation: noise-1 .2s linear infinite;
@@ -61,7 +61,7 @@ body:before {
   bottom: 0;
   left: 0;
   right: 35%;
-  opacity: 0;
+  opavideo: 0;
   color: white;
   -webkit-animation: noise-2 .2s linear infinite;
           animation: noise-2 .2s linear infinite;
@@ -93,7 +93,7 @@ body:before {
   bottom: 0;
   left: 40px;
   right: 100px;
-  opacity: 0;
+  opavideo: 0;
   color: white;
   -webkit-animation: noise-2 .2s linear infinite;
           animation: noise-2 .2s linear infinite;
@@ -111,66 +111,66 @@ body:before {
   bottom: 0;
   left: 40px;
   right: 0;
-  opacity: 0;
+  opavideo: 0;
   color: white;
   -webkit-animation: noise-1 .2s linear infinite;
           animation: noise-1 .2s linear infinite;
 }
 
 @-webkit-keyframes noise-1 {
-  0%, 20%, 40%, 60%, 70%, 90% {opacity: 0;}
-  10% {opacity: .1;}
-  50% {opacity: .5; left: -6px;}
-  80% {opacity: .3;}
-  100% {opacity: .6; left: 2px;}
+  0%, 20%, 40%, 60%, 70%, 90% {opavideo: 0;}
+  10% {opavideo: .1;}
+  50% {opavideo: .5; left: -6px;}
+  80% {opavideo: .3;}
+  100% {opavideo: .6; left: 2px;}
 }
 
 @keyframes noise-1 {
-  0%, 20%, 40%, 60%, 70%, 90% {opacity: 0;}
-  10% {opacity: .1;}
-  50% {opacity: .5; left: -6px;}
-  80% {opacity: .3;}
-  100% {opacity: .6; left: 2px;}
+  0%, 20%, 40%, 60%, 70%, 90% {opavideo: 0;}
+  10% {opavideo: .1;}
+  50% {opavideo: .5; left: -6px;}
+  80% {opavideo: .3;}
+  100% {opavideo: .6; left: 2px;}
 }
 
 @-webkit-keyframes noise-2 {
-  0%, 20%, 40%, 60%, 70%, 90% {opacity: 0;}
-  10% {opacity: .1;}
-  50% {opacity: .5; left: 6px;}
-  80% {opacity: .3;}
-  100% {opacity: .6; left: -2px;}
+  0%, 20%, 40%, 60%, 70%, 90% {opavideo: 0;}
+  10% {opavideo: .1;}
+  50% {opavideo: .5; left: 6px;}
+  80% {opavideo: .3;}
+  100% {opavideo: .6; left: -2px;}
 }
 
 @keyframes noise-2 {
-  0%, 20%, 40%, 60%, 70%, 90% {opacity: 0;}
-  10% {opacity: .1;}
-  50% {opacity: .5; left: 6px;}
-  80% {opacity: .3;}
-  100% {opacity: .6; left: -2px;}
+  0%, 20%, 40%, 60%, 70%, 90% {opavideo: 0;}
+  10% {opavideo: .1;}
+  50% {opavideo: .5; left: 6px;}
+  80% {opavideo: .3;}
+  100% {opavideo: .6; left: -2px;}
 }
 
 @-webkit-keyframes noise {
-  0%, 3%, 5%, 42%, 44%, 100% {opacity: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}  
-  4.3% {opacity: 1; -webkit-transform: scaleY(1.7); transform: scaleY(1.7);}
-  43% {opacity: 1; -webkit-transform: scaleX(1.5); transform: scaleX(1.5);}
+  0%, 3%, 5%, 42%, 44%, 100% {opavideo: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}  
+  4.3% {opavideo: 1; -webkit-transform: scaleY(1.7); transform: scaleY(1.7);}
+  43% {opavideo: 1; -webkit-transform: scaleX(1.5); transform: scaleX(1.5);}
 }
 
 @keyframes noise {
-  0%, 3%, 5%, 42%, 44%, 100% {opacity: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}  
-  4.3% {opacity: 1; -webkit-transform: scaleY(1.7); transform: scaleY(1.7);}
-  43% {opacity: 1; -webkit-transform: scaleX(1.5); transform: scaleX(1.5);}
+  0%, 3%, 5%, 42%, 44%, 100% {opavideo: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}  
+  4.3% {opavideo: 1; -webkit-transform: scaleY(1.7); transform: scaleY(1.7);}
+  43% {opavideo: 1; -webkit-transform: scaleX(1.5); transform: scaleX(1.5);}
 }
 
 @-webkit-keyframes noise-3 {
-  0%,3%,5%,42%,44%,100% {opacity: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}
-  4.3% {opacity: 1; -webkit-transform: scaleY(4); transform: scaleY(4);}
-  43% {opacity: 1; -webkit-transform: scaleX(10) rotate(60deg); transform: scaleX(10) rotate(60deg);}
+  0%,3%,5%,42%,44%,100% {opavideo: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}
+  4.3% {opavideo: 1; -webkit-transform: scaleY(4); transform: scaleY(4);}
+  43% {opavideo: 1; -webkit-transform: scaleX(10) rotate(60deg); transform: scaleX(10) rotate(60deg);}
 }
 
 @keyframes noise-3 {
-  0%,3%,5%,42%,44%,100% {opacity: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}
-  4.3% {opacity: 1; -webkit-transform: scaleY(4); transform: scaleY(4);}
-  43% {opacity: 1; -webkit-transform: scaleX(10) rotate(60deg); transform: scaleX(10) rotate(60deg);}
+  0%,3%,5%,42%,44%,100% {opavideo: 1; -webkit-transform: scaleY(1); transform: scaleY(1);}
+  4.3% {opavideo: 1; -webkit-transform: scaleY(4); transform: scaleY(4);}
+  43% {opavideo: 1; -webkit-transform: scaleX(10) rotate(60deg); transform: scaleX(10) rotate(60deg);}
 }
 
 .wrap {

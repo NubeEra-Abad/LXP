@@ -83,7 +83,7 @@ Googel Fonts  */
   background-color: #fff; }
 
 .fade-5 {
-  opacity: 0.5; }
+  opavideo: 0.5; }
 
 .icon-lg {
   font-size: 4.68em; }
@@ -204,7 +204,7 @@ Googel Fonts  */
   background-color: #fff; }
 
 .fade-5 {
-  opacity: 0.5; }
+  opavideo: 0.5; }
 
 .icon-lg {
   font-size: 4.68em; }
@@ -315,7 +315,7 @@ Googel Fonts  */
         color: rgba(153, 171, 180, 0.8); }
   .tdl-holder input[type="checkbox"] {
     cursor: pointer;
-    opacity: 0;
+    opavideo: 0;
     position: absolute; }
     .tdl-holder input[type="checkbox"] + i {
       border: 1px solid rgba(153, 171, 180, 0.3);
@@ -698,7 +698,7 @@ aside.left-panel {
           border-color: transparent #03a9f3 #03a9f3 transparent; }
         .navbar .navbar-nav li.menu-item-has-children.show .sub-menu {
           max-height: 1000px;
-          opacity: 1;
+          opavideo: 1;
           position: static !important; }
 
 .navbar .navbar-nav > .active > a,
@@ -811,7 +811,7 @@ aside.left-panel {
   .open aside.left-panel .navbar .navbar-nav .menu-title {
     font-size: 0;
     line-height: 0;
-    opacity: 0;
+    opavideo: 0;
     padding: 0; }
   .open aside.left-panel .menutoggle {
     background-color: #dc3545;
@@ -1242,12 +1242,12 @@ header .form-inline {
     position: relative;
     height: 80px;
     color: #333648; }
-    .card.weather-box .middle .city {
+    .card.weather-box .middle .video {
       padding-top: 15px;
       width: 100%;
       font-weight: 700;
       font-size: 16px; }
-      .card.weather-box .middle .city span {
+      .card.weather-box .middle .video span {
         font-size: 14px;
         display: block;
         font-weight: 400; }
@@ -1389,7 +1389,7 @@ header .form-inline {
   height: 75px; }
 
 .traffic-chart .ct-area {
-  fill-opacity: .7; }
+  fill-opavideo: .7; }
 
 .traffic-chart .ct-series-a .ct-area,
 .traffic-chart .ct-series-a .ct-slice-donut-solid,
@@ -2290,7 +2290,7 @@ footer.site-footer {
     aside.left-panel .navbar .navbar-nav .menu-title {
       font-size: 0;
       line-height: 0;
-      opacity: 0;
+      opavideo: 0;
       padding: 0; }
     aside.left-panel .menutoggle {
       display: none; }
@@ -2313,7 +2313,7 @@ footer.site-footer {
         padding-right: 30px;
         font-size: 14px;
         line-height: 50px;
-        opacity: 1; }
+        opavideo: 1; }
 
   .navbar .main-menu {
     padding: 0; }

@@ -1,9 +1,8 @@
-{% extends 'learner/learnerbase.html' %}
+{% extends 'trainer/trainerbase.html' %}
 {% block content %}
 {%load static%}
 
 <head>
-  
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
   <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
@@ -12,9 +11,9 @@
   <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
   <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
   <script src="/static/datatableconfig.js"></script>
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   <style media="screen">
-    canvas {
+     canvas {
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;
@@ -29,39 +28,47 @@
     a:link {
       text-decoration: none;
     }
+
     h6 {
       text-align: center;
     }
+
     .row {
       margin: 100px;
     }
-
     table.dataTable tr.odd { background-color: #E2E4FF; }
     table.dataTable tr.even { background-color: white; }
   </style>
 </head>
-<ol class="breadcrumb text-right">
-  <li><a href="learner-dashboard">Dashboard</a></li>
-  <li class="active">Exams</li>
-</ol>
+<BR><BR>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Exams</h6>
+      <h6 class="panel-title">Videos for Subject : {{xyzz}}</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-          <th>Exam Name</th>
-          <th>Take Exam</th>
-          <th>Results</th>
+          <th>Topic Name</th>
+          <th>Show</th>
+          <th>Material</th>
+          <th>Watched</th>
         </tr>
       </thead>
-      {% for t in exams %}
+      {% for t in videos %}
       <tr>
-        <td> {{t.exam_name}}</td>
-        <td><a class="btn btn-success" href="{% url 'learner-take-exam' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-up"></span></a></td>
-        <td><a class="btn btn-primary" href="{% url 'learner-show-exam-reuslt' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td> {{t.TopicName}}</td>
+        {% if forloop.counter == 1 or t.TopicCovered == t.d or t.c == 'unlock' %}
+            <td><a class="btn btn-success" href="{% url 'show-video' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        {% else %}
+            <td><a class="btn btn-danger" ><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        {% endif %}
+        {% if t.cc > 0 %}
+        <td><a class="btn btn-success" href="{% url 'trainer-view-material' t.TopicName   %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        {% else %}
+        <td><a class="btn btn-danger" ><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        {% endif %}
+        <td> {{t.yn}}</td>
       </tr>
       {% endfor %}
     </table>

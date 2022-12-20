@@ -60,20 +60,20 @@ $(document).ready(function(){
     rectangle = map.drawRectangle({
         bounds: bounds,
         strokeColor: '#BBD8E9',
-        strokeOpacity: 1,
+        strokeOpavideo: 1,
         strokeWeight: 3,
         fillColor: '#BBD8E9',
-        fillOpacity: 0.6
+        fillOpavideo: 0.6
     });
 
     var paths = [[-12.040397656836609,-77.03373871559225],[-12.040248585302038,-77.03993927003302],[-12.050047116528843,-77.02448169303511],[-12.044804866577001,-77.02154422636042]];
     polygon = map.drawPolygon({
         paths: paths,
         strokeColor: '#25D359',
-        strokeOpacity: 1,
+        strokeOpavideo: 1,
         strokeWeight: 3,
         fillColor: '#25D359',
-        fillOpacity: 0.6
+        fillOpavideo: 0.6
     });
     var lat = -12.040504866577001;
     var lng = -77.02024422636042;
@@ -82,10 +82,10 @@ $(document).ready(function(){
         lng: lng,
         radius: 350,
         strokeColor: '#432070',
-        strokeOpacity: 1,
+        strokeOpavideo: 1,
         strokeWeight: 3,
         fillColor: '#432070',
-        fillOpacity: 0.6
+        fillOpavideo: 0.6
     });
     for(var i in paths){
         bounds.push(paths[i]);
