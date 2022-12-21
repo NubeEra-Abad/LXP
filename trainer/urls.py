@@ -39,4 +39,15 @@ urlpatterns = [
     path('trainer-learner-video-course-subject/<int:course_id>', views.trainer_learner_video_Course_subject_view,name='trainer-learner-video-course-subject'),
     path('trainer-learner-video-list/<int:subject_id>,/<int:course_id>', views.trainer_learner_video_list_view,name='trainer-learner-video-list'),
     path('trainer-learner-show-video/<int:subject_id>,/<int:course_id>,/<int:video_id>', views.trainer_learner_show_video_view,name='trainer-learner-show-video'),
+
+    path('trainer-material', views.trainer_material_view,name='trainer-material'),
+    path('trainer-add-material', views.trainer_add_material_view,name='trainer-add-material'),
+    path('trainer-update-material/<int:pk>', views.trainer_update_material_view,name='trainer-update-material'),
+    path('trainer-view-material', views.trainer_view_material_view,name='trainer-view-material'),
+    path('trainer-delete-material/<int:pk>', views.trainer_delete_material_view,name='trainer-delete-material'),
+    path('trainer-show-material/<subjectname>,/<chaptername>,/<materialtype>,/<int:pk>', views.trainer_show_material_view,name='trainer-show-material'),
+    path('trainer-view-material-chapters', views.trainer_material_chapters_view,name='trainer-view-material-chapters'),
+
+    path('trainer-upload-file', views.trainer_upload_file_view,name='trainer-upload-file'),
+    path('trainer-start-upload-file', views.trainer_start_upload_file_view,name='trainer-start-upload-file'),
 ]

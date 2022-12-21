@@ -749,3 +749,29 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
 @login_required
 def get_message_from_httperror(e):
     return e.error_details[0]['message']
+
+
+def courses(request):
+    if request.method=='POST':
+        course = request.POST.getlist('course')
+        modules = request.POST.getlist('modules')
+        for x in course:
+            course = x
+        for x in modules:
+            modules = x
+        print(course)
+        print(modules)
+    courses = iLMSModel.Playlist.objects.all()
+    context = {'courses': courses}
+    return render(request, 'cto/university.html', context)
+
+@login_required
+def modules(request):
+    course = request.GET.get('course')
+    modules = iLMSModel.Video.objects.all().filter(id__in = iLMSModel.PlaylistItem.objects.all().filter( playlist_id=course))
+    context = {'modules': modules}
+    return render(request, 'cto/modules.html', context)
+
+
+
+

@@ -1,0 +1,7 @@
+<label for="chapters">Chapter Name</label>
+<select name="chapters" class="custom-select">
+    <option selected>Choose your Chapter</option>
+    {% for chapter in chapters %}
+        <option value="{{chapter.pk}}">{{ chapter.name }}</option>
+    {% endfor %}
+</select>

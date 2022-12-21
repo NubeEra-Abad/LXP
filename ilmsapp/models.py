@@ -436,3 +436,10 @@ class WaringMail(models.Model):
     watchedperc = models.DecimalField(max_digits=5, decimal_places=2)
     pending = models.IntegerField(default=0)
     datetimestamp = models.DateTimeField()
+
+class Material(models.Model):
+    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
+    chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
+    mtype=models.PositiveIntegerField(default=0)
+    urlvalue=models.TextField()
+    description=models.TextField()

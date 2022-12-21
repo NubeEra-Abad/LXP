@@ -36,6 +36,7 @@ def trainer_dashboard_view(request):
     except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_exam_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -43,6 +44,8 @@ def trainer_exam_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+
+@login_required
 def trainer_add_exam_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -66,6 +69,7 @@ def trainer_add_exam_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_update_exam_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -86,6 +90,7 @@ def trainer_update_exam_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_view_exam_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -94,6 +99,7 @@ def trainer_view_exam_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_delete_exam_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':  
@@ -105,6 +111,7 @@ def trainer_delete_exam_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
  
+@login_required
 def trainer_mcqquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -112,6 +119,7 @@ def trainer_mcqquestion_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_add_mcqquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -135,6 +143,7 @@ def trainer_add_mcqquestion_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_update_mcqquestion_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -155,6 +164,7 @@ def trainer_update_mcqquestion_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_view_mcqquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -163,6 +173,7 @@ def trainer_view_mcqquestion_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_delete_mcqquestion_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':  
@@ -174,6 +185,7 @@ def trainer_delete_mcqquestion_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_shortquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -181,6 +193,7 @@ def trainer_shortquestion_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_add_shortquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -204,6 +217,7 @@ def trainer_add_shortquestion_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_update_shortquestion_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -226,6 +240,7 @@ def trainer_update_shortquestion_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_view_shortquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -234,6 +249,7 @@ def trainer_view_shortquestion_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_delete_shortquestion_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':  
@@ -245,6 +261,7 @@ def trainer_delete_shortquestion_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_pending_short_exam_result_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -253,6 +270,7 @@ def trainer_pending_short_exam_result_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_update_short_question_result_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -261,6 +279,7 @@ def trainer_update_short_question_result_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_save_short_question_result_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -392,6 +411,7 @@ def Import_excel(request):
             iLMSModel.McqQuestionResource.import_data(dataset,dry_run=False)        
     return render(request, 'Import_excel_db.html',{})
 
+@login_required
 def trainer_view_learner_video_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
@@ -401,6 +421,7 @@ def trainer_view_learner_video_view(request):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_learner_video_Course_view(request,user_id,userfirstname,userlastname):
 #    try:    
         if str(request.session['utype']) == 'trainer':
@@ -409,6 +430,7 @@ def trainer_learner_video_Course_view(request,user_id,userfirstname,userlastname
  #   except:
         return render(request,'ilmsapp/404page.html')
 
+@login_required
 def trainer_learner_video_Course_subject_view(request,course_id):
 #    try:    
         if str(request.session['utype']) == 'trainer':
@@ -433,6 +455,7 @@ def trainer_learner_video_Course_subject_view(request,course_id):
  #   except:
         return render(request,'ilmsapp/404page.html')
  
+@login_required
 def trainer_learner_video_list_view(request,subject_id,course_id):
     try:     
         if str(request.session['utype']) == 'trainer':
@@ -442,7 +465,8 @@ def trainer_learner_video_list_view(request,subject_id,course_id):
             return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
     except:
         return render(request,'ilmsapp/404page.html')
-
+ 
+@login_required
 def trainer_learner_show_video_view(request,subject_id,course_id,video_id):
     #try:    
         if str(request.session['utype']) == 'trainer':
@@ -457,3 +481,209 @@ def trainer_learner_show_video_view(request,subject_id,course_id,video_id):
             return render(request,'trainer/learnervideo/trainer_learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
     #except:
         return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_material_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            return render(request,'trainer/material/trainer_material.html')
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_material_chapters_view(request):
+    subject = request.GET.get('subject')
+    chapters = iLMSModel.Video.objects.all().filter(id__in = iLMSModel.PlaylistItem.objects.all().filter( playlist_id=subject))
+    context = {'chapters': chapters}
+    return render(request, 'trainer/material/trainer_material_chapters.html', context)
+
+@login_required
+def trainer_add_material_view(request):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            if request.method=='POST':
+                subject = request.POST.getlist('subject')
+                chapter = request.POST.getlist('chapters')
+                mtype = request.POST.getlist('mtype')
+                urlvalue = request.POST.get('urlvalue')
+                description = request.POST.get('description')
+                for x in subject:
+                    subject = x
+                for x in chapter:
+                    chapter = x
+                for x in mtype:
+                    mtype = x
+                if subject == 'Choose your Subject':
+                    messages.info(request, 'Please Select Subject')
+                if chapter == 'Choose your Chapter':
+                    messages.info(request, 'Please Select Chapter')
+                if mtype == 'Choose your Type':
+                    messages.info(request, 'Please Select Material Type')
+                if urlvalue == '':
+                    messages.info(request, 'Please Enter Details')
+                if description is None:
+                    messages.info(request, 'Please Enter Description')
+ 
+                if description is not None and subject !='Choose your Subject' and  chapter !='Choose your Chapter' and mtype !='Choose your Type' and urlvalue !='':
+                    material = iLMSModel.Material.objects.create(
+                        subject_id = subject,
+                        chapter_id = chapter,
+                        mtype = mtype,
+                        urlvalue=urlvalue,
+                        description=description
+                    ).save()
+
+            subjects = iLMSModel.Playlist.objects.all()
+            context = {'subjects': subjects}
+            return render(request,'trainer/material/trainer_add_material.html',context)
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_update_material_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            material = iLMSModel.Video.objects.get(id=pk)
+            materialForm=ILMSFORM.MaterialForm(request.POST,instance=material)
+            if request.method=='POST':
+                if materialForm.is_valid(): 
+                    materialtext = materialForm.cleaned_data["name"]
+                    subjecttext = materialForm.cleaned_data["subjectID"]
+                    
+                    material = iLMSModel.Video.objects.all().filter(name__iexact = materialtext).exclude(id=pk)
+                    if material:
+                        messages.info(request, 'Material Name Already Exist')
+                        return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm})
+                    else:
+                        subject = iLMSModel.Playlist.objects.get(name=subjecttext)
+                        
+                        material = iLMSModel.Video.objects.get(id=pk)
+                        oldsubject =iLMSModel.PlaylistItem.objects.get(video_id=pk)
+                        material.name = materialtext
+                        material.save()
+                        PLItems = iLMSModel.PlaylistItem.objects.get(video_id=pk,playlist_id = oldsubject.playlist_id)
+                        PLItems.playlist_id =subject.id
+                        PLItems.save()
+                        c_list = iLMSModel.Video.objects.raw('SELECT   ilmsapp_video.id,  ilmsapp_video.name,  ilmsapp_video.video_id,  ilmsapp_playlist.name AS plname FROM  ilmsapp_playlistitem  INNER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id)  INNER JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)')
+                        return render(request,'trainer/material/trainer_view_material.html',{'materials':c_list})
+            return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm,'sub':material.name})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_view_material_view(request):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            c_list = iLMSModel.Video.objects.raw('SELECT   ilmsapp_video.id,  ilmsapp_video.name,  ilmsapp_video.video_id,  ilmsapp_playlist.name AS plname FROM  ilmsapp_playlistitem  INNER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id)  INNER JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)')
+            materials = iLMSModel.Material.objects.all().filter(subject_id__in=iLMSModel.Playlist.objects.all())
+            return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_delete_material_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            material=iLMSModel.Material.objects.get(id=pk)
+            material.delete()
+            materials = iLMSModel.Material.objects.all().filter(subject_id__in=iLMSModel.Playlist.objects.all())
+            return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_show_material_view(request,subjectname,chaptername,materialtype,pk):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            details= iLMSModel.Material.objects.all().filter(id=pk)
+            if materialtype == '1':
+                return render(request,'trainer/material/trainer_material_htmlshow.html',{'details':details})
+            if materialtype == '2':
+                return render(request,'trainer/material/trainer_material_urlshow.html',{'details':details})
+            if materialtype == '3':
+                return render(request,'trainer/material/trainer_material_pdfshow.html',{'details':details})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
+@login_required
+def trainer_upload_file_view(request):
+    subjects = iLMSModel.Playlist.objects.all()
+    context = {'subjects': subjects}
+    return render(request,'trainer/uploadpdf/trainer_upload_file.html',context)
+
+from django.conf import settings
+from datetime import datetime
+import boto3, botocore
+ALLOWED_EXTENSIONS = set(['txt', 'zip', 'markdown', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+def allowed_file(name):
+    return "." in name and name.split(".")[1].lower() in ALLOWED_EXTENSIONS
+# Connect to the s3 service
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=settings.AWS_ACCESS_KEY,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+)
+#upload file to s3 w/ acl as public
+
+@login_required  
+def upload_file_to_s3(request,file, bucket_name, acl="public-read"):
+    try:
+        filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
+        print("intered in function")
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+    except Exception as e:
+        print("Something Unexpected Happened: ", e)
+        return e
+    # returns the webling to file upload to view
+    url=settings.AWS_DOMAIN + '' + filename
+    subject = request.POST.getlist('subject')
+    chapter = request.POST.getlist('chapters')
+    mtype = '3'
+    description = 'file uploaded'
+    for x in subject:
+        subject = x
+    for x in chapter:
+        chapter = x
+    for x in mtype:
+        mtype = x
+    if subject == 'Choose your Subject':
+        messages.info(request, 'Please Select Subject')
+    if chapter == 'Choose your Chapter':
+        messages.info(request, 'Please Select Chapter')
+    if mtype == 'Choose your Type':
+        messages.info(request, 'Please Select Material Type')
+    if description is None:
+        messages.info(request, 'Please Enter Description')
+
+    if description is not None and subject !='Choose your Subject' and  chapter !='Choose your Chapter' and mtype !='Choose your Type' :
+        material = iLMSModel.Material.objects.create(
+            subject_id = subject,
+            chapter_id = chapter,
+            mtype = mtype,
+            urlvalue=url,
+            description=description
+        ).save()
+    
+    subjects = iLMSModel.Playlist.objects.all()
+    context = {'subjects': subjects}
+    return render(request,'trainer/uploadpdf/trainer_upload_file.html',context)
+
+@login_required
+def trainer_start_upload_file_view(request):
+    if request.method=="POST":
+        file=request.FILES["select_file"]
+        if file == "":
+            return "Please return to previous page and select a file"
+        if file:
+            output = upload_file_to_s3(request, file, settings.AWS_BUCKET_NAME)
+            return output
+        else:
+            return redirect("/")
