@@ -96,7 +96,6 @@ def cto_add_subject_view(request):
                         plobj.is_in_db = False
                         plobj.has_playlist_changed = False
                         plobj.has_new_updates = False
-                        plobj.untube_user = request.user
                         plobj.save()
                 else:
                     print("form is invalid")
@@ -197,7 +196,6 @@ def cto_add_chapter_view(request):
                             user_label = '',
                             user_notes = '',
                             video_details_modified = False,
-                            untube_user_id = request.user.id
                             )
                         chapter.save()
                         PLItems = iLMSModel.PlaylistItem.objects.create(

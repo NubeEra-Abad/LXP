@@ -172,7 +172,6 @@ class PlaylistManager(models.Manager):
                     video_count=item['contentDetails']['itemCount'],
                     is_private_on_yt=True if item['status']['privacyStatus'] == 'private' else False,
                     playlist_yt_player_HTML=item['player']['embedHtml'],
-                    untube_user=None,
                     is_user_owned=True if item['snippet']['channelId'] == item['snippet']['channelId'] else False,
                     is_yt_mix=True if ("My Mix" in item['snippet']['title'] or "Mix -" in item['snippet']['title']) and
                                       item['snippet']['channelId'] == "UCBR8-60-B28hp2BmDPdntcQ" else False
@@ -217,7 +216,6 @@ class PlaylistManager(models.Manager):
                             name=item['snippet']['title'],
                             description=item['snippet']['description'],
                             is_unavailable_on_yt=True,
-                            untube_user=None
                         )
                         video.save()
                     else:
@@ -231,7 +229,6 @@ class PlaylistManager(models.Manager):
                             thumbnail_url=getThumbnailURL(item['snippet']['thumbnails']),
                             channel_id=item['snippet']['videoOwnerChannelId'],
                             channel_name=item['snippet']['videoOwnerChannelTitle'],
-                            untube_user=None
                         )
                         video.save()
 
@@ -315,7 +312,6 @@ class PlaylistManager(models.Manager):
                                     name=item['snippet']['title'],
                                     description=item['snippet']['description'],
                                     is_unavailable_on_yt=True,
-                                    untube_user=None
                                 )
                                 video.save()
                             else:
@@ -329,7 +325,6 @@ class PlaylistManager(models.Manager):
                                     thumbnail_url=getThumbnailURL(item['snippet']['thumbnails']),
                                     channel_id=item['snippet']['videoOwnerChannelId'],
                                     channel_name=item['snippet']['videoOwnerChannelTitle'],
-                                    untube_user=None
                                 )
                                 video.save()
 
@@ -650,7 +645,6 @@ class PlaylistManager(models.Manager):
                                 name=item['snippet']['title'],
                                 description=item['snippet']['description'],
                                 is_unavailable_on_yt=True,
-                                untube_user=None
                             )
                             video.save()
                         else:
@@ -664,7 +658,6 @@ class PlaylistManager(models.Manager):
                                 thumbnail_url=getThumbnailURL(item['snippet']['thumbnails']),
                                 channel_id=item['snippet']['videoOwnerChannelId'],
                                 channel_name=item['snippet']['videoOwnerChannelTitle'],
-                                untube_user=None
                             )
                             video.save()
 
@@ -751,7 +744,6 @@ class PlaylistManager(models.Manager):
                                         name=item['snippet']['title'],
                                         description=item['snippet']['description'],
                                         is_unavailable_on_yt=True,
-                                        untube_user=None
                                     )
                                     video.save()
                                 else:
@@ -765,7 +757,6 @@ class PlaylistManager(models.Manager):
                                         thumbnail_url=getThumbnailURL(item['snippet']['thumbnails']),
                                         channel_id=item['snippet']['videoOwnerChannelId'],
                                         channel_name=item['snippet']['videoOwnerChannelTitle'],
-                                        untube_user=None
                                     )
                                     video.save()
 

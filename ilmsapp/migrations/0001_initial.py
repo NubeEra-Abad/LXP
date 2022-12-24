@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-
+from social_django.models import UserSocialAuth
 
 class Migration(migrations.Migration):
 
