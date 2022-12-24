@@ -6,7 +6,7 @@ import datetime
 from django.db.models import Q, Sum
 import requests
 import humanize
-
+from django.db import models
 
 ###################################
 def getHumanizedTimeString(seconds):
@@ -34,8 +34,6 @@ class Tag(models.Model):
     last_views_reset = models.DateTimeField(default=datetime.datetime.now)
 
 class Video(models.Model):
-    untube_user = models.ForeignKey(User, related_name="videos", on_delete=models.CASCADE, null=True)
-
     # video details
     video_id = models.CharField(max_length=100)
     name = models.CharField(max_length=100, blank=True)
@@ -93,8 +91,6 @@ class Video(models.Model):
 
 class Playlist(models.Model):
     tags = models.ManyToManyField(Tag, related_name="playlists")
-    untube_user = models.ForeignKey(User, related_name="playlists", on_delete=models.CASCADE, null=True)
-
     # playlist is made by this channel
     channel_id = models.TextField(blank=True)
     channel_name = models.TextField(blank=True)
@@ -272,8 +268,6 @@ class PlaylistItem(models.Model):
    
 
 class Pin(models.Model):
-    untube_user = models.ForeignKey(User, related_name="pins",
-                                    on_delete=models.CASCADE, null=True)  # untube user this pin is linked to
     kind = models.CharField(max_length=100)  # "playlist", "video"
     playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, null=True)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True)
