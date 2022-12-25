@@ -12,10 +12,10 @@ from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
 from time import gmtime, strftime
 from . import models
-from ilmsapp import models as iLMSModel
+from lxpapp import models as LXPModel
 from youtubemanager import PlaylistManager
 from cto import models as CTOModel
-from ilmsapp import forms as ILMSFORM
+from lxpapp import forms as ILMSFORM
 from django.db.models import Sum
 from django.db import transaction
 from django.contrib.auth.models import Group
@@ -46,7 +46,7 @@ def cto_dashboard_view(request):
             }
         return render(request,'cto/cto_dashboard.html',context=dict)
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_subject_view(request):
@@ -54,7 +54,7 @@ def cto_subject_view(request):
         if str(request.session['utype']) == 'cto':
             return render(request,'cto/subject/cto_subject.html')
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_add_subject_view(request):
@@ -64,13 +64,13 @@ def cto_add_subject_view(request):
                 subjectForm=ILMSFORM.SubjectForm(request.POST)
                 if subjectForm.is_valid(): 
                     subjecttext = subjectForm.cleaned_data["name"]
-                    subject = iLMSModel.Playlist.objects.all().filter(name__iexact = subjecttext)
+                    subject = LXPModel.Playlist.objects.all().filter(name__iexact = subjecttext)
                     if subject:
                         messages.info(request, 'Subject Name Already Exist')
                         subjectForm=ILMSFORM.SubjectForm()
                         return render(request,'cto/subject/cto_add_subject.html',{'subjectForm':subjectForm})                  
                     else:
-                        plobj = iLMSModel.Playlist.objects.create(name =subjecttext)
+                        plobj = LXPModel.Playlist.objects.create(name =subjecttext)
                         plobj.channel_id = ''
                         plobj.channel_name = ''
                         plobj.is_yt_mix = False
@@ -102,49 +102,49 @@ def cto_add_subject_view(request):
             subjectForm=ILMSFORM.SubjectForm()
             return render(request,'cto/subject/cto_add_subject.html',{'subjectForm':subjectForm})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_subject_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            subject = iLMSModel.Playlist.objects.get(id=pk)
+            subject = LXPModel.Playlist.objects.get(id=pk)
             subjectForm=ILMSFORM.SubjectForm(request.POST,instance=subject)
             if request.method=='POST':
                 if subjectForm.is_valid(): 
                     subjecttext = subjectForm.cleaned_data["name"]
-                    subject = iLMSModel.Playlist.objects.all().filter(name__iexact = subjecttext).exclude(id=pk)
+                    subject = LXPModel.Playlist.objects.all().filter(name__iexact = subjecttext).exclude(id=pk)
                     if subject:
                         messages.info(request, 'Subject Name Already Exist')
                         return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm})
                     else:
                         subjectForm.save()
-                        subjects = iLMSModel.Playlist.objects.all()
+                        subjects = LXPModel.Playlist.objects.all()
                         return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
             return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm,'sub':subject.name,'pl':subject.playlist_id})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_subject_view(request):
     try:
         if str(request.session['utype']) == 'cto':
-            subjects = iLMSModel.Playlist.objects.all()
+            subjects = LXPModel.Playlist.objects.all()
             return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_subject_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':  
-            subject=iLMSModel.Playlist.objects.get(id=pk)
+            subject=LXPModel.Playlist.objects.get(id=pk)
             subject.delete()
             return HttpResponseRedirect('/cto/subject/cto-view-subject')
-        subjects = iLMSModel.Playlist.objects.all().filter(playlist_id = '')
+        subjects = LXPModel.Playlist.objects.all().filter(playlist_id = '')
         return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_chapter_view(request):
@@ -152,7 +152,7 @@ def cto_chapter_view(request):
         if str(request.session['utype']) == 'cto':
             return render(request,'cto/chapter/cto_chapter.html')
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_add_chapter_view(request):
@@ -162,14 +162,14 @@ def cto_add_chapter_view(request):
                 chapterForm=ILMSFORM.ChapterForm(request.POST)
                 if chapterForm.is_valid(): 
                     chaptertext = chapterForm.cleaned_data["name"]
-                    chapter = iLMSModel.Video.objects.all().filter(name__iexact = chaptertext)
+                    chapter = LXPModel.Video.objects.all().filter(name__iexact = chaptertext)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
                         chapterForm=ILMSFORM.ChapterForm()
                         return render(request,'cto/chapter/cto_add_chapter.html',{'chapterForm':chapterForm})                  
                     else:
-                        subject=iLMSModel.Playlist.objects.get(id=request.POST.get('subjectID'))
-                        chapter = iLMSModel.Video.objects.create(
+                        subject=LXPModel.Playlist.objects.get(id=request.POST.get('subjectID'))
+                        chapter = LXPModel.Video.objects.create(
                             video_id = '',
                             name = chaptertext,
                             duration = '',
@@ -198,7 +198,7 @@ def cto_add_chapter_view(request):
                             video_details_modified = False,
                             )
                         chapter.save()
-                        PLItems = iLMSModel.PlaylistItem.objects.create(
+                        PLItems = LXPModel.PlaylistItem.objects.create(
                             playlist_item_id = '',
                             video_position = 0,
                             published_at = datetime.now(),
@@ -216,61 +216,61 @@ def cto_add_chapter_view(request):
             chapterForm=ILMSFORM.ChapterForm()
             return render(request,'cto/chapter/cto_add_chapter.html',{'chapterForm':chapterForm})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_chapter_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            chapter = iLMSModel.Video.objects.get(id=pk)
+            chapter = LXPModel.Video.objects.get(id=pk)
             chapterForm=ILMSFORM.ChapterForm(request.POST,instance=chapter)
             if request.method=='POST':
                 if chapterForm.is_valid(): 
                     chaptertext = chapterForm.cleaned_data["name"]
                     subjecttext = chapterForm.cleaned_data["subjectID"]
                     
-                    chapter = iLMSModel.Video.objects.all().filter(name__iexact = chaptertext).exclude(id=pk)
+                    chapter = LXPModel.Video.objects.all().filter(name__iexact = chaptertext).exclude(id=pk)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
                         return render(request,'cto/chapter/cto_update_chapter.html',{'chapterForm':chapterForm})
                     else:
-                        subject = iLMSModel.Playlist.objects.get(name=subjecttext)
+                        subject = LXPModel.Playlist.objects.get(name=subjecttext)
                         
-                        chapter = iLMSModel.Video.objects.get(id=pk)
-                        oldsubject =iLMSModel.PlaylistItem.objects.get(video_id=pk)
+                        chapter = LXPModel.Video.objects.get(id=pk)
+                        oldsubject =LXPModel.PlaylistItem.objects.get(video_id=pk)
                         chapter.name = chaptertext
                         chapter.save()
-                        PLItems = iLMSModel.PlaylistItem.objects.get(video_id=pk,playlist_id = oldsubject.playlist_id)
+                        PLItems = LXPModel.PlaylistItem.objects.get(video_id=pk,playlist_id = oldsubject.playlist_id)
                         PLItems.playlist_id =subject.id
                         PLItems.save()
-                        c_list = iLMSModel.Video.objects.raw('SELECT   ilmsapp_video.id,  ilmsapp_video.name,  ilmsapp_video.video_id,  ilmsapp_playlist.name AS plname FROM  ilmsapp_playlistitem  INNER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id)  INNER JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)')
+                        c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
                         return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':c_list})
             return render(request,'cto/chapter/cto_update_chapter.html',{'chapterForm':chapterForm,'sub':chapter.name})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_chapter_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.Video.objects.raw('SELECT   ilmsapp_video.id,  ilmsapp_video.name,  ilmsapp_video.video_id,  ilmsapp_playlist.name AS plname FROM  ilmsapp_playlistitem  INNER JOIN ilmsapp_video ON (ilmsapp_playlistitem.video_id = ilmsapp_video.id)  INNER JOIN ilmsapp_playlist ON (ilmsapp_playlistitem.playlist_id = ilmsapp_playlist.id)')
+            c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
             return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':c_list})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_chapter_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':  
-            chapter=iLMSModel.Video.objects.get(id=pk)
+            chapter=LXPModel.Video.objects.get(id=pk)
             chapter.delete()
-            PLItem = iLMSModel.PlaylistItem.objects.get(video_id = pk)
+            PLItem = LXPModel.PlaylistItem.objects.get(video_id = pk)
             PLItem.delete()
             return HttpResponseRedirect('/cto/chapter/cto-view-chapter')
-        chapters = iLMSModel.Video.objects.all()
+        chapters = LXPModel.Video.objects.all()
         return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':chapters})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_topic_view(request):
@@ -278,7 +278,7 @@ def cto_topic_view(request):
         if str(request.session['utype']) == 'cto':
             return render(request,'cto/topic/cto_topic.html')
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_add_topic_view(request):
@@ -288,73 +288,73 @@ def cto_add_topic_view(request):
                 topicForm=ILMSFORM.TopicForm(request.POST)
                 if topicForm.is_valid(): 
                     topictext = topicForm.cleaned_data["topic_name"]
-                    topic = iLMSModel.Topic.objects.all().filter(topic_name__iexact = topictext)
+                    topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = topictext)
                     if topic:
                         messages.info(request, 'Topic Name Already Exist')
                         topicForm=ILMSFORM.TopicForm()
                         return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})                  
                     else:
 
-                        chapter=iLMSModel.Video.objects.get(id=request.POST.get('chapterID'))
-                        subject=iLMSModel.Playlist.objects.get(id=request.POST.get('subjectID'))
-                        topic = iLMSModel.Topic.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_name = topictext)
+                        chapter=LXPModel.Video.objects.get(id=request.POST.get('chapterID'))
+                        subject=LXPModel.Playlist.objects.get(id=request.POST.get('subjectID'))
+                        topic = LXPModel.Topic.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_name = topictext)
                         topic.save()
                 else:
                     print("form is invalid")
             topicForm=ILMSFORM.TopicForm()
             return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_topic_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            topic = iLMSModel.Topic.objects.get(id=pk)
+            topic = LXPModel.Topic.objects.get(id=pk)
             topicForm=ILMSFORM.TopicForm(request.POST,instance=topic)
             if request.method=='POST':
                 if topicForm.is_valid(): 
                     topictext = topicForm.cleaned_data["topic_name"]
                     chaptertext = topicForm.cleaned_data["chapterID"]
                     subjecttext = topicForm.cleaned_data["subjectID"]
-                    topic = iLMSModel.Topic.objects.all().filter(topic_name__iexact = topictext).exclude(id=pk)
+                    topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = topictext).exclude(id=pk)
                     if topic:
                         messages.info(request, 'Topic Name Already Exist')
                         return render(request,'cto/topic/cto_update_topic.html',{'topicForm':topicForm})
                     else:
-                        chapter = iLMSModel.Video.objects.get(chapter_name=chaptertext)
-                        subject = iLMSModel.Playlist.objects.get(subject_name=subjecttext)
-                        topic = iLMSModel.Topic.objects.get(id=pk)
+                        chapter = LXPModel.Video.objects.get(chapter_name=chaptertext)
+                        subject = LXPModel.Playlist.objects.get(subject_name=subjecttext)
+                        topic = LXPModel.Topic.objects.get(id=pk)
                         topic.topic_name = topictext
                         topic.subject_id = subject.id
                         topic.chapter_id = chapter.id
                         topic.save()
-                        c_list = iLMSModel.Topic.objects.filter(chapter_id__in=iLMSModel.Video.objects.all())
+                        c_list = LXPModel.Topic.objects.filter(chapter_id__in=LXPModel.Video.objects.all())
                         return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
             return render(request,'cto/topic/cto_update_topic.html',{'topicForm':topicForm,'sub':topic.topic_name})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_topic_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.Topic.objects.filter(chapter_id__in=iLMSModel.Video.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all())
+            c_list = LXPModel.Topic.objects.filter(chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all())
             return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_topic_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':  
-            topic=iLMSModel.Topic.objects.get(id=pk)
+            topic=LXPModel.Topic.objects.get(id=pk)
             topic.delete()
             return HttpResponseRedirect('/cto/topic/cto-view-topic')
-        topics = iLMSModel.Topic.objects.all()
+        topics = LXPModel.Topic.objects.all()
         return render(request,'cto/topic/cto_view_topic.html',{'topics':topics})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 
 def cto_course_view(request):
@@ -362,7 +362,7 @@ def cto_course_view(request):
         if str(request.session['utype']) == 'cto':
             return render(request,'cto/course/cto_course.html')
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def cto_add_course_view(request):
     #try:
@@ -373,11 +373,11 @@ def cto_add_course_view(request):
                 courseForm=ILMSFORM.CourseForm(request.POST)
                 if courseForm.is_valid() : 
                     coursetext = courseForm.cleaned_data["course_name"]
-                    course = iLMSModel.Course.objects.all().filter(course_name__iexact = coursetext)
+                    course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
                     if course:
                         messages.info(request, 'Course Name Already Exist')
                         courseForm=ILMSFORM.CourseForm()
-                        det_formset = ILMSFORM.CourseDetFormSet(queryset=iLMSModel.CourseDetails.objects.none())
+                        det_formset = ILMSFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
                         return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
                     else:
                         course = courseForm.save(commit=False)
@@ -391,51 +391,51 @@ def cto_add_course_view(request):
                             topic = None
                             refid = form.data['form-'+str(counter)+'-subject']
                             if refid:
-                                subject=iLMSModel.Playlist.objects.get(id=refid)
+                                subject=LXPModel.Playlist.objects.get(id=refid)
                             refid = form.data['form-'+str(counter)+'-chapter']
                             
                             if refid:
-                                chapter=iLMSModel.Video.objects.get(id=refid)
+                                chapter=LXPModel.Video.objects.get(id=refid)
                             refid = form.data['form-'+str(counter)+'-topic']
                             if refid:
-                                topic=iLMSModel.Topic.objects.get(id=refid)
+                                topic=LXPModel.Topic.objects.get(id=refid)
                             if subject and chapter and topic :
-                                coursedetails = iLMSModel.CourseDetails.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_id = topic.id,course_id =course.id )
+                                coursedetails = LXPModel.CourseDetails.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_id = topic.id,course_id =course.id )
                                 coursedetails.save()
                         messages.info(request, 'Course saved')
                 else:
                     print("form is invalid")
             courseForm=ILMSFORM.CourseForm()
-            det_formset = ILMSFORM.CourseDetFormSet(queryset=iLMSModel.CourseDetails.objects.none())
+            det_formset = ILMSFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
             return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def cto_view_course_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.Course.objects.all()
+            c_list = LXPModel.Course.objects.all()
             return render(request,'cto/course/cto_view_course.html',{'courses':c_list})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def cto_view_course_details_view(request,cname):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = iLMSModel.CourseDetails.objects.filter(course_id__in=iLMSModel.Course.objects.all().filter(course_name=cname),chapter_id__in=iLMSModel.Video.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all(),topic_id__in=iLMSModel.Topic.objects.all())
+            c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all())
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def cto_delete_course_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':  
-            course=iLMSModel.Course.objects.get(id=pk)
+            course=LXPModel.Course.objects.get(id=pk)
             course.delete()
-            c_list = iLMSModel.Course.objects.all()
+            c_list = LXPModel.Course.objects.all()
             return render(request,'cto/course/cto_view_course.html',{'courses':c_list})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def cto_add_course_by_playlist_view(request):
     #try:
@@ -445,7 +445,7 @@ def cto_add_course_by_playlist_view(request):
                 courseForm=ILMSFORM.CourseForm(request.POST)
                 if courseForm.is_valid() : 
                     coursetext = courseForm.cleaned_data["course_name"]
-                    course = iLMSModel.Course.objects.all().filter(course_name__iexact = coursetext)
+                    course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
                     if course:
                         messages.info(request, 'Course Name Already Exist')
                     else:
@@ -453,9 +453,9 @@ def cto_add_course_by_playlist_view(request):
                         course.save()
                         selectedlist = request.POST.getlist('playlist[]')
                         for PLID in selectedlist:
-                            topics =iLMSModel.Topic.objects.all().filter(subject_id=PLID)
+                            topics =LXPModel.Topic.objects.all().filter(subject_id=PLID)
                             for det in topics:
-                                iLMSModel.CourseDetails.objects.create(
+                                LXPModel.CourseDetails.objects.create(
                                     course_id= course.id,
                                     subject_id= det.subject_id,
                                     chapter_id= det.chapter_id,
@@ -465,21 +465,21 @@ def cto_add_course_by_playlist_view(request):
                 else:
                     print("form is invalid")
             courseForm=ILMSFORM.CourseForm()
-            subject=iLMSModel.Playlist.objects.all().order_by('name')
+            subject=LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/course/cto_add_course_by_playlist.html',{'courseForm':courseForm,'subject':subject})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 class CourseList(ListView):
-    model = iLMSModel.Course
+    model = LXPModel.Course
 
 class courseCreate(CreateView):
-    model = iLMSModel.Course
+    model = LXPModel.Course
     fields = ['course_name']
 
 
 class CDetailsCreate(CreateView):
-    model = iLMSModel.Course
+    model = LXPModel.Course
     fields = ['course_name']
     success_url = reverse_lazy('course-list')
 
@@ -503,13 +503,13 @@ class CDetailsCreate(CreateView):
 
 
 class courseUpdate(UpdateView):
-    model = iLMSModel.Course
+    model = LXPModel.Course
     success_url = '/'
     fields = ['course_name']
 
 
 class CDetailsUpdate(UpdateView):
-    model = iLMSModel.Course
+    model = LXPModel.Course
     fields = ['course_name']
     success_url = reverse_lazy('course-list')
     def get_context_data(self, **kwargs):
@@ -532,24 +532,24 @@ class CDetailsUpdate(UpdateView):
 
 
 class courseDelete(DeleteView):
-    model = iLMSModel.Course
+    model = LXPModel.Course
     success_url = reverse_lazy('course-list')
 
 @login_required
 def cto_print_course_view(request):
     try:
-        courses = iLMSModel.Course.objects.all()
+        courses = LXPModel.Course.objects.all()
         return render(request,'cto/course/cto_print_course.html',{'courses':courses})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_print_course_preview_view(request,cname):
     try:
-        coursedetails = iLMSModel.CourseDetails.objects.filter(course_id__in=iLMSModel.Course.objects.all().filter(course_name =cname),chapter_id__in=iLMSModel.Video.objects.all(),subject_id__in=iLMSModel.Playlist.objects.all(),topic_id__in=iLMSModel.Topic.objects.all())
+        coursedetails = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name =cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all())
         return render(request,'cto/course/cto_print_course_preview.html',{'coursedetails':coursedetails,'cname':cname})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_passionateskill_view(request):
@@ -557,7 +557,7 @@ def cto_passionateskill_view(request):
         if str(request.session['utype']) == 'cto':
             return render(request,'cto/passionateskill/cto_passionateskill.html')
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_add_passionateskill_view(request):
@@ -567,7 +567,7 @@ def cto_add_passionateskill_view(request):
                 passionateskillForm=ILMSFORM.PassionateSkillForm(request.POST)
                 if passionateskillForm.is_valid(): 
                     passionateskilltext = passionateskillForm.cleaned_data["passionateskill_name"]
-                    passionateskill = iLMSModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext)
+                    passionateskill = LXPModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext)
                     if passionateskill:
                         messages.info(request, 'PassionateSkill Name Already Exist')
                         passionateskillForm=ILMSFORM.PassionateSkillForm()
@@ -579,49 +579,49 @@ def cto_add_passionateskill_view(request):
             passionateskillForm=ILMSFORM.PassionateSkillForm()
             return render(request,'cto/passionateskill/cto_add_passionateskill.html',{'passionateskillForm':passionateskillForm})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_passionateskill_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            passionateskill = iLMSModel.PassionateSkill.objects.get(id=pk)
+            passionateskill = LXPModel.PassionateSkill.objects.get(id=pk)
             passionateskillForm=ILMSFORM.PassionateSkillForm(request.POST,instance=passionateskill)
             if request.method=='POST':
                 if passionateskillForm.is_valid(): 
                     passionateskilltext = passionateskillForm.cleaned_data["passionateskill_name"]
-                    passionateskill = iLMSModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext).exclude(id=pk)
+                    passionateskill = LXPModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext).exclude(id=pk)
                     if passionateskill:
                         messages.info(request, 'PassionateSkill Name Already Exist')
                         return render(request,'cto/passionateskill/cto_update_passionateskill.html',{'passionateskillForm':passionateskillForm})
                     else:
                         passionateskillForm.save()
-                        passionateskills = iLMSModel.PassionateSkill.objects.all()
+                        passionateskills = LXPModel.PassionateSkill.objects.all()
                         return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
             return render(request,'cto/passionateskill/cto_update_passionateskill.html',{'passionateskillForm':passionateskillForm,'sub':passionateskill.passionateskill_name})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_passionateskill_view(request):
     try:
         if str(request.session['utype']) == 'cto':
-            passionateskills = iLMSModel.PassionateSkill.objects.all()
+            passionateskills = LXPModel.PassionateSkill.objects.all()
             return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_passionateskill_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':  
-            passionateskill=iLMSModel.PassionateSkill.objects.get(id=pk)
+            passionateskill=LXPModel.PassionateSkill.objects.get(id=pk)
             passionateskill.delete()
             return HttpResponseRedirect('/cto/passionateskill/cto-view-passionateskill')
-        passionateskills = iLMSModel.PassionateSkill.objects.all()
+        passionateskills = LXPModel.PassionateSkill.objects.all()
         return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_knownskill_view(request):
@@ -629,7 +629,7 @@ def cto_knownskill_view(request):
         if str(request.session['utype']) == 'cto':
             return render(request,'cto/knownskill/cto_knownskill.html')
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_add_knownskill_view(request):
@@ -639,7 +639,7 @@ def cto_add_knownskill_view(request):
                 knownskillForm=ILMSFORM.KnownSkillForm(request.POST)
                 if knownskillForm.is_valid(): 
                     knownskilltext = knownskillForm.cleaned_data["knownskill_name"]
-                    knownskill = iLMSModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext)
+                    knownskill = LXPModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext)
                     if knownskill:
                         messages.info(request, 'KnownSkill Name Already Exist')
                         knownskillForm=ILMSFORM.KnownSkillForm()
@@ -651,49 +651,49 @@ def cto_add_knownskill_view(request):
             knownskillForm=ILMSFORM.KnownSkillForm()
             return render(request,'cto/knownskill/cto_add_knownskill.html',{'knownskillForm':knownskillForm})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_knownskill_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            knownskill = iLMSModel.KnownSkill.objects.get(id=pk)
+            knownskill = LXPModel.KnownSkill.objects.get(id=pk)
             knownskillForm=ILMSFORM.KnownSkillForm(request.POST,instance=knownskill)
             if request.method=='POST':
                 if knownskillForm.is_valid(): 
                     knownskilltext = knownskillForm.cleaned_data["knownskill_name"]
-                    knownskill = iLMSModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext).exclude(id=pk)
+                    knownskill = LXPModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext).exclude(id=pk)
                     if knownskill:
                         messages.info(request, 'KnownSkill Name Already Exist')
                         return render(request,'cto/knownskill/cto_update_knownskill.html',{'knownskillForm':knownskillForm})
                     else:
                         knownskillForm.save()
-                        knownskills = iLMSModel.KnownSkill.objects.all()
+                        knownskills = LXPModel.KnownSkill.objects.all()
                         return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
             return render(request,'cto/knownskill/cto_update_knownskill.html',{'knownskillForm':knownskillForm,'sub':knownskill.knownskill_name})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_knownskill_view(request):
     try:
         if str(request.session['utype']) == 'cto':
-            knownskills = iLMSModel.KnownSkill.objects.all()
+            knownskills = LXPModel.KnownSkill.objects.all()
             return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_knownskill_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':  
-            knownskill=iLMSModel.KnownSkill.objects.get(id=pk)
+            knownskill=LXPModel.KnownSkill.objects.get(id=pk)
             knownskill.delete()
             return HttpResponseRedirect('/cto/knownskill/cto-view-knownskill')
-        knownskills = iLMSModel.KnownSkill.objects.all()
+        knownskills = LXPModel.KnownSkill.objects.all()
         return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def getcredentials():
@@ -709,7 +709,7 @@ def getcredentials():
 
 @login_required
 def cto_sync_youtube_view(request):
-    pllist = iLMSModel.Playlist.objects.all().order_by('name')
+    pllist = LXPModel.Playlist.objects.all().order_by('name')
     return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
 
 @login_required
@@ -721,7 +721,7 @@ def cto_sync_youtube_start_view(request):
         plcount = 1
         maxcount = alllist.__len__()
         for PL_ID in alllist:
-                PL_NAME = ''#iLMSModel.Playlist.objects.values('name').filter(playlist_id = PL_ID)
+                PL_NAME = ''#LXPModel.Playlist.objects.values('name').filter(playlist_id = PL_ID)
                 print(str(plcount) + ' ' + PL_NAME)
                 pm.getAllVideosForPlaylist(PL_ID,credentials,maxcount,plcount,PL_NAME)
                 plcount = plcount + 1
@@ -739,7 +739,7 @@ def cto_sync_youtube_start_view(request):
         'total_question':0,
         }
         return render(request,'cto/cto_dashboard.html',context=dict)
-    pllist = iLMSModel.Playlist.objects.all().order_by('name')
+    pllist = LXPModel.Playlist.objects.all().order_by('name')
     return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})    
 ######################################################################
 
@@ -747,13 +747,13 @@ def cto_sync_youtube_start_view(request):
 def cto_sync_youtube_byselected_playlist_start_view(request):
     if request.method=='POST':
         if 'dblist' in request.POST:
-            pllist = iLMSModel.Playlist.objects.all().order_by('name')
+            pllist = LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
         elif 'cloudlist' in request.POST:
             pm = PlaylistManager()
             credentials = pm.getCredentials()
             pl =  pm.initializePlaylist(credentials)
-            pllist = iLMSModel.Playlist.objects.all().order_by('name')
+            pllist = LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
         elif 'startselected' in request.POST:
             pm = PlaylistManager()
@@ -763,7 +763,7 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             credentials = pm.getCredentials()
             for PL_NAME in selectedlist:
                 print(str(plcount) + ' ' + PL_NAME)
-                PL_ID = iLMSModel.Playlist.objects.all().filter(name = PL_NAME)
+                PL_ID = LXPModel.Playlist.objects.all().filter(name = PL_NAME)
                 _id = ''
                 for z in PL_ID:
                     _id = z.playlist_id
@@ -793,14 +793,14 @@ def courses(request):
             modules = x
         print(course)
         print(modules)
-    courses = iLMSModel.Playlist.objects.all()
+    courses = LXPModel.Playlist.objects.all()
     context = {'courses': courses}
     return render(request, 'cto/university.html', context)
 
 @login_required
 def modules(request):
     course = request.GET.get('course')
-    modules = iLMSModel.Video.objects.all().filter(id__in = iLMSModel.PlaylistItem.objects.all().filter( playlist_id=course))
+    modules = LXPModel.Video.objects.all().filter(id__in = LXPModel.PlaylistItem.objects.all().filter( playlist_id=course))
     context = {'modules': modules}
     return render(request, 'cto/modules.html', context)
 

@@ -1,6 +1,6 @@
 from django.urls import path,include
 from django.contrib import admin
-from ilmsapp import views
+from lxpapp import views
 from django.contrib.auth.views import LogoutView,LoginView
 from django.contrib.auth import views as auth_views
 urlpatterns = [
@@ -13,7 +13,7 @@ urlpatterns = [
     path('cfo/',include('cfo.urls')),
     path('learner/',include('learner.urls')),
     path('trainer/',include('trainer.urls')),
-    #path('logout', LogoutView.as_view(template_name='ilmsapp/logout.html'),name='logout'),
+    #path('logout', LogoutView.as_view(template_name='lxpapp/logout.html'),name='logout'),
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
     path('afterlogin', views.afterlogin_view,name='afterlogin'),
@@ -21,7 +21,7 @@ urlpatterns = [
     path('syncyoutube-start', views.syncyoutube_start_view,name='syncyoutube-start'),
 
     path('adminclick', views.adminclick_view),
-    path('adminlogin', LoginView.as_view(template_name='ilmsapp/adminlogin.html'),name='adminlogin'),
+    path('adminlogin', LoginView.as_view(template_name='lxpapp/adminlogin.html'),name='adminlogin'),
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
 
     path('admin-view-user', views.admin_view_user_view,name='admin-view-user'),

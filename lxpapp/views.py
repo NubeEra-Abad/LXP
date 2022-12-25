@@ -23,13 +23,13 @@ from social_django.models import UserSocialAuth
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def login(request):
-    return render(request, 'ilmsapp/index.html')
+    return render(request, 'lxpapp/index.html')
 
 @login_required
 def home(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')  
-    return render(request,'ilmsapp/404page.html')
+    return render(request,'lxpapp/404page.html')
 import datetime
 def afterlogin_view(request):
     user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
@@ -80,7 +80,7 @@ def afterlogin_view(request):
                                 send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                             else:
                                 print("form is invalid")
-                                return render(request,'ilmsapp/404page.html')
+                                return render(request,'lxpapp/404page.html')
                             return render(request,'loginrelated/wait_for_approval.html')
                         learnerdetailsForm=forms.LearnerDetailsForm()
                         pskills = models.PassionateSkill.objects.all()
@@ -120,13 +120,13 @@ def admin_dashboard_view(request):
             'total_exam':0,
             'total_question':0,
             }
-            return render(request,'ilmsapp/admin_dashboard.html',context=dict)
+            return render(request,'lxpapp/admin_dashboard.html',context=dict)
    # except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def syncyoutube_view(request):
     pllist = models.PlayList.objects.all()
-    return render(request,'ilmsapp/syncyoutube.html',{'pllist':pllist})
+    return render(request,'lxpapp/syncyoutube.html',{'pllist':pllist})
 def syncyoutube_start_view(request):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
     api_service_name = "youtube"
@@ -175,10 +175,10 @@ def syncyoutube_start_view(request):
     'total_exam':0,
     'total_question':0,
     }
-    return render(request,'ilmsapp/admin_dashboard.html',context=dict)
+    return render(request,'lxpapp/admin_dashboard.html',context=dict)
 
 def aboutus_view(request):
-    return render(request,'ilmsapp/aboutus.html')
+    return render(request,'lxpapp/aboutus.html')
 
 def contactus_view(request):
     try:    
@@ -191,17 +191,17 @@ def contactus_view(request):
                     name=sub.cleaned_data['Name']
                     message = sub.cleaned_data['Message']
                     send_mail(str(name)+' || '+str(email),message,settings.EMAIL_HOST_USER, settings.EMAIL_RECEIVING_USER, fail_silently = False)
-                    return render(request, 'ilmsapp/contactussuccess.html')
-            return render(request, 'ilmsapp/contactus.html', {'form':sub})
+                    return render(request, 'lxpapp/contactussuccess.html')
+            return render(request, 'lxpapp/contactus.html', {'form':sub})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 def admin_view_user_view(request):
     #try:    
         if str(request.session['utype']) == 'admin':
-            users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(ilmsapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN ilmsapp_usercourse ON (auth_user.id = ilmsapp_usercourse.user_id) LEFT OUTER JOIN ilmsapp_course ON (ilmsapp_usercourse.course_id = ilmsapp_course.id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
-            return render(request,'ilmsapp/admin_view_user.html',{'users':users})
+            users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
+            return render(request,'lxpapp/admin_view_user.html',{'users':users})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def active_user_view(request,userid,pk):
     try:    
@@ -215,7 +215,7 @@ def active_user_view(request,userid,pk):
                 isfirstlogin.save()
             return HttpResponseRedirect('/admin-view-user',{'users':users})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def inactive_user_view(request,pk):
     try:    
@@ -225,7 +225,7 @@ def inactive_user_view(request,pk):
             users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
             return HttpResponseRedirect('/admin-view-user',{'users':users})
     except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 def admin_update_course_view(request,pk):
     #try:    
         if str(request.session['utype']) == 'admin':
@@ -239,9 +239,9 @@ def admin_update_course_view(request,pk):
                 users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
             course = models.Course.objects.all()
-            return render(request,'ilmsapp/admin_update_course.html',{'courses':course,'uid':pk})
+            return render(request,'lxpapp/admin_update_course.html',{'courses':course,'uid':pk})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 
 def admin_mark_usertype_view(request,pk):
     #try:    
@@ -252,7 +252,7 @@ def admin_mark_usertype_view(request,pk):
                 cursor.execute("UPDATE social_auth_usersocialauth SET utype = " + str (newtype) + " WHERE id = " + str(pk))
                 users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
-            return render(request,'ilmsapp/admin_mark_usertype.html',{'courses':'course','uid':pk})
+            return render(request,'lxpapp/admin_mark_usertype.html',{'courses':'course','uid':pk})
     #except:
-        return render(request,'ilmsapp/404page.html')
+        return render(request,'lxpapp/404page.html')
 

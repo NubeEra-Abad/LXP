@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('social_django', '0012_usersocialauth_pic'),
-        ('ilmsapp', '0001_initial'),
+        ('lxpapp', '0001_initial'),
     ]
 
     operations = [
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('exam_name', models.CharField(max_length=50)),
                 ('questiontpye', models.CharField(choices=[('MCQ', 'MCQ'), ('ShortAnswer', 'ShortAnswer')], default='', max_length=200)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Course')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Course')),
             ],
         ),
         migrations.CreateModel(
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
                 ('option4', models.CharField(max_length=200)),
                 ('answer', models.CharField(choices=[('1', 'Option1'), ('2', 'Option2'), ('3', 'Option3'), ('4', 'Option4')], max_length=200)),
                 ('marks', models.IntegerField(default=0)),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Exam')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Exam')),
             ],
         ),
         migrations.CreateModel(
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
                 ('correct', models.PositiveIntegerField()),
                 ('timetaken', models.CharField(max_length=200)),
                 ('date', models.DateTimeField(auto_now=True)),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Exam')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Exam')),
                 ('learner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -130,7 +130,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('question', models.CharField(max_length=600)),
                 ('marks', models.IntegerField(default=0)),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Exam')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Exam')),
             ],
         ),
         migrations.CreateModel(
@@ -141,7 +141,7 @@ class Migration(migrations.Migration):
                 ('datecreate', models.DateTimeField(auto_now=True)),
                 ('status', models.BooleanField(default=False)),
                 ('timetaken', models.CharField(max_length=200)),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Exam')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Exam')),
                 ('learner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -196,7 +196,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('learner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
+                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
             ],
         ),
         migrations.CreateModel(
@@ -204,7 +204,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('learner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
+                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
             ],
         ),
         migrations.CreateModel(
@@ -212,7 +212,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('TopicCovered', models.PositiveIntegerField(default=0)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
+                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
             ],
         ),
         migrations.CreateModel(
@@ -223,7 +223,7 @@ class Migration(migrations.Migration):
                 ('TopicName', models.CharField(max_length=600)),
                 ('VideoTime', models.CharField(max_length=600)),
                 ('status', models.CharField(choices=[('Approved', 'Approved'), ('Rejected', 'Rejected'), ('Pending', 'Pending')], default='Pending', max_length=200)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
+                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
             ],
         ),
         migrations.CreateModel(
@@ -231,7 +231,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('remarks', models.CharField(max_length=50)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Course')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Course')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -240,8 +240,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('topic_name', models.CharField(max_length=50)),
-                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
-                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Playlist')),
+                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
+                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Playlist')),
             ],
         ),
         migrations.CreateModel(
@@ -262,8 +262,8 @@ class Migration(migrations.Migration):
                 ('marks', models.PositiveIntegerField()),
                 ('answer', models.CharField(max_length=200)),
                 ('feedback', models.CharField(default='', max_length=200)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.ShortQuestion')),
-                ('shortresult', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.ShortResult')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.ShortQuestion')),
+                ('shortresult', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.ShortResult')),
             ],
         ),
         migrations.CreateModel(
@@ -278,27 +278,27 @@ class Migration(migrations.Migration):
                 ('is_duplicate', models.BooleanField(default=False)),
                 ('is_marked_as_watched', models.BooleanField(blank=True, default=False)),
                 ('num_of_accesses', models.IntegerField(default=0)),
-                ('playlist', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='playlist_items', to='ilmsapp.Playlist')),
-                ('video', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
+                ('playlist', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='playlist_items', to='lxpapp.Playlist')),
+                ('video', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
             ],
         ),
         migrations.AddField(
             model_name='playlist',
             name='tags',
-            field=models.ManyToManyField(related_name='playlists', to='ilmsapp.Tag'),
+            field=models.ManyToManyField(related_name='playlists', to='lxpapp.Tag'),
         ),
         migrations.AddField(
             model_name='playlist',
             name='videos',
-            field=models.ManyToManyField(related_name='playlists', to='ilmsapp.Video'),
+            field=models.ManyToManyField(related_name='playlists', to='lxpapp.Video'),
         ),
         migrations.CreateModel(
             name='Pin',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('kind', models.CharField(max_length=100)),
-                ('playlist', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Playlist')),
-                ('video', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
+                ('playlist', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Playlist')),
+                ('video', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
             ],
         ),
         migrations.CreateModel(
@@ -306,8 +306,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('selected', models.CharField(max_length=200)),
-                ('mcqresult', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.McqResult')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.McqQuestion')),
+                ('mcqresult', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.McqResult')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.McqQuestion')),
             ],
         ),
         migrations.CreateModel(
@@ -317,24 +317,24 @@ class Migration(migrations.Migration):
                 ('mtype', models.PositiveIntegerField(default=0)),
                 ('urlvalue', models.TextField()),
                 ('description', models.TextField()),
-                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
-                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Playlist')),
+                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
+                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Playlist')),
             ],
         ),
         migrations.CreateModel(
             name='LearnerDetailsPSkill',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('learnerdetails', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.LearnerDetails')),
-                ('passionateskill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.PassionateSkill')),
+                ('learnerdetails', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.LearnerDetails')),
+                ('passionateskill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.PassionateSkill')),
             ],
         ),
         migrations.CreateModel(
             name='LearnerDetailsKSkill',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('knownskill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.KnownSkill')),
-                ('learnerdetails', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.LearnerDetails')),
+                ('knownskill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.KnownSkill')),
+                ('learnerdetails', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.LearnerDetails')),
             ],
         ),
         migrations.CreateModel(
@@ -348,28 +348,28 @@ class Migration(migrations.Migration):
             name='CourseDetails',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Video')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Course')),
-                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Playlist')),
-                ('topic', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Topic')),
+                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Video')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Course')),
+                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Playlist')),
+                ('topic', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Topic')),
             ],
         ),
         migrations.CreateModel(
             name='BatchTrainer',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('batch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Batch')),
+                ('batch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Batch')),
                 ('trainer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='social_django.UserSocialAuth')),
             ],
         ),
         migrations.AddField(
             model_name='batch',
             name='course',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.Course'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.Course'),
         ),
         migrations.AddField(
             model_name='batch',
             name='coursetype',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ilmsapp.CourseType'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lxpapp.CourseType'),
         ),
     ]

@@ -84,12 +84,12 @@ Any suggestion and feedback is welcome. You can message me on facebook
 ## Screenshots
 ----
 ### Homepage
-<!-- ![homepage snap](https://github.com/sumitkumar1503/iLMS/blob/master/static/screenshots/homepage.png?raw=true) -->
+<!-- ![homepage snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/homepage.png?raw=true) -->
 ### Admin Dashboard
-<!-- ![dashboard snap](https://github.com/sumitkumar1503/iLMS/blob/master/static/screenshots/adminhomepage.png?raw=true) -->
+<!-- ![dashboard snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/adminhomepage.png?raw=true) -->
 ### Exam Rules
-<!-- ![invoice snap](https://github.com/sumitkumar1503/iLMS/blob/master/static/screenshots/rules.png?raw=true) -->
+<!-- ![invoice snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/rules.png?raw=true) -->
 ### Exam
-<!-- ![doctor snap](https://github.com/sumitkumar1503/iLMS/blob/master/static/screenshots/exam.png?raw=true) -->
+<!-- ![doctor snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/exam.png?raw=true) -->
 ### Trainer
-<!-- ![doctor snap](https://github.com/sumitkumar1503/iLMS/blob/master/static/screenshots/trainer.png?raw=true) -->
+<!-- ![doctor snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/trainer.png?raw=true) -->

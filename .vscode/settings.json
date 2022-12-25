@@ -7,7 +7,7 @@
             "driver": "SQLite",
             "name": "d",
             "group": "d",
-            "database": "${workspaceFolder:iLMSV2}/iLMSV2.sqlite3"
+            "database": "${workspaceFolder:LXP}/LXP.sqlite3"
         }
     ]
 }

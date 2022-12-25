@@ -1,5 +1,5 @@
 import datetime
-from ilmsapp import models as iLMSModel
+from lxpapp import models as LXPModel
 import requests
 from django.contrib.auth.models import User
 from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
@@ -136,8 +136,8 @@ class PlaylistManager(models.Manager):
             playlist_ids.append(playlist_id)
 
             # check if this playlist already exists in user's untube collection
-            if iLMSModel.Playlist.objects.all().filter(playlist_id=playlist_id).exists():
-                playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
+            if LXPModel.Playlist.objects.all().filter(playlist_id=playlist_id).exists():
+                playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
                 ####print(f"PLAYLIST {playlist.name} ({playlist_id}) ALREADY EXISTS IN DB")
 
                 # POSSIBLE CASES:
@@ -153,12 +153,12 @@ class PlaylistManager(models.Manager):
                     return result
             else:  # no such playlist in database
                 ####print(f"CREATING {item['snippet']['title']} ({playlist_id})")
-                if iLMSModel.Playlist.objects.filter(Q(playlist_id=playlist_id) & Q(is_in_db=False)).exists():
-                    unimported_playlist = iLMSModel.Playlist.objects.filter(Q(playlist_id=playlist_id) & Q(is_in_db=False)).first()
+                if LXPModel.Playlist.objects.filter(Q(playlist_id=playlist_id) & Q(is_in_db=False)).exists():
+                    unimported_playlist = LXPModel.Playlist.objects.filter(Q(playlist_id=playlist_id) & Q(is_in_db=False)).first()
                     unimported_playlist.delete()
 
                 ### MAKE THE PLAYLIST AND LINK IT TO CURRENT_USER
-                playlist = iLMSModel.Playlist(  # create the playlist and link it to current user
+                playlist = LXPModel.Playlist(  # create the playlist and link it to current user
                     playlist_id=playlist_id,
                     name=item['snippet']['title'],
                     description=item['snippet']['description'],
@@ -184,7 +184,7 @@ class PlaylistManager(models.Manager):
 
     def getAllVideosForPlaylist(self, playlist_id,credentials,maxcount,plcount,plname):
         
-        playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
+        playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
         
         ### GET ALL VIDEO IDS FROM THE PLAYLIST
         video_ids = []  # stores list of all video ids for a given playlist
@@ -207,11 +207,11 @@ class PlaylistManager(models.Manager):
                 # 1. create and save the video in user's untube
                 # 2. add it to playlist
                 # 3. make a playlist item which is linked to the video
-                if not iLMSModel.Video.objects.filter(video_id=video_id).exists():
+                if not LXPModel.Video.objects.filter(video_id=video_id).exists():
                     if item['snippet']['title'] == "Deleted video" or item['snippet'][
                         'description'] == "This video is unavailable." or item['snippet']['title'] == "Private video" or \
                             item['snippet']['description'] == "This video is private.":
-                        video = iLMSModel.Video(
+                        video = LXPModel.Video(
                             video_id=video_id,
                             name=item['snippet']['title'],
                             description=item['snippet']['description'],
@@ -219,7 +219,7 @@ class PlaylistManager(models.Manager):
                         )
                         video.save()
                     else:
-                        video = iLMSModel.Video(
+                        video = LXPModel.Video(
                             video_id=video_id,
                             published_at=item['contentDetails']['videoPublishedAt'] if 'videoPublishedAt' in
                                                                                        item[
@@ -234,7 +234,7 @@ class PlaylistManager(models.Manager):
 
                     playlist.videos.add(video)
 
-                    playlist_item = iLMSModel.PlaylistItem(
+                    playlist_item = LXPModel.PlaylistItem(
                         playlist_item_id=playlist_item_id,
                         published_at=item['snippet']['publishedAt'] if 'publishedAt' in
                                                                        item[
@@ -246,7 +246,7 @@ class PlaylistManager(models.Manager):
                         video=video
                     )
                     playlist_item.save()
-                    iLMSModel.Topic.objects.create(topic_name='not applicable',
+                    LXPModel.Topic.objects.create(topic_name='not applicable',
                                                     subject = playlist,
                                                     chapter = video
                                                 ).save()
@@ -255,7 +255,7 @@ class PlaylistManager(models.Manager):
                         ####print("PLAYLIST ITEM ALREADY EXISTS")
                         continue
 
-                    video = iLMSModel.Video.objects.get(video_id=video_id)
+                    video = LXPModel.Video.objects.get(video_id=video_id)
 
                     # if video already in playlist.videos
                     is_duplicate = False
@@ -263,7 +263,7 @@ class PlaylistManager(models.Manager):
                         is_duplicate = True
                     else:
                         playlist.videos.add(video)
-                    playlist_item = iLMSModel.PlaylistItem(
+                    playlist_item = LXPModel.PlaylistItem(
                         playlist_item_id=playlist_item_id,
                         published_at=item['snippet']['publishedAt'] if 'publishedAt' in
                                                                        item[
@@ -281,7 +281,7 @@ class PlaylistManager(models.Manager):
 
                     )
                     playlist_item.save()
-                    iLMSModel.Topic.objects.create(topic_name='not applicable',
+                    LXPModel.Topic.objects.create(topic_name='not applicable',
                                 subject = playlist,
                                 chapter = video
                             ).save()
@@ -309,12 +309,12 @@ class PlaylistManager(models.Manager):
                         # 1. create and save the video in user's untube
                         # 2. add it to playlist
                         # 3. make a playlist item which is linked to the video
-                        if not iLMSModel.Video.objects.filter(video_id=video_id).exists():
+                        if not LXPModel.Video.objects.filter(video_id=video_id).exists():
                             if item['snippet']['title'] == "Deleted video" or item['snippet'][
                                 'description'] == "This video is unavailable." or item['snippet'][
                                 'title'] == "Private video" or \
                                     item['snippet']['description'] == "This video is private.":
-                                video = iLMSModel.Video(
+                                video = LXPModel.Video(
                                     video_id=video_id,
                                     name=item['snippet']['title'],
                                     description=item['snippet']['description'],
@@ -322,7 +322,7 @@ class PlaylistManager(models.Manager):
                                 )
                                 video.save()
                             else:
-                                video = iLMSModel.Video(
+                                video = LXPModel.Video(
                                     video_id=video_id,
                                     published_at=item['contentDetails']['videoPublishedAt'] if 'videoPublishedAt' in
                                                                                                item[
@@ -337,7 +337,7 @@ class PlaylistManager(models.Manager):
 
                             playlist.videos.add(video)
 
-                            playlist_item = iLMSModel.PlaylistItem(
+                            playlist_item = LXPModel.PlaylistItem(
                                 playlist_item_id=playlist_item_id,
                                 published_at=item['snippet']['publishedAt'] if 'publishedAt' in
                                                                                item[
@@ -349,12 +349,12 @@ class PlaylistManager(models.Manager):
                                 video=video
                             )
                             playlist_item.save()
-                            iLMSModel.Topic.objects.create(topic_name='not applicable',
+                            LXPModel.Topic.objects.create(topic_name='not applicable',
                                 subject = playlist,
                                 chapter = video
                             ).save()
                         else:  # video found in user's db
-                            video = iLMSModel.Video.objects.get(video_id=video_id)
+                            video = LXPModel.Video.objects.get(video_id=video_id)
 
                             # if video already in playlist.videos
                             is_duplicate = False
@@ -362,7 +362,7 @@ class PlaylistManager(models.Manager):
                                 is_duplicate = True
                             else:
                                 playlist.videos.add(video)
-                            playlist_item = iLMSModel.PlaylistItem(
+                            playlist_item = LXPModel.PlaylistItem(
                                 playlist_item_id=playlist_item_id,
                                 published_at=item['snippet']['publishedAt'] if 'publishedAt' in
                                                                                item[
@@ -379,7 +379,7 @@ class PlaylistManager(models.Manager):
                                 is_duplicate=is_duplicate
                             )
                             playlist_item.save()
-                            iLMSModel.Topic.objects.create(topic_name='not applicable',
+                            LXPModel.Topic.objects.create(topic_name='not applicable',
                                 subject = playlist,
                                 chapter = video
                             ).save()
@@ -468,7 +468,7 @@ class PlaylistManager(models.Manager):
         """
         credentials = self.getCredentials()
 
-        playlist = iLMSModel.Playlist.objects.get(playlist_id=pl_id)
+        playlist = LXPModel.Playlist.objects.get(playlist_id=pl_id)
 ###to do
         # if its been a week since the last full scan, do a full playlist scan
         # basically checks all the playlist video for any updates
@@ -595,8 +595,8 @@ class PlaylistManager(models.Manager):
             playlist_id = item["id"]
 
             # check if this playlist already exists in database
-            if iLMSModel.Playlist.objects.filter(playlist_id=playlist_id).exists():
-                playlist = iLMSModel.Playlist.objects.get(playlist_id__exact=playlist_id)
+            if LXPModel.Playlist.objects.filter(playlist_id=playlist_id).exists():
+                playlist = LXPModel.Playlist.objects.get(playlist_id__exact=playlist_id)
                 print(f"PLAYLIST {playlist.name} ALREADY EXISTS IN DB")
 
                 # POSSIBLE CASES:
@@ -614,7 +614,7 @@ class PlaylistManager(models.Manager):
     def updatePlaylist(self, playlist_id):
         credentials = self.getCredentials()
 
-        playlist = iLMSModel.Playlist.objects.get(playlist_id__exact=playlist_id)
+        playlist = LXPModel.Playlist.objects.get(playlist_id__exact=playlist_id)
 
         current_video_ids = [playlist_item.video.video_id for playlist_item in playlist.playlist_items.all()]
         current_playlist_item_ids = [playlist_item.playlist_item_id for playlist_item in playlist.playlist_items.all()]
@@ -649,13 +649,13 @@ class PlaylistManager(models.Manager):
                 # check if new playlist item added
                 if not playlist.playlist_items.filter(playlist_item_id=playlist_item_id).exists():
                     # if video dne in user's db at all, create and save it
-                    if not iLMSModel.Video.objects.filter(video_id=video_id).exists():
+                    if not LXPModel.Video.objects.filter(video_id=video_id).exists():
                         if (item['snippet']['title'] == "Deleted video" and item['snippet'][
                             'description'] == "This video is unavailable.") or (item['snippet'][
                                                                                     'title'] == "Private video" and
                                                                                 item['snippet'][
                                                                                     'description'] == "This video is private."):
-                            video = iLMSModel.Video(
+                            video = LXPModel.Video(
                                 video_id=video_id,
                                 name=item['snippet']['title'],
                                 description=item['snippet']['description'],
@@ -663,7 +663,7 @@ class PlaylistManager(models.Manager):
                             )
                             video.save()
                         else:
-                            video = iLMSModel.Video(
+                            video = LXPModel.Video(
                                 video_id=video_id,
                                 published_at=item['contentDetails']['videoPublishedAt'] if 'videoPublishedAt' in
                                                                                            item[
@@ -676,7 +676,7 @@ class PlaylistManager(models.Manager):
                             )
                             video.save()
 
-                    video = iLMSModel.Video.objects.get(video_id=video_id)
+                    video = LXPModel.Video.objects.get(video_id=video_id)
 
                     # check if the video became unavailable on youtube
                     if not video.is_unavailable_on_yt and not video.was_deleted_on_yt and (
@@ -693,7 +693,7 @@ class PlaylistManager(models.Manager):
                     else:
                         is_duplicate = True
 
-                    playlist_item = iLMSModel.PlaylistItem(
+                    playlist_item = LXPModel.PlaylistItem(
                         playlist_item_id=playlist_item_id,
                         published_at=item['snippet']['publishedAt'] if 'publishedAt' in
                                                                        item[
@@ -710,7 +710,7 @@ class PlaylistManager(models.Manager):
                         is_duplicate=is_duplicate
                     )
                     playlist_item.save()
-                    iLMSModel.Topic.objects.create(topic_name='not applicable',
+                    LXPModel.Topic.objects.create(topic_name='not applicable',
                                 subject = playlist,
                                 chapter = video
                             ).save()
@@ -752,13 +752,13 @@ class PlaylistManager(models.Manager):
                         # check if new playlist item added
                         if not playlist.playlist_items.filter(playlist_item_id=playlist_item_id).exists():
                             # if video dne in user's db at all, create and save it
-                            if not iLMSModel.Video.objects.filter(video_id=video_id).exists():
+                            if not LXPModel.Video.objects.filter(video_id=video_id).exists():
                                 if (item['snippet']['title'] == "Deleted video" and item['snippet'][
                                     'description'] == "This video is unavailable.") or (item['snippet'][
                                                                                             'title'] == "Private video" and
                                                                                         item['snippet'][
                                                                                             'description'] == "This video is private."):
-                                    video = iLMSModel.Video(
+                                    video = LXPModel.Video(
                                         video_id=video_id,
                                         name=item['snippet']['title'],
                                         description=item['snippet']['description'],
@@ -766,7 +766,7 @@ class PlaylistManager(models.Manager):
                                     )
                                     video.save()
                                 else:
-                                    video = iLMSModel.Video(
+                                    video = LXPModel.Video(
                                         video_id=video_id,
                                         published_at=item['contentDetails']['videoPublishedAt'] if 'videoPublishedAt' in
                                                                                                    item[
@@ -779,7 +779,7 @@ class PlaylistManager(models.Manager):
                                     )
                                     video.save()
 
-                            video = iLMSModel.Video.objects.get(video_id=video_id)
+                            video = LXPModel.Video.objects.get(video_id=video_id)
 
                             # check if the video became unavailable on youtube
                             if not video.is_unavailable_on_yt and not video.was_deleted_on_yt and (
@@ -796,7 +796,7 @@ class PlaylistManager(models.Manager):
                             else:
                                 is_duplicate = True
 
-                            playlist_item = iLMSModel.PlaylistItem(
+                            playlist_item = LXPModel.PlaylistItem(
                                 playlist_item_id=playlist_item_id,
                                 published_at=item['snippet']['publishedAt'] if 'publishedAt' in
                                                                                item[
@@ -813,7 +813,7 @@ class PlaylistManager(models.Manager):
                                 is_duplicate=is_duplicate
                             )
                             playlist_item.save()
-                            iLMSModel.Topic.objects.create(topic_name='not applicable',
+                            LXPModel.Topic.objects.create(topic_name='not applicable',
                                 subject = playlist,
                                 chapter = video
                             ).save()
@@ -915,7 +915,7 @@ class PlaylistManager(models.Manager):
         Takes in playlist itemids for the videos in a particular playlist
         """
         credentials = self.getCredentials()
-        playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
+        playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
 
         # new_playlist_duration_in_seconds = playlist.playlist_duration_in_seconds
         # new_playlist_video_count = playlist.video_count
@@ -937,7 +937,7 @@ class PlaylistManager(models.Manager):
             video_ids = [video.video_id for video in playlist.videos.all()]
             playlist.delete()
             for video_id in video_ids:
-                video = iLMSModel.Video.objects.get(video_id=video_id)
+                video = LXPModel.Video.objects.get(video_id=video_id)
                 if video.playlists.all().count() == 0:
                     video.delete()
 
@@ -948,8 +948,8 @@ class PlaylistManager(models.Manager):
         Takes in playlist itemids for the videos in a particular playlist
         """
         credentials = self.getCredentials()
-        playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
-        playlist_items = iLMSModel.Playlist.objects.get(playlist_id=playlist_id).playlist_items.select_related('video').filter(
+        playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
+        playlist_items = LXPModel.Playlist.objects.get(playlist_id=playlist_id).playlist_items.select_related('video').filter(
             playlist_item_id__in=playlist_item_ids)
 
         new_playlist_duration_in_seconds = playlist.playlist_duration_in_seconds
@@ -1012,7 +1012,7 @@ class PlaylistManager(models.Manager):
             counter += 1
 
     def deleteSpecificPlaylistItems(self,  playlist_id, command):
-        playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
+        playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
         playlist_items = []
         if command == "duplicate":
             playlist_items = playlist.playlist_items.filter(is_duplicate=True)
@@ -1065,7 +1065,7 @@ class PlaylistManager(models.Manager):
         Takes in playlist itemids for the videos in a particular playlist
         """
         credentials = self.getCredentials()
-        playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
+        playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
 
         with build('youtube', 'v3', credentials=credentials) as youtube:
             pl_request = youtube.playlists().update(
@@ -1107,7 +1107,7 @@ class PlaylistManager(models.Manager):
         Takes in playlist itemids for the videos in a particular playlist
         """
         credentials = self.getCredentials()
-        playlist_items = iLMSModel.Playlist.objects.get(playlist_id=from_playlist_id).playlist_items.select_related('video').filter(
+        playlist_items = LXPModel.Playlist.objects.get(playlist_id=from_playlist_id).playlist_items.select_related('video').filter(
             playlist_item_id__in=playlist_item_ids)
 
         result = {
@@ -1229,7 +1229,7 @@ class PlaylistManager(models.Manager):
         result["num_added"] = added
 
         try:
-            playlist = iLMSModel.Playlist.objects.get(playlist_id=playlist_id)
+            playlist = LXPModel.Playlist.objects.get(playlist_id=playlist_id)
             if added > 0:
                 playlist.has_playlist_changed = True
                 playlist.save(update_fields=['has_playlist_changed'])
