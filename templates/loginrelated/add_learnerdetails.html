@@ -20,7 +20,9 @@
   }
 
   #select2,
-  #select1,#select3,#select4 {
+  #select1,
+  #select3,
+  #select4 {
     height: 250px;
     width: 250px;
   }
@@ -79,6 +81,10 @@
       <label for="whatsappno">If no, please provide WhatsApp No.</label>
       {% render_field learnerdetailsForm.whatsappno class="form-control"%}
       <br>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+      <script src="/static/multiselect-dropdown.js"></script>
       <table>
         <tr>
           <th colspan="2">Known Skills(KS)</th>
@@ -88,36 +94,23 @@
         </tr>
         <tr>
           <td>
-            <select multiple="multiple" name="listbox1" id="select1">
+            <label>Known Skills(KS) </label>
+
+            <select name="listbox1" id="select1" multiple multiselect-search="true" multiselect-select-all="true"
+              multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
               {% for t in kskills %}
               <option value="{{ t.id }}">{{t.knownskill_name}}</option>
               {% endfor %}
             </select>
           </td>
           <td>
-            <button id="add">&gt;&gt;</button>
-          </td>
-          <td>
-            <button id="remove">&lt;&lt;</button>
-          </td>
-          <td>
-            <select multiple="multiple" name="listbox2" id="select2"></select>
-          </td>
-          <td>
-            <select multiple="multiple" name="listbox3" id="select3">
+            <label>Passionate Skills(PS) </label>
+            <select name="listbox3" id="select3" multiple multiselect-search="true" multiselect-select-all="true"
+              multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
               {% for t in pskills %}
               <option value="{{ t.id }}">{{t.passionateskill_name}}</option>
               {% endfor %}
             </select>
-          </td>
-          <td>
-            <button id="add1">&gt;&gt;</button>
-          </td>
-          <td>
-            <button id="remove1">&lt;&lt;</button>
-          </td>
-          <td>
-            <select multiple="multiple" name="listbox4" id="select4"></select>
           </td>
         </tr>
       </table>

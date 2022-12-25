@@ -72,11 +72,16 @@ def afterlogin_view(request):
                                 learnerdetails.save()
                                 
                                 obj = models.LearnerDetails.objects.latest('id')
-                                selectedlist = request.POST.getlist('listbox2')
+                                selectedlist = request.POST.getlist('listbox1')
                                 for x in selectedlist:
                                     knownskillid = str(x)
                                     knownskilltable = models.LearnerDetailsKSkill.objects.create(learnerdetails_id=obj.id,knownskill_id=knownskillid)
                                     knownskilltable.save()
+                                selectedlist = request.POST.getlist('listbox3')
+                                for x in selectedlist:
+                                    passionateskillid = str(x)
+                                    passionateskilltable = models.LearnerDetailsPSkill.objects.create(learnerdetails_id=obj.id,passionateskill_id=passionateskillid)
+                                    passionateskilltable.save()
                                 send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                             else:
                                 print("form is invalid")

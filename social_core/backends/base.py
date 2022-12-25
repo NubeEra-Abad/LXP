@@ -85,12 +85,17 @@ class BaseAuth:
             return out
         user = out.get('user')
         from social_django.models import UserSocialAuth
+        from lxpapp.models import UserPics
         if user:
             user.social_user = out.get('social')
             user.is_new = out.get('is_new')
             pic =out['response']['picture']
             pic =str(out['response']['picture']).replace('=s96-c','')
             UserSocialAuth.objects.filter(user_id=user.id).update(pic=pic)
+            picuser = UserPics.objects.all().filter(user_id=user.id,pic =pic)
+            if not picuser: 
+                picuser= UserPics.objects.create(user_id=user.id,picpath =pic)
+                picuser.save()
         return user
 
     def disconnect(self, *args, **kwargs):

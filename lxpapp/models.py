@@ -8,6 +8,10 @@ import requests
 import humanize
 from django.db import models
 
+class UserPics(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    picpath = models.TextField(default='')
+    pic = models.ImageField()
 ###################################
 def getHumanizedTimeString(seconds):
       

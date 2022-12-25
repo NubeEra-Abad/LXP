@@ -74,22 +74,3 @@ EMAIL_RECEIVING_USER = 'youremail@gmail.com'
 ## Drawbacks/LoopHoles
 - Admin/Trainer can add any number of questions to any course, But while adding course, admin provide question number.
 
-
-## Feedback
-Any suggestion and feedback is welcome. You can message me on facebook
-- [Contact on Facebook](https://fb.com/sumit.luv)
-- [Subscribe my Channel LazyCoder On Youtube](https://youtube.com/lazycoders)
-
----
-## Screenshots
-----
-### Homepage
-<!-- ![homepage snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/homepage.png?raw=true) -->
-### Admin Dashboard
-<!-- ![dashboard snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/adminhomepage.png?raw=true) -->
-### Exam Rules
-<!-- ![invoice snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/rules.png?raw=true) -->
-### Exam
-<!-- ![doctor snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/exam.png?raw=true) -->
-### Trainer
-<!-- ![doctor snap](https://github.com/sumitkumar1503/online/blob/master/static/screenshots/trainer.png?raw=true) -->
