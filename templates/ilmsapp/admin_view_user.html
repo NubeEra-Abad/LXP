@@ -40,6 +40,7 @@
         <tr> 
           <th>Provider</th>
           <th>User Id</th>
+          <th>Pic</th>
           <th>Full Name</th>
           <th>Type</th>
           <th>Course Name</th>
@@ -59,6 +60,8 @@
           {% endif %}
         </td> 
         <td> {{t.uid}}</td>
+        <td> <img src="{{t.pic}}" style = "width:100px"></td>
+        
         <td> {{t.user.first_name}}  {{t.user.last_name}}</td>
         <td> 
           {% if t.utype == 0 or t.utype == 2 %}

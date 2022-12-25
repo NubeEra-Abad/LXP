@@ -5,7 +5,7 @@ from django import forms
 from .models import (
     Course,CourseDetails
 )
-from django.forms import ModelForm, inlineformset_factory
+from django.forms import ModelForm, inlineformset_factory,modelformset_factory
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)
     Email = forms.EmailField()
@@ -46,8 +46,10 @@ class CourseDetailsForm(ModelForm):
         exclude = ()
 
 CourseDetailsFormset = inlineformset_factory(Course, CourseDetails,
-                                            form=CourseDetailsForm, extra=2)
-
+                                            form=CourseDetailsForm, extra=5)
+CourseDetFormSet = modelformset_factory(
+    CourseDetails, fields=("subject","chapter", "topic"), extra=1
+)
 class UserCourseForm(forms.ModelForm):
     courseid=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
     class Meta:

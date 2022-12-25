@@ -32,6 +32,8 @@ urlpatterns = [
     path('cto-view-course-details/<cname>', views.cto_view_course_details_view,name='cto-view-course-details'),
     path('cto-delete-course/<int:pk>', views.cto_delete_course_view,name='cto-delete-course'),
 
+    path('cto-add-course-by-playlist', views.cto_add_course_by_playlist_view,name='cto-add-course-by-playlist'),
+
     path('course-list', views.CourseList.as_view(), name='course-list'),
     path('course-add', views.CDetailsCreate.as_view(), name='course-add'),
     path('course-update/<int:pk>', views.CDetailsUpdate.as_view(), name='course-update'),

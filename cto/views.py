@@ -369,34 +369,36 @@ def cto_add_course_view(request):
         from django.forms import modelformset_factory
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
+                det_formset = ILMSFORM.CourseDetFormSet(data=request.POST)
                 courseForm=ILMSFORM.CourseForm(request.POST)
-                coursedetailsForm=ILMSFORM.CourseDetailsFormset(request.POST)
-                if courseForm.is_valid() and coursedetailsForm.is_valid() : 
+                if courseForm.is_valid() : 
                     coursetext = courseForm.cleaned_data["course_name"]
                     course = iLMSModel.Course.objects.all().filter(course_name__iexact = coursetext)
                     if course:
                         messages.info(request, 'Course Name Already Exist')
                         courseForm=ILMSFORM.CourseForm()
-                        coursedetailsForm=ILMSFORM.CourseDetailsFormset()
-                        return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'coursedetailsForm':coursedetailsForm})
+                        det_formset = ILMSFORM.CourseDetFormSet(queryset=iLMSModel.CourseDetails.objects.none())
+                        return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
                     else:
                         course = courseForm.save(commit=False)
                         course.save()
-                        for form in coursedetailsForm.forms:
+                        det_formset = ILMSFORM.CourseDetFormSet(data=request.POST)
+                        counter = 0
+                        for form in det_formset.forms:
                             refid = None
                             subject = None
                             chapter = None
                             topic = None
-                            refid = form.cleaned_data['subjectID']
+                            refid = form.data['form-'+str(counter)+'-subject']
                             if refid:
-                                subject=iLMSModel.Playlist.objects.get(id=refid.id)
-                            refid = form.cleaned_data['chapterID']
+                                subject=iLMSModel.Playlist.objects.get(id=refid)
+                            refid = form.data['form-'+str(counter)+'-chapter']
                             
                             if refid:
-                                chapter=iLMSModel.Video.objects.get(id=refid.id)
-                            refid = form.cleaned_data['topicID']
+                                chapter=iLMSModel.Video.objects.get(id=refid)
+                            refid = form.data['form-'+str(counter)+'-topic']
                             if refid:
-                                topic=iLMSModel.Topic.objects.get(id=refid.id)
+                                topic=iLMSModel.Topic.objects.get(id=refid)
                             if subject and chapter and topic :
                                 coursedetails = iLMSModel.CourseDetails.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_id = topic.id,course_id =course.id )
                                 coursedetails.save()
@@ -404,9 +406,8 @@ def cto_add_course_view(request):
                 else:
                     print("form is invalid")
             courseForm=ILMSFORM.CourseForm()
-            coursedetailsForm=ILMSFORM.CourseDetailsFormset()
-            
-            return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'coursedetailsForm':coursedetailsForm})
+            det_formset = ILMSFORM.CourseDetFormSet(queryset=iLMSModel.CourseDetails.objects.none())
+            return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
     #except:
         return render(request,'ilmsapp/404page.html')
 
@@ -436,6 +437,39 @@ def cto_delete_course_view(request,pk):
     #except:
         return render(request,'ilmsapp/404page.html')
 
+def cto_add_course_by_playlist_view(request):
+    #try:
+        from django.forms import modelformset_factory
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                courseForm=ILMSFORM.CourseForm(request.POST)
+                if courseForm.is_valid() : 
+                    coursetext = courseForm.cleaned_data["course_name"]
+                    course = iLMSModel.Course.objects.all().filter(course_name__iexact = coursetext)
+                    if course:
+                        messages.info(request, 'Course Name Already Exist')
+                    else:
+                        course = courseForm.save(commit=False)
+                        course.save()
+                        selectedlist = request.POST.getlist('playlist[]')
+                        for PLID in selectedlist:
+                            topics =iLMSModel.Topic.objects.all().filter(subject_id=PLID)
+                            for det in topics:
+                                iLMSModel.CourseDetails.objects.create(
+                                    course_id= course.id,
+                                    subject_id= det.subject_id,
+                                    chapter_id= det.chapter_id,
+                                    topic_id= det.id
+                                ).save()
+                        messages.info(request, 'Course saved')
+                else:
+                    print("form is invalid")
+            courseForm=ILMSFORM.CourseForm()
+            subject=iLMSModel.Playlist.objects.all().order_by('name')
+            return render(request,'cto/course/cto_add_course_by_playlist.html',{'courseForm':courseForm,'subject':subject})
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
 class CourseList(ListView):
     model = iLMSModel.Course
 
@@ -452,9 +486,9 @@ class CDetailsCreate(CreateView):
     def get_context_data(self, **kwargs):
         data = super(CDetailsCreate, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['cdetails'] = ILMSFORM.CourseDetailsFormset(self.request.POST)
+            data['cdetails'] = ILMSFORM.CourseDetFormSet(self.request.POST)
         else:
-            data['cdetails'] = ILMSFORM.CourseDetailsFormset
+            data['cdetails'] = ILMSFORM.CourseDetFormSet
         return data
 
     def form_valid(self, form):
@@ -481,9 +515,9 @@ class CDetailsUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         data = super(CDetailsUpdate, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['cdetails'] = ILMSFORM.CourseDetailsFormset(self.request.POST, instance=self.object)
+            data['cdetails'] = ILMSFORM.CourseDetFormSet(self.request.POST, instance=self.object)
         else:
-            data['cdetails'] = ILMSFORM.CourseDetailsFormset(instance=self.object)
+            data['cdetails'] = ILMSFORM.CourseDetFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):
@@ -717,7 +751,7 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
         elif 'cloudlist' in request.POST:
             pm = PlaylistManager()
-            credentials = getcredentials()
+            credentials = pm.getCredentials()
             pl =  pm.initializePlaylist(credentials)
             pllist = iLMSModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
@@ -726,7 +760,7 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             selectedlist = request.POST.getlist('playlist[]')
             maxcount = selectedlist.__len__()
             plcount = 1
-            credentials = getcredentials()
+            credentials = pm.getCredentials()
             for PL_NAME in selectedlist:
                 print(str(plcount) + ' ' + PL_NAME)
                 PL_ID = iLMSModel.Playlist.objects.all().filter(name = PL_NAME)

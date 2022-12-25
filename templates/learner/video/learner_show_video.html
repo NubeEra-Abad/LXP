@@ -15,7 +15,22 @@
     width: 400px;
     padding: 10px;
 }
-
+#status span.status {
+  display: none;
+  font-weight: bold;
+}
+span.status.complete {
+  color: green;
+}
+span.status.incomplete {
+  color: red;
+}
+#status.complete span.status.complete {
+  display: inline;
+}
+#status.incomplete span.status.incomplete {
+  display: inline;
+}
 .message-blue {
     position: relative;
     margin-left: 20px;
@@ -120,6 +135,8 @@
     $(iframe).height($(iframe).contents().find('html').height());
     }
         </script>
+        <script type="text/javascript" src="/static/watched.js"></script>
+
     </head>
     </thead>
     <ol class="breadcrumb text-right">
@@ -132,7 +149,22 @@
     <h6 class="panel-title">
         <b>Playing Video of Topic : {{topicname}}</b>
     </h6>
-    <iframe
+    <video width="200" controls="true" poster="" id="video1">
+        <source type="video/mp4" src="https://terabox.com/s/1qvkJmQ8mL4_NmnmJt09C8w"></source>
+    </video>
+    <object data='https://terabox.com/s/1qvkJmQ8mL4_NmnmJt09C8w' width='560px' height='315px' id="video">
+    </object>
+    <div id="status" class="incomplete">
+    <span>Play status: </span>
+    <span class="status complete">COMPLETE</span>
+    <span class="status incomplete">INCOMPLETE</span>
+    <br />
+    </div>
+    <div>
+    <span id="played">0</span> seconds out of 
+    <span id="duration"></span> seconds. (only updates when the video pauses)
+    </div>
+    <iframe id="video2"
         width="75%"
         height="60%"
         marginheight="0"
