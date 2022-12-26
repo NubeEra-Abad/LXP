@@ -42,13 +42,19 @@
         <tr>
           <th>Topic Name</th>
           <th>Show</th>
+          <th>Material</th>
         </tr>
       </thead>
       {% for t in list %}
       <tr>
         <td>{{t.video.name}}</td>
-        <td><a class="btn btn-success" href="{% url 'learner-show-video' subject_id course_id t.video.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td><a class="btn btn-success" href="{% url 'learner-show-video' subject_id course_id t.video.id  %}"><span class="glyphicon glyphicon-expand"></span></a></td>
 
+        {% if t.matid > 0  %}
+            <td><a class="btn btn-success" href="{% url 'learner-see-material' subject_id t.video.id course_id t.matid  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+        {% else %}
+            <td><a class="btn btn-danger" ><span class="glyphicon glyphicon-eye-close"></span></a></td>
+        {% endif %}
       {% endfor %}
     </table>
   </div>

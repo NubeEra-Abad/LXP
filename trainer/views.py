@@ -334,6 +334,8 @@ def trainer_sync_youtube_start_view(request):
     if request.method=='POST':
         pm = PlaylistManager()
         credentials = pm.getCredentials()
+        drive = googleapiclient.discovery.build('drive', 'v3', credentials=credentials)
+        files = drive.files().list().execute()
         alllist = pm.initializePlaylist(credentials)
         plcount = 1
         maxcount = alllist.__len__()

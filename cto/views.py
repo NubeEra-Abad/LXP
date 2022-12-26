@@ -717,6 +717,7 @@ def cto_sync_youtube_start_view(request):
     if request.method=='POST':
         pm = PlaylistManager()
         credentials = pm.getCredentials()
+        
         alllist = pm.initializePlaylist(credentials)
         plcount = 1
         maxcount = alllist.__len__()

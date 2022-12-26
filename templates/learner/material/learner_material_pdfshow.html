@@ -1,0 +1,47 @@
+{% extends 'learner/learnerbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <style type="text/css">
+    html, body{
+      width:100%;
+      height:80%;
+      margin:0px;   
+    }
+    </style>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+    function autoResize(iframe) {
+        $(iframe).height($(iframe).contents().find('html').height());
+    }
+    </script>
+
+</head>
+ </thead>
+ <ol class="breadcrumb text-right">
+  <li><a href="/learner/learner-dashboard">Dashboard</a></li>
+  <li><a href="/learner/learner-video-course">Learner Courses for Recorded Videos</a></li>
+  <li><a href="/learner/learner-video-course-subject/{{course_id}}">Video Subject List of Course : {{coursename}}</a></li>
+  <li><a href="/learner/learner-video-list/{{subject_id}},/{{course_id}}">Video List of Subject : {{subjectname}}</a></li>
+  <li class="active">Material For Chapter : {{chaptername}} </li>
+</ol>
+  {% for t in details %}
+    <div class="panel-heading">
+      <h6 class="panel-title"><b>Subject Name :  {{subjectname}} / Chapter Name : {{chaptername}} </b></h6>
+    </div>
+          <embed
+          src="{{t.urlvalue}}#toolbar=0&navpanes=0"
+          type="application/pdf"
+          frameBorder="0"
+          scrolling="auto"
+          height="100%"
+          width="100%"
+      ></embed>
+  {% endfor %}
+<br><br><br><br><br><br>
+
+{% endblock content %}

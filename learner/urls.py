@@ -22,5 +22,6 @@ path('learner-video-course', views.learner_video_Course_view,name='learner-video
 path('learner-video-course-subject/<int:course_id>', views.learner_video_Course_subject_view,name='learner-video-course-subject'),
 path('learner-video-list/<int:subject_id>,/<int:course_id>', views.learner_video_list_view,name='learner-video-list'),
 path('learner-show-video/<int:subject_id>,/<int:course_id>,/<int:video_id>', views.learner_show_video_view,name='learner-show-video'),
+path('learner-see-material/<subject_id>/<chapter_id>/<course_id>/<int:pk>', views.learner_see_material_view,name='learner-see-material'),
 
 ]
