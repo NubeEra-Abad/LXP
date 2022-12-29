@@ -39,3 +39,5 @@ django-allauth
 humanize
 pandas
 Django-import-export
+pytube
+oauth2client

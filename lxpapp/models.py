@@ -282,8 +282,7 @@ class Topic(models.Model):
    chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
    topic_name = models.CharField(max_length=50)
-   def __str__(self):
-      return self.topic_name
+
 class Course(models.Model):
    course_name = models.CharField(max_length=50)
    def __str__(self):

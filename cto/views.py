@@ -15,7 +15,7 @@ from . import models
 from lxpapp import models as LXPModel
 from youtubemanager import PlaylistManager
 from cto import models as CTOModel
-from lxpapp import forms as ILMSFORM
+from lxpapp import forms as LXPFORM
 from django.db.models import Sum
 from django.db import transaction
 from django.contrib.auth.models import Group
@@ -61,13 +61,13 @@ def cto_add_subject_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                subjectForm=ILMSFORM.SubjectForm(request.POST)
+                subjectForm=LXPFORM.SubjectForm(request.POST)
                 if subjectForm.is_valid(): 
                     subjecttext = subjectForm.cleaned_data["name"]
                     subject = LXPModel.Playlist.objects.all().filter(name__iexact = subjecttext)
                     if subject:
                         messages.info(request, 'Subject Name Already Exist')
-                        subjectForm=ILMSFORM.SubjectForm()
+                        subjectForm=LXPFORM.SubjectForm()
                         return render(request,'cto/subject/cto_add_subject.html',{'subjectForm':subjectForm})                  
                     else:
                         plobj = LXPModel.Playlist.objects.create(name =subjecttext)
@@ -99,7 +99,7 @@ def cto_add_subject_view(request):
                         plobj.save()
                 else:
                     print("form is invalid")
-            subjectForm=ILMSFORM.SubjectForm()
+            subjectForm=LXPFORM.SubjectForm()
             return render(request,'cto/subject/cto_add_subject.html',{'subjectForm':subjectForm})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -109,7 +109,7 @@ def cto_update_subject_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
             subject = LXPModel.Playlist.objects.get(id=pk)
-            subjectForm=ILMSFORM.SubjectForm(request.POST,instance=subject)
+            subjectForm=LXPFORM.SubjectForm(request.POST,instance=subject)
             if request.method=='POST':
                 if subjectForm.is_valid(): 
                     subjecttext = subjectForm.cleaned_data["name"]
@@ -159,13 +159,13 @@ def cto_add_chapter_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                chapterForm=ILMSFORM.ChapterForm(request.POST)
+                chapterForm=LXPFORM.ChapterForm(request.POST)
                 if chapterForm.is_valid(): 
                     chaptertext = chapterForm.cleaned_data["name"]
                     chapter = LXPModel.Video.objects.all().filter(name__iexact = chaptertext)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
-                        chapterForm=ILMSFORM.ChapterForm()
+                        chapterForm=LXPFORM.ChapterForm()
                         return render(request,'cto/chapter/cto_add_chapter.html',{'chapterForm':chapterForm})                  
                     else:
                         subject=LXPModel.Playlist.objects.get(id=request.POST.get('subjectID'))
@@ -213,7 +213,7 @@ def cto_add_chapter_view(request):
                         PLItems.save()
                 else:
                     print("form is invalid")
-            chapterForm=ILMSFORM.ChapterForm()
+            chapterForm=LXPFORM.ChapterForm()
             return render(request,'cto/chapter/cto_add_chapter.html',{'chapterForm':chapterForm})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -223,7 +223,7 @@ def cto_update_chapter_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
             chapter = LXPModel.Video.objects.get(id=pk)
-            chapterForm=ILMSFORM.ChapterForm(request.POST,instance=chapter)
+            chapterForm=LXPFORM.ChapterForm(request.POST,instance=chapter)
             if request.method=='POST':
                 if chapterForm.is_valid(): 
                     chaptertext = chapterForm.cleaned_data["name"]
@@ -285,19 +285,24 @@ def cto_add_topic_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                topicForm=ILMSFORM.TopicForm(request.POST)
-                topictext = request.POST.get['topic_name']
+                topicForm=LXPFORM.TopicForm(request.POST)
+                topictext = request.POST['topic_name']
                 topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = topictext)
                 if topic:
                     messages.info(request, 'Topic Name Already Exist')
-                    topicForm=ILMSFORM.TopicForm()
-                    return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})                  
                 else:
-                    chapter=LXPModel.Video.objects.get(id=request.POST.get('chapterID'))
-                    subject=LXPModel.Playlist.objects.get(id=request.POST.get('subjectID'))
+                    c = request.POST.getlist('chapters')
+                    for x in c:
+                        c= int(x)
+                    chapter=LXPModel.Video.objects.get(id=c)
+
+                    s = request.POST.getlist('subject')
+                    for x in s:
+                        s= int(x)
+                    subject=LXPModel.Playlist.objects.get(id=s)
                     topic = LXPModel.Topic.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_name = topictext)
                     topic.save()
-            topicForm=ILMSFORM.TopicForm()
+            topicForm=LXPFORM.TopicForm()
             subjects = LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm,'subjects':subjects})
     #except:
@@ -308,7 +313,7 @@ def cto_update_topic_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
             topic = LXPModel.Topic.objects.get(id=pk)
-            topicForm=ILMSFORM.TopicForm(request.POST,instance=topic)
+            topicForm=LXPFORM.TopicForm(request.POST,instance=topic)
             if request.method=='POST':
                 if topicForm.is_valid(): 
                     topictext = topicForm.cleaned_data["topic_name"]
@@ -332,11 +337,20 @@ def cto_update_topic_view(request,pk):
     #except:
         return render(request,'lxpapp/404page.html')
 
+#c_list = LXPModel.Topic.objects.filter(chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all())
+from django.core.paginator import Paginator
 @login_required
 def cto_view_topic_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = LXPModel.Topic.objects.filter(chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all())
+            
+            # c_list = LXPModel.Topic.objects.raw('SELECT   lxpapp_topic.id,  lxpapp_playlist.name AS playlist_name ,  lxpapp_video.name AS video_name FROM  lxpapp_playlist  INNER JOIN lxpapp_topic ON (lxpapp_playlist.id = lxpapp_topic.subject_id)  INNER JOIN lxpapp_video ON (lxpapp_topic.chapter_id = lxpapp_video.id)')
+            c_list = LXPModel.Topic.objects.all()
+            paginator = Paginator(c_list, 100)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
+            return render(request=request, template_name="cto/topic/cto_view_topic.html", context={'topics':page_obj})
             return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -366,20 +380,20 @@ def cto_add_course_view(request):
         from django.forms import modelformset_factory
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                det_formset = ILMSFORM.CourseDetFormSet(data=request.POST)
-                courseForm=ILMSFORM.CourseForm(request.POST)
+                det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
+                courseForm=LXPFORM.CourseForm(request.POST)
                 if courseForm.is_valid() : 
                     coursetext = courseForm.cleaned_data["course_name"]
                     course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
                     if course:
                         messages.info(request, 'Course Name Already Exist')
-                        courseForm=ILMSFORM.CourseForm()
-                        det_formset = ILMSFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
+                        courseForm=LXPFORM.CourseForm()
+                        det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
                         return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
                     else:
                         course = courseForm.save(commit=False)
                         course.save()
-                        det_formset = ILMSFORM.CourseDetFormSet(data=request.POST)
+                        det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
                         counter = 0
                         for form in det_formset.forms:
                             refid = None
@@ -402,8 +416,8 @@ def cto_add_course_view(request):
                         messages.info(request, 'Course saved')
                 else:
                     print("form is invalid")
-            courseForm=ILMSFORM.CourseForm()
-            det_formset = ILMSFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
+            courseForm=LXPFORM.CourseForm()
+            det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
             return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -439,7 +453,7 @@ def cto_add_course_by_playlist_view(request):
         from django.forms import modelformset_factory
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                courseForm=ILMSFORM.CourseForm(request.POST)
+                courseForm=LXPFORM.CourseForm(request.POST)
                 if courseForm.is_valid() : 
                     coursetext = courseForm.cleaned_data["course_name"]
                     course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
@@ -461,7 +475,7 @@ def cto_add_course_by_playlist_view(request):
                         messages.info(request, 'Course saved')
                 else:
                     print("form is invalid")
-            courseForm=ILMSFORM.CourseForm()
+            courseForm=LXPFORM.CourseForm()
             subject=LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/course/cto_add_course_by_playlist.html',{'courseForm':courseForm,'subject':subject})
     #except:
@@ -483,9 +497,9 @@ class CDetailsCreate(CreateView):
     def get_context_data(self, **kwargs):
         data = super(CDetailsCreate, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['cdetails'] = ILMSFORM.CourseDetFormSet(self.request.POST)
+            data['cdetails'] = LXPFORM.CourseDetFormSet(self.request.POST)
         else:
-            data['cdetails'] = ILMSFORM.CourseDetFormSet
+            data['cdetails'] = LXPFORM.CourseDetFormSet
         return data
 
     def form_valid(self, form):
@@ -512,9 +526,9 @@ class CDetailsUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         data = super(CDetailsUpdate, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['cdetails'] = ILMSFORM.CourseDetFormSet(self.request.POST, instance=self.object)
+            data['cdetails'] = LXPFORM.CourseDetFormSet(self.request.POST, instance=self.object)
         else:
-            data['cdetails'] = ILMSFORM.CourseDetFormSet(instance=self.object)
+            data['cdetails'] = LXPFORM.CourseDetFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):
@@ -561,19 +575,19 @@ def cto_add_passionateskill_view(request):
     try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                passionateskillForm=ILMSFORM.PassionateSkillForm(request.POST)
+                passionateskillForm=LXPFORM.PassionateSkillForm(request.POST)
                 if passionateskillForm.is_valid(): 
                     passionateskilltext = passionateskillForm.cleaned_data["passionateskill_name"]
                     passionateskill = LXPModel.PassionateSkill.objects.all().filter(passionateskill_name__iexact = passionateskilltext)
                     if passionateskill:
                         messages.info(request, 'PassionateSkill Name Already Exist')
-                        passionateskillForm=ILMSFORM.PassionateSkillForm()
+                        passionateskillForm=LXPFORM.PassionateSkillForm()
                         return render(request,'cto/passionateskill/cto_add_passionateskill.html',{'passionateskillForm':passionateskillForm})                  
                     else:
                         passionateskillForm.save()
                 else:
                     print("form is invalid")
-            passionateskillForm=ILMSFORM.PassionateSkillForm()
+            passionateskillForm=LXPFORM.PassionateSkillForm()
             return render(request,'cto/passionateskill/cto_add_passionateskill.html',{'passionateskillForm':passionateskillForm})
     except:
         return render(request,'lxpapp/404page.html')
@@ -583,7 +597,7 @@ def cto_update_passionateskill_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
             passionateskill = LXPModel.PassionateSkill.objects.get(id=pk)
-            passionateskillForm=ILMSFORM.PassionateSkillForm(request.POST,instance=passionateskill)
+            passionateskillForm=LXPFORM.PassionateSkillForm(request.POST,instance=passionateskill)
             if request.method=='POST':
                 if passionateskillForm.is_valid(): 
                     passionateskilltext = passionateskillForm.cleaned_data["passionateskill_name"]
@@ -633,19 +647,19 @@ def cto_add_knownskill_view(request):
     try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
-                knownskillForm=ILMSFORM.KnownSkillForm(request.POST)
+                knownskillForm=LXPFORM.KnownSkillForm(request.POST)
                 if knownskillForm.is_valid(): 
                     knownskilltext = knownskillForm.cleaned_data["knownskill_name"]
                     knownskill = LXPModel.KnownSkill.objects.all().filter(knownskill_name__iexact = knownskilltext)
                     if knownskill:
                         messages.info(request, 'KnownSkill Name Already Exist')
-                        knownskillForm=ILMSFORM.KnownSkillForm()
+                        knownskillForm=LXPFORM.KnownSkillForm()
                         return render(request,'cto/knownskill/cto_add_knownskill.html',{'knownskillForm':knownskillForm})                  
                     else:
                         knownskillForm.save()
                 else:
                     print("form is invalid")
-            knownskillForm=ILMSFORM.KnownSkillForm()
+            knownskillForm=LXPFORM.KnownSkillForm()
             return render(request,'cto/knownskill/cto_add_knownskill.html',{'knownskillForm':knownskillForm})
     except:
         return render(request,'lxpapp/404page.html')
@@ -655,7 +669,7 @@ def cto_update_knownskill_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cto':
             knownskill = LXPModel.KnownSkill.objects.get(id=pk)
-            knownskillForm=ILMSFORM.KnownSkillForm(request.POST,instance=knownskill)
+            knownskillForm=LXPFORM.KnownSkillForm(request.POST,instance=knownskill)
             if request.method=='POST':
                 if knownskillForm.is_valid(): 
                     knownskilltext = knownskillForm.cleaned_data["knownskill_name"]

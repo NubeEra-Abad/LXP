@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from lxpapp import models as LXPModel
-from lxpapp import forms as ILMSFORM
+from lxpapp import forms as LXPFORM
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from youtubemanager import PlaylistManager
 from django.http import HttpResponse
 from django.template import loader
 import os
+from pathlib import Path
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
@@ -17,6 +18,37 @@ from urllib.parse import parse_qs, urlparse
 import googleapiclient.discovery
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 from social_django.models import UserSocialAuth
+from apiclient.discovery import build
+from apiclient.errors import HttpError
+from apiclient.http import MediaFileUpload
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.file import Storage
+from oauth2client.tools import argparser, run_flow
+from pytube import Playlist
+import http.client as hc
+import httplib2
+import os
+import random
+import time
+httplib2.RETRIES = 1
+CLIENT_SECRETS_FILE = "GoogleCredV1.json"
+MAX_RETRIES = 10
+RETRIABLE_EXCEPTIONS = (httplib2.HttpLib2Error, IOError, hc.NotConnected,
+                        hc.IncompleteRead, hc.ImproperConnectionState,
+                        hc.CannotSendRequest, hc.CannotSendHeader,
+                        hc.ResponseNotReady, hc.BadStatusLine)
+RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
+YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube"
+YOUTUBE_API_SERVICE_NAME = "youtube"
+YOUTUBE_API_VERSION = "v3"
+
+MISSING_CLIENT_SECRETS_MESSAGE = """
+   %s
+""" % os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                   CLIENT_SECRETS_FILE))
+
+VALID_PRIVACY_STATUSES = ("public", "private", "unlisted")
+
 def trainerclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -50,13 +82,13 @@ def trainer_add_exam_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
-                examForm=ILMSFORM.ExamForm(request.POST)
+                examForm=LXPFORM.ExamForm(request.POST)
                 if examForm.is_valid(): 
                     examtext = examForm.cleaned_data["exam_name"]
                     exam = LXPModel.Exam.objects.all().filter(exam_name__iexact = examtext)
                     if exam:
                         messages.info(request, 'Exam Name Already Exist')
-                        examForm=ILMSFORM.ExamForm()
+                        examForm=LXPFORM.ExamForm()
                         return render(request,'trainer/exam/trainer_add_exam.html',{'examForm':examForm})                  
                     else:
                         course=LXPModel.Course.objects.get(id=request.POST.get('courseID'))
@@ -64,7 +96,7 @@ def trainer_add_exam_view(request):
                         exam.save()
                 else:
                     print("form is invalid")
-            examForm=ILMSFORM.ExamForm()
+            examForm=LXPFORM.ExamForm()
             return render(request,'trainer/exam/trainer_add_exam.html',{'examForm':examForm})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -74,7 +106,7 @@ def trainer_update_exam_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
             exam = LXPModel.Exam.objects.get(id=pk)
-            examForm=ILMSFORM.ExamForm(request.POST,instance=exam)
+            examForm=LXPFORM.ExamForm(request.POST,instance=exam)
             if request.method=='POST':
                 if examForm.is_valid(): 
                     examtext = examForm.cleaned_data["exam_name"]
@@ -124,13 +156,13 @@ def trainer_add_mcqquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
-                mcqquestionForm=ILMSFORM.McqQuestionForm(request.POST)
+                mcqquestionForm=LXPFORM.McqQuestionForm(request.POST)
                 if mcqquestionForm.is_valid(): 
                     questiontext = mcqquestionForm.cleaned_data["question"]
                     mcqquestion = LXPModel.McqQuestion.objects.all().filter(question__iexact = questiontext)
                     if mcqquestion:
                         messages.info(request, 'Mcq Question Name Already Exist')
-                        mcqquestionForm=ILMSFORM.McqQuestionForm()
+                        mcqquestionForm=LXPFORM.McqQuestionForm()
                         return render(request,'trainer/mcqquestion/trainer_add_mcqquestion.html',{'mcqquestionForm':mcqquestionForm})                  
                     else:
                         exam=LXPModel.Exam.objects.get(id=request.POST.get('examID'))
@@ -138,7 +170,7 @@ def trainer_add_mcqquestion_view(request):
                         mcqquestion.save()
                 else:
                     print("form is invalid")
-            mcqquestionForm=ILMSFORM.McqQuestionForm()
+            mcqquestionForm=LXPFORM.McqQuestionForm()
             return render(request,'trainer/mcqquestion/trainer_add_mcqquestion.html',{'mcqquestionForm':mcqquestionForm})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -148,7 +180,7 @@ def trainer_update_mcqquestion_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
             mcqquestion = LXPModel.McqQuestion.objects.get(id=pk)
-            mcqquestionForm=ILMSFORM.McqQuestionForm(request.POST,instance=mcqquestion)
+            mcqquestionForm=LXPFORM.McqQuestionForm(request.POST,instance=mcqquestion)
             if request.method=='POST':
                 if mcqquestionForm.is_valid(): 
                     mcqquestiontext = mcqquestionForm.cleaned_data["mcqquestion_name"]
@@ -198,13 +230,13 @@ def trainer_add_shortquestion_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
-                shortquestionForm=ILMSFORM.ShortQuestionForm(request.POST)
+                shortquestionForm=LXPFORM.ShortQuestionForm(request.POST)
                 if shortquestionForm.is_valid(): 
                     questiontext = shortquestionForm.cleaned_data["question"]
                     shortquestion = LXPModel.ShortQuestion.objects.all().filter(question__iexact = questiontext)
                     if shortquestion:
                         messages.info(request, 'Short Question Already Exist')
-                        shortquestionForm=ILMSFORM.ShortQuestionForm()
+                        shortquestionForm=LXPFORM.ShortQuestionForm()
                         return render(request,'trainer/shortquestion/trainer_add_shortquestion.html',{'shortquestionForm':shortquestionForm})                  
                     else:
                         exam=LXPModel.Exam.objects.get(id=request.POST.get('examID'))
@@ -212,7 +244,7 @@ def trainer_add_shortquestion_view(request):
                         shortquestion.save()
                 else:
                     print("form is invalid")
-            shortquestionForm=ILMSFORM.ShortQuestionForm()
+            shortquestionForm=LXPFORM.ShortQuestionForm()
             return render(request,'trainer/shortquestion/trainer_add_shortquestion.html',{'shortquestionForm':shortquestionForm})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -222,7 +254,7 @@ def trainer_update_shortquestion_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
             shortquestion = LXPModel.ShortQuestion.objects.get(id=pk)
-            shortquestionForm=ILMSFORM.ShortQuestionForm(request.POST,instance=shortquestion)
+            shortquestionForm=LXPFORM.ShortQuestionForm(request.POST,instance=shortquestion)
             if request.method=='POST':
                 if shortquestionForm.is_valid(): 
                     shortquestiontext = shortquestionForm.cleaned_data["question"]
@@ -361,6 +393,140 @@ def trainer_sync_youtube_start_view(request):
     pllist = LXPModel.Playlist.objects.all().order_by('name')
     return render(request,'trainer/youtube/trainer_sync_youtube.html',{'pllist':pllist})    
 ######################################################################
+
+@login_required
+def trainer_sync_video_folder_view(request):
+    return render(request,'trainer/youtube/trainer_sync_video_folder.html')
+    
+
+def get_authenticated_service():
+    flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
+                                   scope=YOUTUBE_UPLOAD_SCOPE,
+                                   message=MISSING_CLIENT_SECRETS_MESSAGE)
+
+    storage = CLIENT_SECRETS_FILE#os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                   #CLIENT_SECRETS_FILE))
+    
+    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, YOUTUBE_UPLOAD_SCOPE)
+    flow.run_local_server()
+    credentials = flow.credentials
+    youtube = googleapiclient.discovery.build(
+        YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, credentials=credentials)
+    
+    return youtube
+
+def initialize_upload(youtube,filewithpath,onlyFoldername,onlyfilenamewithoutextension):
+    tags = None
+    playlistTitle = onlyFoldername
+    title = onlyfilenamewithoutextension
+    body = dict(
+        snippet=dict(
+            title=title,
+            description=title,
+            tags=tags,
+            categoryId=27
+        ),
+        status=dict(
+            privacyStatus='private'
+        )
+    )
+    part=",".join(body.keys())
+    insert_request = youtube.videos().insert(
+        part=",".join(body.keys()),
+        body=body,
+        media_body=MediaFileUpload(filewithpath, chunksize=100 * 1024 * 1024, resumable=True)
+    )
+    resumable_upload(youtube,insert_request,playlistTitle)
+    
+
+# This method implements an exponential backoff strategy to resume a
+# failed upload.
+def resumable_upload(youtube,insert_request,playlisTitle):
+    response = None
+    error = None
+    retry = 0
+    while response is None:
+        try:
+            print("Uploading file...")
+            status, response = insert_request.next_chunk()
+            if response is not None:
+                if 'id' in response:
+                    videoId = response['id']
+                    print("Video id '%s' was successfully uploaded." % videoId)
+                    # objPlaylist = Playlist()
+                    # objPlaylist.insert(playlisTitle,videoId)
+                    playlist_id = LXPModel.Playlist.objects.all().filter(name=playlisTitle)
+                    for x in playlist_id:
+                        playlist_id = x.playlist_id
+                    add_video_to_playlist(youtube,videoId,playlist_id)
+
+                    #insert_into_playlist(videoId,playlistId)
+                else:
+                    exit("The upload failed with an unexpected response: %s" % response)
+        except HttpError as e:
+            if e.resp.status in RETRIABLE_STATUS_CODES:
+                error = "A retriable HTTP error %d occurred:\n%s" % (e.resp.status,
+                                                                     e.content)
+            else:
+                raise
+        except RETRIABLE_EXCEPTIONS as e:
+            error = "A retriable error occurred: %s" % e
+
+        if error is not None:
+            print(error)
+            retry += 1
+            if retry > MAX_RETRIES:
+                exit("No longer attempting to retry.")
+
+            max_sleep = 2 ** retry
+            sleep_seconds = random.random() * max_sleep
+            print("Sleeping %f seconds and then retrying..." % sleep_seconds)
+            time.sleep(sleep_seconds)
+
+def add_video_to_playlist(youtube,videoID,playlistID):
+    try:
+      add_video_request=youtube.playlistItems().insert(
+      part="snippet",
+      body={
+            'snippet': {
+              'playlistId': playlistID, 
+              'resourceId': {
+                      'kind': 'youtube#video',
+                  'videoId': videoID
+                }
+            #'position': 0
+            }
+    }
+     ).execute()
+     
+    except HttpError as e:
+            raise
+
+def trainer_start_sync_video_folder_view(request):
+    if request.method=="POST":
+        youtube = get_authenticated_service()
+        
+        folder=request.POST["select_folder"]
+        folder = str.replace(folder,'/','\\')
+        path ='D:\\upload\\iLMS'
+        path =folder
+
+        filelist = []
+        folder = ''
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                filelist.append(os.path.join(root,file))
+        for filewithpath in filelist:
+            fullfolderpath = os.path.dirname(filewithpath)
+            onlyfilenamewithextension = os.path.basename(filewithpath)
+            file_extension = Path(onlyfilenamewithextension).suffix
+            path=os.path.dirname(filewithpath)
+            onlyFoldername = os.path.basename(path)
+            onlyfilenamewithoutextension = Path(filewithpath).stem
+            if file_extension.upper() == '.MP4':
+                initialize_upload(youtube,filewithpath,onlyFoldername,onlyfilenamewithoutextension)
+        return  redirect("/")
 
 @login_required
 def trainer_sync_youtube_byselected_playlist_start_view(request):
@@ -546,7 +712,7 @@ def trainer_update_material_view(request,pk):
     #try:
         if str(request.session['utype']) == 'trainer':
             material = LXPModel.Video.objects.get(id=pk)
-            materialForm=ILMSFORM.MaterialForm(request.POST,instance=material)
+            materialForm=LXPFORM.MaterialForm(request.POST,instance=material)
             if request.method=='POST':
                 if materialForm.is_valid(): 
                     materialtext = materialForm.cleaned_data["name"]

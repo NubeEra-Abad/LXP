@@ -171,6 +171,7 @@ LOGOUT_REDIRECT_URL = 'login'
 ##########                  Prod
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
    'https://www.googleapis.com/auth/userinfo.email',
    'https://www.googleapis.com/auth/userinfo.profile',

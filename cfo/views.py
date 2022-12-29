@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from . import models
 from lxpapp import models as LXPModel
-from lxpapp import forms as ILMSFORM
+from lxpapp import forms as LXPFORM
 from django.http import HttpResponseRedirect
 from django.db import connection
 from django.contrib import messages
@@ -96,19 +96,19 @@ def cfo_add_coursetype_view(request):
     try:
         if str(request.session['utype']) == 'cfo':
             if request.method=='POST':
-                coursetypeForm=ILMSFORM.CourseTypeForm(request.POST)
+                coursetypeForm=LXPFORM.CourseTypeForm(request.POST)
                 if coursetypeForm.is_valid(): 
                     coursetypetext = coursetypeForm.cleaned_data["coursetype_name"]
                     coursetype = LXPModel.CourseType.objects.all().filter(coursetype_name__iexact = coursetypetext)
                     if coursetype:
                         messages.info(request, 'CourseType Name Already Exist')
-                        coursetypeForm=ILMSFORM.CourseTypeForm()
+                        coursetypeForm=LXPFORM.CourseTypeForm()
                         return render(request,'cfo/coursetype/cfo_add_coursetype.html',{'coursetypeForm':coursetypeForm})                  
                     else:
                         coursetypeForm.save()
                 else:
                     print("form is invalid")
-            coursetypeForm=ILMSFORM.CourseTypeForm()
+            coursetypeForm=LXPFORM.CourseTypeForm()
             return render(request,'cfo/coursetype/cfo_add_coursetype.html',{'coursetypeForm':coursetypeForm})
     except:
         return render(request,'lxpapp/404page.html')
@@ -118,7 +118,7 @@ def cfo_update_coursetype_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cfo':
             coursetype = LXPModel.CourseType.objects.get(id=pk)
-            coursetypeForm=ILMSFORM.CourseTypeForm(request.POST,instance=coursetype)
+            coursetypeForm=LXPFORM.CourseTypeForm(request.POST,instance=coursetype)
             if request.method=='POST':
                 if coursetypeForm.is_valid(): 
                     coursetypetext = coursetypeForm.cleaned_data["coursetype_name"]
@@ -168,13 +168,13 @@ def cfo_add_batch_view(request):
     #try:
         if str(request.session['utype']) == 'cfo':
             if request.method=='POST':
-                batchForm=ILMSFORM.BatchForm(request.POST)
+                batchForm=LXPFORM.BatchForm(request.POST)
                 if batchForm.is_valid(): 
                     batchtext = batchForm.cleaned_data["batch_name"]
                     batch = LXPModel.Batch.objects.all().filter(batch_name__iexact = batchtext)
                     if batch:
                         messages.info(request, 'Batch Name Already Exist')
-                        batchForm=ILMSFORM.BatchForm()
+                        batchForm=LXPFORM.BatchForm()
                         return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm})                  
                     else:
                         batchname = batchForm.cleaned_data["batch_name"]
@@ -193,7 +193,7 @@ def cfo_add_batch_view(request):
                             batchtrainertable.save()
                 else:
                     print("form is invalid")
-            batchForm=ILMSFORM.BatchForm()
+            batchForm=LXPFORM.BatchForm()
             trainers =  UserSocialAuth.objects.filter(user_id__in=User.objects.all(),status = True,utype=1)
             return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers})
     #except:
@@ -204,7 +204,7 @@ def cfo_update_batch_view(request,pk):
     #try:
         if str(request.session['utype']) == 'cfo':
             batch = LXPModel.Batch.objects.get(id=pk)
-            batchForm=ILMSFORM.BatchForm(request.POST,instance=batch)
+            batchForm=LXPFORM.BatchForm(request.POST,instance=batch)
             if request.method=='POST':
                 if batchForm.is_valid(): 
                     batchtext = batchForm.cleaned_data["batch_name"]

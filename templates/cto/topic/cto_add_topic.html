@@ -62,6 +62,7 @@
 </script>
 
 <body>
+
   <div>
     <ol class="breadcrumb text-right">
       <li><a href="cto-dashboard">Dashboard</a></li>
@@ -84,22 +85,16 @@
       {% include 'trainer/material/trainer_material_chapters.html' %}
     </div>
     <div class="form-group">
-      <label for="subject_name">Subject Name</label>
-      {% render_field topicForm.subjectID|attr:'required:true' class="form-control" %}
-      <br />
-      <label for="chapter_name">Chapter Name</label>
-      {% render_field topicForm.chapterID|attr:'required:true' class="form-control" %}
-      <br />
       <label for="topic_name">Topic Name</label>
       {% render_field topicForm.topic_name class="form-control" placeholder="topic Name" %}
     </div>
     <button type="submit" class="btn btn-primary">ADD</button>
   </form>
   <br />
-  {% if messages %} 
-    {% for message in messages %} 
-      {{ message }} 
-    {% endfor %} 
+  {% if messages %}
+  {% for message in messages %}
+  {{ message }}
+  {% endfor %}
   {% endif %}
   <br /><br /><br />
   {% endblock content %}
