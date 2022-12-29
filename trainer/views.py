@@ -92,7 +92,8 @@ def trainer_add_exam_view(request):
                         return render(request,'trainer/exam/trainer_add_exam.html',{'examForm':examForm})                  
                     else:
                         course=LXPModel.Course.objects.get(id=request.POST.get('courseID'))
-                        exam = LXPModel.Exam.objects.create(course_id = course.id,exam_name = examtext,questiontpye = request.POST.get('questiontpye'))
+                        batch=LXPModel.Batch.objects.get(id=request.POST.get('batchID'))
+                        exam = LXPModel.Exam.objects.create(course_id = course.id,batch_id = batch.id,exam_name = examtext,questiontpye = request.POST.get('questiontpye'))
                         exam.save()
                 else:
                     print("form is invalid")
@@ -366,13 +367,16 @@ def trainer_sync_youtube_start_view(request):
     if request.method=='POST':
         pm = PlaylistManager()
         credentials = pm.getCredentials()
-        drive = googleapiclient.discovery.build('drive', 'v3', credentials=credentials)
-        files = drive.files().list().execute()
+        # drive = googleapiclient.discovery.build('drive', 'v3', credentials=credentials)
+        # files = drive.files().list().execute()
         alllist = pm.initializePlaylist(credentials)
         plcount = 1
         maxcount = alllist.__len__()
         for PL_ID in alllist:
                 PL_NAME = ''#LXPModel.Playlist.objects.values('name').filter(playlist_id = PL_ID)
+                plname = LXPModel.Playlist.objects.all().filter(playlist_id = PL_ID)
+                for x in plname:
+                    PL_NAME = x.name
                 print(str(plcount) + ' ' + PL_NAME)
                 pm.getAllVideosForPlaylist(PL_ID,credentials,maxcount,plcount,PL_NAME)
                 plcount = plcount + 1

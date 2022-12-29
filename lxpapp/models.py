@@ -352,8 +352,9 @@ class IsFirstLogIn(models.Model):
 
 
 class Exam(models.Model):
-   exam_name = models.CharField(max_length=50)
    course=models.ForeignKey(Course,on_delete=models.CASCADE)
+   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
+   exam_name = models.CharField(max_length=50)
    cat=(('MCQ','MCQ'),('ShortAnswer','ShortAnswer'))
    questiontpye=models.CharField(max_length=200,choices=cat,default='')
    def __str__(self):

@@ -4,27 +4,39 @@
 
 <head>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
-  <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
   <script src="/static/datatableconfig.js"></script>
-   
+
   <style media="screen">
-    
     a:link {
       text-decoration: none;
     }
+
     h6 {
       text-align: center;
     }
+
     .row {
       margin: 100px;
     }
-    table.dataTable tr.odd { background-color: #E2E4FF; }
-    table.dataTable tr.even { background-color: white; }
+
+    table.dataTable tr.odd {
+      background-color: #E2E4FF;
+    }
+
+    table.dataTable tr.even {
+      background-color: white;
+    }
+
+    td {
+      vertical-align: center;
+    }
   </style>
 </head>
 <br><br>
@@ -37,7 +49,7 @@
     <!-- <table id="example" class="display" style="width:100%"> -->
     <table class="table table-hover display" id="dev-table">
       <thead>
-        <tr> 
+        <tr>
           <th>Provider</th>
           <th>User Id</th>
           <th>Pic</th>
@@ -54,36 +66,44 @@
         <!-- google-oauth2 -->
         <td>
           {% if t.provider == "google-oauth2" %}
-            <img src="static/GoogleOAuth.png" style = "width:25px">Google</h1>
+          <img src="static/GoogleOAuth.png" style="width:25px">Google</h1>
           {% else %}
-            <h1>Other</h1>            
+          <h1>Other</h1>
           {% endif %}
-        </td> 
+        </td>
         <td> {{t.uid}}</td>
-        <td> <img src="{{t.pic}}" style = "width:100px"></td>
-        
-        <td> {{t.user.first_name}}  {{t.user.last_name}}</td>
-        <td> 
+        <td> <img src="{{t.pic}}" style="width:100px"></td>
+
+        <td> {{t.user.first_name}} {{t.user.last_name}}</td>
+        <td>
           {% if t.utype == 0 or t.utype == 2 %}
-            Learner
+          Learner
           {% elif t.utype == 1 %}
-            Trainer
+          Trainer
           {% elif t.utype == 3 %}
-            CTO
+          CTO
           {% elif t.utype == 4 %}
-            CFO
+          CFO
           {% endif %}
         </td>
         <td> {{t.course_name}}</td>
-        <td> 
+        <td>
           {% if t.status == 0 %}
-          <center><a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center>
+          <center><a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id %}"><span
+                class="glyphicon glyphicon-remove-circle"></span></a></center>
           {% elif t.status == 1 %}
-          <center><a class="btn btn-success btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center>
+          <center><a class="btn btn-success btn-xs" href="{% url 'inactive-user' t.id  %}"><span
+                class="glyphicon glyphicon-ok-circle"></span></a></center>
           {% endif %}
         </td>
-        <td><center><a class="btn btn-primary btn-xs" href="{% url 'admin-update-course' t.user_id  %}"><span class="glyphicon glyphicon-user"></span></a></center></td>
-        <td><center><a class="btn btn-primary btn-xs" href="{% url 'admin-mark-usertype' t.id  %}"><span class="glyphicon glyphicon-user"></span></a></center></td>
+        <td>
+          <center><a class="btn btn-primary btn-xs" href="{% url 'admin-update-course' t.user_id  %}"><span
+                class="glyphicon glyphicon-user"></span></a></center>
+        </td>
+        <td>
+          <center><a class="btn btn-primary btn-xs" href="{% url 'admin-mark-usertype' t.id  %}"><span
+                class="glyphicon glyphicon-user"></span></a></center>
+        </td>
       </tr>
       {% endfor %}
     </table>

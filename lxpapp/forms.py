@@ -94,6 +94,7 @@ class LearnerDetailsForm(forms.ModelForm):
 
 class ExamForm(forms.ModelForm):
     courseID=forms.ModelChoiceField(queryset=models.Course.objects.all() ,empty_label="Course Name", to_field_name="id")
+    batchID=forms.ModelChoiceField(queryset=models.Batch.objects.all() ,empty_label="Batch Name", to_field_name="id")
     class Meta:
         model=models.Exam
         fields=['exam_name','questiontpye']
