@@ -286,23 +286,20 @@ def cto_add_topic_view(request):
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 topicForm=ILMSFORM.TopicForm(request.POST)
-                if topicForm.is_valid(): 
-                    topictext = topicForm.cleaned_data["topic_name"]
-                    topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = topictext)
-                    if topic:
-                        messages.info(request, 'Topic Name Already Exist')
-                        topicForm=ILMSFORM.TopicForm()
-                        return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})                  
-                    else:
-
-                        chapter=LXPModel.Video.objects.get(id=request.POST.get('chapterID'))
-                        subject=LXPModel.Playlist.objects.get(id=request.POST.get('subjectID'))
-                        topic = LXPModel.Topic.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_name = topictext)
-                        topic.save()
+                topictext = request.POST.get['topic_name']
+                topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = topictext)
+                if topic:
+                    messages.info(request, 'Topic Name Already Exist')
+                    topicForm=ILMSFORM.TopicForm()
+                    return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})                  
                 else:
-                    print("form is invalid")
+                    chapter=LXPModel.Video.objects.get(id=request.POST.get('chapterID'))
+                    subject=LXPModel.Playlist.objects.get(id=request.POST.get('subjectID'))
+                    topic = LXPModel.Topic.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_name = topictext)
+                    topic.save()
             topicForm=ILMSFORM.TopicForm()
-            return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm})
+            subjects = LXPModel.Playlist.objects.all().order_by('name')
+            return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm,'subjects':subjects})
     #except:
         return render(request,'lxpapp/404page.html')
 

@@ -1,6 +1,6 @@
 {% extends 'trainer/trainerbase.html' %}
 {% block content %}
-{%load static%}
+{% load static%}
 
 <head>
   <style>
@@ -14,56 +14,6 @@
       line-height: 50px;
     }
   </style>
-  <style type="text/css">
-    body {
-      background: linear-gradient(-45deg, #736e8e, #84bcf3, #AE876B, #B0E7AE);
-      background: linear-gradient(-45deg, #0645a4, #2480cd, #84bcf3, #b7d6f7);
-      background: linear-gradient(-45deg, #AE876B, #ABA27B, #A7BC8A, #A3D69A);
-      background-size: 400% 400%;
-      animation: gradient 5s ease infinite;
-    }
-
-    @keyframes gradient {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    .progress {
-      height: 20px;
-      margin-bottom: 20px;
-      overflow: hidden;
-      background-color: #f5f5f5;
-      border-radius: 4px;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-    }
-
-    .progress-bar {
-      float: left;
-      width: 0%;
-      height: 100%;
-      font-size: 12px;
-      line-height: 20px;
-      color: #fff;
-      text-align: center;
-      background-color: #337ab7;
-      -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      -webkit-transition: width .6s ease;
-      -o-transition: width .6s ease;
-      transition: width .6s ease;
-    }
-  </style>
-
-
   <script src="https://unpkg.com/htmx.org@1.4.1"></script>
   <script src="https://unpkg.com/htmx.org/dist/ext/class-tools.js"></script>
 

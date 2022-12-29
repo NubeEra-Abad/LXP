@@ -1,32 +1,88 @@
 {% extends 'cto/ctobase.html' %} {% load widget_tweaks %} {% block content %}
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <style>
     a:link {
       text-decoration: none;
     }
+
+    select {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+  </style>
+  <!-- Bootstrap CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <script src="https://unpkg.com/htmx.org@1.6.0"></script>
+
+  <style type="text/css">
+    div.container {
+      max-width: 500px;
+      margin: 100px auto;
+      border: 2px solid white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    h4 {
+      text-transform: uppercase;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+
+    input[type=text]:focus {
+      background-color: lightblue;
+    }
   </style>
 </head>
+<script>
+  function validateForm() {
+    let x = document.forms[0]["subject"].value;
+    if (x == "Choose your Subject") {
+      alert("Subject Name must be Selected");
+      return false;
+    }
+    x = document.forms[0]["chapters"].value;
+    if (x == "Choose your Chapter") {
+      alert("Chapter Name must be Selected");
+      return false;
+    }
+
+  }
+</script>
+
 <body>
   <div>
-  <ol class="breadcrumb text-right">
-    <li><a href="cto-dashboard">Dashboard</a></li>
-    <li><a href="cto-view-topic">View Topics</a></li>
-    <li class="active">Add Topic</li>
-  </ol>
-</div>
+    <ol class="breadcrumb text-right">
+      <li><a href="cto-dashboard">Dashboard</a></li>
+      <li><a href="cto-view-topic">View Topics</a></li>
+      <li class="active">Add Topic</li>
+    </ol>
+  </div>
   <h2 style="text-align: center; color: blue">Add Topic</h2>
-  <form method="POST" autocomplete="off" style="margin: 100px; margin-top: 0px">
+  <form onsubmit="return validateForm()" method="POST" autocomplete="off" style="margin: 100px; margin-top: 0px">
     {%csrf_token%}
+    <label for="subject">Subject Name</label>
+    <select class="custom-select mb-4" name="subject" hx-get="{% url 'trainer-view-material-chapters' %}"
+      hx-trigger="change" hx-target="#chapters">
+      <option selected>Choose your Subject</option>
+      {% for subject in subjects %}
+      <option value="{{subject.pk}}">{{ subject.name }}</option>
+      {% endfor %}
+    </select>
+    <div id="chapters">
+      {% include 'trainer/material/trainer_material_chapters.html' %}
+    </div>
     <div class="form-group">
       <label for="subject_name">Subject Name</label>
       {% render_field topicForm.subjectID|attr:'required:true' class="form-control" %}

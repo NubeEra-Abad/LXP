@@ -1,65 +1,105 @@
 {% extends 'cto/ctobase.html' %}
 {% block content %}
 {%load static%}
+<!--Bootstrap CSS-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <head>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
-  <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
   <script src="/static/datatableconfig.js"></script>
   <style media="screen">
     a:link {
       text-decoration: none;
     }
+
     h6 {
       text-align: center;
     }
+
     .row {
       margin: 100px;
     }
 
-    table.dataTable tr.odd { background-color: #E2E4FF; }
-    table.dataTable tr.even { background-color: white; }
+    table.dataTable tr.odd {
+      background-color: #E2E4FF;
+    }
+
+    table.dataTable tr.even {
+      background-color: white;
+    }
   </style>
 </head>
+
 <body>
   <ol class="breadcrumb text-right">
     <li><a href="cto-dashboard">Dashboard</a></li>
     <li><a href="cto-add-topic">Add Topic</a></li>
     <li class="active">View Topic</li>
   </ol>
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Topic</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Subject Name</th>
-          <th>Chapter Name</th>
-          <th>Topic Name</th>
-          <th>Update</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      {% for t in topics %}
+  <table class="table table-hover" id="dev-table">
+    <thead>
       <tr>
-        <td> {{t.subject}}</td>
-        <td> {{t.chapter}}</td>
-        <td> {{t.topic_name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-topic' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-topic' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <th>Subject Name</th>
+        <th>Chapter Name</th>
+        <th>Topic Name</th>
+        <th>Update</th>
+        <th>Delete</th>
       </tr>
-      {% endfor %}
-    </table>
+    </thead>
+    {% for t in topics %}
+    <tr>
+      <td> {{t.subject}}</td>
+      <td> {{t.chapter}}</td>
+      <td> {{t.topic_name}}</td>
+      <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-topic' t.id  %}"><span
+            class="	glyphicon glyphicon-pencil"></span></a></td>
+      <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-topic' t.id  %}"
+          onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <!--Pagination-->
+  <div class="container p-4">
+    <div class="pagination justify-content-center">
+          {% if topics.has_previous %}
+               <li><a href="?page={{ topics.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+          {% endif %}
+          {% for i in topics.paginator.page_range %}
+            {% if topics.number == i %}
+              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if topics.has_next %}
+            <li><a href="?page={{ topics.next_page_number }}">&raquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+    </div>
   </div>
-</div>
+  <!--end of Pagination-->
 
-<br><br><br><br><br><br>
-{% endblock content %}
+
+  <!-- Optional Javascript -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+  {% endblock content %}
 </body>
