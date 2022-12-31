@@ -1,0 +1,80 @@
+{% extends 'trainer/trainerbase.html' %}
+{% block content %}
+{%load static%}
+<!--Bootstrap CSS-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
+  <script src="/static/datatableconfig.js"></script>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    table.dataTable tr.odd {
+      background-color: #E2E4FF;
+    }
+
+    table.dataTable tr.even {
+      background-color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <body>
+    <ol class="breadcrumb text-right">
+      <li><a href="trainer-dashboard">Dashboard</a></li>
+      <li><a href="trainer-add-k8sterminal">Add K8STerminal</a></li>
+      <li class="active">View K8STerminal</li>
+    </ol>
+    <div class="container">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">K8STerminal</h6>
+        </div>
+        <table class="table table-hover" id="dev-table">
+          <thead>
+            <tr>
+              <th>Trainer Name</th>
+              <th>Learner Name</th>
+              <th>Password</th>
+              <th>Usage Value</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          {% for t in k8sterminals %}
+          <tr> 
+            <td> {{t.trainer.first_name}} {{t.trainer.last_name}}</td>
+            <td> {{t.learner.first_name}} {{t.learner.last_name}}</td>
+            <td> {{t.Password}}</td>
+            <td> {{t.usagevalue}}</td>
+            <td><a class="btn btn-danger btn-xs" href="{% url 'trainer-delete-k8sterminal' t.id  %}"
+                onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+          </tr>
+          {% endfor %}
+        </table>
+
+      </div>
+    </div>
+
+    {% endblock content %}
+  </body>

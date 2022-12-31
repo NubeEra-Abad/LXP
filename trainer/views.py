@@ -5,10 +5,11 @@ from lxpapp import forms as LXPFORM
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.models import User
-from django.db.models import Sum,Count
+from django.db.models import Sum,Count,Q
 from youtubemanager import PlaylistManager
 from django.http import HttpResponse
 from django.template import loader
+
 import os
 from pathlib import Path
 import google_auth_oauthlib.flow
@@ -70,16 +71,16 @@ def trainer_dashboard_view(request):
 
 @login_required
 def trainer_exam_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             return render(request,'trainer/exam/trainer_exam.html')
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 
 @login_required
 def trainer_add_exam_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 examForm=LXPFORM.ExamForm(request.POST)
@@ -99,12 +100,12 @@ def trainer_add_exam_view(request):
                     print("form is invalid")
             examForm=LXPFORM.ExamForm()
             return render(request,'trainer/exam/trainer_add_exam.html',{'examForm':examForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_update_exam_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             exam = LXPModel.Exam.objects.get(id=pk)
             examForm=LXPFORM.ExamForm(request.POST,instance=exam)
@@ -120,41 +121,41 @@ def trainer_update_exam_view(request,pk):
                         exams = LXPModel.Exam.objects.all()
                         return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
             return render(request,'trainer/exam/trainer_update_exam.html',{'examForm':examForm,'ex':exam.exam_name,'sub':exam.questiontpye})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_exam_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             exams = LXPModel.Exam.objects.all().filter(course_id__in = LXPModel.Course.objects.all())
             return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_delete_exam_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':  
             exam=LXPModel.Exam.objects.get(id=pk)
             exam.delete()
             return HttpResponseRedirect('/trainer/trainer-view-exam')
         exams = LXPModel.Exam.objects.all()
         return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
  
 @login_required
 def trainer_mcqquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             return render(request,'trainer/mcqquestion/trainer_mcqquestion.html')
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_add_mcqquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 mcqquestionForm=LXPFORM.McqQuestionForm(request.POST)
@@ -173,12 +174,12 @@ def trainer_add_mcqquestion_view(request):
                     print("form is invalid")
             mcqquestionForm=LXPFORM.McqQuestionForm()
             return render(request,'trainer/mcqquestion/trainer_add_mcqquestion.html',{'mcqquestionForm':mcqquestionForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_update_mcqquestion_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             mcqquestion = LXPModel.McqQuestion.objects.get(id=pk)
             mcqquestionForm=LXPFORM.McqQuestionForm(request.POST,instance=mcqquestion)
@@ -194,41 +195,41 @@ def trainer_update_mcqquestion_view(request,pk):
                         mcqquestions = LXPModel.McqQuestion.objects.all()
                         return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
             return render(request,'trainer/mcqquestion/trainer_update_mcqquestion.html',{'mcqquestionForm':mcqquestionForm,'ex':mcqquestion.mcqquestion_name,'sub':mcqquestion.questiontpye})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_mcqquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             mcqquestions = LXPModel.McqQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all())
             return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_delete_mcqquestion_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':  
             mcqquestion=LXPModel.McqQuestion.objects.get(id=pk)
             mcqquestion.delete()
             return HttpResponseRedirect('/trainer/trainer-view-mcqquestion')
         mcqquestions = LXPModel.McqQuestion.objects.all()
         return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_shortquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             return render(request,'trainer/shortquestion/trainer_shortquestion.html')
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_add_shortquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 shortquestionForm=LXPFORM.ShortQuestionForm(request.POST)
@@ -247,12 +248,12 @@ def trainer_add_shortquestion_view(request):
                     print("form is invalid")
             shortquestionForm=LXPFORM.ShortQuestionForm()
             return render(request,'trainer/shortquestion/trainer_add_shortquestion.html',{'shortquestionForm':shortquestionForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_update_shortquestion_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             shortquestion = LXPModel.ShortQuestion.objects.get(id=pk)
             shortquestionForm=LXPFORM.ShortQuestionForm(request.POST,instance=shortquestion)
@@ -270,51 +271,51 @@ def trainer_update_shortquestion_view(request,pk):
                         shortquestions = LXPModel.ShortQuestion.objects.all()
                         return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
             return render(request,'trainer/shortquestion/trainer_update_shortquestion.html',{'shortquestionForm':shortquestionForm,'ex':shortquestion.question})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_shortquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             shortquestions = LXPModel.ShortQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all())
             return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_delete_shortquestion_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':  
             shortquestion=LXPModel.ShortQuestion.objects.get(id=pk)
             shortquestion.delete()
             return HttpResponseRedirect('/trainer/trainer-view-shortquestion')
         shortquestions = LXPModel.ShortQuestion.objects.all()
         return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_pending_short_exam_result_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             pending = LXPModel.ShortResult.objects.all().filter( learner_id__in = User.objects.all(),exam_id__in = LXPModel.Exam.objects.all(),status = False)
             return render(request,'trainer/shortexam/trainer_pending_short_exam_reuslt.html',{'pending':pending})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_update_short_question_result_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = pk)
             return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_save_short_question_result_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=="POST":
                 feedback=request.POST['newfeedback']
@@ -342,7 +343,7 @@ def trainer_save_short_question_result_view(request,pk):
                 else:
                     resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = mainid)
                     return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html') 
 
 @login_required
@@ -585,12 +586,12 @@ def Import_excel(request):
 
 @login_required
 def trainer_view_learner_video_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             #learner = UserSocialAuth.objects.raw("SELECT social_auth_usersocialauth.id,social_auth_usersocialauth.provider,social_auth_usersocialauth.uid,auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 0 THEN 'Learner' ELSE 'Trainer' END AS utype,CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,IFNULL(course_name,'') AS course_name,auth_user.id as user_id FROM social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  WHERE social_auth_usersocialauth.utype = 0 AND social_auth_usersocialauth.status = 1 Order by social_auth_usersocialauth.uid")
             learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) WHERE (social_auth_usersocialauth.utype = 0 OR social_auth_usersocialauth.utype = 2) AND social_auth_usersocialauth.status = 1 GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name ')
             return render(request,'trainer/learnervideo/trainer_view_learner_video.html',{'learner':learner})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -640,7 +641,7 @@ def trainer_learner_video_list_view(request,subject_id,course_id):
  
 @login_required
 def trainer_learner_show_video_view(request,subject_id,course_id,video_id):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'trainer':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
@@ -651,7 +652,7 @@ def trainer_learner_show_video_view(request,subject_id,course_id,video_id):
                 topicname =x.name
                 url = "https://www.youtube.com/embed/" + x.video_id
             return render(request,'trainer/learnervideo/trainer_learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -671,7 +672,7 @@ def trainer_material_chapters_view(request):
 
 @login_required
 def trainer_add_material_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 subject = request.POST.getlist('subject')
@@ -708,12 +709,12 @@ def trainer_add_material_view(request):
             subjects = LXPModel.Playlist.objects.all()
             context = {'subjects': subjects}
             return render(request,'trainer/material/trainer_add_material.html',context)
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_update_material_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             material = LXPModel.Video.objects.get(id=pk)
             materialForm=LXPFORM.MaterialForm(request.POST,instance=material)
@@ -739,17 +740,17 @@ def trainer_update_material_view(request,pk):
                         c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
                         return render(request,'trainer/material/trainer_view_material.html',{'materials':c_list})
             return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm,'sub':material.name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_material_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
             materials = LXPModel.Material.objects.all().filter(subject_id__in=LXPModel.Playlist.objects.all())
             return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -765,7 +766,7 @@ def trainer_delete_material_view(request,pk):
 
 @login_required
 def trainer_show_material_view(request,subjectname,chaptername,materialtype,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             details= LXPModel.Material.objects.all().filter(id=pk)
             if materialtype == '1':
@@ -774,7 +775,7 @@ def trainer_show_material_view(request,subjectname,chaptername,materialtype,pk):
                 return render(request,'trainer/material/trainer_material_urlshow.html',{'details':details})
             if materialtype == '3':
                 return render(request,'trainer/material/trainer_material_pdfshow.html',{'details':details})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -859,3 +860,90 @@ def trainer_start_upload_file_view(request):
             return output
         else:
             return redirect("/")
+
+
+@login_required
+def trainer_k8sterminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            return render(request,'trainer/k8sterminal/trainer_k8sterminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_add_k8sterminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            if request.method=='POST':
+                k8sterminalForm=LXPFORM.K8STerminalForm(request.POST)
+                learner_id = request.POST['user_name']
+                usagevalue = request.POST.get('usagevalue')
+                password1 = request.POST.get("password")
+                password2 = request.POST.get("confirmpassword")
+                if password1 and password2 and password1 != password2:
+                    messages.info(request, 'password_mismatch')
+                else:
+                    k8sterminal = LXPModel.K8STerminal.objects.create(
+                        trainer_id = request.user.id,
+                        learner_id = learner_id,
+                        Password = password1,
+                        usagevalue = usagevalue)
+                    k8sterminal.save()
+                    messages.info(request, 'Record Saved')
+            k8sterminalForm=LXPFORM.K8STerminalForm()
+            users = User.objects.all().filter(id__in = UserSocialAuth.objects.all().filter(Q(utype=0) | Q(utype=2),status = 1))
+            return render(request,'trainer/k8sterminal/trainer_add_k8sterminal.html',{'k8sterminalForm':k8sterminalForm,'users':users})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_update_k8sterminal_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            k8sterminal = LXPModel.K8STerminal.objects.get(id=pk)
+            k8sterminalForm=LXPFORM.K8STerminalForm(request.POST,instance=k8sterminal)
+            if request.method=='POST':
+                if k8sterminalForm.is_valid(): 
+                    k8sterminaltext = k8sterminalForm.cleaned_data["k8sterminal_name"]
+                    chaptertext = k8sterminalForm.cleaned_data["chapterID"]
+                    subjecttext = k8sterminalForm.cleaned_data["subjectID"]
+                    k8sterminal = LXPModel.K8STerminal.objects.all().filter(k8sterminal_name__iexact = k8sterminaltext).exclude(id=pk)
+                    if k8sterminal:
+                        messages.info(request, 'K8STerminal Name Already Exist')
+                        return render(request,'trainer/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm})
+                    else:
+                        chapter = LXPModel.Video.objects.get(chapter_name=chaptertext)
+                        subject = LXPModel.Playlist.objects.get(subject_name=subjecttext)
+                        k8sterminal = LXPModel.K8STerminal.objects.get(id=pk)
+                        k8sterminal.k8sterminal_name = k8sterminaltext
+                        k8sterminal.subject_id = subject.id
+                        k8sterminal.chapter_id = chapter.id
+                        k8sterminal.save()
+                        c_list = LXPModel.K8STerminal.objects.filter(chapter_id__in=LXPModel.Video.objects.all())
+                        return render(request,'trainer/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':c_list})
+            return render(request,'trainer/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm,'sub':k8sterminal.k8sterminal_name})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+#c_list = LXPModel.K8STerminal.objects.filter(chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all())
+from django.core.paginator import Paginator
+@login_required
+def trainer_view_k8sterminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            k8sterminals = LXPModel.K8STerminal.objects.all().filter(learner_id__in = User.objects.all().filter(id__in=UserSocialAuth.objects.all()))
+            return render(request,'trainer/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_delete_k8sterminal_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            k8sterminal=LXPModel.K8STerminal.objects.get(id=pk)
+            k8sterminal.delete()
+            return HttpResponseRedirect('/trainer/trainer-view-k8sterminal')
+        k8sterminals = LXPModel.K8STerminal.objects.all()
+        return render(request,'trainer/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
+    except:
+        return render(request,'lxpapp/404page.html')

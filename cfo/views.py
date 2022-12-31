@@ -32,11 +32,11 @@ def cfo_dashboard_view(request):
  
 @login_required
 def cfo_manage_learner_view(request):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'cfo':
             users = LXPModel.Course.objects.raw("SELECT social_auth_usersocialauth.id,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 1 THEN 'Trainer' WHEN social_auth_usersocialauth.utype = 2 THEN 'learner' WHEN social_auth_usersocialauth.utype = 3 THEN 'cto' WHEN social_auth_usersocialauth.utype = 4 THEN 'cfo' END AS utype,  CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,  lxpapp_course.course_name,auth_user.id as user_id FROM  social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id)  LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) WHERE social_auth_usersocialauth.utype = 2 OR social_auth_usersocialauth.utype = 0 ")
             return render(request,'cfo/cfo_manage_learner.html',{'users':users})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -67,7 +67,7 @@ def cfo_inactive_learner_view(request,pk):
 
 @login_required
 def cfo_update_learner_course_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'cfo':
             if request.method=="POST":
                 course=request.POST['newcourse']
@@ -80,7 +80,7 @@ def cfo_update_learner_course_view(request,pk):
                 return render(request,'cfo/cfo_manage_learner.html',{'users':users})
             course = LXPModel.Course.objects.all()
             return render(request,'cfo/cfo_update_learner_course.html',{'courses':course,'uid':pk})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -115,7 +115,7 @@ def cfo_add_coursetype_view(request):
 
 @login_required
 def cfo_update_coursetype_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             coursetype = LXPModel.CourseType.objects.get(id=pk)
             coursetypeForm=LXPFORM.CourseTypeForm(request.POST,instance=coursetype)
@@ -131,7 +131,7 @@ def cfo_update_coursetype_view(request,pk):
                         coursetypes = LXPModel.CourseType.objects.all()
                         return render(request,'cfo/coursetype/cfo_view_coursetype.html',{'coursetypes':coursetypes})
             return render(request,'cfo/coursetype/cfo_update_coursetype.html',{'coursetypeForm':coursetypeForm,'sub':coursetype.coursetype_name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -165,7 +165,7 @@ def cfo_batch_view(request):
 
 @login_required
 def cfo_add_batch_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             if request.method=='POST':
                 batchForm=LXPFORM.BatchForm(request.POST)
@@ -196,12 +196,12 @@ def cfo_add_batch_view(request):
             batchForm=LXPFORM.BatchForm()
             trainers =  UserSocialAuth.objects.filter(user_id__in=User.objects.all(),status = True,utype=1)
             return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cfo_update_batch_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             batch = LXPModel.Batch.objects.get(id=pk)
             batchForm=LXPFORM.BatchForm(request.POST,instance=batch)
@@ -217,7 +217,7 @@ def cfo_update_batch_view(request,pk):
                         batchs = LXPModel.Batch.objects.all()
                         return render(request,'cfo/batch/cfo_view_batch.html',{'batchs':batchs})
             return render(request,'cfo/batch/cfo_update_batch.html',{'batchForm':batchForm,'sub':batch.batch_name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

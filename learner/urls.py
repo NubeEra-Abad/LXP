@@ -24,4 +24,6 @@ path('learner-video-list/<int:subject_id>,/<int:course_id>', views.learner_video
 path('learner-show-video/<int:subject_id>,/<int:course_id>,/<int:video_id>', views.learner_show_video_view,name='learner-show-video'),
 path('learner-see-material/<subject_id>/<chapter_id>/<course_id>/<int:pk>', views.learner_see_material_view,name='learner-see-material'),
 
+path('learner-check-k8sterminal', views.learner_check_k8sterminal_view,name='learner-check-k8sterminal'),
+
 ]

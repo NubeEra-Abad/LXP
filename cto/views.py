@@ -35,7 +35,7 @@ def ctoclick_view(request):
 
 @login_required    
 def cto_dashboard_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             dict={
             'total_course':0,
@@ -45,7 +45,7 @@ def cto_dashboard_view(request):
             'total_learner':0
             }
         return render(request,'cto/cto_dashboard.html',context=dict)
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -58,7 +58,7 @@ def cto_subject_view(request):
 
 @login_required
 def cto_add_subject_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 subjectForm=LXPFORM.SubjectForm(request.POST)
@@ -101,12 +101,12 @@ def cto_add_subject_view(request):
                     print("form is invalid")
             subjectForm=LXPFORM.SubjectForm()
             return render(request,'cto/subject/cto_add_subject.html',{'subjectForm':subjectForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_subject_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             subject = LXPModel.Playlist.objects.get(id=pk)
             subjectForm=LXPFORM.SubjectForm(request.POST,instance=subject)
@@ -122,7 +122,7 @@ def cto_update_subject_view(request,pk):
                         subjects = LXPModel.Playlist.objects.all()
                         return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
             return render(request,'cto/subject/cto_update_subject.html',{'subjectForm':subjectForm,'sub':subject.name,'pl':subject.playlist_id})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -156,7 +156,7 @@ def cto_chapter_view(request):
 
 @login_required
 def cto_add_chapter_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 chapterForm=LXPFORM.ChapterForm(request.POST)
@@ -215,12 +215,12 @@ def cto_add_chapter_view(request):
                     print("form is invalid")
             chapterForm=LXPFORM.ChapterForm()
             return render(request,'cto/chapter/cto_add_chapter.html',{'chapterForm':chapterForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_chapter_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             chapter = LXPModel.Video.objects.get(id=pk)
             chapterForm=LXPFORM.ChapterForm(request.POST,instance=chapter)
@@ -246,16 +246,16 @@ def cto_update_chapter_view(request,pk):
                         c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
                         return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':c_list})
             return render(request,'cto/chapter/cto_update_chapter.html',{'chapterForm':chapterForm,'sub':chapter.name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_chapter_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
             return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':c_list})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -282,7 +282,7 @@ def cto_topic_view(request):
 
 @login_required
 def cto_add_topic_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 topicForm=LXPFORM.TopicForm(request.POST)
@@ -305,12 +305,12 @@ def cto_add_topic_view(request):
             topicForm=LXPFORM.TopicForm()
             subjects = LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/topic/cto_add_topic.html',{'topicForm':topicForm,'subjects':subjects})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_topic_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             topic = LXPModel.Topic.objects.get(id=pk)
             topicForm=LXPFORM.TopicForm(request.POST,instance=topic)
@@ -334,14 +334,14 @@ def cto_update_topic_view(request,pk):
                         c_list = LXPModel.Topic.objects.filter(chapter_id__in=LXPModel.Video.objects.all())
                         return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
             return render(request,'cto/topic/cto_update_topic.html',{'topicForm':topicForm,'sub':topic.topic_name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 #c_list = LXPModel.Topic.objects.filter(chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all())
 from django.core.paginator import Paginator
 @login_required
 def cto_view_topic_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             
             # c_list = LXPModel.Topic.objects.raw('SELECT   lxpapp_topic.id,  lxpapp_playlist.name AS playlist_name ,  lxpapp_video.name AS video_name FROM  lxpapp_playlist  INNER JOIN lxpapp_topic ON (lxpapp_playlist.id = lxpapp_topic.subject_id)  INNER JOIN lxpapp_video ON (lxpapp_topic.chapter_id = lxpapp_video.id)')
@@ -352,7 +352,7 @@ def cto_view_topic_view(request):
 
             return render(request=request, template_name="cto/topic/cto_view_topic.html", context={'topics':page_obj})
             return render(request,'cto/topic/cto_view_topic.html',{'topics':c_list})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -376,7 +376,7 @@ def cto_course_view(request):
         return render(request,'lxpapp/404page.html')
 
 def cto_add_course_view(request):
-    #try:
+    try:
         from django.forms import modelformset_factory
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
@@ -419,37 +419,37 @@ def cto_add_course_view(request):
             courseForm=LXPFORM.CourseForm()
             det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
             return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def cto_view_course_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             c_list = LXPModel.Course.objects.all()
             return render(request,'cto/course/cto_view_course.html',{'courses':c_list})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def cto_view_course_details_view(request,cname):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all())
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def cto_delete_course_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':  
             course=LXPModel.Course.objects.get(id=pk)
             course.delete()
             c_list = LXPModel.Course.objects.all()
             return render(request,'cto/course/cto_view_course.html',{'courses':c_list})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def cto_add_course_by_playlist_view(request):
-    #try:
+    try:
         from django.forms import modelformset_factory
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
@@ -478,7 +478,7 @@ def cto_add_course_by_playlist_view(request):
             courseForm=LXPFORM.CourseForm()
             subject=LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/course/cto_add_course_by_playlist.html',{'courseForm':courseForm,'subject':subject})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 class CourseList(ListView):
@@ -594,7 +594,7 @@ def cto_add_passionateskill_view(request):
 
 @login_required
 def cto_update_passionateskill_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             passionateskill = LXPModel.PassionateSkill.objects.get(id=pk)
             passionateskillForm=LXPFORM.PassionateSkillForm(request.POST,instance=passionateskill)
@@ -610,7 +610,7 @@ def cto_update_passionateskill_view(request,pk):
                         passionateskills = LXPModel.PassionateSkill.objects.all()
                         return render(request,'cto/passionateskill/cto_view_passionateskill.html',{'passionateskills':passionateskills})
             return render(request,'cto/passionateskill/cto_update_passionateskill.html',{'passionateskillForm':passionateskillForm,'sub':passionateskill.passionateskill_name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -666,7 +666,7 @@ def cto_add_knownskill_view(request):
 
 @login_required
 def cto_update_knownskill_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             knownskill = LXPModel.KnownSkill.objects.get(id=pk)
             knownskillForm=LXPFORM.KnownSkillForm(request.POST,instance=knownskill)
@@ -682,7 +682,7 @@ def cto_update_knownskill_view(request,pk):
                         knownskills = LXPModel.KnownSkill.objects.all()
                         return render(request,'cto/knownskill/cto_view_knownskill.html',{'knownskills':knownskills})
             return render(request,'cto/knownskill/cto_update_knownskill.html',{'knownskillForm':knownskillForm,'sub':knownskill.knownskill_name})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+from django.contrib.messages import constants as messages
 import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -180,3 +180,10 @@ AWS_BUCKET_NAME='bkt-test-08nov'
 AWS_ACCESS_KEY='AKIATZQFG2PZIUPD23GA'
 AWS_SECRET_ACCESS_KEY=' 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'
 AWS_DOMAIN='http://bkt-test-08nov.s3.amazonaws.com/'
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+}

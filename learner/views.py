@@ -18,30 +18,30 @@ def learnerclick_view(request):
     return render(request,'learner/learnerclick.html')
 
 def learner_dashboard_view(request):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             dict={
             'total_Video':0,
             'total_exam':0,
             }
             return render(request,'learner/learner_dashboard.html',context=dict)
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_exam_view(request):
-    #try:    
-    if str(request.session['utype']) == 'learner':
-        course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
-        a=''
-        for x in course:
-            a = x.id
-        exams=LXPModel.Exam.objects.all().filter(questiontpye='MCQ',course_id = a)
-        return render(request,'learner/exam/learner_exam.html',{'exams':exams})
-    #except:
+    try:    
+        if str(request.session['utype']) == 'learner':
+            course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
+            a=''
+            for x in course:
+                a = x.id
+            exams=LXPModel.Exam.objects.all().filter(questiontpye='MCQ',course_id = a)
+            return render(request,'learner/exam/learner_exam.html',{'exams':exams})
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_take_exam_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             exam = LXPModel.Exam.objects.all().filter(id=pk)
             mcqquestion= LXPModel.McqQuestion.objects.filter(exam_id=pk)
@@ -51,11 +51,11 @@ def learner_take_exam_view(request,pk):
                 total_marks = total_marks + x.marks
                 total_questions = total_questions + 1
             return render(request,'learner/exam/learner_take_exam.html',{'exam':exam,'total_questions':total_questions,'total_marks':total_marks})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_start_exam_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             if request.method == 'POST':
                 mcqresult = LXPModel.McqResult.objects.create(learner_id = request.user.id,exam_id =pk,marks=0,wrong=0,correct=0)
@@ -105,41 +105,40 @@ def learner_start_exam_view(request,pk):
             exam=LXPModel.Exam.objects.get(id=pk)
             questions=LXPModel.McqQuestion.objects.all().filter(exam_id=exam.id).order_by('?')
             return render(request,'learner/exam/learner_start_exam.html',{'exam':exam,'questions':questions})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_exam_reuslt_view(request,pk):
-    #try:    
-    if str(request.session['utype']) == 'learner':
-        exams=LXPModel.McqResult.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all(), learner_id=request.user.id,exam_id = pk)
-        
-        return render(request,'learner/exam/learner_show_exam_reuslt.html',{'exams':exams})
-    #except:
+    try:    
+        if str(request.session['utype']) == 'learner':
+            exams=LXPModel.McqResult.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all(), learner_id=request.user.id,exam_id = pk)
+            return render(request,'learner/exam/learner_show_exam_reuslt.html',{'exams':exams})
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_exam_reuslt_details_view(request,pk):
-    #try:    
-    if str(request.session['utype']) == 'learner':
-        exams=LXPModel.McqResultDetails.objects.all().filter(question_id__in = LXPModel.McqQuestion.objects.all(), mcqresult_id = pk)
-        return render(request,'learner/exam/learner_exam_result_details.html',{'exams':exams})
-    #except:
+    try:    
+        if str(request.session['utype']) == 'learner':
+            exams=LXPModel.McqResultDetails.objects.all().filter(question_id__in = LXPModel.McqQuestion.objects.all(), mcqresult_id = pk)
+            return render(request,'learner/exam/learner_exam_result_details.html',{'exams':exams})
+    except:
         return render(request,'lxpapp/404page.html')
 
 
 def learner_short_exam_view(request):
-    #try:    
-    if str(request.session['utype']) == 'learner':
-        course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
-        a=''
-        for x in course:
-            a = x.id
-        shortexams=LXPModel.Exam.objects.all().filter(questiontpye='ShortAnswer',course_id = a)
-        return render(request,'learner/shortexam/learner_short_exam.html',{'shortexams':shortexams})
-    #except:
+    try:    
+        if str(request.session['utype']) == 'learner':
+            course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
+            a=''
+            for x in course:
+                a = x.id
+            shortexams=LXPModel.Exam.objects.all().filter(questiontpye='ShortAnswer',course_id = a)
+            return render(request,'learner/shortexam/learner_short_exam.html',{'shortexams':shortexams})
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_take_short_exam_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             shortexam = LXPModel.Exam.objects.all().filter(id=pk)
             mcqquestion= LXPModel.ShortQuestion.objects.filter(exam_id=pk)
@@ -149,11 +148,11 @@ def learner_take_short_exam_view(request,pk):
                 total_marks = total_marks + x.marks
                 total_questions = total_questions + 1
             return render(request,'learner/shortexam/learner_take_short_exam.html',{'shortexam':shortexam,'total_questions':total_questions,'total_marks':total_marks})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_start_short_exam_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             if request.method == 'POST':
                 shortresult = LXPModel.ShortResult.objects.create(learner_id = request.user.id,exam_id =pk,marks=0)
@@ -181,27 +180,27 @@ def learner_start_short_exam_view(request,pk):
             shortexam=LXPModel.Exam.objects.get(id=pk)
             questions=LXPModel.ShortQuestion.objects.all().filter(exam_id=shortexam.id).order_by('?')
             return render(request,'learner/shortexam/learner_start_short_exam.html',{'shortexam':shortexam,'questions':questions})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_short_exam_reuslt_view(request,pk):
-    #try:    
-    if str(request.session['utype']) == 'learner':
-        shortexams=LXPModel.ShortResult.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all(), learner_id=request.user.id,exam_id = pk)
-        return render(request,'learner/shortexam/learner_show_short_exam_reuslt.html',{'shortexams':shortexams})
-    #except:
+    try:    
+        if str(request.session['utype']) == 'learner':
+            shortexams=LXPModel.ShortResult.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all(), learner_id=request.user.id,exam_id = pk)
+            return render(request,'learner/shortexam/learner_show_short_exam_reuslt.html',{'shortexams':shortexams})
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_short_exam_reuslt_details_view(request,pk):
-    #try:    
-    if str(request.session['utype']) == 'learner':
-        shortexams=LXPModel.ShortResultDetails.objects.all().filter(question_id__in = LXPModel.ShortQuestion.objects.all(), shortresult_id = pk)
-        return render(request,'learner/shortexam/learner_short_exam_result_details.html',{'shortexams':shortexams})
-    #except:
+    try:    
+        if str(request.session['utype']) == 'learner':
+            shortexams=LXPModel.ShortResultDetails.objects.all().filter(question_id__in = LXPModel.ShortQuestion.objects.all(), shortresult_id = pk)
+            return render(request,'learner/shortexam/learner_short_exam_result_details.html',{'shortexams':shortexams})
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_video_Course_view(request):
-#    try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             # users = LXPModel.Course.objects.all().filter(id__in = LXPModel.UserCourse.objects.all().filter(user_id=str(request.user.id)))  
             # for course in users:
@@ -209,11 +208,11 @@ def learner_video_Course_view(request):
             #     return render(request,'learner/learner_video_course.html',{'videos':videos1, 'coursename':str(course.course_name)})
             videos1 = LXPModel.UserCourse.objects.all().filter(course_id__in = LXPModel.Course.objects.all(),user_id=str(request.user.id))  
             return render(request,'learner/video/learner_video_course.html',{'videos':videos1})
- #   except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_video_Course_subject_view(request,course_id):
-#    try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
@@ -233,21 +232,21 @@ def learner_video_Course_subject_view(request,course_id):
             dif = tc-wc
 
             return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
- #   except:
+    except:
         return render(request,'lxpapp/404page.html')
  
 def learner_video_list_view(request,subject_id,course_id):
-    #try:     
+    try:     
         if str(request.session['utype']) == 'learner':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            list = LXPModel.PlaylistItem.objects.raw('SELECT   vid.id,  vid.name,  ifnuLL(lxpapp_videowatched.id, 0) AS watched_id, ifnuLL((SELECT id FROM lxpapp_material Where lxpapp_material.chapter_id = vid.id),0) as matid FROM  lxpapp_playlistitem  LEFT OUTER JOIN lxpapp_video vid ON (lxpapp_playlistitem.video_id = vid.id)  LEFT OUTER JOIN lxpapp_videowatched ON (vid.id = lxpapp_videowatched.video_id) WHERE  lxpapp_playlistitem.playlist_id = '+str (subject_id)+' AND  (lxpapp_videowatched.learner_id = '+str(request.user.id)+' OR  lxpapp_videowatched.learner_id IS NULL)')  
+            list = LXPModel.PlaylistItem.objects.raw('SELECT   vid.id,  vid.name,  ifnuLL(lxpapp_videowatched.id, 0) AS watched_id, ifnuLL((SELECT id FROM lxpapp_material Where lxpapp_material.chapter_id = vid.id),0) as matid FROM  lxpapp_playlistitem  LEFT OUTER JOIN lxpapp_video vid ON (lxpapp_playlistitem.video_id = vid.id)  LEFT OUTER JOIN lxpapp_videowatched ON (vid.id = lxpapp_videowatched.video_id) WHERE  lxpapp_playlistitem.playlist_id = '+str (subject_id)+'  AND (lxpapp_videowatched.learner_id = '+str(request.user.id)+' OR  lxpapp_videowatched.learner_id IS NULL  OR  lxpapp_videowatched.learner_id > 0)')  
             return render(request,'learner/video/learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_video_view(request,subject_id,course_id,video_id):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
@@ -264,12 +263,12 @@ def learner_show_video_view(request,subject_id,course_id,video_id):
                     vw=  LXPModel.VideoWatched.objects.create(video_id = video_id,learner_id=request.user.id)
                     vw.save()
             return render(request,'learner/video/learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 
 def learner_see_material_view(request,subject_id,chapter_id,course_id,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'learner':
             details= LXPModel.Material.objects.all().filter(id=pk)
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
@@ -285,5 +284,43 @@ def learner_see_material_view(request,subject_id,chapter_id,course_id,pk):
                 return render(request,'learner/material/learner_material_urlshow.html',{'details':details,'subjectname':subjectname,'chaptername':chaptername,'subject_id':subject_id,'course_id':course_id})
             if materialtype == 3:
                 return render(request,'learner/material/learner_material_pdfshow.html',{'details':details,'subjectname':subjectname,'chaptername':chaptername,'subject_id':subject_id,'course_id':course_id})
-    #except:
+    except:
         return render(request,'ilmsapp/404page.html')
+
+def learner_check_k8sterminal_view(request):
+    #try:
+        if str(request.session['utype']) == 'learner':
+            if request.method=='POST':
+                password = request.POST.get("password")
+                if password == '' or password is None:
+                    messages.info(request, 'Please Enter password')
+                    return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
+                usage = LXPModel.K8STerminal.objects.all().filter(learner_id= request.user.id)
+                if not usage:
+                    messages.info(request, 'Invalid password or Terminal Setting not found, please contact to your trainer')
+                    return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
+                totcount = 0
+                passwordmain=''
+                for x in usage:
+                    totcount += x.usagevalue
+                    passwordmain = x.Password
+                usagecount = LXPModel.K8STerminalLearnerCount.objects.all().filter(learner_id= request.user.id)
+                count = 0
+                for x in usagecount:
+                    count += x.usedvalue
+                if password != passwordmain:
+                    messages.info(request, 'Invalid password or Terminal Setting not found, please contact to your trainer')
+                    return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
+                if count > totcount:
+                    messages.info(request, 'Terminal usage permission exceed, please contact to your trainer')
+                    return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
+                
+                count += 1
+                usagecount = LXPModel.K8STerminalLearnerCount.objects.create(
+                            learner_id = request.user.id,
+                            usedvalue = 1
+                ).save()
+                return render(request,'learner/k8sterminal/learner_launch_k8sterminal.html')
+            return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
+    #except: 
+        return render(request,'lxpapp/404page.html')

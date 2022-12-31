@@ -3,7 +3,7 @@ import os
 #from social_django.models import UserSocialAuth as a
 
 from urllib.parse import parse_qs, urlparse
-from . import forms,models
+from lxpapp import forms,models
 from django.db.models import Sum
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
@@ -159,7 +159,7 @@ def adminclick_view(request):
     return HttpResponseRedirect('adminlogin')
 
 def admin_dashboard_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'admin':
             dict={
             'total_learner':0,
@@ -168,7 +168,7 @@ def admin_dashboard_view(request):
             'total_question':0,
             }
             return render(request,'lxpapp/admin_dashboard.html',context=dict)
-   # except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def syncyoutube_view(request):
@@ -243,11 +243,11 @@ def contactus_view(request):
     except:
         return render(request,'lxpapp/404page.html')
 def admin_view_user_view(request):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'admin':
             users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
             return render(request,'lxpapp/admin_view_user.html',{'users':users})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def active_user_view(request,userid,pk):
@@ -274,7 +274,7 @@ def inactive_user_view(request,pk):
     except:
         return render(request,'lxpapp/404page.html')
 def admin_update_course_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'admin':
             if request.method=="POST":
                 course = request.POST.getlist('playlist[]')
@@ -287,11 +287,11 @@ def admin_update_course_view(request,pk):
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
             course = models.Course.objects.all()
             return render(request,'lxpapp/admin_update_course.html',{'courses':course,'uid':pk})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def admin_mark_usertype_view(request,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'admin':
             if request.method=="POST":
                 newtype=request.POST['newtype']
@@ -300,6 +300,6 @@ def admin_mark_usertype_view(request,pk):
                 users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
             return render(request,'lxpapp/admin_mark_usertype.html',{'courses':'course','uid':pk})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
