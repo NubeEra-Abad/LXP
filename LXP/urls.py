@@ -16,9 +16,7 @@ urlpatterns = [
     #path('logout', LogoutView.as_view(template_name='lxpapp/logout.html'),name='logout'),
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
-    path('afterlogin', views.afterlogin_view,name='afterlogin'),
-    path('syncyoutube', views.syncyoutube_view,name='syncyoutube'),
-    path('syncyoutube-start', views.syncyoutube_start_view,name='syncyoutube-start'),
+    path('afterlogin', views.afterlogin_view,name='afterlogin'),   
 
     path('adminclick', views.adminclick_view),
     path('adminlogin', LoginView.as_view(template_name='lxpapp/adminlogin.html'),name='adminlogin'),
@@ -27,9 +25,9 @@ urlpatterns = [
     path('admin-view-user', views.admin_view_user_view,name='admin-view-user'),
     path('active-user/<userid>/<int:pk>', views.active_user_view,name='active-user'),
     path('inactive-user/<int:pk>', views.inactive_user_view,name='inactive-user'),
+    path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),
     path('admin-update-course/<int:pk>', views.admin_update_course_view,name='admin-update-course'),
-    path('admin-mark-usertype/<int:pk>', views.admin_mark_usertype_view,name='admin-mark-usertype'),
-    
- 
+    path('admin-mark-usertype/<int:pk>', views.admin_mark_usertype_view,name='admin-mark-usertype'), 
 ]
+
 
