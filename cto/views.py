@@ -374,10 +374,47 @@ def cto_course_view(request):
             return render(request,'cto/course/cto_course.html')
     except:
         return render(request,'lxpapp/404page.html')
+@login_required
+def cto_update_course_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                course = LXPModel.Course.objects.get(id=pk)
+                courseForm=LXPFORM.CourseForm(request.POST,instance=course)
+                if courseForm.is_valid() : 
+                    coursetext = courseForm.cleaned_data["course_name"]
+                    course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext).exclude(id=pk)
+                    if course:
+                        messages.info(request, 'Course Name Already Exist')
+                    else:
+                        cdetails = LXPModel.CourseDetails.objects.all().filter(course_id = pk)
+                        cdetails.delete()
+                        course = courseForm.save(commit=False)
+                        course.save()
+                        selectedlist = request.POST.getlist('playlist[]')
+                        for PLID in selectedlist:
+                            topics =LXPModel.Topic.objects.all().filter(subject_id=PLID)
+                            for det in topics:
+                                LXPModel.CourseDetails.objects.create(
+                                    course_id= pk,
+                                    subject_id= det.subject_id,
+                                    chapter_id= det.chapter_id,
+                                    topic_id= det.id
+                                ).save()
+                        messages.info(request, 'Course saved')
+                else:
+                    print("form is invalid")
+            courseForm=LXPFORM.CourseForm()
+            subject=LXPModel.Playlist.objects.all().order_by('name')
+            course=LXPModel.Course.objects.all().filter(id = pk)
+            for x in course:
+                course = x.course_name
+            return render(request,'cto/course/cto_update_course.html',{'courseForm':courseForm,'subject':subject,'sub':course})
+    #except:
+        return render(request,'lxpapp/404page.html')
 
 def cto_add_course_view(request):
     try:
-        from django.forms import modelformset_factory
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
@@ -430,12 +467,13 @@ def cto_view_course_view(request):
     except:
         return render(request,'lxpapp/404page.html')
 
-def cto_view_course_details_view(request,cname):
-    try:
+def cto_view_course_details_view(request,cname,cid):
+    #try:
         if str(request.session['utype']) == 'cto':
-            c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all())
+            c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all()).order_by('id')
+            c_list = LXPModel.CourseDetails.objects.select_related().values('subject__name','chapter__name','topic__topic_name').filter(course_id = cid).order_by('chapter__name')
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 def cto_delete_course_view(request,pk):

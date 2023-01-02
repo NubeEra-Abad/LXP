@@ -41,6 +41,7 @@
       <thead>
         <tr>
           <th>Course Name</th>
+          <th>Update</th>
           <th>Details</th>
           <th>Delete</th>
         </tr>
@@ -48,7 +49,8 @@
       {% for t in courses %}
       <tr>
         <td> {{t.course_name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-view-course-details' t.course_name  %}" ><span class="glyphicon glyphicon-pencil"></span></a></td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-course' t.id  %}" ><span class="glyphicon glyphicon-pencil"></span></a></td>
+        <td><a class="btn btn-info btn-xs" href="{% url 'cto-view-course-details' t.course_name t.id %}" ><span class="glyphicon glyphicon-pencil"></span></a></td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-course' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}

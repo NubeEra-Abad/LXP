@@ -69,9 +69,9 @@
       </thead>
       {% for t in courses %}
       <tr>
-        <td> {{t.subject}}</td>
-        <td> {{t.chapter}}</td>
-        <td> {{t.topic}}</td>
+        <td> {{t.subject__name}}</td>
+        <td> {{t.chapter__name}}</td>
+        <td> {{t.topic__topic_name}}</td>
       </tr>
       {% endfor %}
     </table>

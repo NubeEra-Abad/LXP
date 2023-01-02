@@ -29,7 +29,8 @@ urlpatterns = [
     path('cto-course', views.cto_course_view,name='cto-course'),
     path('cto-add-course', views.cto_add_course_view,name='cto-add-course'),
     path('cto-view-course', views.cto_view_course_view,name='cto-view-course'),
-    path('cto-view-course-details/<cname>', views.cto_view_course_details_view,name='cto-view-course-details'),
+    path('cto-update-course/<int:pk>', views.cto_update_course_view,name='cto-update-course'),
+    path('cto-view-course-details/<cname>/<int:cid>', views.cto_view_course_details_view,name='cto-view-course-details'),
     path('cto-delete-course/<int:pk>', views.cto_delete_course_view,name='cto-delete-course'),
 
     path('cto-add-course-by-playlist', views.cto_add_course_by_playlist_view,name='cto-add-course-by-playlist'),
@@ -38,7 +39,6 @@ urlpatterns = [
     path('course-add', views.CDetailsCreate.as_view(), name='course-add'),
     path('course-update/<int:pk>', views.CDetailsUpdate.as_view(), name='course-update'),
     path('course-delete/<int:pk>', views.courseDelete.as_view(), name='course-delete'),
-    path('cto-print-course-preview/<cname>', views.cto_print_course_preview_view,name='cto-print-course-preview'),
 
     path('cto-passionateskill', views.cto_passionateskill_view,name='cto-passionateskill'),
     path('cto-add-passionateskill', views.cto_add_passionateskill_view,name='cto-add-passionateskill'),
