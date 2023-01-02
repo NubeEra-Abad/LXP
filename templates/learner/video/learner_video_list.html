@@ -47,7 +47,7 @@
       </thead>
       {% for t in list %}
       <tr>
-        <td>{{t.video.name}}</td>
+        <td>{{t.name}}</td>
         <td><a class="btn btn-success" href="{% url 'learner-show-video' subject_id course_id t.video.id  %}"><span class="glyphicon glyphicon-expand"></span></a></td>
 
         {% if t.matid > 0  %}
