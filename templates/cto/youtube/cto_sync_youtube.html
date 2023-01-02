@@ -25,10 +25,10 @@
     integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 
-<form method="POST" class="show-loading-after-submit" action="{% url 'cto-sync-youtube-start' %}" style="margin-left: 100px;">
+<form method="POST" action="{% url 'cto-sync-youtube-start' %}" style="margin-left: 100px;">
   <button type="submit" class="btn btn-primary">Start All</button>
 </form>
-<form method="POST" class="show-loading-after-submit" action="{% url 'cto-sync-youtube-byselected-playlist-start' %}" autocomplete="off"
+<form method="POST" action="{% url 'cto-sync-youtube-byselected-playlist-start' %}" autocomplete="off"
   style="margin:100px;margin-top: 0px;">
   <label>Play list </label>
 
