@@ -15,22 +15,22 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.db import connection
 from django.contrib.auth.decorators import login_required
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
-import googleapiclient.discovery
+
 from social_django.models import UserSocialAuth
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def login(request):
     return render(request, 'lxpapp/index.html')
 
+
 @login_required
 def home(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')  
     return render(request,'lxpapp/404page.html')
+
 import datetime
+
 def afterlogin_view(request):
     user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
     if not user:
@@ -153,11 +153,13 @@ def afterlogin_view(request):
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                     return render(request,'cfo/cfo_wait_for_approval.html')
 
+
 def adminclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
     return HttpResponseRedirect('adminlogin')
 
+@login_required
 def admin_dashboard_view(request):
     try:
         if str(request.session['utype']) == 'admin':
@@ -170,60 +172,6 @@ def admin_dashboard_view(request):
             return render(request,'lxpapp/admin_dashboard.html',context=dict)
     except:
         return render(request,'lxpapp/404page.html')
-
-def syncyoutube_view(request):
-    pllist = models.PlayList.objects.all()
-    return render(request,'lxpapp/syncyoutube.html',{'pllist':pllist})
-def syncyoutube_start_view(request):
-    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-    api_service_name = "youtube"
-    api_version = "v3"
-    client_secrets_file = "GoogleCredV1.json"
-    xxx = 0
-    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-        client_secrets_file, scopes)
-    flow.run_local_server()
-    credentials = flow.credentials
-    youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, credentials=credentials)
-    
-    pllist = models.PlayList.objects.all()
-    for plyLstitem in pllist:
-        url = 'https://www.youtube.com/playlist?list=' + str(plyLstitem.playlist_id)
-        query = parse_qs(urlparse(url).query, keep_blank_values=True)
-        playlist_id = query["list"][0]
-        youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, credentials=credentials)
-        request1 = youtube.playlistItems().list(
-            part = "snippet",
-            playlistId = playlist_id,
-            maxResults = 5000
-        )
-        response1 = request1.execute()
-        playlist_items = []
-        playlistname = plyLstitem.playlist_name
-        while request1 is not None:
-            response1 = request1.execute()
-            playlist_items += response1["items"]
-            request1 = youtube.playlistItems().list_next(request1, response1)
-        for t in playlist_items:
-            xxx += 1
-            currenturl = 'https://www.youtube.com/embed/' + t["snippet"]["resourceId"]["videoId"]
-            tochk= models.VideoLinks.objects.all().filter(Url=currenturl)
-            if tochk:
-                a=''
-            else:
-                y = models.VideoLinks.objects.create(SrNo=xxx,TopicName=t["snippet"]['title'],Url='https://www.youtube.com/embed/' + t["snippet"]["resourceId"]["videoId"],CourseName=playlistname,TopicCovered=0)
-                y.save()
-    print ('all done')
-    dict={
-    'total_learner':0,
-    'total_trainer':0,
-    'total_exam':0,
-    'total_question':0,
-    }
-    return render(request,'lxpapp/admin_dashboard.html',context=dict)
-
 def aboutus_view(request):
     return render(request,'lxpapp/aboutus.html')
 
@@ -242,6 +190,7 @@ def contactus_view(request):
             return render(request, 'lxpapp/contactus.html', {'form':sub})
     except:
         return render(request,'lxpapp/404page.html')
+@login_required
 def admin_view_user_view(request):
     try:    
         if str(request.session['utype']) == 'admin':
@@ -250,6 +199,7 @@ def admin_view_user_view(request):
     except:
         return render(request,'lxpapp/404page.html')
 
+@login_required
 def active_user_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'admin':
@@ -264,6 +214,7 @@ def active_user_view(request,userid,pk):
     except:
         return render(request,'lxpapp/404page.html')
 
+@login_required
 def inactive_user_view(request,pk):
     try:    
         if str(request.session['utype']) == 'admin':
@@ -273,6 +224,31 @@ def inactive_user_view(request,pk):
             return HttpResponseRedirect('/admin-view-user',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def delete_user_view(request,userid,pk):
+    #try:    
+        if str(request.session['utype']) == 'admin':
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM lxpapp_BatchTrainer WHERE trainer_id = " + str(pk))
+            cursor.execute("DELETE FROM lxpapp_UserPics WHERE user_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_UserCourse WHERE user_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_LearnerDetails WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_IsFirstLogIn WHERE user_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_McqResult WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_ShortResult WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_VideoToUnlock WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_VideoWatched WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_WaringMail WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_K8STerminal WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM lxpapp_K8STerminalLearnerCount WHERE learner_id = " + str(userid))
+            cursor.execute("DELETE FROM social_auth_usersocialauth WHERE id = " + str(pk))
+            cursor.execute("DELETE FROM auth_user WHERE id = " + str(userid))
+            users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
+            return HttpResponseRedirect('/admin-view-user',{'users':users})
+    #except:
+        return render(request,'lxpapp/404page.html')
+@login_required
 def admin_update_course_view(request,pk):
     try:    
         if str(request.session['utype']) == 'admin':
@@ -290,6 +266,7 @@ def admin_update_course_view(request,pk):
     except:
         return render(request,'lxpapp/404page.html')
 
+@login_required
 def admin_mark_usertype_view(request,pk):
     try:    
         if str(request.session['utype']) == 'admin':
