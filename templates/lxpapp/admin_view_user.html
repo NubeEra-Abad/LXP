@@ -56,10 +56,8 @@
           <th>Full Name</th>
           <th>Type</th>
           <th>Course Name</th>
-          <th>Active</th>
+          <th>Update User</th>
           <th>Delete User</th>
-          <th>Update Course</th>
-          <th>Update User Type</th>
         </tr>
       </thead>
       {% for t in users %}
@@ -67,7 +65,7 @@
         <!-- google-oauth2 -->
         <td>
           {% if t.provider == "google-oauth2" %}
-          <img src="static/GoogleOAuth.png" style="width:25px">Google</h1>
+          <img src="/static/GoogleOAuth.png" style="width:25px">Google</h1>
           {% else %}
           <h1>Other</h1>
           {% endif %}
@@ -90,23 +88,12 @@
         
         <td> {{t.course_name}}</td>
         <td>
-          {% if t.status == 0 %}
-          <center><a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id %}"><span
-                class="glyphicon glyphicon-remove-circle"></span></a></center>
-          {% elif t.status == 1 %}
-          <center><a class="btn btn-success btn-xs" href="{% url 'inactive-user' t.id  %}"><span
-                class="glyphicon glyphicon-ok-circle"></span></a></center>
-          {% endif %}
+          <center><a class="btn btn-primary btn-xs" href="{% url 'update-user' t.user.first_name t.user.last_name t.id  %}"><span
+                class="glyphicon glyphicon-user"></span></a></center>
         </td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'delete-user'  t.user_id t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
-        <td>
-          <center><a class="btn btn-primary btn-xs" href="{% url 'admin-update-course' t.user_id  %}"><span
-                class="glyphicon glyphicon-user"></span></a></center>
-        </td>
-        <td>
-          <center><a class="btn btn-primary btn-xs" href="{% url 'admin-mark-usertype' t.id  %}"><span
-                class="glyphicon glyphicon-user"></span></a></center>
-        </td>
+
+        
       </tr>
       {% endfor %}
     </table>

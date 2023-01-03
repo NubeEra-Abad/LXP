@@ -200,6 +200,39 @@ def admin_view_user_view(request):
         return render(request,'lxpapp/404page.html')
 
 @login_required
+def update_user_view(request,userfirstname,userlastname,pk):
+    #try:    
+        if str(request.session['utype']) == 'admin':
+            if request.method == 'POST':
+                course = request.POST.getlist('courses[]')
+                active = request.POST.get('active')
+                usertype = request.POST.getlist('utype[]')
+                if usertype[0] == '2' and course.__len__()==0:
+                    a=''
+                elif usertype[0] == '2' and course.__len__():
+                    usercouse = models.UserCourse.objects.all().filter(user_id=pk)
+                    usercouse.delete()
+                    for c in course:
+                        usercouse = models.UserCourse.objects.create(user_id=pk,course_id=c,remarks='')
+                        usercouse.save()
+                users = UserSocialAuth.objects.get(id=pk)
+                if active:
+                    users.status = True
+                else:
+                    users.status = False
+                users.utype = usertype[0]
+                users.save()
+                users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
+                return HttpResponseRedirect('/admin-view-user',{'users':users})
+            courses = models.Course.objects.all()
+            learnercourses = models.UserCourse.objects.all().filter(user_id=pk)
+            users = UserSocialAuth.objects.all().filter(id=pk)
+            username = userfirstname + ' ' + userlastname
+            return render(request,'lxpapp/admin_update_user.html',{'users':users,'courses':courses,'learnercourses':learnercourses,'username':username})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
 def active_user_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'admin':
