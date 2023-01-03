@@ -745,11 +745,12 @@ def cto_delete_knownskill_view(request,pk):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def getcredentials():
+def getcredentials(request):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
     client_secrets_file = "GoogleCredV1.json"
 
     # Get credentials and create an API client
+    flow = None
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
         client_secrets_file, scopes)
     flow.run_local_server()
@@ -765,7 +766,7 @@ def cto_sync_youtube_view(request):
 def cto_sync_youtube_start_view(request):
     if request.method=='POST':
         pm = PlaylistManager()
-        credentials = pm.getCredentials()
+        credentials = getcredentials(request)
         
         alllist = pm.initializePlaylist(credentials)
         plcount = 1
@@ -801,7 +802,7 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
         elif 'cloudlist' in request.POST:
             pm = PlaylistManager()
-            credentials = pm.getCredentials()
+            credentials = getcredentials(request)
             pl =  pm.initializePlaylist(credentials)
             pllist = LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
@@ -810,7 +811,7 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             selectedlist = request.POST.getlist('playlist[]')
             maxcount = selectedlist.__len__()
             plcount = 1
-            credentials = pm.getCredentials()
+            credentials = getcredentials(request)
             for PL_NAME in selectedlist:
                 print(str(plcount) + ' ' + PL_NAME)
                 PL_ID = LXPModel.Playlist.objects.all().filter(name = PL_NAME)
