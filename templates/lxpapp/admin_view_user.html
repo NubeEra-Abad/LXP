@@ -50,31 +50,26 @@
     <table class="table table-hover display" id="dev-table">
       <thead>
         <tr>
-          <th>Provider</th>
-          <th>User Id</th>
           <th>Pic</th>
-          <th>Full Name</th>
-          <th>Type</th>
+          <th>User Id</th>
           <th>Course Name</th>
+          <th>status</th>
           <th>Update User</th>
           <th>Delete User</th>
         </tr>
       </thead>
       {% for t in users %}
       <tr>
-        <!-- google-oauth2 -->
+        <td> <img src="{{t.pic}}" style="width:50px"></td>
         <td>
-          {% if t.provider == "google-oauth2" %}
-          <img src="/static/GoogleOAuth.png" style="width:25px">Google</h1>
+          
+          {% if t.status%}
+          <b>{{t.user.first_name}} {{t.user.last_name}} </b> <br>{{t.uid}} 
           {% else %}
-          <h1>Other</h1>
+          <b><font style="color:red;">{{t.user.first_name}} {{t.user.last_name}} (On Hold) </b> </font><br>{{t.uid}} 
           {% endif %}
-        </td>
-        <td> {{t.uid}}</td>
-        <td> <img src="{{t.pic}}" style="width:100px"></td>
-
-        <td> {{t.user.first_name}} {{t.user.last_name}}</td>
-        <td>
+          
+          <br>User Type :
           {% if t.utype == 0 or t.utype == 2 %}
           Learner
           {% elif t.utype == 1 %}
@@ -84,9 +79,18 @@
           {% elif t.utype == 4 %}
           CFO
           {% endif %}
+          <br>
+          <B>Mobile : {{t.mobile}} </B>
         </td>
         
         <td> {{t.course_name}}</td>
+        <td> 
+          {% if t.status%}
+          <center><a class="btn btn-danger btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center>
+          {% else %}
+          <center><a class="btn btn-success btn-xs" href="{% url 'active-user' t.user_id t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a></center>
+          {% endif %}
+        </td>
         <td>
           <center><a class="btn btn-primary btn-xs" href="{% url 'update-user' t.user.first_name t.user.last_name t.id  %}"><span
                 class="glyphicon glyphicon-user"></span></a></center>
