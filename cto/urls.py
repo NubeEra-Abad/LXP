@@ -1,7 +1,7 @@
 from django.urls import path
 from cto import views
 from django.contrib.auth.views import LoginView
-
+from cto.views import CreateCrudUser, CrudView, DeleteCrudUser, UpdateCrudUser
 urlpatterns = [
 
     path('ctoclick', views.ctoclick_view),
@@ -59,6 +59,10 @@ urlpatterns = [
     path('courses', views.courses,name='courses'),
     path('modules', views.modules, name='modules'),
 
-    
+    # Django Ajax CRUD Operations
+    path('crudcto/', CrudView.as_view(), name='crud_ajaxcto'),
+    path('ajax/crudcto/create/', CreateCrudUser.as_view(), name='cto_crud_ajax_create'),
+    path('ajax/crudcto/delete/', DeleteCrudUser.as_view(), name='cto_crud_ajax_delete'),
+    path('ajax/crudcto/update/', UpdateCrudUser.as_view(), name='cto_crud_ajax_update'),
 
 ]

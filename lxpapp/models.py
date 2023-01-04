@@ -451,3 +451,9 @@ class K8STerminal(models.Model):
 class K8STerminalLearnerCount(models.Model):
     learner=models.ForeignKey(User,on_delete=models.CASCADE)
     usedvalue=models.PositiveIntegerField(default=0)
+
+
+class CrudUser(models.Model):
+    name = models.CharField(max_length=30, blank=True)
+    address = models.CharField(max_length=100, blank=True)
+    age = models.IntegerField(blank=True, null=True)
