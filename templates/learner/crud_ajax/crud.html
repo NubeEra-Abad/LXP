@@ -38,7 +38,7 @@
     if (nameInput && addressInput && ageInput) {
       // Create Ajax Call
       $.ajax({
-        url: '{% url "crud_ajax_create" %}',
+        url: '{% url "cto_crud_ajax_create" %}',
         data: {
           'name': nameInput,
           'address': addressInput,
@@ -65,7 +65,7 @@
     var action = confirm("Are you sure you want to delete this user?");
     if (action != false) {
       $.ajax({
-        url: '{% url "crud_ajax_delete" %}',
+        url: '{% url "cto_crud_ajax_delete" %}',
         data: {
           'id': id,
         },
@@ -89,7 +89,7 @@
     if (nameInput && addressInput && ageInput) {
       // Create Ajax Call
       $.ajax({
-        url: '{% url "crud_ajax_update" %}',
+        url: '{% url "cto_crud_ajax_update" %}',
         data: {
           'id': idInput,
           'name': nameInput,
