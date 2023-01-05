@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
 
     path('admin-view-user', views.admin_view_user_view,name='admin-view-user'),
-    path('update-user/<userfirstname>/<userlastname>/<int:pk>', views.update_user_view,name='update-user'),
+    path('update-user/<userfirstname>/<userlastname>/<userid>/<int:pk>', views.update_user_view,name='update-user'),
     path('active-user/<userid>/<int:pk>', views.active_user_view,name='active-user'),
     path('inactive-user/<int:pk>', views.inactive_user_view,name='inactive-user'),
     path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),

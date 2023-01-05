@@ -1,6 +1,7 @@
 from django.urls import path
 from trainer import views
 from django.contrib.auth.views import LoginView
+from trainer.views import trainer_live_session_create, trainer_live_session, trainer_live_session_delete, trainer_live_session_update
 
 urlpatterns = [
 
@@ -59,6 +60,12 @@ urlpatterns = [
     path('trainer-update-k8sterminal/<int:pk>', views.trainer_update_k8sterminal_view,name='trainer-update-k8sterminal'),
     path('trainer-view-k8sterminal', views.trainer_view_k8sterminal_view,name='trainer-view-k8sterminal'),
     path('trainer-delete-k8sterminal/<int:pk>', views.trainer_delete_k8sterminal_view,name='trainer-delete-k8sterminal'),
+
+    # Django Ajax CRUD Operations
+    path('tainer-live-session/', trainer_live_session.as_view(), name='tainer-live-session'),
+    path('ajax/tainer-live-session/create/', trainer_live_session_create.as_view(), name='tainer-live-session-create'),
+    path('ajax/tainer-live-session/delete/', trainer_live_session_delete.as_view(), name='tainer-live-session-delete'),
+    path('ajax/tainer-live-session/update/', trainer_live_session_update.as_view(), name='tainer-live-session-update'),
 
 ]
  

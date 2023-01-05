@@ -947,3 +947,66 @@ def trainer_delete_k8sterminal_view(request,pk):
         return render(request,'trainer/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
     except:
         return render(request,'lxpapp/404page.html')
+
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, View, DeleteView
+from django.core import serializers
+from django.http import JsonResponse
+
+class trainer_live_session(TemplateView):
+    template_name = 'trainer/livesession/livesession.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['livesessions'] = LXPModel.LiveSession.objects.all()
+        return context
+
+class trainer_live_session_create(View):
+    def  get(self, request):
+        trainer = request.user.id
+        subject = request.GET.get('subject_id', None)
+        password = request.GET.get('password', None)
+
+        obj = LXPModel.LiveSession.objects.create(
+            trainer_id = trainer,
+            subject_id = subject,
+            password = password
+        ).save()
+
+        livesession = {'id':obj.id,'trainer_id':obj.trainer_id,'subject_id':obj.subject_id,'password':obj.password}
+
+        data = {
+            'livesessions': livesession
+        }
+        return JsonResponse(data)
+
+class trainer_live_session_delete(View):
+    def  get(self, request):
+        id1 = request.GET.get('id', None)
+        LXPModel.LiveSession.objects.get(id=id1).delete()
+        data = {
+            'deleted': True
+        }
+        return JsonResponse(data)
+
+
+class trainer_live_session_update(View):
+    def  get(self, request):
+        id1 = request.GET.get('id', None)
+        name1 = request.GET.get('name', None)
+        address1 = request.GET.get('address', None)
+        age1 = request.GET.get('age', None)
+
+        obj = LXPModel.CrudUser.objects.get(id=id1)
+        obj.name = name1
+        obj.address = address1
+        obj.age = age1
+        obj.save()
+
+        user = {'id':obj.id,'name':obj.name,'address':obj.address,'age':obj.age}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+

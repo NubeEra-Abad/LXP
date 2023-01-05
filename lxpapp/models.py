@@ -457,3 +457,19 @@ class CrudUser(models.Model):
     name = models.CharField(max_length=30, blank=True)
     address = models.CharField(max_length=100, blank=True)
     age = models.IntegerField(blank=True, null=True)
+
+class LiveSession(models.Model):
+    trainer=models.ForeignKey(User,on_delete=models.CASCADE)
+    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
+    password = models.CharField(max_length=30, blank=True)
+
+class LiveQuestion(models.Model):
+    livesession=models.ForeignKey(LiveSession,on_delete=models.CASCADE)
+    question = models.CharField(max_length=500, blank=True)
+
+class LiveSessionUsers(models.Model):
+    livesession=models.ForeignKey(LiveSession,on_delete=models.CASCADE)
+    livequestion=models.ForeignKey(LiveQuestion,on_delete=models.CASCADE)
+    answer = models.CharField(max_length=500, blank=True)
+    correct = models.BooleanField(default=0)
+

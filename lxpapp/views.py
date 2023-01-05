@@ -200,7 +200,7 @@ def admin_view_user_view(request):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def update_user_view(request,userfirstname,userlastname,pk):
+def update_user_view(request,userfirstname,userlastname,userid,pk):
     #try:    
         if str(request.session['utype']) == 'admin':
             if request.method == 'POST':
@@ -210,10 +210,10 @@ def update_user_view(request,userfirstname,userlastname,pk):
                 if usertype[0] == '2' and course.__len__()==0:
                     a=''
                 elif usertype[0] == '2' and course.__len__():
-                    usercouse = models.UserCourse.objects.all().filter(user_id=pk)
+                    usercouse = models.UserCourse.objects.all().filter(user_id=userid)
                     usercouse.delete()
                     for c in course:
-                        usercouse = models.UserCourse.objects.create(user_id=pk,course_id=c,remarks='')
+                        usercouse = models.UserCourse.objects.create(user_id=userid,course_id=c,remarks='')
                         usercouse.save()
                 users = UserSocialAuth.objects.get(id=pk)
                 if active:
