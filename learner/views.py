@@ -37,11 +37,11 @@ def learner_dashboard_view(request):
 def learner_exam_view(request):
     try:    
         if str(request.session['utype']) == 'learner':
-            course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
+            batch = LXPModel.Batch.objects.all().filter(id__in= LXPModel.Batchlearner.objects.values('learner_id').filter (learner_id= request.user.id))
             a=''
-            for x in course:
+            for x in batch:
                 a = x.id
-            exams=LXPModel.Exam.objects.all().filter(questiontpye='MCQ',course_id = a)
+            exams=LXPModel.Exam.objects.raw('SELECT  lxpapp_batch.id,  lxpapp_batch.batch_name,  lxpapp_exam.exam_name FROM  lxpapp_batch  INNER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  INNER JOIN lxpapp_exam ON (lxpapp_batch.id = lxpapp_exam.batch_id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id)) 
             return render(request,'learner/exam/learner_exam.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -212,13 +212,14 @@ def learner_video_Course_view(request):
             # for course in users:
             #     videos1=LXPModel.CourseDetails.objects.raw(" SELECT ff.id, ff.coursedetails_name, (SELECT count(g.id) AS vw FROM lxpapp_videowatched as g  WHERE g.learner_id = " + str(request.user.id) + " and g.CourseName = ff.coursedetails_name) as vw, (SELECT count(x.id) AS vw FROM lxpapp_videolinks as x  WHERE  x.CourseName = ff.coursedetails_name) as ctotal FROM  lxpapp_coursedetails  as ff LEFT OUTER JOIN lxpapp_course as a ON (ff.course_id = a.id) LEFT outer JOIN social_auth_usersocialauth as b ON (a.course_name = b.course_name) WHERE   a.course_name = '" + str(course.course_name) + "' and b.user_id = " + str(request.user.id))
             #     return render(request,'learner/learner_video_course.html',{'videos':videos1, 'coursename':str(course.course_name)})
-            videos1 = LXPModel.UserCourse.objects.all().filter(course_id__in = LXPModel.Course.objects.all(),user_id=str(request.user.id))  
+            videos1 = LXPModel.BatchCourse.objects.raw('SELECT  lxpapp_course.id,  lxpapp_course.course_name FROM  lxpapp_batchcourse   INNER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(request.user.id))
+            
             return render(request,'learner/video/learner_video_course.html',{'videos':videos1})
     except:
         return render(request,'lxpapp/404page.html')
 
 def learner_video_Course_subject_view(request,course_id):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
@@ -242,7 +243,7 @@ def learner_video_Course_subject_view(request,course_id):
             dif = tc- wc
 
             return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
  
 def learner_video_list_view(request,subject_id,course_id):
@@ -298,7 +299,7 @@ def learner_see_material_view(request,subject_id,chapter_id,course_id,pk):
         return render(request,'ilmsapp/404page.html')
 
 def learner_check_k8sterminal_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'learner':
             if request.method=='POST':
                 password = request.POST.get("password")
@@ -332,7 +333,7 @@ def learner_check_k8sterminal_view(request):
                 ).save()
                 return render(request,'learner/k8sterminal/learner_launch_k8sterminal.html')
             return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
-    #except: 
+    except: 
         return render(request,'lxpapp/404page.html')
 
 

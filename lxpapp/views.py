@@ -201,7 +201,7 @@ def admin_view_user_view(request):
 
 @login_required
 def update_user_view(request,userfirstname,userlastname,userid,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'admin':
             if request.method == 'POST':
                 course = request.POST.getlist('courses[]')
@@ -230,7 +230,7 @@ def update_user_view(request,userfirstname,userlastname,userid,pk):
             userdetails = models.LearnerDetails.objects.all().filter(learner_id=userid)
             username = userfirstname + ' ' + userlastname
             return render(request,'lxpapp/admin_update_user.html',{'users':users,'courses':courses,'learnercourses':learnercourses,'username':username,'userdetails':userdetails})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -261,7 +261,7 @@ def inactive_user_view(request,pk):
 
 @login_required
 def delete_user_view(request,userid,pk):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'admin':
             cursor = connection.cursor()
             cursor.execute("DELETE FROM lxpapp_BatchTrainer WHERE trainer_id = " + str(pk))
@@ -280,7 +280,7 @@ def delete_user_view(request,userid,pk):
             cursor.execute("DELETE FROM auth_user WHERE id = " + str(userid))
             users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
             return HttpResponseRedirect('/admin-view-user',{'users':users})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 @login_required
 def admin_update_course_view(request,pk):

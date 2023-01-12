@@ -51,6 +51,7 @@ urlpatterns = [
     path('trainer-delete-material/<int:pk>', views.trainer_delete_material_view,name='trainer-delete-material'),
     path('trainer-show-material/<subjectname>,/<chaptername>,/<materialtype>,/<int:pk>', views.trainer_show_material_view,name='trainer-show-material'),
     path('trainer-view-material-chapters', views.trainer_material_chapters_view,name='trainer-view-material-chapters'),
+    path('trainer-view-material-topics', views.trainer_material_topics_view,name='trainer-view-material-topics'),
 
     path('trainer-upload-file', views.trainer_upload_file_view,name='trainer-upload-file'),
     path('trainer-start-upload-file', views.trainer_start_upload_file_view,name='trainer-start-upload-file'),

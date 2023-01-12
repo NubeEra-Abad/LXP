@@ -29,6 +29,8 @@ urlpatterns = [
 
     path('cto-course', views.cto_course_view,name='cto-course'),
     path('cto-add-course', views.cto_add_course_view,name='cto-add-course'),
+    path('cto-course-chapters', views.cto_course_chapters_view,name='cto-course-chapters'),
+    path('cto-course-chapters-all', views.cto_course_chapters_all_view,name='cto-course-chapters-all'),
     path('cto-view-course', views.cto_view_course_view,name='cto-view-course'),
     path('cto-update-course/<int:pk>', views.cto_update_course_view,name='cto-update-course'),
     path('cto-view-course-details/<cname>/<int:cid>', views.cto_view_course_details_view,name='cto-view-course-details'),

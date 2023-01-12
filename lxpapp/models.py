@@ -244,7 +244,6 @@ class Playlist(models.Model):
             all_vids_unavailable = True
         return all_vids_unavailable
 
-
 class PlaylistItem(models.Model):
     playlist = models.ForeignKey(Playlist, related_name="playlist_items",
                                  on_delete=models.CASCADE, null=True)  # playlist this pl item belongs to
@@ -312,11 +311,14 @@ class CourseType(models.Model):
 class Batch(models.Model):
    batch_name = models.CharField(max_length=50)
    coursetype=models.ForeignKey(CourseType,on_delete=models.CASCADE)
-   fee = models.IntegerField(default=0)
    stdate = models.DateField()
    enddate = models.DateField()
    def __str__(self):
       return self.batch_name
+
+class BatchCourse(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
+   course=models.ForeignKey(Course,on_delete=models.CASCADE)
 
 class BatchTrainer(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
@@ -325,7 +327,7 @@ class BatchTrainer(models.Model):
 class Batchlearner(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
    learner=models.ForeignKey(User,on_delete=models.CASCADE)
- 
+
 class PassionateSkill(models.Model):
    passionateskill_name = models.CharField(max_length=200)
    def __str__(self):
@@ -358,7 +360,6 @@ class IsFirstLogIn(models.Model):
 
 
 class Exam(models.Model):
-   course=models.ForeignKey(Course,on_delete=models.CASCADE)
    batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
    exam_name = models.CharField(max_length=50)
    cat=(('MCQ','MCQ'),('ShortAnswer','ShortAnswer'))
@@ -457,6 +458,7 @@ class K8STerminal(models.Model):
 class K8STerminalLearnerCount(models.Model):
     learner=models.ForeignKey(User,on_delete=models.CASCADE)
     usedvalue=models.PositiveIntegerField(default=0)
+
 
 
 class CrudUser(models.Model):

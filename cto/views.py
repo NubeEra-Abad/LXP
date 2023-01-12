@@ -316,28 +316,25 @@ def cto_add_defualt_topic_view(request):
             LXPModel.Topic.objects.all().delete()
             plitems = LXPModel.PlaylistItem.objects.all()
             for x in plitems:
+                counter = counter + 1
                 a = LXPModel.Topic.objects.create(topic_name='not applicable',
                                                     subject_id = x.playlist_id,
                                                     chapter_id = x.video_id
                                                 )
                 a.save()
-                # try:
+                #   try:
                 #     coursedet = LXPModel.CourseDetails.objects.get(subject_id = x.playlist_id,chapter_id = x.video_id)
-                # except LXPModel.CourseDetails.DoesNotExist:
+                #   except LXPModel.CourseDetails.DoesNotExist:
                 #     coursedet = None
                 coursedet = LXPModel.CourseDetails.objects.all().filter(subject_id = x.playlist_id,chapter_id = x.video_id)
                 for cdet in coursedet:
                     if cdet is None:
                         zc=''
                     else:
-                        counter = counter +1
-                        if counter == 152:
-                            vb = ''
                         cdet.topic_id = a.id
                         cdet.save()
             return render(request,'cto/topic/cto_topic.html')
     except:
-            print(counter)
             return render(request,'lxpapp/404page.html')
 @login_required
 def cto_update_topic_view(request,pk):
@@ -407,7 +404,7 @@ def cto_course_view(request):
         return render(request,'lxpapp/404page.html')
 @login_required
 def cto_update_course_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 course = LXPModel.Course.objects.get(id=pk)
@@ -441,54 +438,101 @@ def cto_update_course_view(request,pk):
             for x in course:
                 course = x.course_name
             return render(request,'cto/course/cto_update_course.html',{'courseForm':courseForm,'subject':subject,'sub':course})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
+@login_required
+def cto_course_chapters_view(request):
+    subject = request.GET.get('subject')
+    chapters = LXPModel.Video.objects.all().filter(id__in = LXPModel.PlaylistItem.objects.all().filter( playlist_id=subject))
+    context = {'chapters': chapters}
+    return render(request, 'cto/course/cto_course_chapters.html', context)
+
+@login_required
+def cto_course_chapters_all_view(request):
+    subject = request.GET.get('subjectall')
+    chapters = LXPModel.Video.objects.all().filter(id__in = LXPModel.PlaylistItem.objects.all().filter( playlist_id=subject))
+    context = {'chapters': chapters}
+    return render(request, 'cto/course/cto_course_chapters_all.html', context)
+
 def cto_add_course_view(request):
-    #try:
-        if str(request.session['utype']) == 'cto':
-            if request.method=='POST':
-                det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
-                courseForm=LXPFORM.CourseForm(request.POST)
-                if courseForm.is_valid() : 
-                    coursetext = courseForm.cleaned_data["course_name"]
-                    course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
-                    if course:
-                        messages.info(request, 'Course Name Already Exist')
-                        courseForm=LXPFORM.CourseForm()
-                        det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
-                        return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
-                    else:
-                        course = courseForm.save(commit=False)
-                        course.save()
-                        det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
-                        counter = 0
-                        for form in det_formset.forms:
-                            refid = None
-                            subject = None
-                            chapter = None
-                            topic = None
-                            refid = form.data['form-'+str(counter)+'-subject']
-                            if refid:
-                                subject=LXPModel.Playlist.objects.get(id=refid)
-                            refid = form.data['form-'+str(counter)+'-chapter']
+    try:
+        if request.method=='POST':
+            course_name = request.POST.get('course_name')
+            course = LXPModel.Course.objects.create(course_name = course_name)
+            course.save()
+            a=''
+            import json
+            json_data = json.loads(request.POST.get('myvalue'))
+            for cx in json_data:
+                a=json_data[cx]['subject']
+                b=json_data[cx]['chapter']
+                x = a.split("-")
+                subid = x[0]
+                x = b.split("-")
+                chapid = x[0]
+                topicid = None
+                try:
+                    topicid = LXPModel.Topic.objects.get(subject_id = subid, chapter_id = chapid)
+                except LXPModel.Topic.DoesNotExist:
+                    topicid = LXPModel.Topic.objects.create(
+                        topic_name = 'not applicable',
+                        subject_id = subid, 
+                        chapter_id = chapid)
+                    topicid.save()
+                coursedet = LXPModel.CourseDetails.objects.create(
+                    course_id = course.id,
+                    subject_id = subid,
+                    chapter_id = chapid,
+                    topic_id = topicid.id
+                )
+                coursedet.save()
+        subjects = LXPModel.Playlist.objects.all()
+        context = {'subjects': subjects}
+        return render(request, 'cto/course/cto_add_course.html', context)
+        # if str(request.session['utype']) == 'cto':
+        #     if request.method=='POST':
+        #         det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
+        #         courseForm=LXPFORM.CourseForm(request.POST)
+        #         if courseForm.is_valid() : 
+        #             coursetext = courseForm.cleaned_data["course_name"]
+        #             course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
+        #             if course:
+        #                 messages.info(request, 'Course Name Already Exist')
+        #                 courseForm=LXPFORM.CourseForm()
+        #                 det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
+        #                 return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
+        #             else:
+        #                 course = courseForm.save(commit=False)
+        #                 course.save()
+        #                 det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
+        #                 counter = 0
+        #                 for form in det_formset.forms:
+        #                     refid = None
+        #                     subject = None
+        #                     chapter = None
+        #                     topic = None
+        #                     refid = form.data['form-'+str(counter)+'-subject']
+        #                     if refid:
+        #                         subject=LXPModel.Playlist.objects.get(id=refid)
+        #                     refid = form.data['form-'+str(counter)+'-chapter']
                             
-                            if refid:
-                                chapter=LXPModel.Video.objects.get(id=refid)
-                            refid = form.data['form-'+str(counter)+'-topic']
-                            if refid:
-                                topic=LXPModel.Topic.objects.get(id=refid)
-                            if subject and chapter and topic :
-                                coursedetails = LXPModel.CourseDetails.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_id = topic.id,course_id =course.id )
-                                coursedetails.save()
-                        messages.info(request, 'Course saved')
-                else:
-                    print("form is invalid")
-            subjects = LXPModel.Playlist.objects.all()
-            courseForm=LXPFORM.CourseForm()
-            det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
-            return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset,'subjects':subjects})
-    #except:
+        #                     if refid:
+        #                         chapter=LXPModel.Video.objects.get(id=refid)
+        #                     refid = form.data['form-'+str(counter)+'-topic']
+        #                     if refid:
+        #                         topic=LXPModel.Topic.objects.get(id=refid)
+        #                     if subject and chapter and topic :
+        #                         coursedetails = LXPModel.CourseDetails.objects.create(subject_id = subject.id,chapter_id = chapter.id,topic_id = topic.id,course_id =course.id )
+        #                         coursedetails.save()
+        #                 messages.info(request, 'Course saved')
+        #         else:
+        #             print("form is invalid")
+        #     subjects = LXPModel.Playlist.objects.all()
+        #     courseForm=LXPFORM.CourseForm()
+        #     det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
+        #     return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset,'subjects':subjects})
+    except:
         return render(request,'lxpapp/404page.html')
 
 def cto_view_course_view(request):
@@ -500,12 +544,12 @@ def cto_view_course_view(request):
         return render(request,'lxpapp/404page.html')
 
 def cto_view_course_details_view(request,cname,cid):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all()).order_by('id')
             c_list = LXPModel.CourseDetails.objects.select_related().values('subject__name','chapter__name','topic__topic_name').filter(course_id = cid).order_by('chapter__name')
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def cto_delete_course_view(request,pk):
@@ -891,7 +935,11 @@ def Cto_Course_View(request):
     if request.method=='POST':
         course = request.POST.getlist('selected_options[]')
         a=''
-
+        import json
+        json_data = json.loads(request.POST.get('myvalue'))
+        for cx in json_data:
+            a=json_data[cx]['subject']
+            b=json_data[cx]['chapter']
     users = LXPModel.CrudUser.objects.all()
     subjects = LXPModel.Playlist.objects.all()
     context = {'users': users,'subjects': subjects}

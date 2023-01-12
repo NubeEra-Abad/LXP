@@ -44,6 +44,35 @@
       float: left;
       align-self: center;
     }
+    input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button {
+  color: #fff;
+  position: relative;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 56px;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 26px;
+}
+
+
+input[type="date"]::-webkit-datetime-edit-day-field{
+  position: absolute !important;
+  color:#000;
+  padding: 2px;
+  left: 4px;
+  
+}
   </style>
 
   <script type="text/javascript">
@@ -77,19 +106,19 @@
     <div class="form-group">
       <label for="batch_name">Batch Name</label>
       {% render_field batchForm.batch_name class="form-control" placeholder="batch Name" %}
-      <br>
-      <label for="course_name">Course Name</label>
-      {% render_field batchForm.courseID|attr:'required:true' class="form-control" %}
-      <br>
+      <label for="listbox3">Course</label>
+      <select class="form-control" name="listbox3" id="field3" multiple multiselect-search="true"
+        multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+        {% for t in courses %}
+        <option value="{{ t.id }}">{{t.course_name}})
+        {% endfor %}
+      </select>
       <label for="coursetype_name">Course Type Name</label>
       {% render_field batchForm.coursetypeID|attr:'required:true' class="form-control" %}
-      <br>
       <label for="stdate">Start Date</label>
       {% render_field batchForm.stdate type="date" class="form-control" %}
-      <br>
       <label for="enddate">End Date</label>
       {% render_field batchForm.enddate type="date" class="form-control" %}
-      <br>
       <label for="listbox1">Trainers</label>
       <select class="form-control" name="listbox1" id="field1" multiple multiselect-search="true"
         multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
@@ -99,7 +128,7 @@
         {% endfor %}
       </select>
 
-      <label for="listbox2">Trainers</label>
+      <label for="listbox2">Learners</label>
       <select class="form-control" name="listbox2" id="field2" multiple multiselect-search="true"
         multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
 

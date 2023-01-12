@@ -24,6 +24,11 @@
 
     table.dataTable tr.odd { background-color: #E2E4FF; }
     table.dataTable tr.even { background-color: white; }
+    .wrap-longtext
+  {
+    word-break: break-all;/* Use break-word, if you prefer sensible text than short width of the cell */
+    white-space: pre-wrap;
+  }
   </style>
 </head>
 <BR><BR>
@@ -32,26 +37,31 @@
   <ol class="breadcrumb text-right">
     <li><a href="/cfo/cfo-dashboard">Dashboard</a></li>
     <li><a href="/cfo/cfo-add-batch">Add Batch</a></li>
-    <li class="active">View Batches</li>
+    <li><a href="/cfo/cfo-view-batch">View Batch</a></li>
+    <li class="active">View Batch Details ({{batchname}}) </li>
   </ol>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Batch</h6>
+      <h6 class="panel-title">Batch details of {{batchname}}</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-          <th>Batch Name</th>
-          <th>Details</th>
-          <th>Delete</th>
+          <th>Course Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Trainers Name</th>
+          <th>Learners Name</th>
         </tr>
       </thead>
       {% for t in batchs %}
       <tr>
-        <td> {{t.batch_name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cfo-view-batch-details' t.batch_name t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'cfo-delete-batch' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td class="wrap-longtext"> {{t.course_name}}</td>
+        <td> {{t.stdate|date:"d-m-Y"}}</td>
+        <td> {{t.enddate|date:"d-m-Y"}}</td>
+        <td class="wrap-longtext"> {{t.trainer_name}}</td>
+        <td class="wrap-longtext"> {{t.learner_name}}</td>
       </tr>
       {% endfor %}
     </table>

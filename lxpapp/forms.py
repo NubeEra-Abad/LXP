@@ -86,7 +86,6 @@ class CourseTypeForm(forms.ModelForm):
  
 class BatchForm(forms.ModelForm):
     coursetypeID=forms.ModelChoiceField(queryset=models.CourseType.objects.all(),empty_label="Course Type Name", to_field_name="id")
-    courseID=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
     batch_name = forms.CharField(
         max_length=255,
         #  forms ↓
@@ -99,6 +98,7 @@ class BatchForm(forms.ModelForm):
             'stdate': forms.DateInput(format='%d/%m/%Y'),
             'enddate': forms.DateInput(format='%d/%m/%Y')
         }
+
 
 class PassionateSkillForm(forms.ModelForm):
     passionateskill_name = forms.CharField(
@@ -137,7 +137,6 @@ class LearnerDetailsForm(forms.ModelForm):
 #         fields=['exam_name','questiontpye']
 
 class ExamForm(forms.ModelForm):
-    courseID=forms.ModelChoiceField(queryset=models.Course.objects.all() ,empty_label="Course Name", to_field_name="id")
     batchID=forms.ModelChoiceField(queryset=models.Batch.objects.all() ,empty_label="Batch Name", to_field_name="id")
     exam_name = forms.CharField(
         max_length=255,

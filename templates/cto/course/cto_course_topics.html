@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+<label for="topics">Topic Name</label>
+<select class="custom-select mb-4 form-control" id="productID" name="chapters"
+                hx-get="{% url 'trainer-view-material-topics' %}" hx-trigger="change" hx-target="#div_topics">
+                <option selected>Choose your Topic</option>
+                {% for t in topics %}
+                <option value="{{t.pk}}">{{ t.topic_name }}</option>
+                {% endfor %}
+              </select>

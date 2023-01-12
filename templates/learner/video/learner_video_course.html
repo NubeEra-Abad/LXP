@@ -44,8 +44,8 @@
       </thead>
       {% for t in videos %}
       <tr>
-        <td>{{t.course.course_name}}</td>
-            <td><a class="btn btn-success" href="{% url 'learner-video-course-subject' t.course_id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td>{{t.course_name}}</td>
+            <td><a class="btn btn-success" href="{% url 'learner-video-course-subject' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
       {% endfor %}
     </table>
   </div>

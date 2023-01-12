@@ -92,13 +92,16 @@ def trainer_add_exam_view(request):
                         examForm=LXPFORM.ExamForm()
                         return render(request,'trainer/exam/trainer_add_exam.html',{'examForm':examForm})                  
                     else:
-                        course=LXPModel.Course.objects.get(id=request.POST.get('courseID'))
                         batch=LXPModel.Batch.objects.get(id=request.POST.get('batchID'))
-                        exam = LXPModel.Exam.objects.create(course_id = course.id,batch_id = batch.id,exam_name = examtext,questiontpye = request.POST.get('questiontpye'))
+                        exam = LXPModel.Exam.objects.create(batch_id = batch.id,exam_name = examtext,questiontpye = request.POST.get('questiontpye'))
                         exam.save()
                 else:
                     print("form is invalid")
             examForm=LXPFORM.ExamForm()
+            from django import forms
+            #d = LXPModel.Batch.objects.all().filter(id__in= LXPModel.BatchTrainer.objects.all().filter(trainer_id=str(request.user.id)))
+            d = LXPModel.Batch.objects.all()
+            examForm.fields['batchID'] = forms.ModelChoiceField(d)
             return render(request,'trainer/exam/trainer_add_exam.html',{'examForm':examForm})
     except:
         return render(request,'lxpapp/404page.html')
@@ -109,6 +112,7 @@ def trainer_update_exam_view(request,pk):
         if str(request.session['utype']) == 'trainer':
             exam = LXPModel.Exam.objects.get(id=pk)
             examForm=LXPFORM.ExamForm(request.POST,instance=exam)
+            
             if request.method=='POST':
                 if examForm.is_valid(): 
                     examtext = examForm.cleaned_data["exam_name"]
@@ -117,6 +121,10 @@ def trainer_update_exam_view(request,pk):
                         messages.info(request, 'Exam Name Already Exist')
                         return render(request,'trainer/exam/trainer_update_exam.html',{'examForm':examForm})
                     else:
+                        bid = examForm.cleaned_data['batchID']
+                        questiontpye = examForm.cleaned_data['questiontpye']
+                        examForm.batchID = bid
+                        examForm.questiontpye = questiontpye
                         examForm.save()
                         exams = LXPModel.Exam.objects.all()
                         return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
@@ -128,7 +136,7 @@ def trainer_update_exam_view(request,pk):
 def trainer_view_exam_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            exams = LXPModel.Exam.objects.all().filter(course_id__in = LXPModel.Course.objects.all())
+            exams = LXPModel.Exam.objects.all().filter(batch_id__in = LXPModel.Batch.objects.all())
             return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -669,6 +677,13 @@ def trainer_material_chapters_view(request):
     chapters = LXPModel.Video.objects.all().filter(id__in = LXPModel.PlaylistItem.objects.all().filter( playlist_id=subject))
     context = {'chapters': chapters}
     return render(request, 'trainer/material/trainer_material_chapters.html', context)
+
+@login_required
+def trainer_material_topics_view(request):
+    chapters = request.GET.get('chapters')
+    topics = LXPModel.Topic.objects.all().filter(id__in = LXPModel.Video.objects.all().filter( chapter_id=chapters))
+    context = {'topics': topics}
+    return render(request, 'trainer/material/trainer_material_topics.html', context)
 
 @login_required
 def trainer_add_material_view(request):

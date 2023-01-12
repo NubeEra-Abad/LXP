@@ -23,5 +23,6 @@ path('cfo-add-batch', views.cfo_add_batch_view,name='cfo-add-batch'),
 path('cfo-update-batch/<int:pk>', views.cfo_update_batch_view,name='cfo-update-batch'),
 path('cfo-view-batch', views.cfo_view_batch_view,name='cfo-view-batch'),
 path('cfo-delete-batch/<int:pk>', views.cfo_delete_batch_view,name='cfo-delete-batch'),
+path('cfo-view-batch-details/<batchname>/<int:pk>', views.cfo_view_batch_details_view,name='cfo-view-batch-details'),
 
 ]

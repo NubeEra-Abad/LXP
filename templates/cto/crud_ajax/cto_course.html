@@ -1,3 +1,5 @@
+{% extends 'cto/ctobase.html' %}
+{% load widget_tweaks %}
 {% load static %}
 {% block content %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
@@ -6,23 +8,28 @@
   var products = [];
   var jsonData = [];
   function generateJSON() {
-
-    //TotalRows=document.getElementById('tblData').getElementsByTagName('tbody')[0].rows;
-    //TotalRows[1].getElementsByTagName("td")
-    var myRows = [];
-    var headers = ("th");
-    var rows = ("tbody tr").each(function (index) {
-      cells = (this).find("td");
-      myRows[index] = {};
-      cells.each(function (cellIndex) {
-        myRows[index][$(headers[cellIndex]).html()] = $(this).html();
-      });
+    //Store HTML Table Values into Multidimensional Javascript Array Object
+    var TableData = new Array();
+    $('#tblData tr').each(function(row, tr) {
+      TableData[row] = {
+        "subject": $(tr).find('td:eq(0)').text(),
+        "chapter": $(tr).find('td:eq(1)').text()
+      }//tableData[row]
     });
-    var myObj = {};
-    myObj.myrows = myRows;
-    alert(JSON.stringify(myObj));
+    TableData.shift(); // first row will be empty - so remove
+    debugger;
+    JsonObject = JSON.parse(JSON.stringify(TableData));
+
+    const jsonString = JSON.stringify(Object.assign({}, TableData)) 
+const json_obj = JSON.parse(jsonString);
+
+    alert(jsonString);
+    var textbox3 = document.getElementById('myvalue');
+    textbox3.value = jsonString;
+    return (String(TableData));
   }
   function addallProduct() {
+    debugger;
     //var productID = document.getElementById("productID").value;
     var eProductID = document.getElementById("productID");
     var productID = eProductID.options[eProductID.selectedIndex].innerHTML;
@@ -43,12 +50,9 @@
         product_desc: null,
       };
 
-      newProduct.product_id = productID;
-      newProduct.product_desc = product_desc;
-      var selectElem = document.getElementById("field2");
-      var element = document.createElement("option");
-      element.innerText = subject_id + ' ' + chapter_id;
-      selectElem.appendChild(element);
+      newProduct.product_id = subject_id + '-' + productID;
+      newProduct.product_desc = chapter_id + '-' + product_desc;
+      
       products.push(newProduct);
       var html = "<table id='tblData' border='1|1' >";
       html += "<tr>";
@@ -96,17 +100,15 @@
       product_id: null,
       product_desc: null,
     };
-    newProduct.product_id = productID;
-    newProduct.product_desc = product_desc;
     var subject_id = eProductID.options[eProductID.selectedIndex].value;
     var chapter_id = eProduct_desc.options[eProduct_desc.selectedIndex].value;
+    newProduct.product_id = subject_id + '-' + productID;
+      newProduct.product_desc = chapter_id + '-' + product_desc;
+    
     if (product_desc == "Choose your Chapter" || subject_id == "Choose your Subject") {
       return;
     }
-    var selectElem = document.getElementById("field2");
-    var element = document.createElement("option");
-    element.innerText = subject_id + ' ' + chapter_id;
-    selectElem.appendChild(element);
+    
     products.push(newProduct);
 
     var html = "<table id='tblData' border='1|1' >";
@@ -124,8 +126,6 @@
     document.getElementById("demo").innerHTML = html;
   }
   function savedata() {
-    debugger;
-    
     var TableData = new Array();
     $('#tblData tr').each(function (row, tr) {
       TableData[row] = {
@@ -135,7 +135,6 @@
     });
     TableData.shift();
     document.getElementById('myvalue').innerHTML = TableData;
-    alert(TableData)
     return TableData;
   };
   
@@ -152,7 +151,7 @@
     <div class="col-md-4 ">
       <form name="order" id="addUser" method="post">
         {% csrf_token %}
-        <input type="textarea" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">
+        <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">
         <table>
           <tr>
             <td>
@@ -171,25 +170,24 @@
               <div id="div_chapters">
                 {% include 'cto/course/cto_course_chapters.html' %}
               </div>
+              <div id="div_topics">
+                {% include 'cto/course/cto_course_topics.html' %}
+              </div>
               <input class="btn btn-primary form-control" type="button" id="btnAddallProduct" onclick="addallProduct();"
                 value="Add All">
             <td>
               <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add New Product">
             </td>
-            <tr>
-              <td>
-                <select name="selected_options" id="field2" size="5"></select>
-              </td>
-            </tr>
         </table>
-        <button class="btn btn-primary form-control" type="submit" onclick="savedata();">SUBMIT</button>
+        <button class="btn btn-primary form-control" type="submit" onclick="generateJSON();">SUBMIT</button>
       </form>
     </div>
   </div>
 </div>
+<p id="demo"></p> <br />
 {% endblock %}
 {% block javascript %}
-<p id="demo"></p> <br />
+
 
 
 </select>
