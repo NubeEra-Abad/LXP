@@ -50,6 +50,7 @@ class TopicForm(forms.ModelForm):
 class CourseForm(ModelForm):
     class Meta:
         model = Course
+        fields=['course_name']
         exclude = ()
 
 class CourseDetailsForm(ModelForm):

@@ -184,18 +184,23 @@ def cfo_add_batch_view(request):
 
                         batchtable = LXPModel.Batch.objects.create(batch_name=batchname,stdate=batchForm.cleaned_data["stdate"],enddate=batchForm.cleaned_data["enddate"],coursetype_id=coursetypeid,course_id=courseid)
                         batchtable.save()
-                        selectedlist = request.POST.getlist('listbox2')
+                        selectedlist = request.POST.getlist('listbox1')
                         for x in selectedlist:
                             trainerid = str(x)
-                            trainerid=trainerid.split('-')
-                            trainerid=trainerid[0]
                             batchtrainertable = LXPModel.BatchTrainer.objects.create(batch_id=batchtable.id,trainer_id=trainerid)
                             batchtrainertable.save()
+                        
+                        selectedlist = request.POST.getlist('listbox2')
+                        for x in selectedlist:
+                            learnerid = str(x)
+                            batchlearnertable = LXPModel.Batchlearner.objects.create(batch_id=batchtable.id,learner_id=learnerid)
+                            batchlearnertable.save()
                 else:
                     print("form is invalid")
             batchForm=LXPFORM.BatchForm()
-            trainers =  UserSocialAuth.objects.filter(user_id__in=User.objects.all(),status = True,utype=1)
-            return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers})
+            trainers =  User.objects.all().filter(id__in= UserSocialAuth.objects.all().filter(status = True,utype=1)) 
+            learners =  User.objects.all().filter(id__in= UserSocialAuth.objects.all().filter(status = True,utype=2)) 
+            return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -235,7 +240,6 @@ def cfo_delete_batch_view(request,pk):
         if str(request.session['utype']) == 'cfo':  
             batch=LXPModel.Batch.objects.get(id=pk)
             batch.delete()
-            return HttpResponseRedirect('/cfo/batch/cfo-view-batch')
         batchs = LXPModel.Batch.objects.all()
         return render(request,'cfo/batch/cfo_view_batch.html',{'batchs':batchs})
     except:

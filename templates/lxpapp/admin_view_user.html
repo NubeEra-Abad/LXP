@@ -47,7 +47,7 @@
       <h6 class="panel-title">Users</h6>
     </div>
     <!-- <table id="example" class="display" style="width:100%"> -->
-    <table class="table table-hover display" id="dev-table">
+    <table  class="table table-hover display" id="dev-table">
       <thead>
         <tr>
           <th>Pic</th>
@@ -82,8 +82,11 @@
           <br>
           <B>Mobile : {{t.mobile}} </B>
         </td>
-        
+        {% if t.utype == 0 or t.utype == 2 %}
         <td> {{t.course_name}}</td>
+          {% else %}
+          <td></td>
+          {% endif %}
         <td> 
           {% if t.status%}
           <center><a class="btn btn-danger btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a></center>

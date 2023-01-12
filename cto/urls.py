@@ -1,7 +1,7 @@
 from django.urls import path
 from cto import views
 from django.contrib.auth.views import LoginView
-from cto.views import CreateCrudUser, CrudView, DeleteCrudUser, UpdateCrudUser
+from cto.views import CreateCrudUser, CrudView, DeleteCrudUser, UpdateCrudUser,CtoCourseView
 urlpatterns = [
 
     path('ctoclick', views.ctoclick_view),
@@ -22,6 +22,7 @@ urlpatterns = [
 
     path('cto-topic', views.cto_topic_view,name='cto-topic'),
     path('cto-add-topic', views.cto_add_topic_view,name='cto-add-topic'),
+    path('cto-add-defualt-topic', views.cto_add_defualt_topic_view,name='cto-add-defualt-topic'),
     path('cto-update-topic/<int:pk>', views.cto_update_topic_view,name='cto-update-topic'),
     path('cto-view-topic', views.cto_view_topic_view,name='cto-view-topic'),
     path('cto-delete-topic/<int:pk>', views.cto_delete_topic_view,name='cto-delete-topic'),
@@ -64,5 +65,11 @@ urlpatterns = [
     path('ajax/crudcto/create/', CreateCrudUser.as_view(), name='cto_crud_ajax_create'),
     path('ajax/crudcto/delete/', DeleteCrudUser.as_view(), name='cto_crud_ajax_delete'),
     path('ajax/crudcto/update/', UpdateCrudUser.as_view(), name='cto_crud_ajax_update'),
+
+    path('ctocourse', views.CtoCourseView,name='ctocourse'),
+    path('ajax/crudcto/create/', CreateCrudUser.as_view(), name='cto_crud_ajax_create'),
+    path('ajax/crudcto/delete/', DeleteCrudUser.as_view(), name='cto_crud_ajax_delete'),
+    path('ajax/crudcto/update/', UpdateCrudUser.as_view(), name='cto_crud_ajax_update'),
+    path('modules1', views.Cto_Course_View, name='modules1'),
 
 ]

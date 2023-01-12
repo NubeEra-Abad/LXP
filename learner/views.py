@@ -218,7 +218,7 @@ def learner_video_Course_view(request):
         return render(request,'lxpapp/404page.html')
 
 def learner_video_Course_subject_view(request,course_id):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'learner':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
@@ -232,13 +232,17 @@ def learner_video_Course_subject_view(request,course_id):
             for x in wc:
                 wc = x.VWatched
             try:
-                per = (100*wc)/tc
+                per = (100*int(wc))/int(tc)
             except:
                 per =0
-            dif = tc-wc
+            if tc is None:
+                tc = 0
+            if wc is None:
+                wc = 0
+            dif = tc- wc
 
             return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
  
 def learner_video_list_view(request,subject_id,course_id):

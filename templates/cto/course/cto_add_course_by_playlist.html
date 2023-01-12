@@ -33,9 +33,9 @@
       <label for="course_name">Course Name</label>
       {{ courseForm.course_name }}<br>
       <label for="subject_name">Subject Name</label>
-      <select name="playlist[]" id="field2" multiple multiselect-search="true" multiselect-select-all="true"
+      <select name="listbox2" id="field2" multiple multiselect-search="true" multiselect-select-all="true"
     multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
-
+ 
     {% for entry in subject %}
     <option value="{{ entry.id}}">{{ entry.name }}</option>
     {% endfor %}

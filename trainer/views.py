@@ -609,7 +609,7 @@ def trainer_learner_video_Course_subject_view(request,course_id):
         if str(request.session['utype']) == 'trainer':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
-            subject = LXPModel.Playlist.objects.raw('SELECT y.id,  y.name  , (SELECT COUNT (PLI.id) FROM lxpapp_playlistitem PLI LEFT OUTER JOIN lxpapp_video PLIV ON (PLI.video_id = PLIV.id)  WHERE  PLI.playlist_id = y.id) as Vtotal  , (SELECT COUNT(WC.id) FROM  lxpapp_videowatched WC  LEFT OUTER JOIN lxpapp_video WCV ON (WC.video_id = WCV.id)  LEFT OUTER JOIN lxpapp_playlistitem WCPL ON (WCV.id = WCPL.video_id) WHERE WCPL.playlist_id = y.id) as VWatched FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist y ON (lxpapp_coursedetails.subject_id = y.id)  WHERE lxpapp_coursedetails.course_id = ' + str(course_id))
+            subject = LXPModel.Playlist.objects.raw('SELECT DISTINCT y.id,  y.name  , (SELECT COUNT (PLI.id) FROM lxpapp_playlistitem PLI LEFT OUTER JOIN lxpapp_video PLIV ON (PLI.video_id = PLIV.id)  WHERE  PLI.playlist_id = y.id) as Vtotal  , (SELECT COUNT(WC.id) FROM  lxpapp_videowatched WC  LEFT OUTER JOIN lxpapp_video WCV ON (WC.video_id = WCV.id)  LEFT OUTER JOIN lxpapp_playlistitem WCPL ON (WCV.id = WCPL.video_id) WHERE WCPL.playlist_id = y.id) as VWatched FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist y ON (lxpapp_coursedetails.subject_id = y.id)  WHERE lxpapp_coursedetails.course_id = ' + str(course_id))
             tc = LXPModel.Video.objects.raw('SELECT 1 as id, count(lxpapp_video.id) AS FIELD_1 FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_coursedetails.subject_id = lxpapp_playlist.id)  LEFT OUTER JOIN lxpapp_playlistitem ON (lxpapp_playlist.id = lxpapp_playlistitem.playlist_id)  LEFT OUTER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) WHERE   lxpapp_coursedetails.course_id = ' + str(course_id))
             wc = LXPModel.VideoWatched.objects.raw('SELECT 1 as id, count(lxpapp_videowatched.id) AS FIELD_1 FROM  lxpapp_videowatched  LEFT OUTER JOIN lxpapp_video ON (lxpapp_videowatched.video_id = lxpapp_video.id)  LEFT OUTER  JOIN lxpapp_playlistitem ON (lxpapp_video.id = lxpapp_playlistitem.video_id)  LEFT OUTER  JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)  LEFT OUTER  JOIN lxpapp_coursedetails ON (lxpapp_playlist.id = lxpapp_coursedetails.subject_id) WHERE   lxpapp_coursedetails.course_id = ' + str(course_id))
             per = 0
@@ -958,25 +958,27 @@ class trainer_live_session(TemplateView):
     template_name = 'trainer/livesession/livesession.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['livesessions'] = LXPModel.LiveSession.objects.all()
+        context['users'] = LXPModel.LiveSession.objects.all()
+        context['sublist'] = LXPModel.Playlist.objects.all()
+
         return context
 
 class trainer_live_session_create(View):
     def  get(self, request):
         trainer = request.user.id
-        subject = request.GET.get('subject_id', None)
-        password = request.GET.get('password', None)
+        subject = request.GET.get('name', None)
+        password = request.GET.get('address', None)
 
         obj = LXPModel.LiveSession.objects.create(
-            trainer_id = trainer,
-            subject_id = subject,
+            trainer_id = int(trainer),
+            subject_id = int(subject),
             password = password
-        ).save()
-
-        livesession = {'id':obj.id,'trainer_id':obj.trainer_id,'subject_id':obj.subject_id,'password':obj.password}
+        )
+        obj.save()
+        user = {'id':obj.id,'name':obj.subject,'address':obj.password}
 
         data = {
-            'livesessions': livesession
+            'user': user
         }
         return JsonResponse(data)
 

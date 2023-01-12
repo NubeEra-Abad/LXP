@@ -1,80 +1,88 @@
 {% extends 'cfo/cfobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+
 <head>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<style>
-  a:link {
-    text-decoration: none;
-  }
-</style>
-<style>
-  th {
-  text-align: center;
-}
-  #select2, #select1{
-    height:300px;
-    width:200px;
-  }
-  
-  .approveTermsContainer{
-    display:flex;
-    justify-content:center;
-  }
-  
-  .transferBtns {
-    margin-right: 30px;
-    margin-left: 30px;
-  }
-  
-  .transferBtns{
-    float:left; 
-    align-self:center;
-  }
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <style>
+    a:link {
+      text-decoration: none;
+    }
   </style>
-  
-  <script type = "text/javascript">
-  $().ready(function() {
-  $('#add').click(function() {
-    return !$('#select1 option:selected').remove().appendTo('#select2');
-  });
-  
-  $('#remove').click(function() {
-    return !$('#select2 option:selected').remove().appendTo('#select1');
-  });
-});
+  <style>
+    th {
+      text-align: center;
+    }
+
+    #select2,
+    #select1 {
+      height: 300px;
+      width: 200px;
+    }
+
+    .approveTermsContainer {
+      display: flex;
+      justify-content: center;
+    }
+
+    .transferBtns {
+      margin-right: 30px;
+      margin-left: 30px;
+    }
+
+    .transferBtns {
+      float: left;
+      align-self: center;
+    }
+  </style>
+
+  <script type="text/javascript">
+    $().ready(function () {
+      $('#add').click(function () {
+        return !$('#select1 option:selected').remove().appendTo('#select2');
+      });
+
+      $('#remove').click(function () {
+        return !$('#select2 option:selected').remove().appendTo('#select1');
+      });
+    });
   </script>
 </head>
+<BR>
+<BR>
+<BR>
+<BR>
+
 <body>
-<div>
-<ol class="breadcrumb text-right">
-  <li><a href="cfo-dashboard">Dashboard</a></li>
-  <li><a href="cfo-view-batch">View Batches</a></li>
-  <li class="active">Add Batch</li>
-</ol>
-</div>
-<h2 style="text-align:center; color:blue;">Add Batch</h2>
-<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+  <div>
+    <ol class="breadcrumb text-right">
+      <li><a href="cfo-dashboard">Dashboard</a></li>
+      <li><a href="cfo-view-batch">View Batches</a></li>
+      <li class="active">Add Batch</li>
+    </ol>
+  </div>
+  <h2 style="text-align:center; color:blue;">Add Batch</h2>
+  <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <div class="form-group">
       <label for="batch_name">Batch Name</label>
       {% render_field batchForm.batch_name class="form-control" placeholder="batch Name" %}
       <br>
       <label for="course_name">Course Name</label>
-      {% render_field batchForm.courseID|attr:'required:true' class="form-control"  %}
+      {% render_field batchForm.courseID|attr:'required:true' class="form-control" %}
       <br>
       <label for="coursetype_name">Course Type Name</label>
-      {% render_field batchForm.coursetypeID|attr:'required:true' class="form-control"  %}
+      {% render_field batchForm.coursetypeID|attr:'required:true' class="form-control" %}
       <br>
       <label for="stdate">Start Date</label>
       {% render_field batchForm.stdate type="date" class="form-control" %}
@@ -82,39 +90,37 @@
       <label for="enddate">End Date</label>
       {% render_field batchForm.enddate type="date" class="form-control" %}
       <br>
-      <table>
-        <tr>
-          <th colspan="2">All Trainers</th>
-          <th colspan="2">Selected Trainers</th>
-        </tr>
-        <tr>
-          <td>
-            <select multiple="multiple" name="listbox1" id="select1">
-              {% for t in trainers %}
-                <option value="{{ t.id }}-{{t.user.first_name}} {{t.user.last_name}}">{{ t.id }}-{{t.user.first_name}} {{t.user.last_name}}</option>
-              {% endfor %}
-            </select>
-          </td>
-          <td>
-            <button id="add">&gt;&gt;</button>
-          </td>
-          <td>
-            <button id="remove">&lt;&lt;</button>
-          </td>
-          <td>
-            <select multiple="multiple" name="listbox2" id="select2"></select>
-          </td>
-        </tr>
-      </table>
+      <label for="listbox1">Trainers</label>
+      <select class="form-control" name="listbox1" id="field1" multiple multiselect-search="true"
+        multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+
+        {% for t in trainers %}
+        <option value="{{ t.id }}">{{t.first_name}}  {{t.last_name}} ({{t.email}})
+        {% endfor %}
+      </select>
+
+      <label for="listbox2">Trainers</label>
+      <select class="form-control" name="listbox2" id="field2" multiple multiselect-search="true"
+        multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+
+        {% for t in learners %}
+        <option value="{{ t.id }}">{{t.first_name}}  {{t.last_name}} ({{t.email}})
+          {{t.user.last_name}}</option>
+        {% endfor %}
+      </select>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
-    
+
   </form>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    crossorigin="anonymous"></script>
+  <script src="/static/multiselect-dropdown.js"></script>
   <br>
-{% if messages %}
+  {% if messages %}
   {% for message in messages %}
-    {{ message }}
+  {{ message }}
   {% endfor %}
-{% endif %}
-<br><br><br>
-{% endblock content %}
+  {% endif %}
+  <br><br><br>
+  {% endblock content %}

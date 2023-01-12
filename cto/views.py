@@ -309,6 +309,37 @@ def cto_add_topic_view(request):
         return render(request,'lxpapp/404page.html')
 
 @login_required
+def cto_add_defualt_topic_view(request):
+    try:
+        counter = 0
+        if str(request.session['utype']) == 'cto':
+            LXPModel.Topic.objects.all().delete()
+            plitems = LXPModel.PlaylistItem.objects.all()
+            for x in plitems:
+                a = LXPModel.Topic.objects.create(topic_name='not applicable',
+                                                    subject_id = x.playlist_id,
+                                                    chapter_id = x.video_id
+                                                )
+                a.save()
+                # try:
+                #     coursedet = LXPModel.CourseDetails.objects.get(subject_id = x.playlist_id,chapter_id = x.video_id)
+                # except LXPModel.CourseDetails.DoesNotExist:
+                #     coursedet = None
+                coursedet = LXPModel.CourseDetails.objects.all().filter(subject_id = x.playlist_id,chapter_id = x.video_id)
+                for cdet in coursedet:
+                    if cdet is None:
+                        zc=''
+                    else:
+                        counter = counter +1
+                        if counter == 152:
+                            vb = ''
+                        cdet.topic_id = a.id
+                        cdet.save()
+            return render(request,'cto/topic/cto_topic.html')
+    except:
+            print(counter)
+            return render(request,'lxpapp/404page.html')
+@login_required
 def cto_update_topic_view(request,pk):
     try:
         if str(request.session['utype']) == 'cto':
@@ -414,7 +445,7 @@ def cto_update_course_view(request,pk):
         return render(request,'lxpapp/404page.html')
 
 def cto_add_course_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 det_formset = LXPFORM.CourseDetFormSet(data=request.POST)
@@ -453,10 +484,11 @@ def cto_add_course_view(request):
                         messages.info(request, 'Course saved')
                 else:
                     print("form is invalid")
+            subjects = LXPModel.Playlist.objects.all()
             courseForm=LXPFORM.CourseForm()
             det_formset = LXPFORM.CourseDetFormSet(queryset=LXPModel.CourseDetails.objects.none())
-            return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset})
-    except:
+            return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm,'det_formset':det_formset,'subjects':subjects})
+    #except:
         return render(request,'lxpapp/404page.html')
 
 def cto_view_course_view(request):
@@ -855,6 +887,22 @@ def modules(request):
     context = {'modules': modules}
     return render(request, 'cto/modules.html', context)
 
+def Cto_Course_View(request):
+    if request.method=='POST':
+        course = request.POST.getlist('selected_options[]')
+        a=''
+
+    users = LXPModel.CrudUser.objects.all()
+    subjects = LXPModel.Playlist.objects.all()
+    context = {'users': users,'subjects': subjects}
+    return render(request, 'cto/crud_ajax/cto_course.html', context)
+
+def CtoCourseView(request):
+    users = LXPModel.CrudUser.objects.all()
+    subjects = LXPModel.Playlist.objects.all()
+    context = {'users': users,'subjects': subjects}
+    return render(request, 'cto/crud_ajax/cto_course.html', context)
+
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, View, DeleteView
@@ -867,6 +915,57 @@ class CrudView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['users'] = LXPModel.CrudUser.objects.all()
         return context
+
+class CreateCrudUser(View):
+    def  get(self, request):
+        name1 = request.GET.get('name', None)
+        address1 = request.GET.get('address', None)
+        age1 = request.GET.get('age', None)
+
+        obj = LXPModel.CrudUser.objects.create(
+            name = name1,
+            address = address1,
+            age = age1
+        )
+
+        user = {'id':obj.id,'name':obj.name,'address':obj.address,'age':obj.age}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+
+class DeleteCrudUser(View):
+    def  get(self, request):
+        id1 = request.GET.get('id', None)
+        LXPModel.CrudUser.objects.get(id=id1).delete()
+        data = {
+            'deleted': True
+        }
+        return JsonResponse(data)
+
+
+class UpdateCrudUser(View):
+    def  get(self, request):
+        id1 = request.GET.get('id', None)
+        name1 = request.GET.get('name', None)
+        address1 = request.GET.get('address', None)
+        age1 = request.GET.get('age', None)
+
+        obj = LXPModel.CrudUser.objects.get(id=id1)
+        obj.name = name1
+        obj.address = address1
+        obj.age = age1
+        obj.save()
+
+        user = {'id':obj.id,'name':obj.name,'address':obj.address,'age':obj.age}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+
+
 
 class CreateCrudUser(View):
     def  get(self, request):

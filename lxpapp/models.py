@@ -279,9 +279,11 @@ class Pin(models.Model):
 ##############################################################################
 
 class Topic(models.Model):
-   chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
-   subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-   topic_name = models.CharField(max_length=50)
+    chapter=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True, blank=True)
+    subject=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True, blank=True)
+    topic_name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.topic_name
 
 class Course(models.Model):
    course_name = models.CharField(max_length=50)
@@ -295,7 +297,7 @@ class CourseDetails(models.Model):
    course=models.ForeignKey(Course,on_delete=models.CASCADE)
    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
    chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
-   topic=models.ForeignKey(Topic,on_delete=models.CASCADE)
+   topic=models.ForeignKey(Topic,on_delete=models.SET_NULL, null=True, blank=True)
 
 class UserCourse(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -309,8 +311,8 @@ class CourseType(models.Model):
 
 class Batch(models.Model):
    batch_name = models.CharField(max_length=50)
-   course=models.ForeignKey(Course,on_delete=models.CASCADE)
    coursetype=models.ForeignKey(CourseType,on_delete=models.CASCADE)
+   fee = models.IntegerField(default=0)
    stdate = models.DateField()
    enddate = models.DateField()
    def __str__(self):
@@ -318,7 +320,11 @@ class Batch(models.Model):
 
 class BatchTrainer(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
-   trainer=models.ForeignKey(UMODEL.UserSocialAuth,on_delete=models.CASCADE)
+   trainer=models.ForeignKey(User,on_delete=models.CASCADE)
+
+class Batchlearner(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
+   learner=models.ForeignKey(User,on_delete=models.CASCADE)
  
 class PassionateSkill(models.Model):
    passionateskill_name = models.CharField(max_length=200)
