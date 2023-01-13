@@ -1063,4 +1063,3 @@ class UpdateCrudUser(View):
             'user': user
         }
         return JsonResponse(data)
-

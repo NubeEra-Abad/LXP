@@ -25,4 +25,10 @@ path('cfo-view-batch', views.cfo_view_batch_view,name='cfo-view-batch'),
 path('cfo-delete-batch/<int:pk>', views.cfo_delete_batch_view,name='cfo-delete-batch'),
 path('cfo-view-batch-details/<batchname>/<int:pk>', views.cfo_view_batch_details_view,name='cfo-view-batch-details'),
 
+path('cfo-learnerfee', views.cfo_learnerfee_view,name='cfo-learnerfee'),
+path('cfo-add-learnerfee', views.cfo_add_learnerfee_view,name='cfo-add-learnerfee'),
+path('cfo-update-learnerfee/<int:pk>', views.cfo_update_learnerfee_view,name='cfo-update-learnerfee'),
+path('cfo-view-learnerfee', views.cfo_view_learnerfee_view,name='cfo-view-learnerfee'),
+path('cfo-delete-learnerfee/<int:pk>', views.cfo_delete_learnerfee_view,name='cfo-delete-learnerfee'),
+
 ]

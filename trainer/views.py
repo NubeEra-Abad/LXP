@@ -131,7 +131,25 @@ def trainer_update_exam_view(request,pk):
             return render(request,'trainer/exam/trainer_update_exam.html',{'examForm':examForm,'ex':exam.exam_name,'sub':exam.questiontpye})
     except:
         return render(request,'lxpapp/404page.html')
-
+@login_required
+def trainer_upload_exam_csv_view(request):
+    if request.method=='POST':
+        import pandas as pd
+        df = pd.read_csv('path_to_file', sep='delimiter')
+        products = []
+        for i in range(len(df)):
+            products.append(
+                UserSocialAuth(
+                name=df.iloc[i][0],
+                description=df.iloc[i][1],
+                price=df.iloc[i][2]
+                )
+            )
+        UserSocialAuth.objects.bulk_create(products)
+    batch = LXPModel.Batch.objects.all()
+    context = {'batch': batch}
+    return render(request,'trainer/exam/trainer_upload_exam_csv.html',context)
+    
 @login_required
 def trainer_view_exam_view(request):
     try:

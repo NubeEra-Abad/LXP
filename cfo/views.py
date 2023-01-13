@@ -186,22 +186,23 @@ def cfo_add_batch_view(request):
                             trainerid = str(x)
                             batchtrainertable = LXPModel.BatchTrainer.objects.create(batch_id=batchtable.id,trainer_id=trainerid)
                             batchtrainertable.save()
-                        
-                        selectedlist = request.POST.getlist('listbox2')
-                        for x in selectedlist:
-                            learnerid = str(x)
-                            batchlearnertable = LXPModel.Batchlearner.objects.create(batch_id=batchtable.id,learner_id=learnerid)
+                        import json
+                        json_data = json.loads(request.POST.get('myvalue'))
+                        for cx in json_data:
+                            a=json_data[cx]['id']
+                            b=json_data[cx]['fee']
+                            batchlearnertable = LXPModel.Batchlearner.objects.create(batch_id=batchtable.id,learner_id=a,fee=b)
                             batchlearnertable.save()
-                            selectedlist = request.POST.getlist('listbox3')
-                            for x in selectedlist:
-                                courseid = str(x)
-                                batchcoursetable = LXPModel.BatchCourse.objects.create(batch_id=batchtable.id,course_id=courseid)
-                                batchcoursetable.save()
+                        selectedlist = request.POST.getlist('listbox3')
+                        for x in selectedlist:
+                            courseid = str(x)
+                            batchcoursetable = LXPModel.BatchCourse.objects.create(batch_id=batchtable.id,course_id=courseid)
+                            batchcoursetable.save()
                 else:
                     print("form is invalid")
             batchForm=LXPFORM.BatchForm()
             trainers =  User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 1 AND  social_auth_usersocialauth.status = true')
-            learners =  User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 2 AND  social_auth_usersocialauth.status = true')
+            learners =  User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 2 AND  social_auth_usersocialauth.status = true ORDER BY auth_user.username')
             courses =  LXPModel.Course.objects.all()
             return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners,'courses':courses})
     #except:
@@ -255,5 +256,77 @@ def cfo_delete_batch_view(request,pk):
             batch.delete()
         batchs = LXPModel.Batch.objects.all()
         return render(request,'cfo/batch/cfo_view_batch.html',{'batchs':batchs})
+    except:
+        return render(request,'lxpapp/404page.html')
+@login_required
+def cfo_learnerfee_view(request):
+    #try:
+        if str(request.session['utype']) == 'cfo':
+            return render(request,'cfo/learnerfee/cfo_learnerfee.html')
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cfo_add_learnerfee_view(request):
+    #try:
+        if str(request.session['utype']) == 'cfo':
+            if request.method=='POST':
+                learnerfeeForm=LXPFORM.LearnerFeeForm(request.POST)
+                if learnerfeeForm.is_valid(): 
+                    learnerid = LXPModel.User.objects.only('id').get(username=learnerfeeForm.cleaned_data["learnerID"]).id
+                    pdate = learnerfeeForm.cleaned_data["paiddate"]
+                    pfee = learnerfeeForm.cleaned_data["fee"]
+                    learnerfee = LXPModel.LearnerFee.objects.create(
+                        learner_id=learnerid,
+                        paiddate = pdate,
+                        fee =pfee
+                    )
+                    learnerfee.save()
+                else:
+                    print("form is invalid")
+            learnerfeeForm=LXPFORM.LearnerFeeForm()
+            return render(request,'cfo/learnerfee/cfo_add_learnerfee.html',{'learnerfeeForm':learnerfeeForm})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cfo_update_learnerfee_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cfo':
+            learnerfee = LXPModel.LearnerFee.objects.get(id=pk)
+            learnerfeeForm=LXPFORM.LearnerFeeForm(request.POST,instance=learnerfee)
+            if request.method=='POST':
+                if learnerfeeForm.is_valid(): 
+                    learnerfeetext = learnerfeeForm.cleaned_data["learnerfee_name"]
+                    learnerfee = LXPModel.LearnerFee.objects.all().filter(learnerfee_name__iexact = learnerfeetext).exclude(id=pk)
+                    if learnerfee:
+                        messages.info(request, 'LearnerFee Name Already Exist')
+                        return render(request,'cfo/learnerfee/cfo_update_learnerfee.html',{'learnerfeeForm':learnerfeeForm})
+                    else:
+                        learnerfeeForm.save()
+                        learnerfees = LXPModel.LearnerFee.objects.all()
+                        return render(request,'cfo/learnerfee/cfo_view_learnerfee.html',{'learnerfees':learnerfees})
+            return render(request,'cfo/learnerfee/cfo_update_learnerfee.html',{'learnerfeeForm':learnerfeeForm,'sub':learnerfee.learnerfee_name})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cfo_view_learnerfee_view(request):
+    try:
+        if str(request.session['utype']) == 'cfo':
+            learnerfees = LXPModel.LearnerFee.objects.all()
+            return render(request,'cfo/learnerfee/cfo_view_learnerfee.html',{'learnerfees':learnerfees})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cfo_delete_learnerfee_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cfo':  
+            learnerfee=LXPModel.LearnerFee.objects.get(id=pk)
+            learnerfee.delete()
+            return HttpResponseRedirect('/cfo/learnerfee/cfo-view-learnerfee')
+        learnerfees = LXPModel.LearnerFee.objects.all()
+        return render(request,'cfo/learnerfee/cfo_view_learnerfee.html',{'learnerfees':learnerfees})
     except:
         return render(request,'lxpapp/404page.html')

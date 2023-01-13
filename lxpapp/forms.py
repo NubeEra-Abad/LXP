@@ -99,6 +99,15 @@ class BatchForm(forms.ModelForm):
             'enddate': forms.DateInput(format='%d/%m/%Y')
         }
 
+class LearnerFeeForm(forms.ModelForm):
+    learnerID=forms.ModelChoiceField(queryset=models.User.objects.all(),empty_label="Learner Name", to_field_name="id")
+    class Meta:
+        model=models.LearnerFee
+        fields=['fee','paiddate']
+        widgets = {
+            'paiddate': forms.DateInput(format='%d/%m/%Y')
+        }
+
 
 class PassionateSkillForm(forms.ModelForm):
     passionateskill_name = forms.CharField(

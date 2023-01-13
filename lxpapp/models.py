@@ -327,6 +327,12 @@ class BatchTrainer(models.Model):
 class Batchlearner(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
    learner=models.ForeignKey(User,on_delete=models.CASCADE)
+   fee = models.IntegerField(default=0)
+
+class LearnerFee(models.Model):
+   learner=models.ForeignKey(User,on_delete=models.CASCADE)
+   paiddate = models.DateField()
+   fee = models.IntegerField(default=0)
 
 class PassionateSkill(models.Model):
    passionateskill_name = models.CharField(max_length=200)

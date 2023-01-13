@@ -40,10 +40,10 @@
     return true;
   }
   function addallProduct() {
-    //var productID = document.getElementById("productID").value;
-    var eProductID = document.getElementById("productID");
-    var productID = eProductID.options[eProductID.selectedIndex].innerHTML;
-    var subject_id = eProductID.options[eProductID.selectedIndex].value;
+    //var field1 = document.getElementById("field1").value;
+    var efield1 = document.getElementById("field1");
+    var field1 = efield1.options[efield1.selectedIndex].innerHTML;
+    var subject_id = efield1.options[efield1.selectedIndex].value;
     //var product_desc = document.getElementById("product_desc").value;
     var eProduct_desc = document.getElementsByName("chapters")[0];
 
@@ -60,7 +60,7 @@
         product_desc: null,
       };
 
-      newProduct.product_id = subject_id + '-' + productID;
+      newProduct.product_id = subject_id + '-' + field1;
       newProduct.product_desc = chapter_id + '-' + product_desc;
 
       products.push(newProduct);
@@ -99,9 +99,9 @@
     }
   }
   function addProduct() {
-    //var productID = document.getElementById("productID").value;
-    var eProductID = document.getElementById("productID");
-    var productID = eProductID.options[eProductID.selectedIndex].innerHTML;
+    //var field1 = document.getElementById("field1").value;
+    var efield1 = document.getElementById("field1");
+    var field1 = efield1.options[efield1.selectedIndex].innerHTML;
 
     //var product_desc = document.getElementById("product_desc").value;
     var eProduct_desc = document.getElementsByName("chapters")[0];
@@ -110,9 +110,9 @@
       product_id: null,
       product_desc: null,
     };
-    var subject_id = eProductID.options[eProductID.selectedIndex].value;
+    var subject_id = efield1.options[efield1.selectedIndex].value;
     var chapter_id = eProduct_desc.options[eProduct_desc.selectedIndex].value;
-    newProduct.product_id = subject_id + '-' + productID;
+    newProduct.product_id = subject_id + '-' + field1;
     newProduct.product_desc = chapter_id + '-' + product_desc;
 
     if (product_desc == "Choose your Chapter" || subject_id == "Choose your Subject") {
@@ -184,8 +184,8 @@
           </tr>
           <tr>
             <td>
-              <label for="productID">Subject Name</label>
-              <select class="custom-select mb-4 form-control" id="productID" name="subject"
+              <label for="field1">Subject Name</label>
+              <select class="custom-select mb-4 form-control" id="field1" name="subject"
                 hx-get="{% url 'trainer-view-material-chapters' %}" hx-trigger="change" hx-target="#div_chapters"
                 >
                 <option selected>Choose your Subject</option>

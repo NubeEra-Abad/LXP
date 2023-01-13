@@ -14,6 +14,7 @@ urlpatterns = [
     path('trainer-update-exam/<int:pk>', views.trainer_update_exam_view,name='trainer-update-exam'),
     path('trainer-view-exam', views.trainer_view_exam_view,name='trainer-view-exam'),
     path('trainer-delete-exam/<int:pk>', views.trainer_delete_exam_view,name='trainer-delete-exam'),
+    path('trainer-upload-exam-csv', views.trainer_upload_exam_csv_view,name='trainer-upload-exam-csv'),
     
     path('trainer-mcqquestion', views.trainer_mcqquestion_view,name='trainer-mcqquestion'),
     path('trainer-add-mcqquestion', views.trainer_add_mcqquestion_view,name='trainer-add-mcqquestion'),
