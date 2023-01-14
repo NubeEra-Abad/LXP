@@ -95,18 +95,30 @@
 </div>
 <script>
   var arr = $("#dev-table tr");
-  $.each(arr, function (i, item) {
-    var currIndex = $("#dev-table tr").eq(i);
-    var matchText = currIndex.children("td").first().text();
-    $(this).nextAll().each(function (i, inItem) {
-      if (matchText === $(this).children("td").first().text()) {
-        $(this).remove();
-      }
-    });
+  // $.each(arr, function (i, item) {
+  //   var currIndex = $("#dev-table tr").eq(i);
+  //   var matchText = currIndex.children("td").first().text();
+  //   $(this).nextAll().each(function (i, inItem) {
+  //     if (matchText === $(this).children("td").first().text()) {
+  //       $(this).remove();
+  //     }
+  //   });
+  // }
+  
+  // );
+  aaa();
+  updateSubTotal();
+function aaa () {
+  $('table').find('tr').each(function(){
+  const $row = $(this);
+  $row.nextAll('tr').each(function(){
+    const $next = $(this);
+    if($row.find('td:first').text() == $next.find('td:first').text()) {
+      $next.remove();
+    }
   })
-  updateSubTotal()
-    ;
-
+});
+}
   function updateSubTotal() {
     debugger;
     var table = document.getElementById("dev-table"),

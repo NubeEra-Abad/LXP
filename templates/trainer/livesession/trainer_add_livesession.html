@@ -1,0 +1,51 @@
+{% extends 'trainer/trainerbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+  a:link {
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+<div>
+<ol class="breadcrumb text-right">
+  <li><a href="trainer-dashboard">Dashboard</a></li>
+  <li><a href="trainer-view-exam">View Exams</a></li>
+  <li class="active">Add Exam</li>
+</ol>
+</div>
+<h2 style="text-align:center; color:blue;">Add Exam</h2>
+<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    <div class="form-group">
+      <label for="exam_name">Exam Name</label>
+      {% render_field examForm.exam_name class="form-control" placeholder="exam Name" %}
+      <br>
+      <label for="batch_name">Batch Name</label>
+      {% render_field examForm.batchID class="form-control" placeholder="Batch Name" %}
+      <br>
+      <label for="questiontpye">Question Type</label>
+      {% render_field examForm.questiontpye class="form-control"%}
+    </div>
+    <button type="submit" class="btn btn-primary">ADD</button>
+    
+  </form>
+  <br>
+{% if messages %}
+  {% for message in messages %}
+    {{ message }}
+  {% endfor %}
+{% endif %}
+<br><br><br>
+{% endblock content %}

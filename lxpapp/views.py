@@ -194,27 +194,19 @@ def contactus_view(request):
 def admin_view_user_view(request):
     try:    
         if str(request.session['utype']) == 'admin':
-            users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name, lxpapp_learnerdetails.mobile FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) LEFT OUTER JOIN lxpapp_learnerdetails ON (auth_user.id = lxpapp_learnerdetails.learner_id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
+            users = UserSocialAuth.objects.raw('SELECT   SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME,  LXPAPP_LEARNERDETAILS.MOBILE,  GROUP_CONCAT(DISTINCT LXPAPP_COURSE.COURSE_NAME) AS course_name FROM  SOCIAL_AUTH_USERSOCIALAUTH  LEFT OUTER JOIN AUTH_USER ON (SOCIAL_AUTH_USERSOCIALAUTH.USER_ID = AUTH_USER.ID)  LEFT OUTER JOIN LXPAPP_LEARNERDETAILS ON (AUTH_USER.ID = LXPAPP_LEARNERDETAILS.LEARNER_ID)  INNER JOIN LXPAPP_BATCHLEARNER ON (AUTH_USER.ID = LXPAPP_BATCHLEARNER.LEARNER_ID)  INNER JOIN LXPAPP_BATCHCOURSE ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCHCOURSE.BATCH_ID)  INNER JOIN LXPAPP_COURSE ON (LXPAPP_BATCHCOURSE.COURSE_ID = LXPAPP_COURSE.ID) GROUP BY  SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME ORDER BY  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME')
             return render(request,'lxpapp/admin_view_user.html',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def update_user_view(request,userfirstname,userlastname,userid,pk):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'admin':
             if request.method == 'POST':
                 course = request.POST.getlist('courses[]')
                 active = request.POST.get('active')
                 usertype = request.POST.getlist('utype[]')
-                if usertype[0] == '2' and course.__len__()==0:
-                    a=''
-                elif usertype[0] == '2' and course.__len__():
-                    usercouse = models.UserCourse.objects.all().filter(user_id=userid)
-                    usercouse.delete()
-                    for c in course:
-                        usercouse = models.UserCourse.objects.create(user_id=userid,course_id=c,remarks='')
-                        usercouse.save()
                 users = UserSocialAuth.objects.get(id=pk)
                 if active:
                     users.status = True
@@ -224,13 +216,12 @@ def update_user_view(request,userfirstname,userlastname,userid,pk):
                 users.save()
                 users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name, lxpapp_learnerdetails.mobile FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) LEFT OUTER JOIN lxpapp_learnerdetails ON (auth_user.id = lxpapp_learnerdetails.learner_id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
-            courses = models.Course.objects.all()
-            learnercourses = models.UserCourse.objects.all().filter(user_id=userid)
+            learnercourses = models.Batchlearner.objects.raw('SELECT LXPAPP_COURSE.id, LXPAPP_COURSE.COURSE_NAME AS course_name FROM  AUTH_USER  INNER JOIN LXPAPP_BATCHLEARNER ON (AUTH_USER.ID = LXPAPP_BATCHLEARNER.LEARNER_ID)  INNER JOIN LXPAPP_BATCHCOURSE ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCHCOURSE.BATCH_ID)  INNER JOIN LXPAPP_COURSE ON (LXPAPP_BATCHCOURSE.COURSE_ID = LXPAPP_COURSE.ID) WHERE AUTH_USER.id = '+ str(userid))
             users = UserSocialAuth.objects.all().filter(id=pk)
             userdetails = models.LearnerDetails.objects.all().filter(learner_id=userid)
             username = userfirstname + ' ' + userlastname
-            return render(request,'lxpapp/admin_update_user.html',{'users':users,'courses':courses,'learnercourses':learnercourses,'username':username,'userdetails':userdetails})
-    except:
+            return render(request,'lxpapp/admin_update_user.html',{'users':users,'learnercourses':learnercourses,'username':username,'userdetails':userdetails})
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

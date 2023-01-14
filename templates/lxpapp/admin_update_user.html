@@ -62,10 +62,10 @@
                             <th>Course Names</th>
                           </tr>
                         </thead>
-                        <td> {{t.course}}</td>
+                        <td> {{t.course_name}}</td>
                         {% else %}
                         <tr>
-                          <td> {{t.course}}</td>
+                          <td> {{t.course_name}}</td>
                         </tr>
                         {% endif %}
                   {% endfor %}
@@ -83,14 +83,6 @@
         {% else %}
         <input type="checkbox" name="active" id="active" value="{{entry.status}}"><br>
         {% endif %}
-
-        <label for="field1">Course Name</label>
-        <select class="multiselect" name="courses[]" id="field1" multiple multiselect-search="true"
-          multiselect-select-all="true" multiselect-max-items="10" onchange="console.log(this.selectedOptions)">
-          {% for entry in courses %}
-          <option value="{{ entry.id}}">{{ entry.course_name }}</option>
-          {% endfor %}
-        </select><br>
         <label for="field2">User Type</label>
         <select class="singleselect" name="utype[]" id="field2" onchange="console.log(this.selectedOptions)">
 

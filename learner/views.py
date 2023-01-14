@@ -246,6 +246,7 @@ def learner_show_video_view(request,subject_id,course_id,video_id):
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             Videos=LXPModel.Video.objects.all().filter(id=video_id)
+            vunlock=LXPModel.Video.objects.raw('SELECT DISTINCT   lxpapp_video.id,  lxpapp_video.name FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_coursedetails ON (lxpapp_video.id = lxpapp_coursedetails.chapter_id)  INNER JOIN lxpapp_batchcourse ON (lxpapp_batchcourse.course_id = lxpapp_coursedetails.course_id)  INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batchcourse.batch_id) WHERE  lxpapp_playlistitem.playlist_id = ' + str(subject_id) + ' AND  lxpapp_video.id > ' + str(video_id) + '  AND lxpapp_batchlearner.learner_id = ' + str(request.user.id) + ' LIMIT 1 ')
             topicname =''
             url=''
             for x in Videos:
@@ -257,6 +258,11 @@ def learner_show_video_view(request,subject_id,course_id,video_id):
                 for x in Videos:
                     vw=  LXPModel.VideoWatched.objects.create(video_id = video_id,learner_id=request.user.id)
                     vw.save()
+            if vunlock:
+                for x in vunlock:
+                    vu=  LXPModel.VideoToUnlock.objects.create(video_id = x.id ,learner_id=request.user.id)
+                    vu.save()
+
             return render(request,'learner/video/learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
     except:
         return render(request,'lxpapp/404page.html')
