@@ -33,7 +33,7 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Courses of {{userfirstname}} {{userlastname}}</h6>
+      <h6 class="panel-title">Courses of {{user_id}} {{userfirstname}} {{userlastname}}</h6>
     </div>
     <table class="table table-hover display" id="dev-table">
       <thead>
@@ -44,8 +44,8 @@
       </thead>
       {% for t in videos %}
       <tr>
-        <td>{{t.course.course_name}}</td>
-            <td><a class="btn btn-success" href="{% url 'trainer-learner-video-course-subject' t.course_id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td>{{t.course_name}}</td>
+            <td><a class="btn btn-success" href="{% url 'trainer-learner-video-course-subject' t.id user_id %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
       {% endfor %}
     </table>
   </div>

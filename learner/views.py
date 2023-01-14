@@ -37,11 +37,7 @@ def learner_dashboard_view(request):
 def learner_exam_view(request):
     try:    
         if str(request.session['utype']) == 'learner':
-            batch = LXPModel.Batch.objects.all().filter(id__in= LXPModel.Batchlearner.objects.values('learner_id').filter (learner_id= request.user.id))
-            a=''
-            for x in batch:
-                a = x.id
-            exams=LXPModel.Exam.objects.raw('SELECT  lxpapp_batch.id,  lxpapp_batch.batch_name,  lxpapp_exam.exam_name FROM  lxpapp_batch  INNER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  INNER JOIN lxpapp_exam ON (lxpapp_batch.id = lxpapp_exam.batch_id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id)) 
+            exams=LXPModel.Exam.objects.raw("SELECT  lxpapp_exam.id,  lxpapp_batch.batch_name,  lxpapp_exam.exam_name FROM  lxpapp_batch  INNER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  INNER JOIN lxpapp_exam ON (lxpapp_batch.id = lxpapp_exam.batch_id) WHERE lxpapp_exam.questiontpye = 'MCQ' AND lxpapp_batchlearner.learner_id = " + str(request.user.id)) 
             return render(request,'learner/exam/learner_exam.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -101,7 +97,7 @@ def learner_start_exam_view(request,pk):
                 mcqresult.correct = correct
                 mcqresult.timetaken = request.POST.get('timer')
                 mcqresult.save()
-                resdetobj = LXPModel.McqResultDetails.objects.raw("SELECT  lxpapp_mcqquestion.id,  lxpapp_mcqquestion.question as q,  lxpapp_mcqquestion.option1 as o1,  lxpapp_mcqquestion.option2 as o2,  lxpapp_mcqquestion.option3 as o3,  lxpapp_mcqquestion.option4 as o4,  lxpapp_mcqquestion.answer AS Correct,  lxpapp_mcqresultdetails.selected AS answered   FROM  lxpapp_mcqresultdetails  LEFT OUTER JOIN lxpapp_mcqresult ON (lxpapp_mcqresultdetails.mcqresult_id = lxpapp_mcqresult.id)  LEFT OUTER JOIN lxpapp_exam ON (lxpapp_mcqresult.exam_id = lxpapp_exam.id)  LEFT OUTER JOIN lxpapp_mcqquestion ON (lxpapp_exam.id = lxpapp_mcqquestion.exam_id)  AND (lxpapp_mcqresultdetails.question_id = lxpapp_mcqquestion.id) Where lxpapp_mcqresult.learner_id= " + str(request.user.id) + " AND lxpapp_exam.id = " + str(pk) + " AND lxpapp_mcqresult.id = " +  str(r_id) )
+                resdetobj = LXPModel.McqResultDetails.objects.raw("SELECT 1 as id,  lxpapp_mcqquestion.question as q,  lxpapp_mcqquestion.option1 as o1,  lxpapp_mcqquestion.option2 as o2,  lxpapp_mcqquestion.option3 as o3,  lxpapp_mcqquestion.option4 as o4,  lxpapp_mcqquestion.answer AS Correct,  lxpapp_mcqquestion.marks,  lxpapp_mcqresultdetails.selected AS answered  FROM  lxpapp_mcqresultdetails  INNER JOIN lxpapp_mcqresult ON (lxpapp_mcqresultdetails.mcqresult_id = lxpapp_mcqresult.id)  INNER JOIN lxpapp_mcqquestion ON (lxpapp_mcqresultdetails.question_id = lxpapp_mcqquestion.id) WHERE lxpapp_mcqresult.id = " + str(r_id) + " AND lxpapp_mcqresult.learner_id = " + str(request.user.id) + " ORDER BY lxpapp_mcqquestion.id" )
                 return render(request,'learner/exam/learner_exam_result.html',{'total':total,'percent':percent, 'wrong':wrong,'correct':correct,'time': request.POST.get('timer'),'score':score,'resdetobj':resdetobj})
             else:
                 questions=LXPModel.McqQuestion.objects.all()
@@ -134,11 +130,7 @@ def learner_show_exam_reuslt_details_view(request,pk):
 def learner_short_exam_view(request):
     try:    
         if str(request.session['utype']) == 'learner':
-            course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
-            a=''
-            for x in course:
-                a = x.id
-            shortexams=LXPModel.Exam.objects.all().filter(questiontpye='ShortAnswer',course_id = a)
+            shortexams=LXPModel.Exam.objects.raw("SELECT  lxpapp_exam.id,  lxpapp_batch.batch_name,  lxpapp_exam.exam_name FROM  lxpapp_batch  INNER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  INNER JOIN lxpapp_exam ON (lxpapp_batch.id = lxpapp_exam.batch_id) WHERE lxpapp_exam.questiontpye = 'ShortAnswer' AND lxpapp_batchlearner.learner_id = " + str(request.user.id)) 
             return render(request,'learner/shortexam/learner_short_exam.html',{'shortexams':shortexams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -177,11 +169,8 @@ def learner_start_short_exam_view(request,pk):
                     
                 shortresult.timetaken = request.POST.get('timer')
                 shortresult.save()
-                course = LXPModel.Course.objects.all().filter(id__in= LXPModel.UserCourse.objects.values('course_id').filter (user_id= request.user.id))
-                a=''
-                for x in course:
-                    a = x.id
-                shortexams=LXPModel.Exam.objects.all().filter(questiontpye='ShortAnswer',course_id = a)
+                
+                shortexams=LXPModel.Exam.objects.raw("SELECT  lxpapp_exam.id,  lxpapp_batch.batch_name,  lxpapp_exam.exam_name FROM  lxpapp_batch  INNER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  INNER JOIN lxpapp_exam ON (lxpapp_batch.id = lxpapp_exam.batch_id) WHERE lxpapp_exam.questiontpye = 'ShortAnswer' AND lxpapp_batchlearner.learner_id = " + str(request.user.id)) 
                 return render(request,'learner/shortexam/learner_short_exam.html',{'shortexams':shortexams})
             shortexam=LXPModel.Exam.objects.get(id=pk)
             questions=LXPModel.ShortQuestion.objects.all().filter(exam_id=shortexam.id).order_by('?')
@@ -214,7 +203,7 @@ def learner_video_Course_view(request):
         return render(request,'lxpapp/404page.html')
 
 def learner_video_Course_subject_view(request,course_id):
-    #try:    
+    try:    
         if str(request.session['utype']) == 'learner':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
@@ -238,17 +227,17 @@ def learner_video_Course_subject_view(request,course_id):
             dif = tc- wc
 
             return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
  
 def learner_video_list_view(request,subject_id,course_id):
-    #try:     
+    try:     
         if str(request.session['utype']) == 'learner':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            list = LXPModel.PlaylistItem.objects.raw('SELECT  lxpapp_video.id,  lxpapp_video.name FROM  lxpapp_coursedetails  INNER JOIN lxpapp_video ON (lxpapp_coursedetails.chapter_id = lxpapp_video.id) WHERE lxpapp_coursedetails.course_id = ' + str (course_id) + ' AND lxpapp_coursedetails.subject_id = ' + str(subject_id))  
+            list = LXPModel.PlaylistItem.objects.raw('select distinct  mainvid.id,  mainvid.name,      ifnull((SELECT    lxpapp_videowatched.video_id FROM  lxpapp_videowatched where lxpapp_videowatched.learner_id = ' + str(request.user.id) + ' AND lxpapp_videowatched.video_id =  mainvid.id), 0) as watched,  ifnull((SELECT    lxpapp_videotounlock.video_id FROM  lxpapp_videotounlock where lxpapp_videotounlock.learner_id = ' + str(request.user.id) + ' AND lxpapp_videotounlock.video_id =  mainvid.id), 0) as unlocked from lxpapp_coursedetails  inner join lxpapp_video mainvid on    (lxpapp_coursedetails.chapter_id = mainvid.id) where  lxpapp_coursedetails.course_id = ' + str (course_id) + ' and lxpapp_coursedetails.subject_id = ' + str (subject_id))  
             return render(request,'learner/video/learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_video_view(request,subject_id,course_id,video_id):

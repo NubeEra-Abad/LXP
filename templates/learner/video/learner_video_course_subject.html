@@ -68,14 +68,60 @@
       </tr>
       <tr>
         <td>Totals :</td>
+        <td>
+          <span id="val"></span>
+        </td>
+        <td>
+          <span id="val1"></span>
+        </td>
+        <td><span id="val2"></span></td>
+        <td></td>
+      </tr>
+      <!-- <tr>
+        <td>Totals :</td>
         <td>{{tc}}</td>
         <td>{{wc}}</td>
         <td>{{per|floatformat:2}} %</td>
         <td></td>
-      </tr>
+      </tr> -->
     </table>
   </div>
 </div>
+<script>
+  var arr = $("#dev-table tr");
+  $.each(arr, function (i, item) {
+    var currIndex = $("#dev-table tr").eq(i);
+    var matchText = currIndex.children("td").first().text();
+    $(this).nextAll().each(function (i, inItem) {
+      if (matchText === $(this).children("td").first().text()) {
+        $(this).remove();
+      }
+    });
+  })
+  updateSubTotal()
+    ;
+
+  function updateSubTotal() {
+    debugger;
+    var table = document.getElementById("dev-table"),
+      sumVal = 0;
+      sumVal1 = 0;
+      var n = "";
+    for (var i = 1; i < table.rows.length; i++) {
+      n = table.rows[i].cells[0].innerHTML;
+      if(n == 'Totals :')
+      {
+        break;
+      }
+      sumVal = sumVal + parseFloat(table.rows[i].cells[1].innerHTML);
+      sumVal1 = sumVal1 + parseFloat(table.rows[i].cells[2].innerHTML);
+    }
+
+    document.getElementById("val").innerHTML = sumVal;
+    document.getElementById("val1").innerHTML = sumVal1;
+    document.getElementById("val2").innerHTML = ((sumVal1 * 100) / sumVal).toPrecision(2) + "%";
+  }
+</script>
 <div style="text-align: center">
   <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
 </div>

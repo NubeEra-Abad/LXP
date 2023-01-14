@@ -165,7 +165,7 @@ def cfo_batch_view(request):
 from django.db import transaction
 @login_required
 def cfo_add_batch_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             if request.method=='POST':
                 batchForm=LXPFORM.BatchForm(request.POST)
@@ -205,7 +205,7 @@ def cfo_add_batch_view(request):
             learners =  User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 2 AND  social_auth_usersocialauth.status = true ORDER BY auth_user.username')
             courses =  LXPModel.Course.objects.all()
             return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners,'courses':courses})
-    #except:
+    except:
         transaction.set_rollback(True)
         return render(request,'lxpapp/404page.html')
 
@@ -241,11 +241,11 @@ def cfo_view_batch_view(request):
 
 @login_required
 def cfo_view_batch_details_view(request,batchname,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             batchs = LXPModel.Batch.objects.raw("SELECT lxpapp_batch.id,  GROUP_CONCAT(DISTINCT lxpapp_course.course_name) as course_name,  lxpapp_batch.stdate,  lxpapp_batch.enddate,  GROUP_CONCAT(DISTINCT trainer.first_name || ' ' || trainer.last_name) AS trainer_name,  GROUP_CONCAT(DISTINCT learner.first_name || ' ' || learner.last_name) AS learner_name FROM  lxpapp_batchcourse  LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id)  LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  LEFT OUTER JOIN lxpapp_batchtrainer ON (lxpapp_batch.id = lxpapp_batchtrainer.batch_id)  LEFT OUTER JOIN auth_user trainer ON (lxpapp_batchtrainer.trainer_id = trainer.id)  LEFT OUTER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id)  LEFT OUTER JOIN auth_user learner ON (lxpapp_batchlearner.learner_id = learner.id) WHERE lxpapp_batch.id = " + str(pk))
             return render(request,'cfo/batch/cfo_view_batch_details.html',{'batchs':batchs,'batchname':batchname})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -260,15 +260,15 @@ def cfo_delete_batch_view(request,pk):
         return render(request,'lxpapp/404page.html')
 @login_required
 def cfo_learnerfee_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             return render(request,'cfo/learnerfee/cfo_learnerfee.html')
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cfo_add_learnerfee_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             if request.method=='POST':
                 learnerfeeForm=LXPFORM.LearnerFeeForm(request.POST)
@@ -286,7 +286,7 @@ def cfo_add_learnerfee_view(request):
                     print("form is invalid")
             learnerfeeForm=LXPFORM.LearnerFeeForm()
             return render(request,'cfo/learnerfee/cfo_add_learnerfee.html',{'learnerfeeForm':learnerfeeForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

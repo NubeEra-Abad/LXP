@@ -15,11 +15,12 @@ urlpatterns = [
     path('trainer-view-exam', views.trainer_view_exam_view,name='trainer-view-exam'),
     path('trainer-delete-exam/<int:pk>', views.trainer_delete_exam_view,name='trainer-delete-exam'),
     path('trainer-upload-exam-csv', views.trainer_upload_exam_csv_view,name='trainer-upload-exam-csv'),
-    
+     
     path('trainer-mcqquestion', views.trainer_mcqquestion_view,name='trainer-mcqquestion'),
     path('trainer-add-mcqquestion', views.trainer_add_mcqquestion_view,name='trainer-add-mcqquestion'),
     path('trainer-update-mcqquestion/<int:pk>', views.trainer_update_mcqquestion_view,name='trainer-update-mcqquestion'),
-    path('trainer-view-mcqquestion', views.trainer_view_mcqquestion_view,name='trainer-view-mcqquestion'),
+    path('trainer-view-mcqquestion-exams', views.trainer_view_mcqquestion_exams_view,name='trainer-view-mcqquestion-exams'),
+    path('trainer-view-mcqquestion/<int:examid>', views.trainer_view_mcqquestion_view,name='trainer-view-mcqquestion'),
     path('trainer-delete-mcqquestion/<int:pk>', views.trainer_delete_mcqquestion_view,name='trainer-delete-mcqquestion'),
 
     path('trainer-shortquestion', views.trainer_shortquestion_view,name='trainer-shortquestion'),
@@ -41,10 +42,12 @@ urlpatterns = [
 
     path('trainer-view-learner-video', views.trainer_view_learner_video_view,name='trainer-view-learner-video'),
     path('trainer-learner-video-course/<int:user_id>/<userfirstname>/<userlastname>', views.trainer_learner_video_Course_view,name='trainer-learner-video-course'),
-    path('trainer-learner-video-course-subject/<int:course_id>', views.trainer_learner_video_Course_subject_view,name='trainer-learner-video-course-subject'),
-    path('trainer-learner-video-list/<int:subject_id>,/<int:course_id>', views.trainer_learner_video_list_view,name='trainer-learner-video-list'),
+    path('trainer-learner-video-course-subject/<int:course_id>,/<int:user_id>', views.trainer_learner_video_Course_subject_view,name='trainer-learner-video-course-subject'),
+    path('trainer-learner-video-list/<int:subject_id>,/<int:course_id>,/<int:user_id>', views.trainer_learner_video_list_view,name='trainer-learner-video-list'),
     path('trainer-learner-show-video/<int:subject_id>,/<int:course_id>,/<int:video_id>', views.trainer_learner_show_video_view,name='trainer-learner-show-video'),
-
+    path('trainer-learner-approve-video/<int:pk>/<int:studid>', views.trainer_learner_approve_video,name='trainer-learner-approve-video'),
+    path('trainer-learner-approveall-video/<int:userid>/<subject_id>', views.trainer_learner_approveall_video,name='trainer-learner-approveall-video'),
+    
     path('trainer-material', views.trainer_material_view,name='trainer-material'),
     path('trainer-add-material', views.trainer_add_material_view,name='trainer-add-material'),
     path('trainer-update-material/<int:pk>', views.trainer_update_material_view,name='trainer-update-material'),

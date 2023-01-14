@@ -36,18 +36,28 @@
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h6 class="panel-title">Video List of Subject : {{subjectname}}</h6>
+      <td>Aprroved all <a class="btn btn-info" href="{% url 'trainer-learner-approveall-video' user_id subject_id %}"><span class="glyphicon glyphicon-saved"></span></a></td>
     </div>
     <table class="table table-hover display" id="dev-table">
       <thead>
         <tr>
           <th>Topic Name</th>
+          <th>Watched</th>
           <th>Show</th>
+          <th>Approved</th>
         </tr>
       </thead>
       {% for t in list %}
       <tr>
         <td>{{t.video.name}}</td>
+        {% if t.watched %}
+        <td>Yes</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
+        
         <td><a class="btn btn-success" href="{% url 'trainer-learner-show-video' subject_id course_id t.video.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td><a class="btn btn-info" href="{% url 'trainer-learner-approve-video' t.id user_id  %}"><span class="glyphicon glyphicon-saved"></span></a></td>
 
       {% endfor %}
     </table>

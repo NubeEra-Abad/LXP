@@ -134,22 +134,73 @@ def trainer_update_exam_view(request,pk):
 @login_required
 def trainer_upload_exam_csv_view(request):
     if request.method=='POST':
-        import pandas as pd
-        df = pd.read_csv('path_to_file', sep='delimiter')
-        products = []
-        for i in range(len(df)):
-            products.append(
-                UserSocialAuth(
-                name=df.iloc[i][0],
-                description=df.iloc[i][1],
-                price=df.iloc[i][2]
-                )
-            )
-        UserSocialAuth.objects.bulk_create(products)
+        file=request.FILES["select_file"]
+        examtext=request.POST.get('exam_name')
+        batch=request.POST.get('batch')
+        qtype=request.POST.get('examtype')
+        exam = LXPModel.Exam.objects.all().filter(exam_name__iexact = examtext)
+        if exam:
+            messages.info(request, 'Exam Name Already Exist')
+        else:
+            if qtype=='0':
+                qtype = 'MCQ'
+            else:
+                qtype = 'ShortAnswer'
+            exam = LXPModel.Exam.objects.create(batch_id = batch,exam_name = examtext,questiontpye = qtype)
+            exam.save()   
+            csv_file = request.FILES["select_file"]
+            file_data = csv_file.read().decode("utf-8")		
+            lines = file_data.split("\n")
+            no = 0
+            for line in lines:						
+                no = no + 1
+                if no > 1:
+                    fields = line.split(",")
+                    if qtype == 'MCQ':
+                        question = LXPModel.McqQuestion.objects.create(
+                            question = fields[0],
+                            option1 = fields[1],
+                            option2 = fields[2],
+                            option3 = fields[3],
+                            option4 = fields[4],
+                            answer = fields[5],
+                            marks = fields[6],
+                            exam_id = exam.id
+                        )
+                        question.save()
+                    elif qtype == 'ShortAnswer':
+                        question = LXPModel.ShortQuestion.objects.create(
+                            question = fields[0],
+                            marks = fields[1],
+                            exam_id = exam.id
+                        )
+                        question.save()
     batch = LXPModel.Batch.objects.all()
     context = {'batch': batch}
     return render(request,'trainer/exam/trainer_upload_exam_csv.html',context)
-    
+
+def upload_csv(request):
+	data = {}
+	if "GET" == request.method:
+		return render(request, "myapp/upload_csv.html", data)
+    # if not GET, then proceed
+	try:
+		csv_file = request.FILES["csv_file"]
+		file_data = csv_file.read().decode("utf-8")		
+		lines = file_data.split("\n")
+		#loop over the lines and save them in db. If error , store as string and then display
+		for line in lines:						
+			fields = line.split(",")
+			data_dict = {}
+			data_dict["name"] = fields[0]
+			data_dict["start_date_time"] = fields[1]
+			data_dict["end_date_time"] = fields[2]
+			data_dict["notes"] = fields[3]
+			
+
+	except Exception as e:
+		messages.error(request,"Unable to upload file. "+repr(e))
+
 @login_required
 def trainer_view_exam_view(request):
     try:
@@ -223,12 +274,19 @@ def trainer_update_mcqquestion_view(request,pk):
             return render(request,'trainer/mcqquestion/trainer_update_mcqquestion.html',{'mcqquestionForm':mcqquestionForm,'ex':mcqquestion.mcqquestion_name,'sub':mcqquestion.questiontpye})
     except:
         return render(request,'lxpapp/404page.html')
-
 @login_required
-def trainer_view_mcqquestion_view(request):
+def trainer_view_mcqquestion_exams_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            mcqquestions = LXPModel.McqQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all())
+            exams = LXPModel.Exam.objects.all().filter(questiontpye='MCQ')
+            return render(request,'trainer/mcqquestion/trainer_view_mcqquestion_exams.html',{'exams':exams})
+    except:
+        return render(request,'lxpapp/404page.html')
+@login_required
+def trainer_view_mcqquestion_view(request,examid):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            mcqquestions = LXPModel.McqQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all().filter(id=examid))
             return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
     except:
         return render(request,'lxpapp/404page.html')
@@ -615,7 +673,7 @@ def trainer_view_learner_video_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
             #learner = UserSocialAuth.objects.raw("SELECT social_auth_usersocialauth.id,social_auth_usersocialauth.provider,social_auth_usersocialauth.uid,auth_user.first_name,  auth_user.last_name,  CASE WHEN social_auth_usersocialauth.utype = 0 THEN 'Learner' ELSE 'Trainer' END AS utype,CASE WHEN social_auth_usersocialauth.status = 0 THEN 'Inactive' ELSE 'Active' END AS status,IFNULL(course_name,'') AS course_name,auth_user.id as user_id FROM social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  WHERE social_auth_usersocialauth.utype = 0 AND social_auth_usersocialauth.status = 1 Order by social_auth_usersocialauth.uid")
-            learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) WHERE (social_auth_usersocialauth.utype = 0 OR social_auth_usersocialauth.utype = 2) AND social_auth_usersocialauth.status = 1 GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name ')
+            learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id,  social_auth_usersocialauth.user_id,  auth_user.first_name,  auth_user.last_name  , GROUP_CONCAT(DISTINCT lxpapp_course.course_name)  as course_name FROM  social_auth_usersocialauth  LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)  INNER JOIN lxpapp_batchlearner ON (auth_user.id = lxpapp_batchlearner.learner_id)  INNER JOIN lxpapp_batchcourse ON (lxpapp_batchlearner.batch_id = lxpapp_batchcourse.batch_id)  INNER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id) WHERE  (social_auth_usersocialauth.utype = 0 OR  social_auth_usersocialauth.utype = 2) AND  social_auth_usersocialauth.status = 1 GROUP BY  social_auth_usersocialauth.id,  social_auth_usersocialauth.user_id,  auth_user.first_name,  auth_user.last_name ')
             return render(request,'trainer/learnervideo/trainer_view_learner_video.html',{'learner':learner})
     except:
         return render(request,'lxpapp/404page.html')
@@ -624,47 +682,90 @@ def trainer_view_learner_video_view(request):
 def trainer_learner_video_Course_view(request,user_id,userfirstname,userlastname):
 #    try:    
         if str(request.session['utype']) == 'trainer':
-            videos1 = LXPModel.UserCourse.objects.all().filter(course_id__in = LXPModel.Course.objects.all(),user_id=user_id)  
-            return render(request,'trainer/learnervideo/trainer_learner_video_course.html',{'videos':videos1,'userfirstname':userfirstname,'userlastname':userlastname})
+            videos1 = LXPModel.BatchCourse.objects.raw('SELECT DISTINCT lxpapp_course.id,  lxpapp_course.course_name,lxpapp_batchcourse.batch_id FROM  lxpapp_batchcourse   INNER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(user_id))
+            return render(request,'trainer/learnervideo/trainer_learner_video_course.html',{'videos':videos1,'userfirstname':userfirstname,'userlastname':userlastname,'user_id':user_id})
  #   except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def trainer_learner_video_Course_subject_view(request,course_id):
+def trainer_learner_video_Course_subject_view(request,course_id,user_id):
 #    try:    
         if str(request.session['utype']) == 'trainer':
+            # coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
+            # subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
+            # subject = LXPModel.Playlist.objects.raw('SELECT DISTINCT y.id,  y.name  , (SELECT COUNT (PLI.id) FROM lxpapp_playlistitem PLI LEFT OUTER JOIN lxpapp_video PLIV ON (PLI.video_id = PLIV.id)  WHERE  PLI.playlist_id = y.id) as Vtotal  , (SELECT COUNT(WC.id) FROM  lxpapp_videowatched WC  LEFT OUTER JOIN lxpapp_video WCV ON (WC.video_id = WCV.id)  LEFT OUTER JOIN lxpapp_playlistitem WCPL ON (WCV.id = WCPL.video_id) WHERE WCPL.playlist_id = y.id) as VWatched FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist y ON (lxpapp_coursedetails.subject_id = y.id)  WHERE lxpapp_coursedetails.course_id = ' + str(course_id))
+            # tc = LXPModel.Video.objects.raw('SELECT 1 as id, count(lxpapp_video.id) AS FIELD_1 FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_coursedetails.subject_id = lxpapp_playlist.id)  LEFT OUTER JOIN lxpapp_playlistitem ON (lxpapp_playlist.id = lxpapp_playlistitem.playlist_id)  LEFT OUTER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) WHERE   lxpapp_coursedetails.course_id = ' + str(course_id))
+            # wc = LXPModel.VideoWatched.objects.raw('SELECT 1 as id, count(lxpapp_videowatched.id) AS FIELD_1 FROM  lxpapp_videowatched  LEFT OUTER JOIN lxpapp_video ON (lxpapp_videowatched.video_id = lxpapp_video.id)  LEFT OUTER  JOIN lxpapp_playlistitem ON (lxpapp_video.id = lxpapp_playlistitem.video_id)  LEFT OUTER  JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)  LEFT OUTER  JOIN lxpapp_coursedetails ON (lxpapp_playlist.id = lxpapp_coursedetails.subject_id) WHERE   lxpapp_coursedetails.course_id = ' + str(course_id))
+            # per = 0
+            # for x in tc:
+            #     tc = x.FIELD_1
+
+            # for x in wc:
+            #     wc = x.FIELD_1
+            # try:
+            #     per = (100*wc)/tc
+            # except:
+            #     per =0
+            # dif = tc-wc
+
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
-            subject = LXPModel.Playlist.objects.raw('SELECT DISTINCT y.id,  y.name  , (SELECT COUNT (PLI.id) FROM lxpapp_playlistitem PLI LEFT OUTER JOIN lxpapp_video PLIV ON (PLI.video_id = PLIV.id)  WHERE  PLI.playlist_id = y.id) as Vtotal  , (SELECT COUNT(WC.id) FROM  lxpapp_videowatched WC  LEFT OUTER JOIN lxpapp_video WCV ON (WC.video_id = WCV.id)  LEFT OUTER JOIN lxpapp_playlistitem WCPL ON (WCV.id = WCPL.video_id) WHERE WCPL.playlist_id = y.id) as VWatched FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist y ON (lxpapp_coursedetails.subject_id = y.id)  WHERE lxpapp_coursedetails.course_id = ' + str(course_id))
-            tc = LXPModel.Video.objects.raw('SELECT 1 as id, count(lxpapp_video.id) AS FIELD_1 FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_coursedetails.subject_id = lxpapp_playlist.id)  LEFT OUTER JOIN lxpapp_playlistitem ON (lxpapp_playlist.id = lxpapp_playlistitem.playlist_id)  LEFT OUTER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) WHERE   lxpapp_coursedetails.course_id = ' + str(course_id))
-            wc = LXPModel.VideoWatched.objects.raw('SELECT 1 as id, count(lxpapp_videowatched.id) AS FIELD_1 FROM  lxpapp_videowatched  LEFT OUTER JOIN lxpapp_video ON (lxpapp_videowatched.video_id = lxpapp_video.id)  LEFT OUTER  JOIN lxpapp_playlistitem ON (lxpapp_video.id = lxpapp_playlistitem.video_id)  LEFT OUTER  JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)  LEFT OUTER  JOIN lxpapp_coursedetails ON (lxpapp_playlist.id = lxpapp_coursedetails.subject_id) WHERE   lxpapp_coursedetails.course_id = ' + str(course_id))
+            #subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
+            subject = LXPModel.Playlist.objects.raw('SELECT id,name,Vtotal,VWatched FROM ( select distinct  y.id,  y.name ,  ( select    count( xx.id) from lxpapp_coursedetails xx where xx.course_id= yyy.course_id and xx.subject_id = y.id ) as Vtotal , ( select count (lxpapp_videowatched.id) as a from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where ghgh.id = yyy.id AND lxpapp_videowatched.learner_id = ' + str(user_id) + ' ) as VWatched from lxpapp_coursedetails yyy left outer join lxpapp_playlist y on (yyy.subject_id = y.id) where yyy.course_id = ' + str(course_id) + ' ) ORDER BY name, VWatched')
+            tc = LXPModel.Video.objects.raw('select 1 as id, count(lxpapp_coursedetails.id) as Vtotal from lxpapp_coursedetails where lxpapp_coursedetails.course_id = ' + str(course_id))
+            wc = LXPModel.VideoWatched.objects.raw('select distinct 1 as id, count (lxpapp_videowatched.id) as VWatched from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND ghgh.course_id = ' + str(course_id))
             per = 0
             for x in tc:
-                tc = x.FIELD_1
+                tc = x.Vtotal
 
             for x in wc:
-                wc = x.FIELD_1
+                wc = x.VWatched
             try:
-                per = (100*wc)/tc
+                per = (100*int(wc))/int(tc)
             except:
                 per =0
-            dif = tc-wc
+            if tc is None:
+                tc = 0
+            if wc is None:
+                wc = 0
+            dif = tc- wc
 
-            return render(request,'trainer/learnervideo/trainer_learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
+            return render(request,'trainer/learnervideo/trainer_learner_video_course_subject.html',{'user_id':user_id,'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
  #   except:
         return render(request,'lxpapp/404page.html')
  
 @login_required
-def trainer_learner_video_list_view(request,subject_id,course_id):
+def trainer_learner_video_list_view(request,subject_id,course_id,user_id):
     try:     
         if str(request.session['utype']) == 'trainer':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            list = LXPModel.PlaylistItem.objects.all().filter(video_id__in = LXPModel.Video.objects.all(),playlist_id=str(subject_id))  
-            return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
+            list = LXPModel.PlaylistItem.objects.raw('select distinct  mainvid.id,  mainvid.name,      ifnull((SELECT    lxpapp_videowatched.video_id FROM  lxpapp_videowatched where lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id =  mainvid.id), 0) as watched,  ifnull((SELECT    lxpapp_videotounlock.video_id FROM  lxpapp_videotounlock where lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id =  mainvid.id), 0) as unlocked from lxpapp_coursedetails  inner join lxpapp_video mainvid on    (lxpapp_coursedetails.chapter_id = mainvid.id) where  lxpapp_coursedetails.course_id = ' + str (course_id) + ' and lxpapp_coursedetails.subject_id = ' + str (subject_id))  
+            return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'user_id':user_id,'course_id':course_id,'coursename':coursename})
     except:
         return render(request,'lxpapp/404page.html')
- 
+
+@login_required
+def trainer_learner_approve_video(request,pk,studid):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            unlock = LXPModel.VideoToUnlock.objects.create(learner_id=studid,video_id=pk)
+            unlock.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    #except:
+        return render(request,'ilmsapp/404page.html') 
+
+@login_required
+def trainer_learner_approveall_video(request,userid,subject_id):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            videos=LXPModel.Playlist.objects.raw('SELECT   lxpapp_video.id FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) where lxpapp_playlistitem.playlist_id = ' + str (subject_id))
+            for x in videos:
+                unlock = LXPModel.VideoToUnlock.objects.create(learner_id=userid,video_id=x.id)
+                unlock.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    #except:
+        return render(request,'ilmsapp/404page.html')
+
 @login_required
 def trainer_learner_show_video_view(request,subject_id,course_id,video_id):
     try:    

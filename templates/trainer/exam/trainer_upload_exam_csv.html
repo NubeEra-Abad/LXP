@@ -83,30 +83,39 @@
   <title></title>
   <script>
     function validateForm() {
-      let x = document.forms[0]["subjectname"].value;
+      let x = document.forms[0]["exam_name"].value;
       if (x == "") {
-        alert("Subject Name must be filled out");
+        alert("Exam Name must be filled out");
         return false;
       }
-      x = document.forms[0]["description"].value;
+      x = document.forms[0]["batch"].value;
       if (x == "") {
-        alert("description must be filled out");
+        alert("batch must be selected");
+        return false;
+      }
+      x = document.forms[0]["batch"].value;
+      if (x == "") {
+        alert("Please Select Batch Name");
         return false;
       }
       var fileInput =
         document.getElementById('select_file');
 
       var filePath = fileInput.value;
-
+      if (filePath == "") {
+        alert("Please CSV file to upload");
+        return false;
+      }
       // Allowing file type
       var allowedExtensions =
-        /(\.pdf)$/i;
+        /(\.csv)$/i;
 
       if (!allowedExtensions.exec(filePath)) {
         alert('Invalid file type');
         fileInput.value = '';
         return false;
       }
+      $('#waiting').show();
     }
   </script>
 </head>
@@ -115,8 +124,10 @@
 
   <div class="container">
     <h4>Upload a Exam CSV File: </h4>
-    <form onsubmit="return validateForm()" method="POST">
+    <form onsubmit="return validateForm()" method="POST" enctype="multipart/form-data">
       {%csrf_token%}
+      <label for="exam_name">Exam Name</label>
+      <input type="text" name="exam_name" id="exam_name"><br>
       <label for="batch">Batch Name</label>
       <select class="mb-4" name="batch">
         {% for t in batch %}
@@ -124,10 +135,10 @@
         {% endfor %}
       </select>
       <BR>
-        <label for="examtype">Exam Type</label>
+      <label for="examtype">Exam Type</label>
       <select class="mb-4" name="examtype">
-        <option value="1">MCQ</option>
-        <option value="2">Short Answer</option>
+        <option value="0">MCQ</option>
+        <option value="1">Short Answer</option>
       </select>
       <BR>
       <input type="file" name="select_file" id="select_file">
@@ -135,7 +146,15 @@
       <button type="submit">Upload</button>
       <BR>
     </form>
+    <div id="waiting" style="display:none">
+      <img src="/static/image/processing-gif-image-5.gif">
+    </div>
   </div>
+  {% if messages %}
+  {% for message in messages %}
+  {{ message }}
+  {% endfor %}
+  {% endif %}
   <br><br><br><br><br><br><br><br><br><br>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
   {% endblock content %}
