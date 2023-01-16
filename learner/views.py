@@ -9,7 +9,7 @@ from time import gmtime, strftime
 from lxpapp import models as LXPModel
 from django.db.models import Sum,Count
 from social_django.models import UserSocialAuth
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, View, DeleteView
@@ -325,8 +325,6 @@ def learner_check_k8sterminal_view(request):
             return render(request,'learner/k8sterminal/learner_check_k8sterminal.html')
     except: 
         return render(request,'lxpapp/404page.html')
-
-
 class CrudView(TemplateView):
     template_name = 'learner/crud_ajax/crud.html'
     def get_context_data(self, **kwargs):
@@ -383,3 +381,19 @@ class UpdateCrudUser(View):
             'user': user
         }
         return JsonResponse(data)
+
+@login_required
+def learner_python_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'learner':  
+            return render(request,'learner/terminals/learner_python_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def learner_linux_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'learner':  
+            return render(request,'learner/terminals/linux/learner_linux_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')

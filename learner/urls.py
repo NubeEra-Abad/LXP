@@ -31,4 +31,7 @@ path('learner-check-k8sterminal', views.learner_check_k8sterminal_view,name='lea
     path('ajax/crud/create/', CreateCrudUser.as_view(), name='crud_ajax_create'),
     path('ajax/crud/delete/', DeleteCrudUser.as_view(), name='crud_ajax_delete'),
     path('ajax/crud/update/', UpdateCrudUser.as_view(), name='crud_ajax_update'),
+
+    path('learner-pyton-terminal', views.learner_python_terminal_view,name='learner-pyton-terminal'),
+    path('learner-linux-terminal', views.learner_linux_terminal_view,name='learner-linux-terminal'),
 ]
