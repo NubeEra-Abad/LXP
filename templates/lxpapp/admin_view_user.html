@@ -49,7 +49,7 @@
     <!-- <table id="example" class="display" style="width:100%"> -->
     <table  class="table table-hover display" id="dev-table">
       <thead>
-        <tr>
+        <tr> 
           <th>Pic</th>
           <th>User Id</th>
           <th>Course Name</th>
@@ -91,12 +91,12 @@
           {% if t.status%}
           <center>
             <a class="btn btn-danger btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a>
-            <BR><BR><B>Learner is Active</B>
+            <BR><BR><B>User is Active</B>
           </center>
           {% else %}
           <center>
             <a class="btn btn-success btn-xs" href="{% url 'active-user' t.user_id t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a>
-            <BR><BR><B><font style="color:red;">Learner is On Hold</font></B>
+            <BR><BR><B><font style="color:red;">User is On Hold</font></B>
           </center>
           {% endif %}
         </td>

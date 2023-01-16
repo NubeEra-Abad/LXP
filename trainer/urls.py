@@ -64,6 +64,9 @@ urlpatterns = [
     path('trainer-update-k8sterminal/<int:pk>', views.trainer_update_k8sterminal_view,name='trainer-update-k8sterminal'),
     path('trainer-view-k8sterminal', views.trainer_view_k8sterminal_view,name='trainer-view-k8sterminal'),
     path('trainer-delete-k8sterminal/<int:pk>', views.trainer_delete_k8sterminal_view,name='trainer-delete-k8sterminal'),
+    
+    path('trainer-pyton-terminal', views.trainer_python_terminal_view,name='trainer-pyton-terminal'),
+    path('trainer-linux-terminal', views.trainer_linux_terminal_view,name='trainer-linux-terminal'),
 
 ]
  

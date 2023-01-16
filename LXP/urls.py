@@ -30,6 +30,7 @@ urlpatterns = [
     path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),
     path('admin-update-course/<int:pk>', views.admin_update_course_view,name='admin-update-course'),
     path('admin-mark-usertype/<int:pk>', views.admin_mark_usertype_view,name='admin-mark-usertype'), 
+
 ]
 
 

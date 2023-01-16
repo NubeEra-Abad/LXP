@@ -304,4 +304,3 @@ def admin_mark_usertype_view(request,pk):
             return render(request,'lxpapp/admin_mark_usertype.html',{'courses':'course','uid':pk})
     except:
         return render(request,'lxpapp/404page.html')
-

@@ -1082,3 +1082,20 @@ def trainer_delete_k8sterminal_view(request,pk):
     except:
         return render(request,'lxpapp/404page.html')
 
+
+@login_required
+def trainer_python_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            return render(request,'trainer/terminals/trainer_python_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_linux_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            return render(request,'trainer/terminals/linux/trainer_linux_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
