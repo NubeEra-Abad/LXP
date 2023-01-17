@@ -206,7 +206,6 @@ def learner_video_Course_subject_view(request,course_id):
     try:    
         if str(request.session['utype']) == 'learner':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
             subject = LXPModel.Playlist.objects.raw('select distinct  y.id,  y.name ,  ( select    count( xx.id) from lxpapp_coursedetails xx where xx.course_id= yyy.course_id and xx.subject_id = y.id ) as Vtotal , ( select count (lxpapp_videowatched.id) as a from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where ghgh.id = yyy.id AND lxpapp_videowatched.learner_id = ' + str(request.user.id) + ' ) as VWatched from lxpapp_coursedetails yyy left outer join lxpapp_playlist y on (yyy.subject_id = y.id) where yyy.course_id = ' + str(course_id))
             tc = LXPModel.Video.objects.raw('select 1 as id, count(lxpapp_coursedetails.id) as Vtotal from lxpapp_coursedetails where lxpapp_coursedetails.course_id = ' + str(course_id))
             wc = LXPModel.VideoWatched.objects.raw('select 1 as id, count (lxpapp_videowatched.id) as VWatched from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where lxpapp_videowatched.learner_id = ' + str(request.user.id) + ' AND ghgh.course_id = ' + str(course_id))
