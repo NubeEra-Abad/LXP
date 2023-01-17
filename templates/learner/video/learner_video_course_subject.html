@@ -88,29 +88,27 @@
   </div>
 </div>
 <script>
-  var arr = $("#dev-table tr");
-  $.each(arr, function (i, item) {
-    var currIndex = $("#dev-table tr").eq(i);
-    var matchText = currIndex.children("td").first().text();
-    $(this).nextAll().each(function (i, inItem) {
-      if (matchText === $(this).children("td").first().text()) {
-        $(this).remove();
-      }
-    });
-  })
+  // var arr = $("#dev-table tr");
+  // $.each(arr, function (i, item) {
+  //   var currIndex = $("#dev-table tr").eq(i);
+  //   var matchText = currIndex.children("td").first().text();
+  //   $(this).nextAll().each(function (i, inItem) {
+  //     if (matchText === $(this).children("td").first().text()) {
+  //       $(this).remove();
+  //     }
+  //   });
+  // })
   updateSubTotal()
     ;
 
   function updateSubTotal() {
-    debugger;
     var table = document.getElementById("dev-table"),
       sumVal = 0;
-      sumVal1 = 0;
-      var n = "";
+    sumVal1 = 0;
+    var n = "";
     for (var i = 1; i < table.rows.length; i++) {
       n = table.rows[i].cells[0].innerHTML;
-      if(n == 'Totals :')
-      {
+      if (n == 'Totals :') {
         break;
       }
       sumVal = sumVal + parseFloat(table.rows[i].cells[1].innerHTML);
@@ -123,14 +121,39 @@
   }
 </script>
 <div style="text-align: center">
-  <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+  <canvas id="myChart" style="width:100%;max-width:300px"></canvas>
+</div>
+<div style="text-align: center">
+  <canvas id="myChart1" style="width:100%;max-width:600px"></canvas>
 </div>
 <script>
+  var xValues = ["Total", "Watch", "To be Watch"];
+  var yValues = ["{{tc}}", "{{wc}}", "{{dif}}"];
+  var barColors = ["red", "green", "blue"];
+
+  new Chart("myChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Video Subject List of Course : {{coursename}}"
+    }
+  }
+});
+</script>
+<!-- <script>
   var xValues = ["Total", "Watch", "To be Watch", ""];
   var yValues = ["{{tc}}", "{{wc}}", "{{dif}}", 0];
   var barColors = ["red", "green", "blue", ""];
 
-  new Chart("myChart", {
+  new Chart("myChart1", {
     type: "bar",
     data: {
       labels: xValues,
@@ -147,6 +170,6 @@
       }
     }
   });
-</script>
+</script> -->
 <br><br><br><br><br><br>
 {% endblock content %}

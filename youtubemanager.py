@@ -253,6 +253,19 @@ class PlaylistManager(models.Manager):
                 else:  # video found in user's db
                     if playlist.playlist_items.filter(playlist_item_id=playlist_item_id).exists():
                         ####print("PLAYLIST ITEM ALREADY EXISTS")
+                        # video = LXPModel.Video.objects.get(video_id=video_id)
+                        # if not LXPModel.PlaylistItem.objects.filter(playlist_id=playlist.id,video_id=video.id).exists():
+                        #     playlist_item = LXPModel.PlaylistItem(
+                        #     playlist_item_id=playlist_item_id,
+                        #     published_at=item['snippet']['publishedAt'] if 'publishedAt' in
+                        #                                                 item[
+                        #                                                     'snippet'] else None,
+                        #     channel_id=item['snippet']['channelId'],
+                        #     channel_name=item['snippet']['channelTitle'],
+                        #     video_position=item['snippet']['position'],
+                        #     playlist=playlist,
+                        #     video=video
+                        #     ).save()
                         continue
 
                     video = LXPModel.Video.objects.get(video_id=video_id)

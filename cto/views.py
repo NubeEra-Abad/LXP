@@ -547,7 +547,7 @@ def cto_view_course_details_view(request,cname,cid):
     try:
         if str(request.session['utype']) == 'cto':
             c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all()).order_by('id')
-            c_list = LXPModel.CourseDetails.objects.select_related().values('subject__name','chapter__name','topic__topic_name').filter(course_id = cid).order_by('chapter__name')
+            c_list = LXPModel.CourseDetails.objects.select_related().values('subject__name','chapter__name','topic__topic_name').filter(course_id = cid).order_by('subject__name','chapter__name')
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
     except:
         return render(request,'lxpapp/404page.html')
@@ -576,7 +576,7 @@ def cto_add_course_by_playlist_view(request):
                     else:
                         course = courseForm.save(commit=False)
                         course.save()
-                        selectedlist = request.POST.getlist('playlist[]')
+                        selectedlist = request.POST.getlist('listbox2')
                         for PLID in selectedlist:
                             topics =LXPModel.Topic.objects.all().filter(subject_id=PLID)
                             for det in topics:

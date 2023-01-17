@@ -203,10 +203,10 @@ def learner_video_Course_view(request):
         return render(request,'lxpapp/404page.html')
 
 def learner_video_Course_subject_view(request,course_id):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'learner':
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            subject = LXPModel.Playlist.objects.raw('select distinct  y.id,  y.name ,  ( select    count( xx.id) from lxpapp_coursedetails xx where xx.course_id= yyy.course_id and xx.subject_id = y.id ) as Vtotal , ( select count (lxpapp_videowatched.id) as a from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where ghgh.id = yyy.id AND lxpapp_videowatched.learner_id = ' + str(request.user.id) + ' ) as VWatched from lxpapp_coursedetails yyy left outer join lxpapp_playlist y on (yyy.subject_id = y.id) where yyy.course_id = ' + str(course_id))
+            subject = LXPModel.Playlist.objects.raw('SELECT  ID as id,  NAME ,  VTOTAL,  SUM(VWATCHED) AS VWatched FROM ( SELECT  Y.ID,  Y.NAME ,  ( SELECT    COUNT( XX.ID)  FROM LXPAPP_COURSEDETAILS XX  WHERE   XX.COURSE_ID= YYY.COURSE_ID AND XX.SUBJECT_ID = Y.ID ) AS Vtotal ,  ( SELECT    COUNT (LXPAPP_VIDEOWATCHED.ID) AS a  FROM LXPAPP_COURSEDETAILS GHGH    LEFT OUTER JOIN LXPAPP_VIDEOWATCHED ON      (GHGH.CHAPTER_ID = LXPAPP_VIDEOWATCHED.VIDEO_ID)  WHERE   GHGH.ID = YYY.ID AND LXPAPP_VIDEOWATCHED.LEARNER_ID = ' + str(request.user.id) + ' ) AS VWatched FROM LXPAPP_COURSEDETAILS YYY  LEFT OUTER JOIN LXPAPP_PLAYLIST Y ON    (YYY.SUBJECT_ID = Y.ID) WHERE YYY.COURSE_ID = ' + str(course_id) + ') GROUP BY  ID,  NAME ,  VTOTAL ORDER BY  NAME')
             tc = LXPModel.Video.objects.raw('select 1 as id, count(lxpapp_coursedetails.id) as Vtotal from lxpapp_coursedetails where lxpapp_coursedetails.course_id = ' + str(course_id))
             wc = LXPModel.VideoWatched.objects.raw('select 1 as id, count (lxpapp_videowatched.id) as VWatched from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where lxpapp_videowatched.learner_id = ' + str(request.user.id) + ' AND ghgh.course_id = ' + str(course_id))
             per = 0
@@ -226,7 +226,7 @@ def learner_video_Course_subject_view(request,course_id):
             dif = tc- wc
 
             return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'coursename':coursename,'course_id':course_id,'dif':dif,'per':per,'wc':wc,'tc':tc})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
  
 def learner_video_list_view(request,subject_id,course_id):
