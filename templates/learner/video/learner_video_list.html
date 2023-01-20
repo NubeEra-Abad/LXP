@@ -67,7 +67,7 @@
         {% endif %} -->
 
         {% if forloop.counter == 1 or t.unlocked > 0 %}
-        <td><a class="btn btn-success" href="{% url 'learner-show-video' subject_id course_id t.video.id  %}"><span class="glyphicon glyphicon-expand"></span></a></td>
+        <td><a class="btn btn-success" href="{% url 'learner-show-video' subject_id course_id t.id  %}"><span class="glyphicon glyphicon-expand"></span></a></td>
         {% else %}
         <td><a class="btn btn-danger"><span class="glyphicon glyphicon-expand"></span></a></td>
         {% endif %}
