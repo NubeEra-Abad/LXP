@@ -197,7 +197,7 @@ def learner_show_short_exam_reuslt_details_view(request,pk):
 def learner_video_Course_view(request):
     try:    
         if str(request.session['utype']) == 'learner':
-            videos1 = LXPModel.BatchCourse.objects.raw('SELECT DISTINCT lxpapp_course.id,  lxpapp_course.course_name,lxpapp_batchcourse.batch_id FROM  lxpapp_batchcourse   INNER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(request.user.id))
+            videos1 = LXPModel.BatchCourse.objects.raw('SELECT DISTINCT lxpapp_course.id,  lxpapp_course.course_name FROM  lxpapp_batchcourse   INNER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(request.user.id))
             return render(request,'learner/video/learner_video_course.html',{'videos':videos1})
     except:
         return render(request,'lxpapp/404page.html')
