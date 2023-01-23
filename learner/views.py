@@ -150,7 +150,7 @@ def learner_take_short_exam_view(request,pk):
         return render(request,'lxpapp/404page.html')
 
 def learner_start_short_exam_view(request,pk):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'learner':
             if request.method == 'POST':
                 shortresult = LXPModel.ShortResult.objects.create(learner_id = request.user.id,exam_id =pk,marks=0)
@@ -175,7 +175,7 @@ def learner_start_short_exam_view(request,pk):
             shortexam=LXPModel.Exam.objects.get(id=pk)
             questions=LXPModel.ShortQuestion.objects.all().filter(exam_id=shortexam.id).order_by('?')
             return render(request,'learner/shortexam/learner_start_short_exam.html',{'shortexam':shortexam,'questions':questions})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 def learner_show_short_exam_reuslt_view(request,pk):
