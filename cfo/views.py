@@ -211,7 +211,7 @@ def cfo_add_batch_view(request):
 
 @login_required
 def cfo_update_batch_view(request,pk):
-    try:
+    #try:
         if str(request.session['utype']) == 'cfo':
             batch = LXPModel.Batch.objects.get(id=pk)
             batchForm=LXPFORM.BatchForm(request.POST,instance=batch)
@@ -224,10 +224,76 @@ def cfo_update_batch_view(request,pk):
                         return render(request,'cfo/batch/cfo_update_batch.html',{'batchForm':batchForm})
                     else:
                         batchForm.save()
+                        selectedlist = request.POST.getlist('listbox1')
+                        det = LXPModel.BatchTrainer.objects.all().filter(batch_id=pk)
+                        det.delete()
+                        for x in selectedlist:
+                            trainerid = str(x)
+                            batchtrainertable = LXPModel.BatchTrainer.objects.create(batch_id=pk,trainer_id=trainerid)
+                            batchtrainertable.save()
+                        import json
+                        det = LXPModel.Batchlearner.objects.all().filter(batch_id=pk)
+                        det.delete()
+                        json_data = json.loads(request.POST.get('myvalue'))
+                        for cx in json_data:
+                            a=json_data[cx]['id']
+                            b=json_data[cx]['fee']
+                            batchlearnertable = LXPModel.Batchlearner.objects.create(batch_id=pk,learner_id=a,fee=b)
+                            batchlearnertable.save()
+                        selectedlist = request.POST.getlist('listbox3')
+                        det = LXPModel.BatchCourse.objects.all().filter(batch_id=pk)
+                        det.delete()
+                        for x in selectedlist:
+                            courseid = str(x)
+                            batchcoursetable = LXPModel.BatchCourse.objects.create(batch_id=pk,course_id=courseid)
+                            batchcoursetable.save()
                         batchs = LXPModel.Batch.objects.all()
                         return render(request,'cfo/batch/cfo_view_batch.html',{'batchs':batchs})
-            return render(request,'cfo/batch/cfo_update_batch.html',{'batchForm':batchForm,'sub':batch.batch_name})
-    except:
+            trainers =  list(User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 1 AND  social_auth_usersocialauth.status = true'))
+            learners =  list(User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 2 AND  social_auth_usersocialauth.status = true ORDER BY auth_user.username'))
+            batchtrainers =  list(User.objects.raw('SELECT DISTINCT   auth_user.id,  auth_user.first_name , auth_user.last_name ,  auth_user.email FROM  lxpapp_batchtrainer  INNER JOIN auth_user ON (lxpapp_batchtrainer.trainer_id = auth_user.id)   WHERE lxpapp_batchtrainer.batch_id = ' + str (pk)))
+            btrainer = []
+            for c in batchtrainers:
+                btrnr={}
+                btrnr["id"]=c.id
+                btrnr["first_name"]=c.first_name
+                btrnr["last_name"]=c.last_name
+                btrnr["email"]=c.email
+                btrainer.append(btrnr)
+            batchlearners =  list(User.objects.raw('SELECT DISTINCT   auth_user.id,  auth_user.first_name , auth_user.last_name ,  auth_user.email,lxpapp_batchlearner.fee FROM  lxpapp_batchlearner  INNER JOIN auth_user ON (lxpapp_batchlearner.learner_id = auth_user.id)   WHERE lxpapp_batchlearner.batch_id = ' + str (pk)))
+            blearner = []
+            for c in batchlearners:
+                btrnr={}
+                btrnr["id"]=c.id
+                btrnr["first_name"]=c.first_name
+                btrnr["last_name"]=c.last_name
+                btrnr["email"]=c.email
+                btrnr["fee"]=c.fee
+                blearner.append(btrnr)
+            courses =  LXPModel.Course.objects.all()
+            import json
+            btrainer = json.dumps(btrainer)
+            blearner = json.dumps(blearner)
+            query = LXPModel.Batch.objects.get(id=pk)
+            stdate = (query.stdate).strftime('%Y-%m-%d')
+            enddate = (query.enddate).strftime('%Y-%m-%d')
+            coursetype = query.coursetype
+            dict={
+            'batchForm':batchForm,
+            'sub':batch.batch_name,
+            'trainers':trainers,
+            'learners':learners,
+            'batchtrainers':batchtrainers,
+            'batchlearners':batchlearners,
+            'courses':courses,
+            'btrainer':btrainer,
+            'blearner':blearner,
+            'stdate':stdate,
+            'enddate':enddate,
+            'coursetype':coursetype}
+            
+            return render(request,'cfo/batch/cfo_update_batch.html',context=dict)
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

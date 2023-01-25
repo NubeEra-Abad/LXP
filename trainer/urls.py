@@ -56,8 +56,14 @@ urlpatterns = [
     path('trainer-view-material-chapters', views.trainer_material_chapters_view,name='trainer-view-material-chapters'),
     path('trainer-view-material-topics', views.trainer_material_topics_view,name='trainer-view-material-topics'),
 
-    path('trainer-upload-file', views.trainer_upload_file_view,name='trainer-upload-file'),
-    path('trainer-start-upload-file', views.trainer_start_upload_file_view,name='trainer-start-upload-file'),
+    path('trainer-material-upload-file', views.trainer_material_upload_file_view,name='trainer-material-upload-file'),
+    path('trainer-material-start-upload-file', views.trainer_material_start_upload_file_view,name='trainer-material-start-upload-file'),
+
+    path('trainer-subject-material-upload-file', views.trainer_subject_material_upload_file_view,name='trainer-subject-material-upload-file'),
+    path('trainer-subject-material-start-upload-file', views.trainer_subject_material_start_upload_file_view,name='trainer-subject-material-start-upload-file'),
+    path('trainer-view-subject-material', views.trainer_view_subject_material_view,name='trainer-view-subject-material'),
+    path('trainer-show-subject-material/<subjectname>,/<materialtype>,/<int:pk>', views.trainer_show_subject_material_view,name='trainer-show-subject-material'),
+    path('trainer-delete-subject-material/<int:pk>', views.trainer_delete_subject_material_view,name='trainer-delete-subject-material'),
 
     path('trainer-k8sterminal', views.trainer_k8sterminal_view,name='trainer-k8sterminal'),
     path('trainer-add-k8sterminal', views.trainer_add_k8sterminal_view,name='trainer-add-k8sterminal'),

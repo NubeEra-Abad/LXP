@@ -114,8 +114,8 @@
 <body>
 
   <div class="container">
-    <h4>Upload a File: </h4>
-    <form action="{% url 'trainer-start-upload-file' %}" onsubmit="return validateForm()" method="POST"
+    <h4>Upload Material File: </h4>
+    <form action="{% url 'trainer-material-start-upload-file' %}" onsubmit="return validateForm()" method="POST"
       enctype="multipart/form-data">
       {%csrf_token%}
       <label for="subject">Subject Name</label>

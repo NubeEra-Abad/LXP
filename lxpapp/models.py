@@ -455,6 +455,12 @@ class Material(models.Model):
     urlvalue=models.TextField()
     description=models.TextField()
 
+class SubjectMaterial(models.Model):
+    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
+    mtype=models.PositiveIntegerField(default=0)
+    urlvalue=models.TextField()
+    description=models.TextField()
+
 class K8STerminal(models.Model):
     trainer=models.ForeignKey(User,on_delete=models.CASCADE, related_name='%(class)s_requests_trainer')
     learner=models.ForeignKey(User,on_delete=models.CASCADE, related_name='%(class)s_requests_learner')

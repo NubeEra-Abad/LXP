@@ -546,8 +546,9 @@ def cto_view_course_view(request):
 def cto_view_course_details_view(request,cname,cid):
     try:
         if str(request.session['utype']) == 'cto':
-            c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all()).order_by('id')
-            c_list = LXPModel.CourseDetails.objects.select_related().values('subject__name','chapter__name','topic__topic_name').filter(course_id = cid).order_by('subject__name','chapter__name')
+            # c_list = LXPModel.CourseDetails.objects.filter(course_id__in=LXPModel.Course.objects.all().filter(course_name=cname),chapter_id__in=LXPModel.Video.objects.all(),subject_id__in=LXPModel.Playlist.objects.all(),topic_id__in=LXPModel.Topic.objects.all()).order_by('id')
+            # c_list = LXPModel.CourseDetails.objects.select_related().values('subject__name','chapter__name','topic__topic_name').filter(course_id = cid).order_by('subject__name','chapter__name')
+            c_list = LXPModel.CourseDetails.objects.raw("SELECT DISTINCT 1 as id, lxpapp_playlist.name AS subject_name,  lxpapp_video.name AS chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursedetails  LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_coursedetails.subject_id = lxpapp_playlist.id)  LEFT OUTER JOIN lxpapp_video ON (lxpapp_coursedetails.chapter_id = lxpapp_video.id)  LEFT OUTER JOIN lxpapp_topic ON (lxpapp_coursedetails.topic_id = lxpapp_topic.id)  WHERE lxpapp_coursedetails.course_id = ' " + str(cid) +  " ' ORDER BY  lxpapp_playlist.name,  lxpapp_video.name,  lxpapp_topic.topic_name")
             return render(request,'cto/course/cto_view_course_details.html',{'courses':c_list,'cname':cname})
     except:
         return render(request,'lxpapp/404page.html')

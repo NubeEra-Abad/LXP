@@ -1,0 +1,101 @@
+{% extends 'trainer/trainerbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    a:link {
+      text-decoration: none;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style type="text/css">
+    div.container {
+      max-width: 500px;
+      margin: 100px auto;
+      border: 2px solid white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    h4 {
+      text-transform: uppercase;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+
+    input[type=text]:focus {
+      background-color: lightblue;
+    }
+  </style>
+  <title></title>
+  <script>
+    function validateForm() {
+      let x = document.forms[0]["subjectname"].value;
+      if (x == "") {
+        alert("Subject Name must be filled out");
+        return false;
+      }
+      x = document.forms[0]["description"].value;
+      if (x == "") {
+        alert("description must be filled out");
+        return false;
+      }
+      var fileInput =
+        document.getElementById('select_file');
+
+      var filePath = fileInput.value;
+
+      // Allowing file type
+      var allowedExtensions =
+        /(\.pdf)$/i;
+
+      if (!allowedExtensions.exec(filePath)) {
+        alert('Invalid file type');
+        fileInput.value = '';
+        return false;
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <div class="container">
+    <h4>Upload Subject Material File: </h4>
+    <form action="{% url 'trainer-subject-material-start-upload-file' %}" onsubmit="return validateForm()" method="POST"
+      enctype="multipart/form-data">
+      {%csrf_token%}
+      <label for="subject">Subject Name</label>
+      <select class="form-control" name="subject">
+        <option selected>Choose your Subject</option>
+        {% for subject in subjects %}
+        <option value="{{subject.pk}}">{{ subject.name }}</option>
+        {% endfor %}
+      </select>
+      <BR>
+      <label for="description">Description</label><br>
+      <input type="text" class="form-control" name="description" id="description">
+      <BR>
+      <input type="file" name="select_file" class="form-control" id="select_file">
+      <br><br>
+      <button type="submit">Upload</button>
+      <BR>
+      {{filename}}
+    </form>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+  {% endblock content %}

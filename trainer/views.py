@@ -913,15 +913,15 @@ def trainer_show_material_view(request,subjectname,chaptername,materialtype,pk):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def trainer_upload_file_view(request):
+def trainer_material_upload_file_view(request):
     subjects = LXPModel.Playlist.objects.all()
     context = {'subjects': subjects}
-    return render(request,'trainer/uploadpdf/trainer_upload_file.html',context)
+    return render(request,'trainer/uploadpdf/trainer_material_upload_file.html',context)
 
 from django.conf import settings
 from datetime import datetime
 import boto3, botocore
-ALLOWED_EXTENSIONS = set(['txt', 'zip', 'markdown', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['pdf'])
 def allowed_file(name):
     return "." in name and name.split(".")[1].lower() in ALLOWED_EXTENSIONS
 # Connect to the s3 service
@@ -933,7 +933,7 @@ s3 = boto3.client(
 #upload file to s3 w/ acl as public
 
 @login_required  
-def upload_file_to_s3(request,file, bucket_name, acl="public-read"):
+def upload_material_file_to_s3(request,file, bucket_name, acl="public-read"):
     try:
         filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
         print("intered in function")
@@ -981,10 +981,69 @@ def upload_file_to_s3(request,file, bucket_name, acl="public-read"):
     
     subjects = LXPModel.Playlist.objects.all()
     context = {'subjects': subjects}
-    return render(request,'trainer/uploadpdf/trainer_upload_file.html',context)
+    return render(request,'trainer/uploadpdf/trainer_material_upload_file.html',context)
 
 @login_required
-def trainer_start_upload_file_view(request):
+def trainer_material_start_upload_file_view(request):
+    if request.method=="POST":
+        file=request.FILES["select_file"]
+        if file == "":
+            return "Please return to previous page and select a file"
+        if file:
+            output = upload_material_file_to_s3(request, file, settings.AWS_BUCKET_NAME)
+            return output
+        else:
+            return redirect("/")
+
+@login_required
+def trainer_subject_material_upload_file_view(request):
+    subjects = LXPModel.Playlist.objects.all().order_by('name')
+    context = {'subjects': subjects}
+    return render(request,'trainer/uploadpdf/trainer_subject_material_upload_file.html',context)
+
+@login_required  
+def upload_subject_material_file_to_s3(request,file, bucket_name, acl="public-read"):
+    try:
+        filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
+        print("intered in function")
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+    except Exception as e:
+        print("Something Unexpected Happened: ", e)
+        return e
+    # returns the webling to file upload to view
+    url=settings.AWS_DOMAIN + '' + filename
+    subject = request.POST.getlist('subject')
+    mtype = '3'
+    description = 'file uploaded'
+    for x in subject:
+        subject = x
+    if subject == 'Choose your Subject':
+        messages.info(request, 'Please Select Subject')
+    if description is None:
+        messages.info(request, 'Please Enter Description')
+
+    if description is not None and subject !='Choose your Subject' and mtype !='Choose your Type' :
+        material = LXPModel.SubjectMaterial.objects.create(
+            subject_id = subject,
+            mtype = mtype,
+            urlvalue=url,
+            description=description
+        ).save()
+    
+    subjects = LXPModel.Playlist.objects.all().order_by('name')
+    context = {'subjects': subjects}
+    return render(request,'trainer/uploadpdf/trainer_subject_material_upload_file.html',context)
+
+@login_required
+def trainer_subject_material_start_upload_file_view(request):
     if request.method=="POST":
         file=request.FILES["select_file"]
         if file == "":
@@ -995,7 +1054,15 @@ def trainer_start_upload_file_view(request):
         else:
             return redirect("/")
 
-
+@login_required
+def trainer_view_subject_material_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
+            materials = LXPModel.SubjectMaterial.objects.all().filter(subject_id__in=LXPModel.Playlist.objects.all())
+            return render(request,'trainer/material/trainer_view_subject_material.html',{'materials':materials})
+    except:
+        return render(request,'lxpapp/404page.html')
 @login_required
 def trainer_k8sterminal_view(request):
     try:
@@ -1003,6 +1070,32 @@ def trainer_k8sterminal_view(request):
             return render(request,'trainer/k8sterminal/trainer_k8sterminal.html')
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_show_subject_material_view(request,subjectname,materialtype,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            details= LXPModel.SubjectMaterial.objects.all().filter(id=pk)
+            if materialtype == '1':
+                return render(request,'trainer/material/trainer_material_htmlshow.html',{'details':details})
+            if materialtype == '2':
+                return render(request,'trainer/material/trainer_material_urlshow.html',{'details':details})
+            if materialtype == '3':
+                return render(request,'trainer/material/trainer_material_pdfshow.html',{'details':details})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_delete_subject_material_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            material=LXPModel.SubjectMaterial.objects.get(id=pk)
+            material.delete()
+            materials = LXPModel.SubjectMaterial.objects.all().filter(subject_id__in=LXPModel.Playlist.objects.all())
+            return render(request,'trainer/material/trainer_view_subject_material.html',{'materials':materials})
+    except:
+        return render(request,'lxpapp/404page.html')
+
 
 @login_required
 def trainer_add_k8sterminal_view(request):

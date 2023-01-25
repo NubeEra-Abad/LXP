@@ -1,4 +1,4 @@
-{% extends 'cfo/cfobase.html' %}
+{% extends 'trainer/trainerbase.html' %}
 {% block content %}
 {%load static%}
 
@@ -17,7 +17,7 @@
     }
     h6 {
       text-align: center;
-    }
+    } 
     .row {
       margin: 100px;
     }
@@ -26,34 +26,41 @@
     table.dataTable tr.even { background-color: white; }
   </style>
 </head>
-<BR><BR>
-  <BR><BR>
 <body>
   <ol class="breadcrumb text-right">
-    <li><a href="/cfo/cfo-dashboard">Dashboard</a></li>
-    <li><a href="/cfo/cfo-add-batch">Add Batch</a></li>
-    <li class="active">View Batches</li>
+    <li><a href="trainer-dashboard">Dashboard</a></li>
+    <li><a href="trainer-add-material">Add Material</a></li>
+    <li class="active">View Subject Material</li>
   </ol>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Batch</h6>
+      <h6 class="panel-title">Subject Material</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-          <th>Batch Name</th>
-          <th>Details</th>
-          <th>Update</th>
+          <th>Subject Name</th>
+          <th>Material Type</th>
+          <th>Decription</th>
+          <th>View</th>
           <th>Delete</th>
         </tr>
       </thead>
-      {% for t in batchs %}
+      {% for t in materials %}
       <tr>
-        <td> {{t.batch_name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cfo-view-batch-details' t.batch_name t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cfo-update-batch' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'cfo-delete-batch' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td> {{t.subject}}</td>
+        {% if t.mtype == '1' %}
+        <td>HTML</td>
+        {% elif t.mtype == '2' %}
+        <td>URL</td>
+        {% else %}
+          <td>PDF</td>
+        {% endif %}
+        <td> {{t.description}}</td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'trainer-show-subject-material' t.subject t.mtype t.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'trainer-delete-subject-material' t.id  %}"
+          onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}
     </table>
