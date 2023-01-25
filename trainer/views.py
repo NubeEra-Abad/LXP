@@ -990,7 +990,7 @@ def trainer_start_upload_file_view(request):
         if file == "":
             return "Please return to previous page and select a file"
         if file:
-            output = upload_file_to_s3(request, file, settings.AWS_BUCKET_NAME)
+            output = upload_subject_material_file_to_s3(request, file, settings.AWS_BUCKET_NAME)
             return output
         else:
             return redirect("/")
