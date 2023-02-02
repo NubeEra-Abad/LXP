@@ -711,8 +711,8 @@ def trainer_learner_video_Course_subject_view(request,course_id,user_id):
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             #subject = LXPModel.CourseDetails.objects.all().filter(subject_id__in = LXPModel.Playlist.objects.all(),course_id=str(course_id))
             subject = LXPModel.Playlist.objects.raw('SELECT id,name,Vtotal,VWatched FROM ( select distinct  y.id,  y.name ,  ( select    count( xx.id) from lxpapp_coursedetails xx where xx.course_id= yyy.course_id and xx.subject_id = y.id ) as Vtotal , ( select count (lxpapp_videowatched.id) as a from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where ghgh.id = yyy.id AND lxpapp_videowatched.learner_id = ' + str(user_id) + ' ) as VWatched from lxpapp_coursedetails yyy left outer join lxpapp_playlist y on (yyy.subject_id = y.id) where yyy.course_id = ' + str(course_id) + ' ) ORDER BY name, VWatched')
-            tc = LXPModel.Video.objects.raw('select 1 as id, count(lxpapp_coursedetails.id) as Vtotal from lxpapp_coursedetails where lxpapp_coursedetails.course_id = ' + str(course_id))
-            wc = LXPModel.VideoWatched.objects.raw('select distinct 1 as id, count (lxpapp_videowatched.id) as VWatched from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND ghgh.course_id = ' + str(course_id))
+            tc = LXPModel.Video.objects.raw("SELECT  1 as id, Count( DISTINCT lxpapp_video.name) as Vtotal FROM  lxpapp_coursedetails  INNER JOIN lxpapp_video ON (lxpapp_coursedetails.chapter_id = lxpapp_video.id) WHERE  lxpapp_coursedetails.course_id = " + str(course_id) + " AND lxpapp_video.name <> 'Deleted video'")
+            wc = LXPModel.VideoWatched.objects.raw('select 1 as id, count (distinct lxpapp_videowatched.id) as VWatched from lxpapp_coursedetails ghgh inner join lxpapp_videowatched on (ghgh.chapter_id = lxpapp_videowatched.video_id) where lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND ghgh.course_id = ' + str(course_id))
             per = 0
             for x in tc:
                 tc = x.Vtotal
@@ -739,7 +739,7 @@ def trainer_learner_video_list_view(request,subject_id,course_id,user_id):
         if str(request.session['utype']) == 'trainer':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            list = LXPModel.PlaylistItem.objects.raw('select distinct  mainvid.id,  mainvid.name,      ifnull((SELECT    lxpapp_videowatched.video_id FROM  lxpapp_videowatched where lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id =  mainvid.id), 0) as watched,  ifnull((SELECT    lxpapp_videotounlock.video_id FROM  lxpapp_videotounlock where lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id =  mainvid.id), 0) as unlocked from lxpapp_coursedetails  inner join lxpapp_video mainvid on    (lxpapp_coursedetails.chapter_id = mainvid.id) where  lxpapp_coursedetails.course_id = ' + str (course_id) + ' and lxpapp_coursedetails.subject_id = ' + str (subject_id))  
+            list = LXPModel.PlaylistItem.objects.raw('select distinct  mainvid.id,  mainvid.name,      ifnull((SELECT    lxpapp_videowatched.video_id FROM  lxpapp_videowatched where lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id =  mainvid.id), 0) as watched,  ifnull((SELECT    lxpapp_videotounlock.video_id FROM  lxpapp_videotounlock where lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id =  mainvid.id), 0) as unlocked from lxpapp_coursedetails  inner join lxpapp_video mainvid on    (lxpapp_coursedetails.chapter_id = mainvid.id) where  lxpapp_coursedetails.course_id = ' + str (course_id) + ' and lxpapp_coursedetails.subject_id = ' + str (subject_id) + '  AND mainvid.name <> "Deleted video"')  
             return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'user_id':user_id,'course_id':course_id,'coursename':coursename})
     except:
         return render(request,'lxpapp/404page.html')
@@ -1022,7 +1022,7 @@ def upload_subject_material_file_to_s3(request,file, bucket_name, acl="public-re
     url=settings.AWS_DOMAIN + '' + filename
     subject = request.POST.getlist('subject')
     mtype = '3'
-    description = 'file uploaded'
+    description = request.POST.get('description')
     for x in subject:
         subject = x
     if subject == 'Choose your Subject':

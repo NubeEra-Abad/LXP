@@ -181,7 +181,8 @@ def learner_start_short_exam_view(request,pk):
 def learner_show_short_exam_reuslt_view(request,pk):
     try:    
         if str(request.session['utype']) == 'learner':
-            shortexams=LXPModel.ShortResult.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all(), learner_id=request.user.id,exam_id = pk)
+            #shortexams=LXPModel.ShortResult.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all(), learner_id=request.user.id,exam_id = pk)
+            shortexams=LXPModel.ShortResult.objects.raw("SELECT DISTINCT  lxpapp_exam.exam_name,  lxpapp_shortresult.datecreate,  SUM(DISTINCT lxpapp_shortresult.marks) AS Obtained,  Sum(lxpapp_shortquestion.marks) AS Tot,  lxpapp_shortresult.learner_id,  lxpapp_shortresult.timetaken,  lxpapp_shortresult.status,  lxpapp_shortresult.id FROM  lxpapp_shortquestion  LEFT OUTER JOIN lxpapp_exam ON (lxpapp_shortquestion.exam_id = lxpapp_exam.id)  LEFT OUTER JOIN lxpapp_shortresult ON (lxpapp_exam.id = lxpapp_shortresult.exam_id) WHERE  lxpapp_exam.id = " + str(pk) + " AND  lxpapp_shortresult.learner_id = " + str(request.user.id) + " GROUP BY  lxpapp_exam.exam_name,  lxpapp_shortresult.datecreate,  lxpapp_shortresult.learner_id,  lxpapp_shortresult.timetaken,  lxpapp_shortresult.status,  lxpapp_shortresult.id")
             return render(request,'learner/shortexam/learner_show_short_exam_reuslt.html',{'shortexams':shortexams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -234,8 +235,18 @@ def learner_video_list_view(request,subject_id,course_id):
         if str(request.session['utype']) == 'learner':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
-            list = LXPModel.PlaylistItem.objects.raw('select distinct  mainvid.id,  mainvid.name,      ifnull((SELECT    lxpapp_videowatched.video_id FROM  lxpapp_videowatched where lxpapp_videowatched.learner_id = ' + str(request.user.id) + ' AND lxpapp_videowatched.video_id =  mainvid.id), 0) as watched,  ifnull((SELECT    lxpapp_videotounlock.video_id FROM  lxpapp_videotounlock where lxpapp_videotounlock.learner_id = ' + str(request.user.id) + ' AND lxpapp_videotounlock.video_id =  mainvid.id), 0) as unlocked from lxpapp_coursedetails  inner join lxpapp_video mainvid on    (lxpapp_coursedetails.chapter_id = mainvid.id) where  lxpapp_coursedetails.course_id = ' + str (course_id) + ' and lxpapp_coursedetails.subject_id = ' + str (subject_id))  
+            list = LXPModel.PlaylistItem.objects.raw("select distinct  mainvid.id,  mainvid.name,      ifnull((SELECT    lxpapp_videowatched.video_id FROM  lxpapp_videowatched where lxpapp_videowatched.learner_id = " + str(request.user.id) + " AND lxpapp_videowatched.video_id =  mainvid.id), 0) as watched,  ifnull((SELECT    lxpapp_videotounlock.video_id FROM  lxpapp_videotounlock where lxpapp_videotounlock.learner_id = " + str(request.user.id) + " AND lxpapp_videotounlock.video_id =  mainvid.id), 0) as unlocked from lxpapp_coursedetails  inner join lxpapp_video mainvid on    (lxpapp_coursedetails.chapter_id = mainvid.id) where  lxpapp_coursedetails.course_id = " + str (course_id) + " and lxpapp_coursedetails.subject_id = " + str (subject_id) + "  AND mainvid.name <> 'Deleted video' ORDER BY mainvid.name")  
             return render(request,'learner/video/learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+def learner_subject_material_list_view(request,subject_id,course_id):
+    try:     
+        if str(request.session['utype']) == 'learner':
+            subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
+            list = LXPModel.SubjectMaterial.objects.all().filter(subject_id = str (subject_id))  
+            return render(request,'learner/video/learner_subject_material_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'course_id':course_id,'coursename':coursename})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -266,7 +277,6 @@ def learner_show_video_view(request,subject_id,course_id,video_id):
     except:
         return render(request,'lxpapp/404page.html')
 
-
 def learner_see_material_view(request,subject_id,chapter_id,course_id,pk):
     try:
         if str(request.session['utype']) == 'learner':
@@ -286,6 +296,26 @@ def learner_see_material_view(request,subject_id,chapter_id,course_id,pk):
                 return render(request,'learner/material/learner_material_pdfshow.html',{'details':details,'subjectname':subjectname,'chaptername':chaptername,'subject_id':subject_id,'course_id':course_id})
     except:
         return render(request,'ilmsapp/404page.html')
+
+def learner_see_subject_material_view(request,subject_id,desciption,course_id,pk):
+    try:
+        if str(request.session['utype']) == 'learner':
+            details= LXPModel.SubjectMaterial.objects.all().filter(id=pk)
+            subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
+            
+            materialtype = 0
+            for x in details:
+                materialtype = x.mtype
+
+            if materialtype == 1:
+                return render(request,'learner/material/learner_material_htmlshow.html',{'details':details,'subjectname':subjectname,'chaptername':desciption,'subject_id':subject_id,'course_id':course_id})
+            if materialtype == 2:
+                return render(request,'learner/material/learner_material_urlshow.html',{'details':details,'subjectname':subjectname,'chaptername':desciption,'subject_id':subject_id,'course_id':course_id})
+            if materialtype == 3:
+                return render(request,'learner/material/learner_material_pdfshow.html',{'details':details,'subjectname':subjectname,'chaptername':desciption,'subject_id':subject_id,'course_id':course_id})
+    except:
+        return render(request,'ilmsapp/404page.html')
+
 
 def learner_check_k8sterminal_view(request):
     try:

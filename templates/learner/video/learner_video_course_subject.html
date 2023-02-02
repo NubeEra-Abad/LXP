@@ -50,23 +50,25 @@
       <thead>
         <tr>
           <th>Subject Name</th>
-          <th>Total Video</th>
-          <th>Video Watched</th>
-          <th>Watched %</th>
+          <th hidden>Total Video</th>
+          <th hidden>Video Watched</th>
+          <th hidden>Watched %</th>
           <th>Video List</th>
+          <th>Subject Materials</th>
         </tr>
       </thead>
       {% for t in subject %}
       <tr>
         <td>{{t.name}}</td>
-        <td>{{t.Vtotal}}</td>
-        <td>{{t.VWatched}}</td>
-        <td><progress id="file" value="{{t.VWatched}}" max="{{t.Vtotal}}"> </progress> </td>
-        <td><a class="btn btn-success" href="{% url 'learner-video-list' t.id course_id  %}"><span
-              class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td hidden>{{t.Vtotal}}</td>
+        <td hidden>{{t.VWatched}}</td>
+        <td hidden><progress id="file" value="{{t.VWatched}}" max="{{t.Vtotal}}"> </progress> </td>
+        <td><a class="btn btn-success" href="{% url 'learner-video-list' t.id course_id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+        <td><a class="btn btn-success" href="{% url 'learner-subject-material-list' t.id course_id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
         {% endfor %}
       </tr>
-      <tr>
+      <!-- Working tr -->
+      <!-- <tr>
         <td>Totals :</td>
         <td>
           <span id="val"></span>
@@ -76,7 +78,9 @@
         </td>
         <td><span id="val2"></span></td>
         <td></td>
-      </tr>
+        <td></td>
+      </tr> -->
+      
       <!-- <tr>
         <td>Totals :</td>
         <td>{{tc}}</td>
@@ -121,10 +125,7 @@
   }
 </script>
 <div style="text-align: center">
-  <canvas id="myChart" style="width:100%;max-width:300px"></canvas>
-</div>
-<div style="text-align: center">
-  <canvas id="myChart1" style="width:100%;max-width:600px"></canvas>
+  <!-- <canvas id="myChart" style="width:100%;max-width:300px"></canvas> -->
 </div>
 <script>
   var xValues = ["Total", "Watch", "To be Watch"];

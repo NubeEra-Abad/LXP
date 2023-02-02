@@ -13,9 +13,9 @@ from django.urls import reverse_lazy
 from time import gmtime, strftime
 from . import models
 from lxpapp import models as LXPModel
+from lxpapp import forms as LXPFORM
 from youtubemanager import PlaylistManager
 from cto import models as CTOModel
-from lxpapp import forms as LXPFORM
 from django.db.models import Sum
 from django.db import transaction
 from django.contrib.auth.models import Group

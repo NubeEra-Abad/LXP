@@ -44,16 +44,18 @@
           <th>Attempt</th>
           <th>Exam Date</th>
           <th>Total Marks</th>
+          <th>Obtained Marks</th>
           <th>Taken Time</th>
           <th>View Details</th>
         </tr>
       </thead>
       {% for t in shortexams %}
       <tr>
-        <td> {{t.exam}}</td>
+        <td> {{t.exam_name}}</td>
         <td>Attemp {{ forloop.counter }}</td>
-        <td> {{t.datecreate}}</td>
-        <td> {{t.marks}}</td>
+        <td> {{t.datecreate|date:"M d, Y"}}</td>
+        <td> {{t.Tot}}</td>
+        <td> {{t.Obtained}}</td>
         <td> {{t.timetaken}} Sec</td>
         {% if t.status == 1 %}
         <td><a class="btn btn-primary" href="{% url 'learner-show-short-exam-reuslt-details' t.id  %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
