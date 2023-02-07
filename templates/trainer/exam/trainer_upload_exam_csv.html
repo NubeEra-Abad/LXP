@@ -147,6 +147,102 @@
       <img src="/static/image/processing-gif-image-5.gif">
     </div>
   </div>
+  <div class="row">
+    <div class="col-xl-6">
+      Sample for MCQ Exam CSV
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Option 1</th>
+            <th>Option 2</th>
+            <th>Option 3</th>
+            <th>Option 4</th>
+            <th>right_ans</th>
+            <th>marks</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>Q1</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>Q2</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>1</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>Q3</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>1</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>Q4</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>1</td>
+          <td>4</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-xl-6">
+      Sample for Short Exam CSV
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>marks</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>Q1</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>Q2</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>Q3</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>Q4</td>
+          <td>5</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="container">
+    Use Google sheet to make your question set as per requirementand export it in comma-separated value and use it
+    here.<br>
+    for sample Exam google sheet you can with below link<br>
+    <a href='https://docs.google.com/spreadsheets/d/1vKAqX8cSSnq9tiySMWsgrcBKo-1ZvzjVOq0d1raJjN0/edit?usp=sharing'
+      target="_blank">
+      Download Sample CSV for MCQ Exam
+    </a><br>
+    <a href='https://docs.google.com/spreadsheets/d/1OgIZ8iuy0yevFgKOZBvtRiEktdhhnnPtKJ-iifqJz3Y/edit?usp=sharing'
+      target="_blank">
+      Download Sample CSV for Short Exam
+    </a>
+    <br>
+    <img src="/static/image/export_csv.png">
+  </div>
   {% if messages %}
   {% for message in messages %}
   {{ message }}

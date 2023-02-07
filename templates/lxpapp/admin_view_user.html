@@ -55,7 +55,7 @@
           <th>Course Name</th>
           <th>status</th>
           <th>Update User</th>
-          <th>Delete User</th>
+          <th hidden>Delete User</th>
         </tr>
       </thead>
       {% for t in users %}
@@ -104,7 +104,7 @@
           <center><a class="btn btn-primary btn-xs" href="{% url 'update-user' t.user.first_name t.user.last_name t.user_id t.id  %}"><span
                 class="glyphicon glyphicon-user"></span></a></center>
         </td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-user'  t.user_id t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td hidden><a class="btn btn-danger btn-xs" href="{% url 'delete-user'  t.user_id t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
 
         
       </tr>
