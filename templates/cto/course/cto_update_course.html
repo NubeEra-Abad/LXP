@@ -3,16 +3,9 @@
 {% block content %}
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
   <style>
     a:link {
       text-decoration: none;
@@ -23,35 +16,269 @@
 <body>
   <div>
     <ol class="breadcrumb text-right">
-      <li><a href="/cto/cto-dashboard">Dashboard</a></li>
-      <li><a href="/cto/cto-view-course">View Courses</a></li>
-      <li class="active">Update Course By Play List</li>
+      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li><a href="../../../../cto/cto-view-course">View Courses</a></li>
+      <li><a href="../../../../cto/cto-add-course">Add Course</a></li>
+      <li class="active">Update Course</li>
     </ol>
   </div>
-  <h2 style="text-align:center; color:blue;">Update Course By Playlist</h2>
-  <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+  <h2 style="text-align:center; color:blue;">Update Course</h2>
+  <form method="POST" id="courseForm" data-modules-url="{% url 'ajax_load_modules' %}" autocomplete="off"
+    style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <div class="form-group">
-      <label for="course_name">Course Name</label>
-      {{ courseForm.course_name }}<br>
-      <label for="subject_name">Subject Name</label>
-      <select name="playlist[]" id="field2" multiple multiselect-search="true" multiselect-select-all="true"
-        multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+      <div class="container">
+        <input type="hidden" name="myvalue" id="myvalue">
+        <label for="course_name">Course Name</label>
+        {% render_field courseForm.course_name class="form-control" placeholder="course Name" value=coursename %}
+        <BR><BR>
+        <div class="row">
+          <div class="col-md-3 col-xl-3">
+            <label for="subject_name">Subject Name</label>
+            {% render_field courseForm.subject class="form-control"%}
+          </div>
+          <div class="col-md-3 col-xl-3">
+            <label for="module_name">Module Name</label>
+            {% render_field courseForm.module class="form-control"%}
+          </div>
+          <div class="col-md-3 col-xl-3">
+            <label for="chapter_name">Chapter Name</label>
+            {% render_field courseForm.chapter class="form-control"%}
+          </div>
+          <div class="col-md-3 col-xl-3">
+            <label for="topic_name">Topic Name</label>
+            {% render_field courseForm.topic class="form-control"%}
+          </div>
+        </div>
 
-        {% for entry in subject %}
-        <option value="{{ entry.id}}">{{ entry.name }}</option>
-        {% endfor %}
-      </select>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
-        crossorigin="anonymous"></script>
-      <script src="/static/multiselect-dropdown.js"></script>
 
+        <div class="row">
+          <div class="col-md-3 col-xl-3">
+          </div>
+          <div class="col-md-3 col-xl-3">
+          </div>
+          <div class="col-md-3 col-xl-3">
+          </div>
+          <div class="col-md-3 col-xl-3">
+            <br>
+            <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Details">
+
+          </div>
+        </div>
+        <p id="demo"></p>
+        <div class="col-md-3 col-xl-3">
+          <button class="btn btn-primary form-control" type="submit"
+            onclick="return generateJSON(event);">SUBMIT</button>
+
+        </div>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">ADD</button>
-
   </form>
+  <script>
+    debugger;
+    var mylist = {{ courses| safe}}; // Be aware that there are no quotes or double quotes. 
+    var html = "<table id='tblData' border='1|1' >";
+    html += "<td>ID</td>";
+    html += "<td>Subject</td>";
+    html += "<td>Module</td>";
+    html += "<td>Chapter</td>";
+    html += "<td>Topic</td>";
+    for (s of mylist) {
+      var newProduct = {
+        id: s.id,
+        subject: s.subject_name,
+        module: s.module_name,
+        chapter: s.chapter_name,
+        topic: s.topic_name,
+      };
+      products.push(newProduct);
+      html += "<tr>";
+      html += "<td>" + s.id + "</td>";
+      html += "<td>" + s.subject_name + "</td>";
+      html += "<td>" + s.module_name + "</td>";
+      html += "<td>" + s.chapter_name + "</td>";
+      html += "<td>" + s.topic_name + "</td>";
+      html += "<td><button type='submit' onClick='deleteProduct(\"" + s.id + "\", this);'/>Delete Item</button></td>";
+      html += "</tr>";
+    }
+
+    html += "</table>";
+    document.getElementById("demo").innerHTML = html;
+  </script>
   <br>
+  <script>
+    debugger;
+    window.onload = myfunction();
+    function myfunction() {
+      $("select").removeAttr("required");
+    }
+    var products = [];
+    var jsonData = [];
+
+    function generateJSON(e) {
+      //Store HTML Table Values into Multidimensional Javascript Array Object
+      var TableData = new Array();
+      $('#tblData tr').each(function (row, tr) {
+        TableData[row] = {
+          "subject": $(tr).find('td:eq(1)').text(),
+          "module": $(tr).find('td:eq(2)').text(),
+          "chapter": $(tr).find('td:eq(3)').text(),
+          "topic": $(tr).find('td:eq(4)').text()
+        }//tableData[row]
+      });
+      TableData.shift(); // first row will be empty - so remove
+      if (TableData == false) {
+        alert("Please Add Course Details");
+        e.preventDefault();
+        return false;
+      }
+      JsonObject = JSON.parse(JSON.stringify(TableData));
+      const jsonString = JSON.stringify(Object.assign({}, TableData))
+      const json_obj = JSON.parse(jsonString);
+      var textbox3 = document.getElementById('myvalue');
+      textbox3.value = jsonString;
+      return true;
+    }
+
+    function addProduct() {
+      var subject = document.getElementById("id_subject");
+      var subject_name = subject.options[subject.selectedIndex].innerHTML;
+      var subject_id = document.getElementById("id_subject").value;
+
+      var module = document.getElementById("id_module");
+      var module_name = module.options[module.selectedIndex].innerHTML;
+      var module_id = document.getElementById("id_module").value;
+
+      var chapter = document.getElementById("id_chapter");
+      var chapter_name = chapter.options[chapter.selectedIndex].innerHTML;
+      var chapter_id = document.getElementById("id_chapter").value;
+
+      var topic = document.getElementById("id_topic");
+      var topic_name = topic.options[topic.selectedIndex].innerHTML;
+      var topic_id = document.getElementById("id_topic").value;
+
+
+      var newProduct = {
+        id: null,
+        subject: null,
+        module: null,
+        chapter: null,
+        topic: null,
+      };
+      debugger;
+      newProduct.id = products.length + 1;
+      newProduct.subject = subject_id + '-' + subject_name;
+      newProduct.module = module_id + '-' + module_name;
+      newProduct.chapter = chapter_id + '-' + chapter_name;
+      newProduct.topic = topic_id + '-' + topic_name;
+      if (subject_id <= 0) {
+        alert('Please Select Subject')
+        return
+      }
+      if (module_id <= 0) {
+        alert('Please Select Module')
+        return
+      }
+      if (chapter_id <= 0) {
+        alert('Please Select Chapter')
+        return
+      }
+      if (topic_id <= 0) {
+        alert('Please Select Topic')
+        return
+      }
+      products.push(newProduct);
+      var html = "<table id='tblData' border='1|1' >";
+      html += "<td>ID</td>";
+      html += "<td>Subject</td>";
+      html += "<td>Module</td>";
+      html += "<td>Chapter</td>";
+      html += "<td>Topic</td>";
+      html += "<td>Action</td>";
+      for (var i = 0; i < products.length; i++) {
+        html += "<tr>";
+        html += "<td>" + products[i].id + "</td>";
+        html += "<td>" + products[i].subject + "</td>";
+        html += "<td>" + products[i].module + "</td>";
+        html += "<td>" + products[i].chapter + "</td>";
+        html += "<td>" + products[i].topic + "</td>";
+        html += "<td><button type='submit' onClick='deleteProduct(\"" + products[i].id + "\", this);'/>Delete Item</button></td>";
+        html += "</tr>";
+      }
+      html += "</table>";
+      document.getElementById("demo").innerHTML = html;
+    }
+    function deleteProduct(product_id, e) {
+      debugger;
+      e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+      for (var i = 0; i < products.length; i++) {
+        if (products[i].id == product_id) {
+          // DO NOT CHANGE THE 1 HERE
+          products.splice(i, 1);
+        }
+      }
+    }
+
+    function removeItem(product_id) {
+      for (var i = 0; i < products.length; i++) {
+        if (products[i].product_id == product_id) {
+          // DO NOT CHANGE THE 1 HERE
+          products.splice(i, 1);
+        }
+      }
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_subject").change(function () {
+      var url = $("#courseForm").attr("data-modules-url");  // get the url of the `load_topics` view
+      var subjectId = $(this).val();  // get the selected subject ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: '{% url 'ajax_load_modules' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-topics/)
+        data: {
+          'subject': subjectId       // add the subject id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_topics` view function
+          $("#id_module").html(data);  // replace the contents of the topic input with the data that came from the server
+        }
+      });
+
+    });
+    // this one is for fetching vanue data
+    $("#id_module").change(function () { //django-model-form created this id
+      var url = $("#courseForm").attr("data-modules-url");  // get the url of the `load_topics` view
+      var moduleId = $(this).val();  // get the selected subject ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: '{% url 'ajax_load_chapters' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-topics/) course_form.html template has this url var
+        data: {
+          'module': moduleId       // add the subject id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_topics` view function
+          $("#id_chapter").html(data);  // replace the contents of the topic input with the data that came from the server
+        }
+      });
+
+    });
+
+    $("#id_chapter").change(function () { //django-model-form created this id
+      var url = $("#courseForm").attr("data-chapters-url");  // get the url of the `load_topics` view
+      var chapterId = $(this).val();  // get the selected subject ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: '{% url 'ajax_load_topics' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-topics/) course_form.html template has this url var
+        data: {
+          'chapter': chapterId       // add the subject id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_topics` view function
+          $("#id_topic").html(data);  // replace the contents of the topic input with the data that came from the server
+        }
+      });
+
+    });
+
+  </script>
   {% if messages %}
   {% for message in messages %}
   {{ message }}

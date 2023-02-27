@@ -54,9 +54,7 @@ INSTALLED_APPS = [
 
 ]
 
-USE_L10N = False
-DATE_FORMAT = "%d/%m/%Y"
-DATE_INPUT_FORMATS = ['%d-%m-%Y', '%Y-%m-%d']
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -97,7 +95,7 @@ WSGI_APPLICATION = 'LXP.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'LXP.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'LXP_Product.sqlite3'),
     }
 }
 
@@ -125,11 +123,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE =  'Asia/Kolkata'
+USE_I18N = True
+USE_L10N = True
 USE_TZ = True
-
+DATE_FORMAT = "%d/%m/%Y"
+DATE_INPUT_FORMATS = ['%d-%m-%Y', '%Y-%m-%d']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 SITE_ID = 1
@@ -165,12 +164,12 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 ##########                  Dev
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '709424261438-iq2t80mcempggouuh8t9os1afuhq2h3l.apps.googleusercontent.com'
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '709424261438-iq2t80mcempggouuh8t9os1afuhq2h3l.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 ##########                  Prod
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
    'https://www.googleapis.com/auth/userinfo.email',

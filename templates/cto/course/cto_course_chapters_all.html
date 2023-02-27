@@ -1,8 +1,0 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-<label for="chaptersall">Chapter Name</label>
-<select id="product_descall" name="chaptersall" class="custom-select form-control">
-    <option selected>Choose your Chapter</option>
-    {% for chapter in chapters %}
-        <option value="{{chapter.pk}}">{{ chapter.name }}</option>
-    {% endfor %}
-</select>

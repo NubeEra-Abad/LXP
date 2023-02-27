@@ -1,44 +1,18 @@
 {% extends 'cto/ctobase.html' %}
+{% load widget_tweaks %}
 {% block content %}
-{%load static%}
-
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
-  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
-  <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
-  <script src="/static/datatableconfig.js"></script>
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-    h6 {
-      text-align: center;
-    }
-    .row {
-      margin: 100px;
-    }
-
-    table.dataTable tr.odd { background-color: #E2E4FF; }
-    table.dataTable tr.even { background-color: white; }
-  </style>
-</head>
-<body>
-  <ol class="breadcrumb text-right">
-    <li><a href="cto-dashboard">Dashboard</a></li>
-    <li><a href="cto-add-subject">Add Subject</a></li>
-    <li class="active">View Subject</li>
-  </ol>
-<br><br>
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Subject</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-add-subject">Add Subject</a></li>
+      <li class="breadcrumb-item active" aria-current="page">View Subjects</li>
+    </ol>
+  </nav>
+</div>
+<div class="card-body">
+  <div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
       <thead>
         <tr>
           <th>Subject Name</th>
@@ -46,25 +20,18 @@
           <th>Delete</th>
         </tr>
       </thead>
-      {% for t in subjects %}
-      <tr>
-        <td> {{t.name}}</td>
-        {% if t.playlist_id == '' %}
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-subject' t.id  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        {% else %}
-        <td></td>
-        {% endif %}
-        {% if t.playlist_id == '' %}
-        <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-subject' t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
-        {% else %}
-        <td></td>
-        {% endif %}
-        
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for t in subjects %}
+        <tr>
+          <td> {{t.subject_name}}</td>
+          <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-subject' t.id  %}"><span
+                class="	far fa-edit"></span></a></td>
+          <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-subject' t.id  %}"
+              onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>
-
-<br><br><br><br><br><br>
 {% endblock content %}

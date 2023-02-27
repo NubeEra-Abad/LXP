@@ -1,117 +1,15 @@
 from django import forms
-from django.contrib.auth.models import User
 from . import models
 from django import forms
-from .models import (
-    Course,CourseDetails
-)
-from django.db.models import Q
-from social_django.models import UserSocialAuth
-from django.forms import ModelForm, inlineformset_factory,modelformset_factory
 
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)
     Email = forms.EmailField()
     Message = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'rows': 3, 'cols': 30}))
 
-class SubjectForm(forms.ModelForm):
-    name = forms.CharField(
-        max_length=255,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.Playlist
-        fields=['name']
-
-class ChapterForm(forms.ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all() ,empty_label="Subject Name", to_field_name="id")
-    name = forms.CharField(
-        max_length=255,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.Video
-        fields=['name']
-
-class TopicForm(forms.ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().order_by('name'),empty_label="Subject Name", to_field_name="id")
-    chapterID=forms.ModelChoiceField(queryset=models.Video.objects.all(),empty_label="Chapter Name", to_field_name="id")
-    topic_name = forms.CharField(
-        max_length=255,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.Topic
-        fields=['topic_name']
-
-class CourseForm(ModelForm):
-    class Meta:
-        model = Course
-        fields=['course_name']
-        exclude = ()
-
-class CourseDetailsForm(ModelForm):
-    subjectID=forms.ModelChoiceField(queryset=models.Playlist.objects.all().order_by('name'),empty_label="Subject Name", to_field_name="id")
-    chapterID=forms.ModelChoiceField(queryset=models.Video.objects.all().order_by('name'),empty_label="Chapter Name", to_field_name="id")
-    topicID=forms.ModelChoiceField(queryset=models.Topic.objects.all().order_by('topic_name'),empty_label="Topic Name", to_field_name="id")
-    class Meta:
-        model = CourseDetails
-        fields=['subject']
-        fields=['chapter']
-        fields=['topic']
-        exclude = ()
-
-CourseDetailsFormset = inlineformset_factory(Course, CourseDetails,
-                                            form=CourseDetailsForm, extra=5)
-CourseDetFormSet = modelformset_factory(
-    CourseDetails, fields=("subject","chapter", "topic"), extra=1
-)
-class UserCourseForm(forms.ModelForm):
-    courseid=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
-    class Meta:
-        model=models.UserCourse
-        fields=['remarks']
-class CourseTypeForm(forms.ModelForm):
-    coursetype_name = forms.CharField(
-        max_length=255,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.CourseType
-        fields=['coursetype_name']
- 
-class BatchForm(forms.ModelForm):
-    coursetypeID=forms.ModelChoiceField(queryset=models.CourseType.objects.all(),empty_label="Course Type Name", to_field_name="id")
-    batch_name = forms.CharField(
-        max_length=255,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.Batch
-        fields=['batch_name','stdate','enddate']
-        widgets = {
-            'stdate': forms.DateInput(format='%d/%m/%Y'),
-            'enddate': forms.DateInput(format='%d/%m/%Y')
-        }
-
-class LearnerFeeForm(forms.ModelForm):
-    learnerID=forms.ModelChoiceField(queryset=models.User.objects.all(),empty_label="Learner Name", to_field_name="id")
-    class Meta:
-        model=models.LearnerFee
-        fields=['fee','paiddate']
-        widgets = {
-            'paiddate': forms.DateInput(format='%d/%m/%Y')
-        }
-
-
 class PassionateSkillForm(forms.ModelForm):
     passionateskill_name = forms.CharField(
-        max_length=255,
+        max_length=90000,
         #  forms ↓
         widget=forms.TextInput(attrs={'autofocus': True})
     )
@@ -121,7 +19,7 @@ class PassionateSkillForm(forms.ModelForm):
 
 class KnownSkillForm(forms.ModelForm):
     knownskill_name = forms.CharField(
-        max_length=255,
+        max_length=90000,
         #  forms ↓
         widget=forms.TextInput(attrs={'autofocus': True})
     )
@@ -129,9 +27,41 @@ class KnownSkillForm(forms.ModelForm):
         model=models.KnownSkill
         fields=['knownskill_name']
 
+class SubjectForm(forms.ModelForm):
+    subject_name = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    class Meta:
+        model=models.Subject
+        fields=['subject_name']
+
+class ModuleForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ModuleForm, self).__init__(*args, **kwargs)
+    
+    class Meta:
+        model=models.Module
+        fields=['module_name','subject']
+
+class ChapterForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ChapterForm, self).__init__(*args, **kwargs)
+    class Meta:
+        model=models.Chapter
+        fields=['chapter_name','module']
+
+class TopicForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TopicForm, self).__init__(*args, **kwargs)
+    class Meta:
+        model=models.Topic
+        fields=['topic_name','chapter']
+
 class LearnerDetailsForm(forms.ModelForm):
     user_full_name = forms.CharField(
-        max_length=255,
+        max_length=90000,
         #  forms ↓
         widget=forms.TextInput(attrs={'autofocus': True})
     )
@@ -139,49 +69,83 @@ class LearnerDetailsForm(forms.ModelForm):
         model=models.LearnerDetails
         fields=['user_full_name','mobile','iswhatsapp','whatsappno']
 
-# class ExamForm(forms.ModelForm):
-#     courseID=forms.ModelChoiceField(queryset=models.Course.objects.all(),empty_label="Course Name", to_field_name="id")
-#     class Meta:
-#         model=models.Exam
-#         fields=['exam_name','questiontpye']
-
-class ExamForm(forms.ModelForm):
-    batchID=forms.ModelChoiceField(queryset=models.Batch.objects.all() ,empty_label="Batch Name", to_field_name="id")
-    exam_name = forms.CharField(
-        max_length=255,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
+class CourseForm(forms.ModelForm):
     class Meta:
-        model=models.Exam
-        fields=['exam_name','questiontpye']
+        model = models.Course
+        fields = ('course_name', 'subject', 'module', 'chapter', 'topic')
 
-class McqQuestionForm(forms.ModelForm):
-    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='MCQ'),empty_label="Exam Name", to_field_name="id")
-    class Meta:
-        model=models.McqQuestion
-        fields=['marks','question','option1','option2','option3','option4','answer']
-        widgets = {
-            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50,'autofocus': True})
-        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-class ShortQuestionForm(forms.ModelForm):
-    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='ShortAnswer'),empty_label="Exam Name", to_field_name="id")
-    class Meta:
-        model=models.McqQuestion
-        fields=['marks','question']
-        widgets = {
-            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50, 'autofocus': True})
-        }
+        self.fields['module'].queryset = models.Module.objects.none()
 
-class PlayListForm(forms.ModelForm):
-    class Meta:
-        model=models.Playlist
-        fields=['name','playlist_id']
+        if 'subject' in self.data:
+            try:
+                subject_id = int(self.data.get('subject'))
+                self.fields['module'].queryset = models.Module.objects.filter(subject_id=subject_id).order_by('module_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['module'].queryset = self.instance.subject.module_set.order_by('subject_name')
 
-class K8STerminalForm(forms.ModelForm):
-    learnerID=forms.ModelChoiceField(queryset= User.objects.all().filter(id__in = UserSocialAuth.objects.all().filter(Q(utype=0) | Q(utype=2),status = 1)),empty_label="Learner Name", to_field_name="id")
-    
+        self.fields['chapter'].queryset = models.Module.objects.none()
+        if 'module' in self.data:
+            try:
+                module_id = int(self.data.get('module'))
+                self.fields['chapter'].queryset = models.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['chapter'].queryset = self.instance.module.chapter_set.order_by('chapter_name')
+
+
+        self.fields['topic'].queryset = models.Chapter.objects.none()
+        if 'chapter' in self.data:
+            try:
+                chapter_id = int(self.data.get('chapter'))
+                self.fields['topic'].queryset = models.Topic.objects.filter(chapter_id=chapter_id).order_by('topic_name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty Topic queryset
+        elif self.instance.pk:
+            self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
+
+class CourseSetForm(forms.ModelForm):
     class Meta:
-        model=models.K8STerminal
-        fields=['Password','usagevalue']
+        model = models.CourseSet
+        fields = ('courseset_name', 'subject', 'module', 'chapter', 'topic')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['module'].queryset = models.Module.objects.none()
+
+        if 'subject' in self.data:
+            try:
+                subject_id = int(self.data.get('subject'))
+                self.fields['module'].queryset = models.Module.objects.filter(subject_id=subject_id).order_by('module_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['module'].queryset = self.instance.subject.module_set.order_by('subject_name')
+
+        self.fields['chapter'].queryset = models.Module.objects.none()
+        if 'module' in self.data:
+            try:
+                module_id = int(self.data.get('module'))
+                self.fields['chapter'].queryset = models.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['chapter'].queryset = self.instance.module.chapter_set.order_by('chapter_name')
+
+
+        self.fields['topic'].queryset = models.Chapter.objects.none()
+        if 'chapter' in self.data:
+            try:
+                chapter_id = int(self.data.get('chapter'))
+                self.fields['topic'].queryset = models.Topic.objects.filter(chapter_id=chapter_id).order_by('topic_name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty Topic queryset
+        elif self.instance.pk:
+            self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
+

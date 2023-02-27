@@ -1,63 +1,39 @@
 {% extends 'cto/ctobase.html' %}
+
+{% block title %}Human Resources Module{% endblock %}
+
 {% block content %}
-{%load static%}
+  <h2>Human Resources Module » People Management</h2>
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>  
-  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>  
-  <script src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
-  <script src="/static/datatableconfig.js"></script>
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-    h6 {
-      text-align: center;
-    }
-    .row {
-      margin: 100px;
-    }
+  <p>
+    <a href="{% url 'course_add' %}">Add course</a>
+  </p>
 
-    table.dataTable tr.odd { background-color: #E2E4FF; }
-    table.dataTable tr.even { background-color: white; }
-  </style>
-</head>
-<body>
-  <ol class="breadcrumb text-right">
-    <li><a href="cto-dashboard">Dashboard</a></li>
-    <li><a href="{% url 'course-add' %}">Add Course</a></li>
-    <li class="active">View Course</li>
-  </ol>
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Course</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Course Name</th>
-          <th>Preview/Print</th>
-          <th>Update</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      {% for course in object_list %}
+  <table border="1">
+    <thead>
       <tr>
-        <td> {{course.course_name}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'cto-print-course-preview' course.course_name  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'course-update' course.pk  %}" ><span class="	glyphicon glyphicon-pencil"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'course-delete' course.pk %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <th>Name</th>
+        <th>Subject</th>
+        <th>Module</th>
+        <th>Chapter</th>
+        <th>Topic</th>
       </tr>
+    </thead>
+    <tbody>
+      {% for course in courses %}
+        <tr>
+          <td><a href="{% url 'course_change' course.pk %}">{{ course.course_name }}</a></td>
+          <td>{{ course.subject.subject_name }}</td>
+          <td>{{ course.module.module_name }}</td>
+          <td>{{ course.chapter.chapter_name }}</td>
+          <td>{{ course.topic.topic_name }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No course in the database. <a href="{% url 'course_add' %}">Add the first course</a>.</td>
+        </tr>
       {% endfor %}
-    </table>
-  </div>
-</div>
+    </tbody>
+  </table>
 
-<br><br><br><br><br><br>
-{% endblock content %}
-</body>
+{% endblock %}

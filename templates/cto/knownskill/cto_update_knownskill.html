@@ -1,57 +1,15 @@
 {% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<head>
-  <style media="screen">
-    input[type=text], select,input[type=number] ,input[type=password], textarea{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-
-  input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  input[type=submit]:hover {
-    background-color: #45a049;
-  }
-  </style>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <style>
-    a:link {
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-  <div>
-  <ol class="breadcrumb text-right">
-    <li><a href="../cto-dashboard">Dashboard</a></li>
-    <li><a href="../cto-view-knownskill">View Known Skills</a></li>
-    <li class="active">Update Known Skill</li>
-  </ol>
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-knownskill">View Known Skills</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Update Known Skills</li>
+    </ol>
+  </nav>
 </div>
-<br><br>
 <h3 style="text-align:center;">Update Known Skills</h3>
 <div>
   <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">

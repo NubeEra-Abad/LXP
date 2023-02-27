@@ -1,35 +1,22 @@
-from django.shortcuts import render,redirect,reverse
-import os
-#from social_django.models import UserSocialAuth as a
-
-from urllib.parse import parse_qs, urlparse
+from django.shortcuts import render,redirect
 from lxpapp import forms,models
-from django.db.models import Sum
-from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required,user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from datetime import date, timedelta
-from django.db.models import Q
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
-from django.db import connection
 from django.contrib.auth.decorators import login_required
-
+from django.db import connection
 from social_django.models import UserSocialAuth
-scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 def login(request):
     return render(request, 'lxpapp/index.html')
-
 
 @login_required
 def home(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')  
     return render(request,'lxpapp/404page.html')
-
-import datetime
 
 def afterlogin_view(request):
     user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
@@ -190,13 +177,18 @@ def contactus_view(request):
             return render(request, 'lxpapp/contactus.html', {'form':sub})
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def getUserTable(request):
+    users = UserSocialAuth.objects.raw('SELECT   SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME,  LXPAPP_LEARNERDETAILS.MOBILE FROM  SOCIAL_AUTH_USERSOCIALAUTH  LEFT OUTER JOIN AUTH_USER ON (SOCIAL_AUTH_USERSOCIALAUTH.USER_ID = AUTH_USER.ID)  LEFT OUTER JOIN LXPAPP_LEARNERDETAILS ON (AUTH_USER.ID = LXPAPP_LEARNERDETAILS.LEARNER_ID) ORDER BY  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME')
+    return users
 @login_required
 def admin_view_user_view(request):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'admin':
-            users = UserSocialAuth.objects.raw('SELECT   SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME,  LXPAPP_LEARNERDETAILS.MOBILE,  GROUP_CONCAT(DISTINCT LXPAPP_COURSE.COURSE_NAME) AS course_name FROM  SOCIAL_AUTH_USERSOCIALAUTH  LEFT OUTER JOIN AUTH_USER ON (SOCIAL_AUTH_USERSOCIALAUTH.USER_ID = AUTH_USER.ID)  LEFT OUTER JOIN LXPAPP_LEARNERDETAILS ON (AUTH_USER.ID = LXPAPP_LEARNERDETAILS.LEARNER_ID)  LEFT OUTER JOIN LXPAPP_BATCHLEARNER ON (AUTH_USER.ID = LXPAPP_BATCHLEARNER.LEARNER_ID)  LEFT OUTER JOIN LXPAPP_BATCHCOURSE ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCHCOURSE.BATCH_ID)  LEFT OUTER JOIN LXPAPP_COURSE ON (LXPAPP_BATCHCOURSE.COURSE_ID = LXPAPP_COURSE.ID) GROUP BY  SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME ORDER BY  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME')
-            return render(request,'lxpapp/admin_view_user.html',{'users':users})
-    except:
+            users = getUserTable(request)
+            return render(request,'lxpapp/users/admin_view_user.html',{'users':users})
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -214,93 +206,62 @@ def update_user_view(request,userfirstname,userlastname,userid,pk):
                     users.status = False
                 users.utype = usertype[0]
                 users.save()
-                users = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(lxpapp_course.course_name)  as course_name, lxpapp_learnerdetails.mobile FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_usercourse ON (auth_user.id = lxpapp_usercourse.user_id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_usercourse.course_id = lxpapp_course.id) LEFT OUTER JOIN lxpapp_learnerdetails ON (auth_user.id = lxpapp_learnerdetails.learner_id) GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id,  auth_user.first_name, auth_user.last_name')
+                users = getUserTable(request)
                 return HttpResponseRedirect('/admin-view-user',{'users':users})
-            learnercourses = models.Batchlearner.objects.raw('SELECT LXPAPP_COURSE.id, LXPAPP_COURSE.COURSE_NAME AS course_name FROM  AUTH_USER  INNER JOIN LXPAPP_BATCHLEARNER ON (AUTH_USER.ID = LXPAPP_BATCHLEARNER.LEARNER_ID)  INNER JOIN LXPAPP_BATCHCOURSE ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCHCOURSE.BATCH_ID)  INNER JOIN LXPAPP_COURSE ON (LXPAPP_BATCHCOURSE.COURSE_ID = LXPAPP_COURSE.ID) WHERE AUTH_USER.id = '+ str(userid))
+            learnercourses = ''
             users = UserSocialAuth.objects.all().filter(id=pk)
             userdetails = models.LearnerDetails.objects.all().filter(learner_id=userid)
             username = userfirstname + ' ' + userlastname
-            return render(request,'lxpapp/admin_update_user.html',{'users':users,'learnercourses':learnercourses,'username':username,'userdetails':userdetails})
+            return render(request,'lxpapp/users/admin_update_user.html',{'users':users,'learnercourses':learnercourses,'username':username,'userdetails':userdetails})
     #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def active_user_view(request,userid,pk):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'admin':
             cursor = connection.cursor()
             cursor.execute("UPDATE social_auth_usersocialauth SET status = 1 WHERE id = " + str(pk))
-            users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(pk))
+            users = models.User.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(pk))
             isfirstlogin =models.IsFirstLogIn.objects.all().filter(user_id = userid)
             if not isfirstlogin:
                 isfirstlogin =models.IsFirstLogIn.objects.create(user_id = userid)
                 isfirstlogin.save()
             return HttpResponseRedirect('/admin-view-user',{'users':users})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def inactive_user_view(request,pk):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'admin':
             cursor = connection.cursor()
             cursor.execute("UPDATE social_auth_usersocialauth SET status = 0 WHERE id = " + str(pk))
-            users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
+            users = models.User.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
             return HttpResponseRedirect('/admin-view-user',{'users':users})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def delete_user_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'admin':
-            cursor = connection.cursor()
-            cursor.execute("DELETE FROM lxpapp_BatchTrainer WHERE trainer_id = " + str(pk))
-            cursor.execute("DELETE FROM lxpapp_UserPics WHERE user_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_UserCourse WHERE user_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_LearnerDetails WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_IsFirstLogIn WHERE user_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_McqResult WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_ShortResult WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_VideoToUnlock WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_VideoWatched WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_WaringMail WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_K8STerminal WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM lxpapp_K8STerminalLearnerCount WHERE learner_id = " + str(userid))
-            cursor.execute("DELETE FROM social_auth_usersocialauth WHERE id = " + str(pk))
-            cursor.execute("DELETE FROM auth_user WHERE id = " + str(userid))
-            users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
+            # cursor = connection.cursor()
+            # cursor.execute("DELETE FROM lxpapp_BatchTrainer WHERE trainer_id = " + str(pk))
+            # cursor.execute("DELETE FROM lxpapp_UserPics WHERE user_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_UserCourse WHERE user_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_LearnerDetails WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_IsFirstLogIn WHERE user_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_McqResult WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_ShortResult WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_VideoToUnlock WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_VideoWatched WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_WaringMail WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_K8STerminal WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM lxpapp_K8STerminalLearnerCount WHERE learner_id = " + str(userid))
+            # cursor.execute("DELETE FROM social_auth_usersocialauth WHERE id = " + str(pk))
+            # cursor.execute("DELETE FROM auth_user WHERE id = " + str(userid))
+            users = models.User.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
             return HttpResponseRedirect('/admin-view-user',{'users':users})
-    except:
-        return render(request,'lxpapp/404page.html')
-@login_required
-def admin_update_course_view(request,pk):
-    try:    
-        if str(request.session['utype']) == 'admin':
-            if request.method=="POST":
-                course = request.POST.getlist('playlist[]')
-                usercouse = models.UserCourse.objects.all().filter(user_id=pk)
-                usercouse.delete()
-                for c in course:
-                    usercouse = models.UserCourse.objects.create(user_id=pk,course_id=c,remarks='')
-                    usercouse.save()
-                users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
-                return HttpResponseRedirect('/admin-view-user',{'users':users})
-            course = models.Course.objects.all()
-            return render(request,'lxpapp/admin_update_course.html',{'courses':course,'uid':pk})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def admin_mark_usertype_view(request,pk):
-    try:    
-        if str(request.session['utype']) == 'admin':
-            if request.method=="POST":
-                newtype=request.POST['newtype']
-                cursor = connection.cursor()
-                cursor.execute("UPDATE social_auth_usersocialauth SET utype = " + str (newtype) + " WHERE id = " + str(pk))
-                users = models.Course.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
-                return HttpResponseRedirect('/admin-view-user',{'users':users})
-            return render(request,'lxpapp/admin_mark_usertype.html',{'courses':'course','uid':pk})
     except:
         return render(request,'lxpapp/404page.html')

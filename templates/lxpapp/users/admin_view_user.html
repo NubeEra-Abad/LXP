@@ -1,0 +1,117 @@
+{% extends 'lxpapp/adminbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
+  <script src="/static/datatableconfig.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    table.dataTable tr.odd {
+      background-color: #E2E4FF;
+    }
+
+    table.dataTable tr.even {
+      background-color: white;
+    }
+
+    td {
+      vertical-align: center;
+    }
+  </style>
+</head>
+<br><br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <input type=button value="Back" onClick="javascript:history.go(-1);" class="btn btn-primary">
+      <h6 class="panel-title">Users</h6>
+    </div>
+    <!-- <table id="example" class="display" style="width:100%"> -->
+    <table  class="table table-hover display" id="dev-table">
+      <thead>
+        <tr> 
+          <th>Pic</th>
+          <th>User Id</th>
+          <th>Course Name</th>
+          <th>status</th>
+          <th>Update User</th>
+          <th>Delete User</th>
+        </tr>
+      </thead>
+      {% for t in users %}
+      <tr>
+        <td> <img src="{{t.pic}}" style="width:50px"></td>
+        <td>
+          
+          {% if t.status%}
+          <b>{{t.user.first_name}} {{t.user.last_name}} </b> <br>{{t.uid}} 
+          {% else %}
+          <b><font style="color:red;">{{t.user.first_name}} {{t.user.last_name}} (On Hold) </b> </font><br>{{t.uid}} 
+          {% endif %}
+          
+          <br>User Type :
+          {% if t.utype == 0 or t.utype == 2 %}
+          Learner
+          {% elif t.utype == 1 %}
+          Trainer
+          {% elif t.utype == 3 %}
+          CTO
+          {% elif t.utype == 4 %}
+          CFO
+          {% endif %}
+          <br>
+          <B>Mobile : {{t.mobile}} </B>
+        </td>
+        {% if t.utype == 0 or t.utype == 2 %}
+        <td> {{t.course_name}}</td>
+          {% else %}
+          <td></td>
+          {% endif %}
+        <td> 
+          {% if t.status%}
+          <center>
+            <a class="btn btn-danger btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="glyphicon glyphicon-remove-circle"></span></a>
+            <BR><BR><B>User is Active</B>
+          </center>
+          {% else %}
+          <center>
+            <a class="btn btn-success btn-xs" href="{% url 'active-user' t.user_id t.id  %}"><span class="glyphicon glyphicon-ok-circle"></span></a>
+            <BR><BR><B><font style="color:red;">User is On Hold</font></B>
+          </center>
+          {% endif %}
+        </td>
+        <td>
+          <center><a class="btn btn-primary btn-xs" href="{% url 'update-user' t.user.first_name t.user.last_name t.user_id t.id  %}"><span
+                class="glyphicon glyphicon-user"></span></a></center>
+        </td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-user'  t.user_id t.id  %}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-trash"></span></a></td>
+
+        
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<br><br><br><br><br><br>
+{% endblock content %}

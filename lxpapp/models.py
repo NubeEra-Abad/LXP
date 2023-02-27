@@ -1,20 +1,128 @@
 from django.db import models
-from django.urls import reverse
-from social_django import models as UMODEL
 from django.contrib.auth.models import User
-import datetime
+from django.db import models
 from django.db.models import Q, Sum
 import requests
 import humanize
-from django.db import models
-
+import datetime
 class UserPics(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     picpath = models.TextField(default='')
     pic = models.ImageField()
+
+class PassionateSkill(models.Model):
+   passionateskill_name = models.CharField(max_length=200)
+   def __str__(self):
+        return self.passionateskill_name
+
+class KnownSkill(models.Model):
+   knownskill_name = models.CharField(max_length=200)
+   def __str__(self):
+        return self.knownskill_name
+
+class LearnerDetails(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    user_full_name = models.CharField(max_length=200)
+    mobile = models.IntegerField(default=0)
+    iswhatsapp = models.BooleanField(default=False)
+    whatsappno = models.IntegerField(default=0)
+    
+class LearnerDetailsPSkill(models.Model):
+    learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.SET_NULL, null=True)
+    passionateskill=models.ForeignKey(PassionateSkill,on_delete=models.SET_NULL, null=True)
+
+class LearnerDetailsKSkill(models.Model):
+    learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.SET_NULL, null=True)
+    knownskill=models.ForeignKey(KnownSkill,on_delete=models.SET_NULL, null=True)
+
+class IsFirstLogIn(models.Model):
+    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return self.user
+
+
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.subject_name
+
+class Module(models.Model):
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    module_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.module_name
+
+class Chapter(models.Model):
+    chapter_name = models.CharField(max_length=200)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.chapter_name
+
+class Topic(models.Model):
+    topic_name = models.CharField(max_length=200)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.topic_name
+
+class Course(models.Model):
+    course_name = models.CharField(max_length=200)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.course_name
+
+class CourseDetails(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
+
+    def __str__(self):
+        return self.course
+    def to_dict(c):
+            if isinstance(c, CourseDetails):
+                dict = {
+                    "id": c.id,
+                    "course_name": c.course.course_name,
+                    "subject_name": c.subject.subject_name,
+                    "module_name": c.module.module_name,
+                    "chapter_name": c.chapter.chapter_name,
+                    "topic_name": c.topic.topic_name
+                }
+                return dict
+            else:
+                type_name = c.__class__.__name__
+                raise TypeError("Unexpected type {0}".format(type_name))
+    
+class CourseSet(models.Model):
+    courseset_name = models.CharField(max_length=200)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.courseset_name
+
+class CourseSetDetails(models.Model):
+    courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
+
+    def __str__(self):
+        return self.courseset
 ###################################
 def getHumanizedTimeString(seconds):
-      
       return humanize.precisedelta(
          datetime.timedelta(seconds=seconds)).upper(). \
          replace(" month".upper(), "m.").replace(" months".upper(), "m.").replace(" days".upper(), "d.").replace(
@@ -29,7 +137,7 @@ SECRETS = {"SECRET_KEY": 'django-insecure-ycs22y+20sq67y(6dm6ynqw=dlhg!)%vuqpd@$
            "GOOGLE_OAUTH_SCOPES": ['https://www.googleapis.com/auth/youtube']}
 class Tag(models.Model):
     name = models.CharField(max_length=69)
-    created_by = models.ForeignKey(User, related_name="playlist_tags", on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(User, related_name="playlist_tags", on_delete=models.SET_NULL, null=True)
 
     times_viewed = models.IntegerField(default=0)
     times_viewed_per_week = models.IntegerField(default=0)
@@ -59,12 +167,12 @@ class Video(models.Model):
     yt_player_HTML = models.TextField(blank=True)
 
     # video is made by this channel
-    # channel = models.ForeignKey(Channel, related_name="videos", on_delete=models.CASCADE)
+    # channel = models.ForeignKey(Channel, related_name="videos", on_delete=models.SET_NULL, null=True)
     channel_id = models.TextField(blank=True)
     channel_name = models.TextField(blank=True)
 
     # which playlist this video belongs to, and position of that video in the playlist (i.e ALL videos belong to some pl)
-    # playlist = models.ForeignKey(Playlist, related_name="videos", on_delete=models.CASCADE)
+    # playlist = models.ForeignKey(Playlist, related_name="videos", on_delete=models.SET_NULL, null=True)
 
     # (moved to playlistItem)
     # is_duplicate = models.BooleanField(default=False)  # True if the same video exists more than once in the playlist
@@ -246,8 +354,8 @@ class Playlist(models.Model):
 
 class PlaylistItem(models.Model):
     playlist = models.ForeignKey(Playlist, related_name="playlist_items",
-                                 on_delete=models.CASCADE, null=True)  # playlist this pl item belongs to
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True)
+                                 on_delete=models.SET_NULL, null=True)  # playlist this pl item belongs to
+    video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True)
 
     # details
     playlist_item_id = models.CharField(max_length=100)  # the item id of the playlist this video beo
@@ -272,224 +380,9 @@ class PlaylistItem(models.Model):
 
 class Pin(models.Model):
     kind = models.CharField(max_length=100)  # "playlist", "video"
-    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, null=True)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True)
+    playlist = models.ForeignKey(Playlist, on_delete=models.SET_NULL, null=True)
+    video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True)
 
+class IncludePlaylist(models.Model):
+    playlist = models.ForeignKey(Playlist, on_delete=models.SET_NULL, null=True)
 ##############################################################################
-
-class Topic(models.Model):
-    chapter=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True, blank=True)
-    subject=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True, blank=True)
-    topic_name = models.CharField(max_length=50)
-    def __str__(self):
-        return self.topic_name
-
-class Course(models.Model):
-   course_name = models.CharField(max_length=50)
-   def __str__(self):
-    return self.course_name
-   
-   def get_absolute_url(self):
-        return reverse('course-update', kwargs={'pk': self.pk})
-
-class CourseDetails(models.Model):
-   course=models.ForeignKey(Course,on_delete=models.CASCADE)
-   subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-   chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
-   topic=models.ForeignKey(Topic,on_delete=models.SET_NULL, null=True, blank=True)
-
-class UserCourse(models.Model):
-   user = models.ForeignKey(User,on_delete=models.CASCADE)
-   course=models.ForeignKey(Course,on_delete=models.CASCADE)
-   remarks = models.CharField(max_length=50)
-
-class CourseType(models.Model):
-   coursetype_name = models.CharField(max_length=50)
-   def __str__(self):
-      return self.coursetype_name
-
-class Batch(models.Model):
-   batch_name = models.CharField(max_length=50)
-   coursetype=models.ForeignKey(CourseType,on_delete=models.CASCADE)
-   stdate = models.DateField()
-   enddate = models.DateField()
-   def __str__(self):
-      return self.batch_name
-
-class BatchCourse(models.Model):
-   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
-   course=models.ForeignKey(Course,on_delete=models.CASCADE)
-
-class BatchTrainer(models.Model):
-   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
-   trainer=models.ForeignKey(User,on_delete=models.CASCADE)
-
-class Batchlearner(models.Model):
-   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
-   learner=models.ForeignKey(User,on_delete=models.CASCADE)
-   fee = models.IntegerField(default=0)
-
-class LearnerFee(models.Model):
-   learner=models.ForeignKey(User,on_delete=models.CASCADE)
-   paiddate = models.DateField()
-   fee = models.IntegerField(default=0)
-
-class PassionateSkill(models.Model):
-   passionateskill_name = models.CharField(max_length=200)
-   def __str__(self):
-        return self.passionateskill_name
-
-class KnownSkill(models.Model):
-   knownskill_name = models.CharField(max_length=200)
-   def __str__(self):
-        return self.knownskill_name
-
-class LearnerDetails(models.Model):
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-    user_full_name = models.CharField(max_length=200)
-    mobile = models.IntegerField(default=0)
-    iswhatsapp = models.BooleanField(default=False)
-    whatsappno = models.IntegerField(default=0)
-    
-class LearnerDetailsPSkill(models.Model):
-    learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.CASCADE)
-    passionateskill=models.ForeignKey(PassionateSkill,on_delete=models.CASCADE)
-
-class LearnerDetailsKSkill(models.Model):
-    learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.CASCADE)
-    knownskill=models.ForeignKey(KnownSkill,on_delete=models.CASCADE)
-
-class IsFirstLogIn(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
-    def __str__(self):
-        return self.user
-
-
-class Exam(models.Model):
-   batch=models.ForeignKey(Batch,on_delete=models.CASCADE)
-   exam_name = models.CharField(max_length=50)
-   cat=(('MCQ','MCQ'),('ShortAnswer','ShortAnswer'))
-   questiontpye=models.CharField(max_length=200,choices=cat,default='')
-   def __str__(self):
-        return self.exam_name
-
-class McqQuestion(models.Model):
-   exam=models.ForeignKey(Exam,on_delete=models.CASCADE)
-   question=models.CharField(max_length=600)
-   option1=models.CharField(max_length=200)
-   option2=models.CharField(max_length=200)
-   option3=models.CharField(max_length=200)
-   option4=models.CharField(max_length=200)
-   cat=(('1','Option1'),('2','Option2'),('3','Option3'),('4','Option4'))
-   answer=models.CharField(max_length=200,choices=cat)
-   marks=models.IntegerField(default=0)
-
-class McqResult(models.Model):
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-    exam = models.ForeignKey(Exam,on_delete=models.CASCADE)
-    marks = models.PositiveIntegerField()
-    wrong = models.PositiveIntegerField()
-    correct = models.PositiveIntegerField()
-    timetaken = models.CharField(max_length=200)
-    date = models.DateTimeField(auto_now=True)
-
-class McqResultDetails(models.Model):
-    mcqresult=models.ForeignKey(McqResult,on_delete=models.CASCADE)
-    question = models.ForeignKey(McqQuestion,on_delete=models.CASCADE)
-    selected=models.CharField(max_length=200)
-
-class ShortQuestion(models.Model):
-   exam=models.ForeignKey(Exam,on_delete=models.CASCADE)
-   question=models.CharField(max_length=600)
-   marks=models.IntegerField(default=0)
-
-class ShortResult(models.Model):
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-    exam = models.ForeignKey(Exam,on_delete=models.CASCADE)
-    marks = models.PositiveIntegerField()
-    datecreate = models.DateTimeField(auto_now=True)
-    status= models.BooleanField(default=False)
-    timetaken = models.CharField(max_length=200)
-
-class ShortResultDetails(models.Model):
-    shortresult=models.ForeignKey(ShortResult,on_delete=models.CASCADE)
-    question=models.ForeignKey(ShortQuestion,on_delete=models.CASCADE)
-    marks=models.PositiveIntegerField()
-    answer=models.CharField(max_length=200)
-    feedback=models.CharField(max_length=200,default='')
-   
-class VideoTopicCount(models.Model):
-   video=models.ForeignKey(Video,on_delete=models.CASCADE)
-   TopicCovered=models.PositiveIntegerField(default=0)
-
-class VideoTimeLine(models.Model):
-    video=models.ForeignKey(Video,on_delete=models.CASCADE)
-    learner_id=models.PositiveIntegerField(default=0)
-    TopicName=models.CharField(max_length=600)
-    VideoTime=models.CharField(max_length=600)
-    cat=(('Approved','Approved'),('Rejected','Rejected'),('Pending','Pending'))
-    status=models.CharField(max_length=200,choices=cat, default= 'Pending')
-
-class VideoToUnlock(models.Model):
-    video=models.ForeignKey(Video,on_delete=models.CASCADE)
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-
-class VideoWatched(models.Model):
-    video=models.ForeignKey(Video,on_delete=models.CASCADE)
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-
-class WaringMail(models.Model):
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-    usermailid=models.TextField()
-    mailed=models.TextField()
-    totvideo = models.IntegerField(default=0)
-    watched = models.IntegerField(default=0)
-    watchedperc = models.DecimalField(max_digits=5, decimal_places=2)
-    pending = models.IntegerField(default=0)
-    datetimestamp = models.DateTimeField()
-
-class Material(models.Model):
-    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-    chapter=models.ForeignKey(Video,on_delete=models.CASCADE)
-    mtype=models.PositiveIntegerField(default=0)
-    urlvalue=models.TextField()
-    description=models.TextField()
-
-class SubjectMaterial(models.Model):
-    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-    mtype=models.PositiveIntegerField(default=0)
-    urlvalue=models.TextField()
-    description=models.TextField()
-
-class K8STerminal(models.Model):
-    trainer=models.ForeignKey(User,on_delete=models.CASCADE, related_name='%(class)s_requests_trainer')
-    learner=models.ForeignKey(User,on_delete=models.CASCADE, related_name='%(class)s_requests_learner')
-    Password=models.TextField()
-    usagevalue=models.PositiveIntegerField(default=0)
-
-class K8STerminalLearnerCount(models.Model):
-    learner=models.ForeignKey(User,on_delete=models.CASCADE)
-    usedvalue=models.PositiveIntegerField(default=0)
-
-
-
-class CrudUser(models.Model):
-    name = models.CharField(max_length=30, blank=True)
-    address = models.CharField(max_length=100, blank=True)
-    age = models.IntegerField(blank=True, null=True)
-
-class LiveSession(models.Model):
-    trainer=models.ForeignKey(User,on_delete=models.CASCADE)
-    subject=models.ForeignKey(Playlist,on_delete=models.CASCADE)
-    password = models.CharField(max_length=30, blank=True)
-
-class LiveQuestion(models.Model):
-    livesession=models.ForeignKey(LiveSession,on_delete=models.CASCADE)
-    question = models.CharField(max_length=500, blank=True)
-
-class LiveSessionUsers(models.Model):
-    livesession=models.ForeignKey(LiveSession,on_delete=models.CASCADE)
-    livequestion=models.ForeignKey(LiveQuestion,on_delete=models.CASCADE)
-    answer = models.CharField(max_length=500, blank=True)
-    correct = models.BooleanField(default=0)
-

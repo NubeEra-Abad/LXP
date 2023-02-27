@@ -246,10 +246,6 @@ class PlaylistManager(models.Manager):
                         video=video
                     )
                     playlist_item.save()
-                    LXPModel.Topic.objects.create(topic_name='not applicable',
-                                                    subject = playlist,
-                                                    chapter = video
-                                                ).save()
                 else:  # video found in user's db
                     if playlist.playlist_items.filter(playlist_item_id=playlist_item_id).exists():
                         ####print("PLAYLIST ITEM ALREADY EXISTS")
@@ -294,11 +290,6 @@ class PlaylistManager(models.Manager):
 
                     )
                     playlist_item.save()
-                    LXPModel.Topic.objects.create(topic_name='not applicable',
-                                subject = playlist,
-                                chapter = video
-                            ).save()
-
                     # check if the video became unavailable on youtube
                     if not video.is_unavailable_on_yt and not video.was_deleted_on_yt and (
                             item['snippet']['title'] == "Deleted video" or
@@ -362,10 +353,6 @@ class PlaylistManager(models.Manager):
                                 video=video
                             )
                             playlist_item.save()
-                            LXPModel.Topic.objects.create(topic_name='not applicable',
-                                subject = playlist,
-                                chapter = video
-                            ).save()
                         else:  # video found in user's db
                             video = LXPModel.Video.objects.get(video_id=video_id)
 
@@ -392,11 +379,7 @@ class PlaylistManager(models.Manager):
                                 is_duplicate=is_duplicate
                             )
                             playlist_item.save()
-                            LXPModel.Topic.objects.create(topic_name='not applicable',
-                                subject = playlist,
-                                chapter = video
-                            ).save()
-
+                            
                             # check if the video became unavailable on youtube
                             if not video.is_unavailable_on_yt and not video.was_deleted_on_yt and (
                                     item['snippet']['title'] == "Deleted video" or
@@ -723,11 +706,6 @@ class PlaylistManager(models.Manager):
                         is_duplicate=is_duplicate
                     )
                     playlist_item.save()
-                    LXPModel.Topic.objects.create(topic_name='not applicable',
-                                subject = playlist,
-                                chapter = video
-                            ).save()
-
                     video.video_details_modified = True
                     video.save(
                         update_fields=['video_details_modified', 'was_deleted_on_yt'])
@@ -826,11 +804,6 @@ class PlaylistManager(models.Manager):
                                 is_duplicate=is_duplicate
                             )
                             playlist_item.save()
-                            LXPModel.Topic.objects.create(topic_name='not applicable',
-                                subject = playlist,
-                                chapter = video
-                            ).save()
-
                             video.video_details_modified = True
                             video.save(update_fields=['video_details_modified',
                                                       'was_deleted_on_yt'])

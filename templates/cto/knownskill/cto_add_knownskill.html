@@ -1,29 +1,15 @@
 {% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<style>
-  a:link {
-    text-decoration: none;
-  }
-</style>
-</head>
-<body>
+
 <div>
-<ol class="breadcrumb text-right">
-  <li><a href="cto-dashboard">Dashboard</a></li>
-  <li><a href="cto-view-knownskill">View Known Skills</a></li>
-  <li class="active">Add Known Skill</li>
-</ol>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-knownskill">View Known Skills</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Add Known Skill</li>
+    </ol>
+  </nav>
 </div>
 <h2 style="text-align:center; color:blue;">Add Known Skill</h2>
 <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
@@ -41,5 +27,4 @@
     {{ message }}
   {% endfor %}
 {% endif %}
-<br><br><br>
 {% endblock content %}
