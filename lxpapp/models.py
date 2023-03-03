@@ -104,16 +104,12 @@ class CourseDetails(models.Model):
     
 class CourseSet(models.Model):
     courseset_name = models.CharField(max_length=200)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-
     def __str__(self):
         return self.courseset_name
 
 class CourseSetDetails(models.Model):
     courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
     module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
@@ -386,3 +382,23 @@ class Pin(models.Model):
 class IncludePlaylist(models.Model):
     playlist = models.ForeignKey(Playlist, on_delete=models.SET_NULL, null=True)
 ##############################################################################
+
+class TrainerNotification(models.Model):
+    trainernotification_message = models.CharField(max_length=200)
+    status = models.BooleanField(default=False)
+    trainer = models.ForeignKey(User, related_name="trainers",
+                                 on_delete=models.SET_NULL, null=True)
+    sender = models.ForeignKey(User, related_name="senders",
+                                 on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return self.trainernotification_message
+
+class Material(models.Model):
+    subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
+    module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
+    topic=models.ForeignKey(Topic,on_delete=models.SET_NULL, null=True)
+    cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))
+    mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
+    urlvalue=models.CharField(max_length=200)
+    description=models.CharField(max_length=200)

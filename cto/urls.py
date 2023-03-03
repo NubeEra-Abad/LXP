@@ -73,4 +73,10 @@ urlpatterns = [
     path('cto-sync-youtube-start', views.cto_sync_youtube_start_view,name='cto-sync-youtube-start'),
     path('cto-sync-youtube-byselected-playlist-start', views.cto_sync_youtube_byselected_playlist_start_view,name='cto-sync-youtube-byselected-playlist-start'),
     
+    path('cto-trainernotification', views.cto_trainernotification_view,name='cto-trainernotification'),
+    path('cto-add-trainernotification', views.cto_add_trainernotification_view,name='cto-add-trainernotification'),
+    path('cto-update-trainernotification/<int:pk>', views.cto_update_trainernotification_view,name='cto-update-trainernotification'),
+    path('cto-view-trainernotification', views.cto_view_trainernotification_view,name='cto-view-trainernotification'),
+    path('cto-delete-trainernotification/<int:pk>', views.cto_delete_trainernotification_view,name='cto-delete-trainernotification'),
+
 ]

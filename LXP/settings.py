@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'lxpapp',
     'cto',
+    'cfo',
     'trainer',
-    'learner',
     'widget_tweaks',
     'social_django',        #add this
     'django.contrib.humanize',  # A set of Django template filters useful for adding a “human touch” to data.
@@ -138,7 +138,7 @@ STATICFILES_DIRS=[
 STATIC_DIR,
  ]
 
-LOGIN_REDIRECT_URL='/afterlogin'
+LOGIN_REDIRECT_URL='/indexpage'
 
 #for contact us give your gmail id and password
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'

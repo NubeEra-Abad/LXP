@@ -16,7 +16,7 @@ urlpatterns = [
     path('trainer/',include('trainer.urls')),
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
-    path('afterlogin', views.afterlogin_view,name='afterlogin'),   
+    path('indexpage', views.afterlogin_view,name='indexpage'),   
 
     path('adminclick', views.adminclick_view),
     path('adminlogin', LoginView.as_view(template_name='lxpapp/adminlogin.html'),name='adminlogin'),

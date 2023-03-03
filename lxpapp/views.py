@@ -15,7 +15,7 @@ def login(request):
 @login_required
 def home(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')  
+        return HttpResponseRedirect('indexpage')  
     return render(request,'lxpapp/404page.html')
 
 def afterlogin_view(request):
@@ -28,7 +28,9 @@ def afterlogin_view(request):
             if xx.utype == 1:
                 if xx.status:
                     request.session['utype'] = 'trainer'
-                    return render(request,'trainer/trainer_dashboard.html')
+                    notification = models.TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
+                    counternotification = notification.__len__()
+                    return render(request,'trainer/trainer_dashboard.html',{'notifications':notification,'totnotification':counternotification})
                 else:
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                     return render(request,'loginrelated/wait_for_approval.html')
@@ -143,7 +145,7 @@ def afterlogin_view(request):
 
 def adminclick_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return HttpResponseRedirect('indexpage')
     return HttpResponseRedirect('adminlogin')
 
 @login_required

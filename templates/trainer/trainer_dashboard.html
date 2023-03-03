@@ -2,11 +2,9 @@
 {% load widget_tweaks %}
 {% block content %}
 
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link href="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
@@ -129,7 +127,9 @@
       
     </div>
   </div>
-
+  {% for t in notification %}
+  <a class="dropdown-item" href="#">{{t.trainernotification_name}}</a>
+  {% endfor %}
 
 <br><br><br><br><br><br><br><br><br><br>
 

@@ -110,9 +110,28 @@ class CourseForm(forms.ModelForm):
             self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
 
 class CourseSetForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CourseSetForm, self).__init__(*args, **kwargs)
     class Meta:
-        model = models.CourseSet
-        fields = ('courseset_name', 'subject', 'module', 'chapter', 'topic')
+        model=models.CourseSet
+        fields=['courseset_name']
+
+from social_django.models import UserSocialAuth
+class TrainerNotificationForm(forms.ModelForm):
+    trainerID=forms.ModelChoiceField(queryset=UserSocialAuth.objects.all().filter(utype = '1',user_id__in=models.User.objects.all().order_by('first_name')),empty_label="Trainer Name", to_field_name="id")
+    trainernotification_message = forms.CharField(
+        max_length=255,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    class Meta:
+        model=models.TrainerNotification
+        fields=['trainernotification_message']        
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = models.Material
+        fields = ('subject', 'module', 'chapter', 'topic','mtype','urlvalue','description')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -148,4 +167,3 @@ class CourseSetForm(forms.ModelForm):
                 pass  # invalid input from the client; ignore and fallback to empty Topic queryset
         elif self.instance.pk:
             self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
-

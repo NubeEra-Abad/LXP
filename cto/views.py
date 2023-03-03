@@ -19,7 +19,7 @@ from django.urls import reverse
 @login_required
 def ctoclick_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return HttpResponseRedirect('indexpage')
     return render(request,'cto/ctoclick.html')
 
 @login_required    
@@ -703,6 +703,10 @@ def cto_upload_course_details_csv_view(request):
         course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
         if course:
             messages.info(request, 'Course Name Already Exist')
+        elif coursetext == '':
+            messages.info(request, 'Please enter Course Name')
+        elif request.POST.get('select_file') == '':
+            messages.info(request, 'Please select CSV file for upload')
         else:
             course = LXPModel.Course.objects.create(course_name = coursetext)
             course.save()     
@@ -722,8 +726,8 @@ def cto_upload_course_details_csv_view(request):
                 no = no + 1
                 if no > 1:
                     fields = line.split(",")
-                    if fields[0] != oldsub:
-                        oldsub = fields[0]
+                    if str(fields[0]).replace('///',',') != oldsub:
+                        oldsub = str(fields[0]).replace('///',',')
                         sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
                         if not sub:
                             sub = LXPModel.Subject.objects.create(subject_name = oldsub )
@@ -732,8 +736,8 @@ def cto_upload_course_details_csv_view(request):
                         else:
                             for x in sub:
                                 subid=x.id  
-                    if fields[1] != oldmod:
-                        oldmod = fields[1] 
+                    if str(fields[1]).replace('///',',') != oldmod:
+                        oldmod = str(fields[1]).replace('///',',')
                         mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
                         if not mod:
                             mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
@@ -742,8 +746,8 @@ def cto_upload_course_details_csv_view(request):
                         else:
                             for x in mod:
                                 modid=x.id 
-                    if fields[2] != oldchap:
-                        oldchap = fields[2] 
+                    if str(fields[2]).replace('///',',') != oldchap:
+                        oldchap = str(fields[2]).replace('///',',')
                         chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
                         if not chap:
                             chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
@@ -752,8 +756,8 @@ def cto_upload_course_details_csv_view(request):
                         else:
                             for x in chap:
                                 chapid=x.id 
-                    if fields[3] != oldtop:
-                        oldtop = fields[3] 
+                    if str(fields[3]).replace('///',',') != oldtop:
+                        oldtop = str(fields[3]).replace('///',',') 
                         top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
                         if not top:
                             top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
@@ -814,6 +818,7 @@ def cto_add_courseset_view(request):
             # data = serialize("json", courses)
             objects_list = []
             for row in courses:
+                
                 d = collections.OrderedDict()
                 d["course_name"] = row.course_name
                 d["subject_name"] = row.subject_name
@@ -823,7 +828,16 @@ def cto_add_courseset_view(request):
                 objects_list.append(d)
             j = json.dumps(objects_list)
             
-
+            import ast
+            
+            # List Initialization
+            Input =  list(course.values())#['12, 454', '15.72, 82.85', '52.236, 25256', '95.9492, 72.906']
+            
+            # using ast to convert
+            Output = [list(ast.literal_eval(x)) for x in Input]
+            
+            # printing
+            print(Output)
             if request.method=='POST':
                 coursesetForm=LXPFORM.CourseSetForm(request.POST)
                 coursesettext = request.POST.get('courseset_name')
@@ -900,7 +914,7 @@ def cto_view_courseset_view(request):
 def cto_view_courseset_details_view(request,coursesetname,pk):
     #try:
         if str(request.session['utype']) == 'cto':
-            coursesets = LXPModel.CourseSet.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_courseset ON (lxpapp_coursesetdetails.courseset_id = lxpapp_courseset.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursesetdetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_module ON (lxpapp_coursesetdetails.module_id = lxpapp_module.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursesetdetails.courseset_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')
+            coursesets = LXPModel.CourseSet.objects.raw('SELECT 1 as id,lxpapp_course.course_name,  lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_courseset ON (lxpapp_coursesetdetails.courseset_id = lxpapp_courseset.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursesetdetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_module ON (lxpapp_coursesetdetails.module_id = lxpapp_module.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id) INNER JOIN lxpapp_course ON (LXPAPP_COURSESETDETAILS.course_id = lxpapp_course.id) WHERE lxpapp_coursesetdetails.courseset_id = ' + str(pk) + ' ORDER BY lxpapp_course.course_name, lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')
             return render(request,'cto/courseset/cto_view_courseset_details.html',{'coursesets':coursesets,'coursesetname':coursesetname})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -935,10 +949,12 @@ def cto_upload_courseset_details_csv_view(request):
             oldmod=''
             oldchap=''
             oldtop=''
+            oldcourse=''
             subid =0
             modid=0
             chapid=0
             topid=0
+            courseid = 0
             no = 0
             for line in lines:						
                 no = no + 1
@@ -980,16 +996,36 @@ def cto_upload_courseset_details_csv_view(request):
                         if not top:
                             top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
                             top.save()
-                            topid1=top.id 
+                            topid=top.id 
                         else:
                             for x in top:
-                                topid1=x.id 
-                    coursesetdet = LXPModel.CourseSetDetails.objects.create(
-                                courseset_id =courseset.id,
+                                topid=x.id
+                    if fields[4] != oldcourse:
+                        oldcourse = fields[4] 
+                        oldcourse=str(oldcourse).replace('\r','')
+                        course = LXPModel.Course.objects.all().filter(course_name__exact = oldcourse)
+                        if not course:
+                            course = LXPModel.Course.objects.create(Course_name = oldcourse)
+                            course.save()
+                            coursedet = LXPModel.CourseDetails.objects.create(
+                                course_id =course.id,
                                 subject_id=subid,
                                 module_id=modid,
                                 chapter_id=chapid,
-                                topic_id=topid1
+                                topic_id=topid
+                                )
+                            coursedet.save()
+                            courseid=course.id 
+                        else:
+                            for x in course:
+                                courseid=x.id
+                    coursesetdet = LXPModel.CourseSetDetails.objects.create(
+                                courseset_id =courseset.id,
+                                course_id =courseid,
+                                subject_id=subid,
+                                module_id=modid,
+                                chapter_id=chapid,
+                                topic_id=topid
                                 )
                     coursesetdet.save()
     return render(request,'cto/courseset/cto_upload_courseset_details_csv.html')
@@ -1138,3 +1174,81 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
 def get_message_from_httperror(e):
     return e.error_details[0]['message']
 ######################################################################
+
+
+@login_required
+def cto_trainernotification_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            return render(request,'cto/trainernotification/cto_trainernotification.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_add_trainernotification_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                trainernotificationForm=LXPFORM.TrainerNotificationForm(request.POST)
+                if trainernotificationForm.is_valid(): 
+                    trainernotificationtext = trainernotificationForm.cleaned_data["trainernotification_message"]
+                    trainernotification = LXPModel.TrainerNotification.objects.all().filter(trainernotification_message__iexact = trainernotificationtext)
+                    if trainernotification:
+                        messages.info(request, 'TrainerNotification Name Already Exist')
+                        trainernotificationForm=LXPFORM.TrainerNotificationForm()
+                        return render(request,'cto/trainernotification/cto_add_trainernotification.html',{'trainernotificationForm':trainernotificationForm})                  
+                    else:
+                        trainernotification = LXPModel.TrainerNotification.objects.create(
+                            trainer_id = trainernotificationForm.cleaned_data["trainerID"].user_id,
+                            sender_id = request.user.id,
+                            status = False,
+                            trainernotification_message =trainernotificationtext
+                        )
+                        trainernotification.save()
+                else:
+                    print("form is invalid")
+            trainernotificationForm=LXPFORM.TrainerNotificationForm()
+            return render(request,'cto/trainernotification/cto_add_trainernotification.html',{'trainernotificationForm':trainernotificationForm})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_update_trainernotification_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':
+            trainernotification = LXPModel.TrainerNotification.objects.get(id=pk)
+            trainernotificationForm=LXPFORM.TrainerNotificationForm(request.POST,instance=trainernotification)
+            if request.method=='POST':
+                if trainernotificationForm.is_valid(): 
+                    trainernotificationtext = trainernotificationForm.cleaned_data["trainernotification_message"]
+                    trainernotification = LXPModel.TrainerNotification.objects.all().filter(trainernotification_message__iexact = trainernotificationtext).exclude(id=pk)
+                    if trainernotification:
+                        messages.info(request, 'TrainerNotification Name Already Exist')
+                        return render(request,'cto/trainernotification/cto_update_trainernotification.html',{'trainernotificationForm':trainernotificationForm})
+                    else:
+                        trainernotificationForm.save()
+                        trainernotifications = LXPModel.TrainerNotification.objects.all()
+                        return render(request,'cto/trainernotification/cto_view_trainernotification.html',{'trainernotifications':trainernotifications})
+            return render(request,'cto/trainernotification/cto_update_trainernotification.html',{'trainernotificationForm':trainernotificationForm,'sub':trainernotification.trainernotification_message})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_view_trainernotification_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            trainernotifications = LXPModel.TrainerNotification.objects.all()
+            return render(request,'cto/trainernotification/cto_view_trainernotification.html',{'trainernotifications':trainernotifications})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_delete_trainernotification_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            trainernotification=LXPModel.TrainerNotification.objects.get(id=pk)
+            trainernotification.delete()
+        trainernotifications = LXPModel.TrainerNotification.objects.all()
+        return render(request,'cto/trainernotification/cto_view_trainernotification.html',{'trainernotifications':trainernotifications})
+    except:
+        return render(request,'lxpapp/404page.html')

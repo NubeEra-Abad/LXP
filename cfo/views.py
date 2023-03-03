@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def cfoclick_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return HttpResponseRedirect('indexpage')
     return render(request,'cfo/cfoclick.html')
 
 @login_required    

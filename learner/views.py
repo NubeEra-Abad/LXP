@@ -6,7 +6,7 @@ from django.shortcuts import render
 @login_required
 def learnerclick_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return HttpResponseRedirect('indexpage')
     return render(request,'learner/learnerclick.html')
 
 @login_required
