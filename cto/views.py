@@ -794,7 +794,6 @@ def cto_upload_course_details_csv_view(request):
                     coursedet.save()
     return render(request,'cto/course/cto_upload_course_details_csv.html')
 
-
 @login_required
 def cto_courseset_view(request):
     try:
