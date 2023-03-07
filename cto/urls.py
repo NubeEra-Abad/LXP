@@ -59,7 +59,7 @@ urlpatterns = [
     path('cto-view-courseset-details/<coursesetname>/<int:pk>', views.cto_view_courseset_details_view,name='cto-view-courseset-details'),
     path('cto-delete-courseset/<int:pk>', views.cto_delete_courseset_view,name='cto-delete-courseset'),
     path('cto-upload-courseset-details-csv', views.cto_upload_courseset_details_csv_view,name='cto-upload-courseset-details-csv'),
-
+    
     path('course_changelist', views.CourseListView.as_view(), name='course_changelist'),
     path('add/', views.CourseCreateView.as_view(), name='course_add'),
     path('<int:pk>/', views.CourseUpdateView.as_view(), name='course_change'),

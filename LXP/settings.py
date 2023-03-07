@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'LXP.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'LXP_Product.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'LXP.sqlite3'),
     }
 }
 

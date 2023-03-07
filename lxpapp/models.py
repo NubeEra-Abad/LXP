@@ -104,12 +104,16 @@ class CourseDetails(models.Model):
     
 class CourseSet(models.Model):
     courseset_name = models.CharField(max_length=200)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+
     def __str__(self):
         return self.courseset_name
 
 class CourseSetDetails(models.Model):
     courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
     module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
@@ -117,6 +121,20 @@ class CourseSetDetails(models.Model):
 
     def __str__(self):
         return self.courseset
+    def to_dict(c):
+            if isinstance(c, CourseSetDetails):
+                dict = {
+                    "id": c.id,
+                    "courseset_name": c.courseset.courseset_name,
+                    "subject_name": c.subject.subject_name,
+                    "module_name": c.module.module_name,
+                    "chapter_name": c.chapter.chapter_name,
+                    "topic_name": c.topic.topic_name
+                }
+                return dict
+            else:
+                type_name = c.__class__.__name__
+                raise TypeError("Unexpected type {0}".format(type_name))
 ###################################
 def getHumanizedTimeString(seconds):
       return humanize.precisedelta(
@@ -402,3 +420,9 @@ class Material(models.Model):
     mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
     urlvalue=models.CharField(max_length=200)
     description=models.CharField(max_length=200)
+
+class CourseType(models.Model):
+    coursetype_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.coursetype_name

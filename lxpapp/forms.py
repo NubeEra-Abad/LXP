@@ -110,11 +110,44 @@ class CourseForm(forms.ModelForm):
             self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
 
 class CourseSetForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(CourseSetForm, self).__init__(*args, **kwargs)
     class Meta:
-        model=models.CourseSet
-        fields=['courseset_name']
+        model = models.CourseSet
+        fields = ('courseset_name', 'subject', 'module', 'chapter', 'topic')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['module'].queryset = models.Module.objects.none()
+
+        if 'subject' in self.data:
+            try:
+                subject_id = int(self.data.get('subject'))
+                self.fields['module'].queryset = models.Module.objects.filter(subject_id=subject_id).order_by('module_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['module'].queryset = self.instance.subject.module_set.order_by('subject_name')
+
+        self.fields['chapter'].queryset = models.Module.objects.none()
+        if 'module' in self.data:
+            try:
+                module_id = int(self.data.get('module'))
+                self.fields['chapter'].queryset = models.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['chapter'].queryset = self.instance.module.chapter_set.order_by('chapter_name')
+
+
+        self.fields['topic'].queryset = models.Chapter.objects.none()
+        if 'chapter' in self.data:
+            try:
+                chapter_id = int(self.data.get('chapter'))
+                self.fields['topic'].queryset = models.Topic.objects.filter(chapter_id=chapter_id).order_by('topic_name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty Topic queryset
+        elif self.instance.pk:
+            self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
 
 from social_django.models import UserSocialAuth
 class TrainerNotificationForm(forms.ModelForm):
@@ -167,3 +200,13 @@ class MaterialForm(forms.ModelForm):
                 pass  # invalid input from the client; ignore and fallback to empty Topic queryset
         elif self.instance.pk:
             self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
+
+class CourseTypeForm(forms.ModelForm):
+    coursetype_name = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    class Meta:
+        model=models.CourseType
+        fields=['coursetype_name']
