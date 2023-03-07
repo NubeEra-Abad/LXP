@@ -31,7 +31,15 @@
     }
   </script>
 </head>
-
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="../../../../cto/cto-add-course">Add Course</a></li>
+    <li class="breadcrumb-item"><a href="../../../../cto/cto-view-course">View Course</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Upload a Course CSV File</li>
+  </ol>
+</nav>
+</div>
   <div class="container">
     <h4>Upload a Course CSV File: </h4>
     <form onsubmit="return validateForm()" method="POST" enctype="multipart/form-data">

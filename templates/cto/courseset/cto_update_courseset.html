@@ -6,75 +6,78 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <style>
-    a:link {
-      text-decoration: none;
-    }
-  </style>
+
 </head>
 
 <body>
   <div>
-    <ol class="breadcrumb text-right">
-      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
-      <li><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
-      <li class="active">Update Course Set</li>
-    </ol>
-  </div>
-  <h2 style="text-align:center; color:blue;">Update Course Set</h2>
-  <form method="POST" id="coursesetForm" data-modules-url="{% url 'ajax_load_modules' %}" autocomplete="off"
-    style="margin:100px;margin-top: 0px;">
-    {%csrf_token%}
-    <div class="form-group">
-      <div class="container">
-        <input type="hidden" name="myvalue" id="myvalue">
-        <label for="courseset_name">Course Set Name</label>
-        {% render_field coursesetForm.courseset_name class="form-control" placeholder="courseset Name" value=coursesetname %}
-        <BR><BR>
-        <div class="row">
-          <div class="col-md-3 col-xl-3">
-            <label for="subject_name">Subject Name</label>
-            {% render_field coursesetForm.subject class="form-control"%}
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
+        <li class="breadcrumb-item"><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Update Course Set</li>
+      </ol>
+    </nav>
+    <h2 style="text-align:center; color:blue;">Update Course Set</h2>
+    <form method="POST" id="coursesetForm" data-modules-url="{% url 'ajax_load_modules' %}" autocomplete="off"
+      style="margin:100px;margin-top: 0px;">
+      {%csrf_token%}
+      <div class="form-group">
+        <div class="container">
+          <input type="hidden" name="myvalue" id="myvalue">
+          <label for="courseset_name">Course Set Name</label>
+          {% render_field coursesetForm.courseset_name class="form-control" placeholder="courseset Name" value=coursesetname %}
+          <BR><BR>
+          <div class="row">
+            <div class="col-md-3 col-xl-3">
+              <label for="subject_name">Subject Name</label>
+              {% render_field coursesetForm.subject class="form-control"%}
+            </div>
+            <div class="col-md-3 col-xl-3">
+              <label for="module_name">Module Name</label>
+              {% render_field coursesetForm.module class="form-control"%}
+            </div>
+            <div class="col-md-3 col-xl-3">
+              <label for="chapter_name">Chapter Name</label>
+              {% render_field coursesetForm.chapter class="form-control"%}
+            </div>
+            <div class="col-md-3 col-xl-3">
+              <label for="topic_name">Topic Name</label>
+              {% render_field coursesetForm.topic class="form-control"%}
+            </div>
           </div>
-          <div class="col-md-3 col-xl-3">
-            <label for="module_name">Module Name</label>
-            {% render_field coursesetForm.module class="form-control"%}
-          </div>
-          <div class="col-md-3 col-xl-3">
-            <label for="chapter_name">Chapter Name</label>
-            {% render_field coursesetForm.chapter class="form-control"%}
-          </div>
-          <div class="col-md-3 col-xl-3">
-            <label for="topic_name">Topic Name</label>
-            {% render_field coursesetForm.topic class="form-control"%}
-          </div>
-        </div>
 
 
-        <div class="row">
-          <div class="col-md-3 col-xl-3">
+          <div class="row">
+            <div class="col-md-3 col-xl-3">
+            </div>
+            <div class="col-md-3 col-xl-3">
+            </div>
+            <div class="col-md-3 col-xl-3">
+            </div>
+            <div class="col-md-3 col-xl-3">
+              <br>
+              <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Details">
+
+            </div>
           </div>
+          <p id="demo"></p>
           <div class="col-md-3 col-xl-3">
-          </div>
-          <div class="col-md-3 col-xl-3">
-          </div>
-          <div class="col-md-3 col-xl-3">
-            <br>
-            <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Details">
+            <button class="btn btn-primary form-control" type="submit"
+              onclick="return generateJSON(event);">SUBMIT</button>
 
           </div>
-        </div>
-        <p id="demo"></p>
-        <div class="col-md-3 col-xl-3">
-          <button class="btn btn-primary form-control" type="submit"
-            onclick="return generateJSON(event);">SUBMIT</button>
-
         </div>
       </div>
-    </div>
+      <div id="waiting" style="display:none">
+        <img src="/static/image/processing-gif-image-5.gif">
+      </div>
+  </div>
   </form>
+
   <script>
+    var products = [];
     debugger;
     var mylist = {{ coursesets| safe}}; // Be aware that there are no quotes or double quotes. 
     var html = "<table id='tblData' border='1|1' >";
@@ -83,22 +86,26 @@
     html += "<td>Module</td>";
     html += "<td>Chapter</td>";
     html += "<td>Topic</td>";
+    html += "<td>Action</td>";
+    var counter = 0;
     for (s of mylist) {
+      counter = counter + 1;
       var newProduct = {
-        id: s.id,
+        id: counter,
         subject: s.subject_name,
         module: s.module_name,
         chapter: s.chapter_name,
         topic: s.topic_name,
+
       };
       products.push(newProduct);
       html += "<tr>";
-      html += "<td>" + s.id + "</td>";
+      html += "<td>" + counter + "</td>";
       html += "<td>" + s.subject_name + "</td>";
       html += "<td>" + s.module_name + "</td>";
       html += "<td>" + s.chapter_name + "</td>";
       html += "<td>" + s.topic_name + "</td>";
-      html += "<td><button type='submit' onClick='deleteProduct(\"" + s.id + "\", this);'/>Delete Item</button></td>";
+      html += "<td><button type='submit' onClick='deleteProduct(\"" + counter + "\", this);'/>Delete Item</button></td>";
       html += "</tr>";
     }
 
@@ -112,10 +119,11 @@
     function myfunction() {
       $("select").removeAttr("required");
     }
-    var products = [];
+
     var jsonData = [];
 
     function generateJSON(e) {
+      $('#waiting').show();
       //Store HTML Table Values into Multidimensional Javascript Array Object
       var TableData = new Array();
       $('#tblData tr').each(function (row, tr) {
@@ -128,7 +136,7 @@
       });
       TableData.shift(); // first row will be empty - so remove
       if (TableData == false) {
-        alert("Please Add Course Details");
+        alert("Please Add Course Set Details");
         e.preventDefault();
         return false;
       }
@@ -171,6 +179,17 @@
       newProduct.module = module_id + '-' + module_name;
       newProduct.chapter = chapter_id + '-' + chapter_name;
       newProduct.topic = topic_id + '-' + topic_name;
+
+      if (products.findIndex(f => f.subject === newProduct.subject) === -1 && products.findIndex(f => f.module === newProduct.module) === -1
+        && products.findIndex(f => f.chapter === newProduct.chapter) === -1
+        && products.findIndex(f => f.topic === newProduct.topic) === -1) {
+        console.log('not contain')
+      } else {
+        alert('Subject and its contents already selected\nPlease select diffrent contents.')
+        return
+      }
+
+
       if (subject_id <= 0) {
         alert('Please Select Subject')
         return

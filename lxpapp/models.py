@@ -70,10 +70,10 @@ class Topic(models.Model):
 
 class Course(models.Model):
     course_name = models.CharField(max_length=200)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
 
     def __str__(self):
         return self.course_name
@@ -104,10 +104,10 @@ class CourseDetails(models.Model):
     
 class CourseSet(models.Model):
     courseset_name = models.CharField(max_length=200)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
 
     def __str__(self):
         return self.courseset_name
@@ -135,6 +135,8 @@ class CourseSetDetails(models.Model):
             else:
                 type_name = c.__class__.__name__
                 raise TypeError("Unexpected type {0}".format(type_name))
+    
+
 ###################################
 def getHumanizedTimeString(seconds):
       return humanize.precisedelta(

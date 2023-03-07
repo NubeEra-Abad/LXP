@@ -7,7 +7,7 @@
     function validateForm() {
       let x = document.forms[0]["courseset_name"].value;
       if (x == "") {
-        alert("Course Name must be filled out");
+        alert("Course Set Name must be filled out");
         return false;
       }
       var fileInput =
@@ -31,7 +31,15 @@
     }
   </script>
 </head>
-
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
+    <li class="breadcrumb-item"><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Upload a Course Set CSV File</li>
+  </ol>
+</nav>
+</div>
   <div class="container">
     <h4>Upload a Course Set CSV File: </h4>
     <form onsubmit="return validateForm()" method="POST" enctype="multipart/form-data">
