@@ -1012,8 +1012,9 @@ def cto_upload_courseset_details_csv_view(request):
                         else:
                             for x in mod:
                                 modid=x.id 
-                    if str(fields[2]).replace('///',',') != oldchap:
-                        oldchap = str(fields[2]).replace('///',',')
+                    tochk = str(fields[2]).replace('///',',').replace('\r','')
+                    if tochk != oldchap:
+                        oldchap = tochk
                         chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
                         if not chap:
                             chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
