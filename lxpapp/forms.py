@@ -147,3 +147,18 @@ class CourseTypeForm(forms.ModelForm):
     class Meta:
         model=models.CourseType
         fields=['coursetype_name']
+
+class BatchForm(forms.ModelForm):
+    coursetypeID=forms.ModelChoiceField(queryset=models.CourseType.objects.all(),empty_label="Course Type Name", to_field_name="id")
+    batch_name = forms.CharField(
+        max_length=255,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    class Meta:
+        model=models.Batch
+        fields=['batch_name','stdate','enddate']
+        widgets = {
+            'stdate': forms.DateInput(format='%d/%m/%Y'),
+            'enddate': forms.DateInput(format='%d/%m/%Y')
+        }

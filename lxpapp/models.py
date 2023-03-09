@@ -45,7 +45,10 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.subject_name
+        try:
+            return self.subject_name
+        except:
+            return self
 
 class Module(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
@@ -398,9 +401,7 @@ class Pin(models.Model):
     kind = models.CharField(max_length=100)  # "playlist", "video"
     playlist = models.ForeignKey(Playlist, on_delete=models.SET_NULL, null=True)
     video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True)
-
-class IncludePlaylist(models.Model):
-    playlist = models.ForeignKey(Playlist, on_delete=models.SET_NULL, null=True)
+    
 ##############################################################################
 
 class TrainerNotification(models.Model):
@@ -428,3 +429,28 @@ class CourseType(models.Model):
 
     def __str__(self):
         return self.coursetype_name
+
+class Batch(models.Model):
+   batch_name = models.CharField(max_length=50)
+   coursetype=models.ForeignKey(CourseType,on_delete=models.SET_NULL, null=True)
+   stdate = models.DateField()
+   enddate = models.DateField()
+   def __str__(self):
+      return self.batch_name
+
+class BatchCourseSet(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
+   courseset=models.ForeignKey(CourseSet,on_delete=models.SET_NULL, null=True)
+
+class BatchRecordedVDOList(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
+   playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)
+
+class BatchTrainer(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
+   trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+
+class Batchlearner(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
+   learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+   fee = models.IntegerField(default=0)

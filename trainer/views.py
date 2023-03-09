@@ -55,40 +55,38 @@ def trainer_add_material_view(request):
 def trainer_update_material_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':
-            material = LXPModel.Video.objects.get(id=pk)
-            materialForm=LXPFORM.MaterialForm(request.POST,instance=material)
+            materialForm=LXPFORM.MaterialForm(request.POST)
             if request.method=='POST':
-                if materialForm.is_valid(): 
-                    materialtext = materialForm.cleaned_data["name"]
-                    subjecttext = materialForm.cleaned_data["subjectID"]
-                    
-                    material = LXPModel.Video.objects.all().filter(name__iexact = materialtext).exclude(id=pk)
-                    if material:
-                        messages.info(request, 'Material Name Already Exist')
-                        return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm})
-                    else:
-                        subject = LXPModel.Playlist.objects.get(name=subjecttext)
-                        
-                        material = LXPModel.Video.objects.get(id=pk)
-                        oldsubject =LXPModel.PlaylistItem.objects.get(video_id=pk)
-                        material.name = materialtext
-                        material.save()
-                        PLItems = LXPModel.PlaylistItem.objects.get(video_id=pk,playlist_id = oldsubject.playlist_id)
-                        PLItems.playlist_id =subject.id
-                        PLItems.save()
-                        c_list = LXPModel.Video.objects.raw('SELECT   lxpapp_video.id,  lxpapp_video.name,  lxpapp_video.video_id,  lxpapp_playlist.name AS plname FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id)  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)')
-                        return render(request,'trainer/material/trainer_view_material.html',{'materials':c_list})
-            return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm,'sub':material.name})
+                subject = request.POST.get('subject')
+                module = request.POST.get('module')
+                chapter = request.POST.get('chapter')
+                topic = request.POST.get('topic')
+                mtype = request.POST.get('mtype')
+                urlvalue = request.POST.get('urlvalue')
+                description = request.POST.get('description')
+                
+                material = LXPModel.Material.objects.get(id=pk)
+                material.subject_id = subject
+                material.module_id = module
+                material.chapter_id = chapter
+                material.topic_id = topic
+                material.mtype = mtype
+                material.urlvalue = urlvalue
+                material.description = description
+                material.save()
+                materials = LXPModel.Material.objects.all()
+                return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
+            return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm})
     except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_material_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             materials = LXPModel.Material.objects.all()
             return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -104,7 +102,7 @@ def trainer_delete_material_view(request,pk):
 
 @login_required
 def trainer_show_material_view(request,materialtype,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             details= LXPModel.Material.objects.all().filter(id=pk)
             if materialtype == 'HTML':
@@ -115,7 +113,7 @@ def trainer_show_material_view(request,materialtype,pk):
                 return render(request,'trainer/material/trainer_material_pdfshow.html',{'details':details})
             if materialtype == 'Video':
                 return render(request,'trainer/material/trainer_material_videoshow.html',{'details':details})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -200,3 +198,89 @@ def trainer_material_start_upload_file_view(request):
             return output
         else:
             return redirect("/")
+
+@login_required
+def trainer_upload_material_details_csv_view(request):
+    if request.method=='POST':
+        if request.POST.get('select_file') == '':
+            messages.info(request, 'Please select CSV file for upload')
+        else:
+            csv_file = request.FILES["select_file"]
+            file_data = csv_file.read().decode("utf-8")		
+            lines = file_data.split("\n")
+            mat_type =''
+            mat_url =''
+            mat_desc =''
+            oldsub =''
+            oldmod=''
+            oldchap=''
+            oldtop=''
+            corsetid =0
+            subid =0
+            modid=0
+            chapid=0
+            topid=0
+            tochk=''
+            no = 0
+            for line in lines:						
+                no = no + 1
+                if no > 1:
+                    fields = line.split(",")
+                    mat_type = str(fields[4]).replace('///',',').replace('\r','')
+                    mat_url = str(fields[5]).replace('///',',').replace('\r','')
+                    mat_desc = str(fields[6]).replace('///',',').replace('\r','')
+                    tochk = str(fields[0]).replace('///',',').replace('\r','')
+                    if tochk != oldsub:
+                        oldsub = tochk
+                        sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+                        if not sub:
+                            sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+                            sub.save()
+                            subid=sub.id
+                        else:
+                            for x in sub:
+                                subid=x.id  
+                    tochk = str(fields[1]).replace('///',',').replace('\r','')
+                    if tochk != oldmod:
+                        oldmod = tochk
+                        mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
+                        if not mod:
+                            mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
+                            mod.save()
+                            modid=mod.id
+                        else:
+                            for x in mod:
+                                modid=x.id 
+                    tochk = str(fields[2]).replace('///',',').replace('\r','')
+                    if tochk != oldchap:
+                        oldchap = tochk
+                        chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
+                        if not chap:
+                            chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
+                            chap.save()
+                            chapid=chap.id
+                        else:
+                            for x in chap:
+                                chapid=x.id 
+                    tochk = str(fields[3]).replace('///',',').replace('\r','')
+                    if tochk != oldtop:
+                        oldtop = tochk
+                        top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
+                        if not top:
+                            top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
+                            top.save()
+                            topid1=top.id 
+                        else:
+                            for x in top:
+                                topid1=x.id 
+                    mat = LXPModel.Material.objects.create(
+                                subject_id=subid,
+                                module_id=modid,
+                                chapter_id=chapid,
+                                topic_id=topid1,
+                                mtype = mat_type,
+                                urlvalue = mat_url,
+                                description = mat_desc
+                                )
+                    mat.save()
+    return render(request,'trainer/material/trainer_upload_material_details_csv.html')

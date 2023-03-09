@@ -65,8 +65,6 @@ urlpatterns = [
     path('ajax/load-topics/', views.load_topics, name='ajax_load_topics'),
 
     path('cto-sync-youtube', views.cto_sync_youtube_view,name='cto-sync-youtube'),
-    path('cto-include-playlist', views.cto_include_playlist_view,name='cto-include-playlist'),
-    path('cto-include-playlist-save', views.cto_include_playlist_save_view,name='cto-include-playlist-save'),
     path('cto-sync-youtube-start', views.cto_sync_youtube_start_view,name='cto-sync-youtube-start'),
     path('cto-sync-youtube-byselected-playlist-start', views.cto_sync_youtube_byselected_playlist_start_view,name='cto-sync-youtube-byselected-playlist-start'),
     

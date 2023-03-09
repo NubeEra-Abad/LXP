@@ -11,7 +11,7 @@ urlpatterns = [
     path('trainer-view-material', views.trainer_view_material_view,name='trainer-view-material'),
     path('trainer-delete-material/<int:pk>', views.trainer_delete_material_view,name='trainer-delete-material'),
     path('trainer-show-material/<materialtype>,/<int:pk>', views.trainer_show_material_view,name='trainer-show-material'),
-
     path('trainer-material-upload-file', views.trainer_material_upload_file_view,name='trainer-material-upload-file'),
     path('trainer-material-start-upload-file', views.trainer_material_start_upload_file_view,name='trainer-material-start-upload-file'),
+    path('trainer-upload-material-details-csv', views.trainer_upload_material_details_csv_view,name='trainer-upload-material-details-csv'),
 ]

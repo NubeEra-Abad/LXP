@@ -600,7 +600,7 @@ def cto_course_view(request):
 
 @login_required
 def cto_add_course_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 courseForm=LXPFORM.CourseForm(request.POST)
@@ -639,12 +639,12 @@ def cto_add_course_view(request):
                         coursedet.save()
             courseForm=LXPFORM.CourseForm()
             return render(request,'cto/course/cto_add_course.html',{'courseForm':courseForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_course_view(request,coursename,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             course = LXPModel.Course.objects.get(id=pk)
             if request.method=='POST':
@@ -704,36 +704,36 @@ def cto_update_course_view(request,coursename,pk):
             json_data = json_data.replace('\\r','')
 
             return render(request,'cto/course/cto_update_course.html',{'courses':json_data,'courseForm':courseForm,'coursename':coursename})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_course_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             courses = LXPModel.Course.objects.all()
             return render(request,'cto/course/cto_view_course.html',{'courses':courses})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_course_details_view(request,coursename,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             courses = LXPModel.Course.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursedetails  INNER JOIN lxpapp_course ON (lxpapp_coursedetails.course_id = lxpapp_course.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursedetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_module ON (lxpapp_coursedetails.module_id = lxpapp_module.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursedetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursedetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursedetails.course_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')
             return render(request,'cto/course/cto_view_course_details.html',{'courses':courses,'coursename':coursename})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_course_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             coursedet=LXPModel.CourseDetails.objects.filter(course_id=pk).delete()
             course=LXPModel.Course.objects.filter(id=pk).delete()
         courses = LXPModel.Course.objects.all()
         return render(request,'cto/course/cto_view_course.html',{'courses':courses})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -826,7 +826,7 @@ def cto_courseset_view(request):
 
 @login_required
 def cto_add_courseset_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 coursesetForm=LXPFORM.CourseSetForm(request.POST)
@@ -865,12 +865,12 @@ def cto_add_courseset_view(request):
                         coursesetdet.save()
             coursesetForm=LXPFORM.CourseSetForm()
             return render(request,'cto/courseset/cto_add_courseset.html',{'coursesetForm':coursesetForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_courseset_view(request,coursesetname,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             courseset = LXPModel.CourseSet.objects.get(id=pk)
             if request.method=='POST':
@@ -930,70 +930,77 @@ def cto_update_courseset_view(request,coursesetname,pk):
             json_data = json_data.replace('\\r','')
 
             return render(request,'cto/courseset/cto_update_courseset.html',{'coursesets':json_data,'coursesetForm':coursesetForm,'coursesetname':coursesetname})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_courseset_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             coursesets = LXPModel.CourseSet.objects.all()
             return render(request,'cto/courseset/cto_view_courseset.html',{'coursesets':coursesets})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_view_courseset_details_view(request,coursesetname,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             coursesets = LXPModel.CourseSet.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_courseset ON (lxpapp_coursesetdetails.courseset_id = lxpapp_courseset.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursesetdetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_module ON (lxpapp_coursesetdetails.module_id = lxpapp_module.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursesetdetails.courseset_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')
             return render(request,'cto/courseset/cto_view_courseset_details.html',{'coursesets':coursesets,'coursesetname':coursesetname})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_delete_courseset_view(request,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             coursesetdet=LXPModel.CourseSetDetails.objects.filter(courseset_id=pk).delete()
             courseset=LXPModel.CourseSet.objects.filter(id=pk).delete()
         coursesets = LXPModel.CourseSet.objects.all()
         return render(request,'cto/courseset/cto_view_courseset.html',{'coursesets':coursesets})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_upload_courseset_details_csv_view(request):
     if request.method=='POST':
-        coursesettext=request.POST.get('courseset_name')
-        courseset = LXPModel.CourseSet.objects.all().filter(courseset_name__iexact = coursesettext)
-        if courseset:
-            messages.info(request, 'CourseSet Name Already Exist')
-        elif coursesettext == '':
-            messages.info(request, 'Please enter CourseSet Name')
-        elif request.POST.get('select_file') == '':
+        if request.POST.get('select_file') == '':
             messages.info(request, 'Please select CSV file for upload')
         else:
-            courseset = LXPModel.CourseSet.objects.create(courseset_name = coursesettext)
-            courseset.save()     
             csv_file = request.FILES["select_file"]
             file_data = csv_file.read().decode("utf-8")		
             lines = file_data.split("\n")
+            oldcourse =''
             oldsub =''
             oldmod=''
             oldchap=''
             oldtop=''
+            corsetid =0
             subid =0
             modid=0
             chapid=0
             topid=0
+            tochk=''
             no = 0
             for line in lines:						
                 no = no + 1
                 if no > 1:
                     fields = line.split(",")
-                    if str(fields[0]).replace('///',',') != oldsub:
-                        oldsub = str(fields[0]).replace('///',',')
+                    tochk = str(fields[4]).replace('///',',').replace('\r','')
+                    if tochk != oldcourse:
+                        oldcourse = tochk
+                        cor = LXPModel.CourseSet.objects.all().filter(courseset_name__exact = oldcourse )
+                        if not cor:
+                            cor = LXPModel.CourseSet.objects.create(courseset_name = oldcourse )
+                            cor.save()
+                            corsetid=cor.id
+                        else:
+                            for x in cor:
+                                corsetid=x.id
+                    tochk = str(fields[0]).replace('///',',').replace('\r','')
+                    if tochk != oldsub:
+                        oldsub = tochk
                         sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
                         if not sub:
                             sub = LXPModel.Subject.objects.create(subject_name = oldsub )
@@ -1002,8 +1009,9 @@ def cto_upload_courseset_details_csv_view(request):
                         else:
                             for x in sub:
                                 subid=x.id  
-                    if str(fields[1]).replace('///',',') != oldmod:
-                        oldmod = str(fields[1]).replace('///',',')
+                    tochk = str(fields[1]).replace('///',',').replace('\r','')
+                    if tochk != oldmod:
+                        oldmod = tochk
                         mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
                         if not mod:
                             mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
@@ -1023,8 +1031,9 @@ def cto_upload_courseset_details_csv_view(request):
                         else:
                             for x in chap:
                                 chapid=x.id 
-                    if str(fields[3]).replace('///',',') != oldtop:
-                        oldtop = str(fields[3]).replace('///',',') 
+                    tochk = str(fields[3]).replace('///',',').replace('\r','')
+                    if tochk != oldtop:
+                        oldtop = tochk
                         top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
                         if not top:
                             top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
@@ -1034,7 +1043,7 @@ def cto_upload_courseset_details_csv_view(request):
                             for x in top:
                                 topid1=x.id 
                     coursesetdet = LXPModel.CourseSetDetails.objects.create(
-                                courseset_id =courseset.id,
+                                courseset_id =corsetid,
                                 subject_id=subid,
                                 module_id=modid,
                                 chapter_id=chapid,
@@ -1078,31 +1087,9 @@ def getcredentials(request):
 
 @login_required
 def cto_sync_youtube_view(request):
-    pllist = LXPModel.IncludePlaylist.objects.all().filter(playlist_id__in =LXPModel.Playlist.objects.all().order_by('name'))
+    #pllist = LXPModel.IncludePlaylist.objects.all().filter(playlist_id__in =LXPModel.Playlist.objects.all().order_by('name'))
+    pllist = LXPModel.Playlist.objects.all().order_by('name')
     return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
-
-@login_required
-def cto_include_playlist_view(request):
-    pllist = LXPModel.Playlist.objects.all().order_by('name')
-    includeplaylist = LXPModel.IncludePlaylist.objects.all().filter(playlist_id__in = LXPModel.Playlist.objects.all().order_by('name'))
-    return render(request,'cto/youtube/cto_include_playlist.html',{'pllist':pllist,'includeplaylist':includeplaylist})
-
-@login_required
-def cto_include_playlist_save_view(request):
-    if request.method=='POST':
-        selectedlist = request.POST.getlist('playlist[]')
-        incpl = LXPModel.IncludePlaylist.objects.all()
-        incpl.delete()
-        for PL_NAME in selectedlist:
-            PL_ID = LXPModel.Playlist.objects.all().filter(name = PL_NAME)
-            for z in PL_ID:
-                incpl = LXPModel.IncludePlaylist.objects.create(
-                    playlist_id = z.id
-                )
-                incpl.save()
-                break
-    pllist = LXPModel.Playlist.objects.all().order_by('name')
-    return redirect('cto-include-playlist')
 
 @login_required
 def cto_sync_youtube_start_view(request):
@@ -1156,7 +1143,8 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             for PL_NAME in selectedlist:
                 print(str(plcount) + ' of ' + str(maxcount))
                 _id = PL_NAME 
-                pm.getAllVideosForPlaylist(_id,credentials,maxcount,plcount,PL_NAME)
+                playlist = LXPModel.Playlist.objects.values_list('playlist_id', flat=True).get(id=PL_NAME)
+                pm.getAllVideosForPlaylist(playlist,credentials,maxcount,plcount,_id)
                 plcount= plcount + 1
     dict={
     'total_learner':0,

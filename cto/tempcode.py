@@ -18,7 +18,7 @@ from django.urls import reverse
 
 @login_required
 def cto_add_courseset_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
 
             course = LXPModel.CourseDetails.objects.all().filter(
@@ -107,5 +107,5 @@ def cto_add_courseset_view(request):
                         coursesetdet.save()
             coursesetForm=LXPFORM.CourseSetForm()
             return render(request,'cto/courseset/cto_add_courseset.html',{'coursesetForm':coursesetForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
