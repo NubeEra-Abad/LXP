@@ -454,3 +454,84 @@ class Batchlearner(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
    fee = models.IntegerField(default=0)
+
+
+class Exam(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
+   exam_name = models.CharField(max_length=50)
+   cat=(('MCQ','MCQ'),('ShortAnswer','ShortAnswer'))
+   questiontpye=models.CharField(max_length=200,choices=cat,default='')
+   def __str__(self):
+        return self.exam_name
+
+class McqQuestion(models.Model):
+   exam=models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
+   question=models.CharField(max_length=600)
+   option1=models.CharField(max_length=200)
+   option2=models.CharField(max_length=200)
+   option3=models.CharField(max_length=200)
+   option4=models.CharField(max_length=200)
+   cat=(('1','Option1'),('2','Option2'),('3','Option3'),('4','Option4'))
+   answer=models.CharField(max_length=200,choices=cat)
+   marks=models.IntegerField(default=0)
+
+class McqResult(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    exam = models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
+    marks = models.PositiveIntegerField()
+    wrong = models.PositiveIntegerField()
+    correct = models.PositiveIntegerField()
+    timetaken = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now=True)
+
+class McqResultDetails(models.Model):
+    mcqresult=models.ForeignKey(McqResult,on_delete=models.SET_NULL, null=True)
+    question = models.ForeignKey(McqQuestion,on_delete=models.SET_NULL, null=True)
+    selected=models.CharField(max_length=200)
+
+class ShortQuestion(models.Model):
+   exam=models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
+   question=models.CharField(max_length=600)
+   marks=models.IntegerField(default=0)
+
+class ShortResult(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    exam = models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
+    marks = models.PositiveIntegerField()
+    datecreate = models.DateTimeField(auto_now=True)
+    status= models.BooleanField(default=False)
+    timetaken = models.CharField(max_length=200)
+
+class ShortResultDetails(models.Model):
+    shortresult=models.ForeignKey(ShortResult,on_delete=models.SET_NULL, null=True)
+    question=models.ForeignKey(ShortQuestion,on_delete=models.SET_NULL, null=True)
+    marks=models.PositiveIntegerField()
+    answer=models.CharField(max_length=200)
+    feedback=models.CharField(max_length=200,default='')
+
+
+class YTExamQuestion(models.Model):
+   playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)
+   video=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True)
+   question=models.CharField(max_length=600)
+   option1=models.CharField(max_length=200)
+   option2=models.CharField(max_length=200)
+   option3=models.CharField(max_length=200)
+   option4=models.CharField(max_length=200)
+   cat=(('1','Option1'),('2','Option2'),('3','Option3'),('4','Option4'))
+   answer=models.CharField(max_length=200,choices=cat)
+   marks=models.IntegerField(default=1)
+
+class YTExamResult(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    ytexamquestion = models.ForeignKey(YTExamQuestion,on_delete=models.SET_NULL, null=True)
+    marks = models.PositiveIntegerField()
+    wrong = models.PositiveIntegerField()
+    correct = models.PositiveIntegerField()
+    timetaken = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now=True)
+
+class YTExamResultDetails(models.Model):
+    ytexamresult=models.ForeignKey(YTExamResult,on_delete=models.SET_NULL, null=True)
+    question = models.ForeignKey(YTExamQuestion,on_delete=models.SET_NULL, null=True)
+    selected=models.CharField(max_length=200)

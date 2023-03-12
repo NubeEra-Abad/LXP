@@ -29,8 +29,20 @@ def afterlogin_view(request):
                 if xx.status:
                     request.session['utype'] = 'trainer'
                     notification = models.TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
-                    counternotification = notification.__len__()
-                    return render(request,'trainer/trainer_dashboard.html',{'notifications':notification,'totnotification':counternotification})
+                    mco = models.Exam.objects.filter(questiontpye='MCQ').count()
+                    short = models.Exam.objects.filter(questiontpye='ShortAnswer').count()
+                    mcqques= models.McqQuestion.objects.all().count()
+                    sques= models.ShortQuestion.objects.all().count()
+                    dict={
+                    'total_course':0,
+                    'total_exam':0,
+                    'total_shortExam':0, 
+                    'total_question':0,
+                    'total_short':0,
+                    'total_learner':0,
+                    'notifications':notification,
+                    }
+                    return render(request,'trainer/trainer_dashboard.html',context=dict)
                 else:
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                     return render(request,'loginrelated/wait_for_approval.html')

@@ -64,6 +64,7 @@ urlpatterns = [
     path('ajax/load-chapters/', views.load_chapters, name='ajax_load_chapters'),
     path('ajax/load-topics/', views.load_topics, name='ajax_load_topics'),
 
+
     path('cto-sync-youtube', views.cto_sync_youtube_view,name='cto-sync-youtube'),
     path('cto-sync-youtube-start', views.cto_sync_youtube_start_view,name='cto-sync-youtube-start'),
     path('cto-sync-youtube-byselected-playlist-start', views.cto_sync_youtube_byselected_playlist_start_view,name='cto-sync-youtube-byselected-playlist-start'),

@@ -193,59 +193,65 @@ def cto_subject_view(request):
 
 @login_required
 def cto_add_subject_view(request):
-    form = LXPFORM.SubjectForm(request.POST or None)
-    
-
-    context = {
-        'form': form,
-        'page_title': 'Add Subject'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('subject_name')
-            subject = LXPModel.Subject.objects.all().filter(subject_name__iexact = name)
-            if subject:
-                messages.info(request, 'Subject Name Already Exist')
-                return redirect(reverse('cto-add-subject'))
-            try:
-                subject = LXPModel.Subject.objects.create(
-                                            subject_name = name)
-                subject.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-add-subject'))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/subject/add_edit_subject.html', context)
+    try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.SubjectForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Subject'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('subject_name')
+                    subject = LXPModel.Subject.objects.all().filter(subject_name__iexact = name)
+                    if subject:
+                        messages.info(request, 'Subject Name Already Exist')
+                        return redirect(reverse('cto-add-subject'))
+                    try:
+                        subject = LXPModel.Subject.objects.create(
+                                                    subject_name = name)
+                        subject.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-subject'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/subject/add_edit_subject.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_subject_view(request, pk):
-    instance = get_object_or_404(LXPModel.Subject, id=pk)
-    form = LXPFORM.SubjectForm(request.POST or None, instance=instance)
-    context = {
-        'form': form,
-        'subject_id': pk,
-        'page_title': 'Edit Subject'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('subject_name')
-            subject = LXPModel.Subject.objects.all().filter(subject_name__iexact = name).exclude(id=pk)
-            if subject:
-                messages.info(request, 'Subject Name Already Exist')
-                return redirect(reverse('cto-update-subject', args=[pk]))
-            try:
-                subject = LXPModel.Subject.objects.get(id=pk)
-                subject.subject_name = name
-                subject.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-update-subject', args=[pk]))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/subject/add_edit_subject.html', context)
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Subject, id=pk)
+            form = LXPFORM.SubjectForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'subject_id': pk,
+                'page_title': 'Edit Subject'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('subject_name')
+                    subject = LXPModel.Subject.objects.all().filter(subject_name__iexact = name).exclude(id=pk)
+                    if subject:
+                        messages.info(request, 'Subject Name Already Exist')
+                        return redirect(reverse('cto-update-subject', args=[pk]))
+                    try:
+                        subject = LXPModel.Subject.objects.get(id=pk)
+                        subject.subject_name = name
+                        subject.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-update-subject', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/subject/add_edit_subject.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
 
 
 @login_required
@@ -271,64 +277,67 @@ def cto_delete_subject_view(request,pk):
 
 @login_required
 def cto_upload_subject_details_csv_view(request):
-    if request.method=='POST':
-        file=request.FILES["select_file"]
-        csv_file = request.FILES["select_file"]
-        file_data = csv_file.read().decode("utf-8")		
-        lines = file_data.split("\n")
-        oldsub =''
-        oldmod=''
-        oldchap=''
-        oldtop=''
-        subid =0
-        modid=0
-        chapid=0
-        topid=0
-        no = 0
-        for line in lines:						
-            no = no + 1
-            if no > 1:
-                fields = line.split(",")
-                if fields[0] != oldsub:
-                    oldsub = fields[0]
-                    sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
-                    if not sub:
-                        sub = LXPModel.Subject.objects.create(subject_name = oldsub )
-                        sub.save()
-                        subid=sub.id
-                    else:
-                        for x in sub:
-                          subid=x.id  
-                if fields[1] != oldmod:
-                    oldmod = fields[1] 
-                    mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
-                    if not mod:
-                        mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
-                        mod.save()
-                        modid=mod.id
-                    else:
-                        for x in mod:
-                          modid=x.id 
-                if fields[2] != oldchap:
-                    oldchap = fields[2] 
-                    chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
-                    if not chap:
-                        chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
-                        chap.save()
-                        chapid=chap.id
-                    else:
-                       for x in chap:
-                          chapid=x.id 
-                if fields[3] != oldtop:
-                    oldtop = fields[3] 
-                    top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
-                    if not top:
-                        top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
-                        top.save()
-                        topid=top.id
-
-    return render(request,'cto/subject/cto_upload_subject_details_csv.html')
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                    file=request.FILES["select_file"]
+                    csv_file = request.FILES["select_file"]
+                    file_data = csv_file.read().decode("utf-8")		
+                    lines = file_data.split("\n")
+                    oldsub =''
+                    oldmod=''
+                    oldchap=''
+                    oldtop=''
+                    subid =0
+                    modid=0
+                    chapid=0
+                    topid=0
+                    no = 0
+                    for line in lines:						
+                        no = no + 1
+                        if no > 1:
+                            fields = line.split(",")
+                            if fields[0] != oldsub:
+                                oldsub = fields[0]
+                                sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+                                if not sub:
+                                    sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+                                    sub.save()
+                                    subid=sub.id
+                                else:
+                                    for x in sub:
+                                        subid=x.id  
+                            if fields[1] != oldmod:
+                                oldmod = fields[1] 
+                                mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
+                                if not mod:
+                                    mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
+                                    mod.save()
+                                    modid=mod.id
+                                else:
+                                    for x in mod:
+                                        modid=x.id 
+                            if fields[2] != oldchap:
+                                oldchap = fields[2] 
+                                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
+                                if not chap:
+                                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
+                                    chap.save()
+                                    chapid=chap.id
+                                else:
+                                    for x in chap:
+                                        chapid=x.id 
+                            if fields[3] != oldtop:
+                                oldtop = fields[3] 
+                                top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
+                                if not top:
+                                    top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
+                                    top.save()
+                                    topid=top.id
+            return render(request,'cto/subject/cto_upload_subject_details_csv.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_module_view(request):
     try:
@@ -339,62 +348,70 @@ def cto_module_view(request):
 
 @login_required
 def cto_add_module_view(request):
-    form = LXPFORM.ModuleForm(request.POST or None)
-    context = {
-        'form': form,
-        'page_title': 'Add Module'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('module_name')
-            subject = form.cleaned_data.get('subject').pk
-            module = LXPModel.Module.objects.all().filter(module_name__iexact = name)
-            if module:
-                messages.info(request, 'Module Name Already Exist')
-                return redirect(reverse('cto-add-module'))
-            try:
-                module = LXPModel.Module.objects.create(
-                                            module_name = name,
-                                            subject_id = subject)
-                module.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-add-module'))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/module/add_edit_module.html', context)
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.ModuleForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Module'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('module_name')
+                    subject = form.cleaned_data.get('subject').pk
+                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name)
+                    if module:
+                        messages.info(request, 'Module Name Already Exist')
+                        return redirect(reverse('cto-add-module'))
+                    try:
+                        module = LXPModel.Module.objects.create(
+                                                    module_name = name,
+                                                    subject_id = subject)
+                        module.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-module'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/module/add_edit_module.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_update_module_view(request, pk):
-    instance = get_object_or_404(LXPModel.Module, id=pk)
-    form = LXPFORM.ModuleForm(request.POST or None, instance=instance)
-    context = {
-        'form': form,
-        'module_id': pk,
-        'page_title': 'Edit Module'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('module_name')
-            subject = form.cleaned_data.get('subject').pk
-            module = LXPModel.Module.objects.all().filter(module_name__iexact = name).exclude(id=pk)
-            if module:
-                messages.info(request, 'Module Name Already Exist')
-                return redirect(reverse('cto-update-module', args=[pk]))
-            try:
-                module = LXPModel.Module.objects.get(id=pk)
-                module.module_name = name
-                module.subject_id = subject
-                module.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-update-module', args=[pk]))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/module/add_edit_module.html', context)
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Module, id=pk)
+            form = LXPFORM.ModuleForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'module_id': pk,
+                'page_title': 'Edit Module'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('module_name')
+                    subject = form.cleaned_data.get('subject').pk
+                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name).exclude(id=pk)
+                    if module:
+                        messages.info(request, 'Module Name Already Exist')
+                        return redirect(reverse('cto-update-module', args=[pk]))
+                    try:
+                        module = LXPModel.Module.objects.get(id=pk)
+                        module.module_name = name
+                        module.subject_id = subject
+                        module.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-update-module', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/module/add_edit_module.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_view_module_view(request):
     try:
@@ -426,62 +443,70 @@ def cto_chapter_view(request):
 
 @login_required
 def cto_add_chapter_view(request):
-    form = LXPFORM.ChapterForm(request.POST or None)
-    context = {
-        'form': form,
-        'page_title': 'Add Chapter'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('chapter_name')
-            module = form.cleaned_data.get('module').pk
-            chapter = LXPModel.Chapter.objects.all().filter(chapter_name__iexact = name)
-            if chapter:
-                messages.info(request, 'Chapter Name Already Exist')
-                return redirect(reverse('cto-add-chapter'))
-            try:
-                chapter = LXPModel.Chapter.objects.create(
-                                            chapter_name = name,
-                                            module_id = module)
-                chapter.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-add-chapter'))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/chapter/add_edit_chapter.html', context)
+    try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.ChapterForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Chapter'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('chapter_name')
+                    module = form.cleaned_data.get('module').pk
+                    chapter = LXPModel.Chapter.objects.all().filter(chapter_name__iexact = name)
+                    if chapter:
+                        messages.info(request, 'Chapter Name Already Exist')
+                        return redirect(reverse('cto-add-chapter'))
+                    try:
+                        chapter = LXPModel.Chapter.objects.create(
+                                                    chapter_name = name,
+                                                    module_id = module)
+                        chapter.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-chapter'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/chapter/add_edit_chapter.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_update_chapter_view(request, pk):
-    instance = get_object_or_404(LXPModel.Chapter, id=pk)
-    form = LXPFORM.ChapterForm(request.POST or None, instance=instance)
-    context = {
-        'form': form,
-        'chapter_id': pk,
-        'page_title': 'Edit Chapter'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('chapter_name')
-            module = form.cleaned_data.get('module').pk
-            chapter = LXPModel.Chapter.objects.all().filter(chapter_name__iexact = name).exclude(id=pk)
-            if chapter:
-                messages.info(request, 'Chapter Name Already Exist')
-                return redirect(reverse('cto-update-chapter', args=[pk]))
-            try:
-                chapter = LXPModel.Chapter.objects.get(id=pk)
-                chapter.chapter_name = name
-                chapter.module_id = module
-                chapter.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-update-chapter', args=[pk]))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/chapter/add_edit_chapter.html', context)
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Chapter, id=pk)
+            form = LXPFORM.ChapterForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'chapter_id': pk,
+                'page_title': 'Edit Chapter'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('chapter_name')
+                    module = form.cleaned_data.get('module').pk
+                    chapter = LXPModel.Chapter.objects.all().filter(chapter_name__iexact = name).exclude(id=pk)
+                    if chapter:
+                        messages.info(request, 'Chapter Name Already Exist')
+                        return redirect(reverse('cto-update-chapter', args=[pk]))
+                    try:
+                        chapter = LXPModel.Chapter.objects.get(id=pk)
+                        chapter.chapter_name = name
+                        chapter.module_id = module
+                        chapter.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-update-chapter', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/chapter/add_edit_chapter.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_view_chapter_view(request):
     try:
@@ -513,62 +538,70 @@ def cto_topic_view(request):
 
 @login_required
 def cto_add_topic_view(request):
-    form = LXPFORM.TopicForm(request.POST or None)
-    context = {
-        'form': form,
-        'page_title': 'Add Topic'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('topic_name')
-            chapter = form.cleaned_data.get('chapter').pk
-            topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = name)
-            if topic:
-                messages.info(request, 'Topic Name Already Exist')
-                return redirect(reverse('cto-add-topic'))
-            try:
-                topic = LXPModel.Topic.objects.create(
-                                            topic_name = name,
-                                            chapter_id = chapter)
-                topic.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-add-topic'))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/topic/add_edit_topic.html', context)
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.TopicForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Topic'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('topic_name')
+                    chapter = form.cleaned_data.get('chapter').pk
+                    topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = name)
+                    if topic:
+                        messages.info(request, 'Topic Name Already Exist')
+                        return redirect(reverse('cto-add-topic'))
+                    try:
+                        topic = LXPModel.Topic.objects.create(
+                                                    topic_name = name,
+                                                    chapter_id = chapter)
+                        topic.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-topic'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/topic/add_edit_topic.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_update_topic_view(request, pk):
-    instance = get_object_or_404(LXPModel.Topic, id=pk)
-    form = LXPFORM.TopicForm(request.POST or None, instance=instance)
-    context = {
-        'form': form,
-        'topic_id': pk,
-        'page_title': 'Edit Topic'
-    }
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data.get('topic_name')
-            chapter = form.cleaned_data.get('chapter').pk
-            topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = name).exclude(id=pk)
-            if topic:
-                messages.info(request, 'Topic Name Already Exist')
-                return redirect(reverse('cto-update-topic', args=[pk]))
-            try:
-                topic = LXPModel.Topic.objects.get(id=pk)
-                topic.topic_name = name
-                topic.chapter_id = chapter
-                topic.save()
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('cto-update-topic', args=[pk]))
-            except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
-        else:
-            messages.error(request, "Fill Form Properly")
-    return render(request, 'cto/topic/add_edit_topic.html', context)
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Topic, id=pk)
+            form = LXPFORM.TopicForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'topic_id': pk,
+                'page_title': 'Edit Topic'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('topic_name')
+                    chapter = form.cleaned_data.get('chapter').pk
+                    topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = name).exclude(id=pk)
+                    if topic:
+                        messages.info(request, 'Topic Name Already Exist')
+                        return redirect(reverse('cto-update-topic', args=[pk]))
+                    try:
+                        topic = LXPModel.Topic.objects.get(id=pk)
+                        topic.topic_name = name
+                        topic.chapter_id = chapter
+                        topic.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-update-topic', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/topic/add_edit_topic.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_view_topic_view(request):
     try:
@@ -738,84 +771,88 @@ def cto_delete_course_view(request,pk):
 
 @login_required
 def cto_upload_course_details_csv_view(request):
-    if request.method=='POST':
-        coursetext=request.POST.get('course_name')
-        course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
-        if course:
-            messages.info(request, 'Course Name Already Exist')
-        elif coursetext == '':
-            messages.info(request, 'Please enter Course Name')
-        elif request.POST.get('select_file') == '':
-            messages.info(request, 'Please select CSV file for upload')
-        else:
-            course = LXPModel.Course.objects.create(course_name = coursetext)
-            course.save()     
-            csv_file = request.FILES["select_file"]
-            file_data = csv_file.read().decode("utf-8")		
-            lines = file_data.split("\n")
-            oldsub =''
-            oldmod=''
-            oldchap=''
-            oldtop=''
-            subid =0
-            modid=0
-            chapid=0
-            topid=0
-            no = 0
-            for line in lines:						
-                no = no + 1
-                if no > 1:
-                    fields = line.split(",")
-                    if str(fields[0]).replace('///',',') != oldsub:
-                        oldsub = str(fields[0]).replace('///',',')
-                        sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
-                        if not sub:
-                            sub = LXPModel.Subject.objects.create(subject_name = oldsub )
-                            sub.save()
-                            subid=sub.id
-                        else:
-                            for x in sub:
-                                subid=x.id  
-                    if str(fields[1]).replace('///',',') != oldmod:
-                        oldmod = str(fields[1]).replace('///',',')
-                        mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
-                        if not mod:
-                            mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
-                            mod.save()
-                            modid=mod.id
-                        else:
-                            for x in mod:
-                                modid=x.id 
-                    if str(fields[2]).replace('///',',') != oldchap:
-                        oldchap = str(fields[2]).replace('///',',')
-                        chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
-                        if not chap:
-                            chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
-                            chap.save()
-                            chapid=chap.id
-                        else:
-                            for x in chap:
-                                chapid=x.id 
-                    if str(fields[3]).replace('///',',') != oldtop:
-                        oldtop = str(fields[3]).replace('///',',') 
-                        top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
-                        if not top:
-                            top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
-                            top.save()
-                            topid1=top.id 
-                        else:
-                            for x in top:
-                                topid1=x.id 
-                    coursedet = LXPModel.CourseDetails.objects.create(
-                                course_id =course.id,
-                                subject_id=subid,
-                                module_id=modid,
-                                chapter_id=chapid,
-                                topic_id=topid1
-                                )
-                    coursedet.save()
-    return render(request,'cto/course/cto_upload_course_details_csv.html')
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                coursetext=request.POST.get('course_name')
+                course = LXPModel.Course.objects.all().filter(course_name__iexact = coursetext)
+                if course:
+                    messages.info(request, 'Course Name Already Exist')
+                elif coursetext == '':
+                    messages.info(request, 'Please enter Course Name')
+                elif request.POST.get('select_file') == '':
+                    messages.info(request, 'Please select CSV file for upload')
+                else:
+                    course = LXPModel.Course.objects.create(course_name = coursetext)
+                    course.save()     
+                    csv_file = request.FILES["select_file"]
+                    file_data = csv_file.read().decode("utf-8")		
+                    lines = file_data.split("\n")
+                    oldsub =''
+                    oldmod=''
+                    oldchap=''
+                    oldtop=''
+                    subid =0
+                    modid=0
+                    chapid=0
+                    topid=0
+                    no = 0
+                    for line in lines:						
+                        no = no + 1
+                        if no > 1:
+                            fields = line.split(",")
+                            if str(fields[0]).replace('///',',') != oldsub:
+                                oldsub = str(fields[0]).replace('///',',')
+                                sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+                                if not sub:
+                                    sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+                                    sub.save()
+                                    subid=sub.id
+                                else:
+                                    for x in sub:
+                                        subid=x.id  
+                            if str(fields[1]).replace('///',',') != oldmod:
+                                oldmod = str(fields[1]).replace('///',',')
+                                mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
+                                if not mod:
+                                    mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
+                                    mod.save()
+                                    modid=mod.id
+                                else:
+                                    for x in mod:
+                                        modid=x.id 
+                            if str(fields[2]).replace('///',',') != oldchap:
+                                oldchap = str(fields[2]).replace('///',',')
+                                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
+                                if not chap:
+                                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
+                                    chap.save()
+                                    chapid=chap.id
+                                else:
+                                    for x in chap:
+                                        chapid=x.id 
+                            if str(fields[3]).replace('///',',') != oldtop:
+                                oldtop = str(fields[3]).replace('///',',') 
+                                top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
+                                if not top:
+                                    top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
+                                    top.save()
+                                    topid1=top.id 
+                                else:
+                                    for x in top:
+                                        topid1=x.id 
+                            coursedet = LXPModel.CourseDetails.objects.create(
+                                        course_id =course.id,
+                                        subject_id=subid,
+                                        module_id=modid,
+                                        chapter_id=chapid,
+                                        topic_id=topid1
+                                        )
+                            coursedet.save()
+            return render(request,'cto/course/cto_upload_course_details_csv.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_courseset_view(request):
     try:
@@ -964,114 +1001,124 @@ def cto_delete_courseset_view(request,pk):
 
 @login_required
 def cto_upload_courseset_details_csv_view(request):
-    if request.method=='POST':
-        if request.POST.get('select_file') == '':
-            messages.info(request, 'Please select CSV file for upload')
-        else:
-            csv_file = request.FILES["select_file"]
-            file_data = csv_file.read().decode("utf-8")		
-            lines = file_data.split("\n")
-            oldcourse =''
-            oldsub =''
-            oldmod=''
-            oldchap=''
-            oldtop=''
-            corsetid =0
-            subid =0
-            modid=0
-            chapid=0
-            topid=0
-            tochk=''
-            no = 0
-            for line in lines:						
-                no = no + 1
-                if no > 1:
-                    fields = line.split(",")
-                    tochk = str(fields[4]).replace('///',',').replace('\r','')
-                    if tochk != oldcourse:
-                        oldcourse = tochk
-                        cor = LXPModel.CourseSet.objects.all().filter(courseset_name__exact = oldcourse )
-                        if not cor:
-                            cor = LXPModel.CourseSet.objects.create(courseset_name = oldcourse )
-                            cor.save()
-                            corsetid=cor.id
-                        else:
-                            for x in cor:
-                                corsetid=x.id
-                    tochk = str(fields[0]).replace('///',',').replace('\r','')
-                    if tochk != oldsub:
-                        oldsub = tochk
-                        sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
-                        if not sub:
-                            sub = LXPModel.Subject.objects.create(subject_name = oldsub )
-                            sub.save()
-                            subid=sub.id
-                        else:
-                            for x in sub:
-                                subid=x.id  
-                    tochk = str(fields[1]).replace('///',',').replace('\r','')
-                    if tochk != oldmod:
-                        oldmod = tochk
-                        mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
-                        if not mod:
-                            mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
-                            mod.save()
-                            modid=mod.id
-                        else:
-                            for x in mod:
-                                modid=x.id 
-                    tochk = str(fields[2]).replace('///',',').replace('\r','')
-                    if tochk != oldchap:
-                        oldchap = tochk
-                        chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
-                        if not chap:
-                            chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
-                            chap.save()
-                            chapid=chap.id
-                        else:
-                            for x in chap:
-                                chapid=x.id 
-                    tochk = str(fields[3]).replace('///',',').replace('\r','')
-                    if tochk != oldtop:
-                        oldtop = tochk
-                        top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
-                        if not top:
-                            top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
-                            top.save()
-                            topid1=top.id 
-                        else:
-                            for x in top:
-                                topid1=x.id 
-                    coursesetdet = LXPModel.CourseSetDetails.objects.create(
-                                courseset_id =corsetid,
-                                subject_id=subid,
-                                module_id=modid,
-                                chapter_id=chapid,
-                                topic_id=topid1
-                                )
-                    coursesetdet.save()
-    return render(request,'cto/courseset/cto_upload_courseset_details_csv.html')
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                if request.POST.get('select_file') == '':
+                    messages.info(request, 'Please select CSV file for upload')
+                else:
+                    csv_file = request.FILES["select_file"]
+                    file_data = csv_file.read().decode("utf-8")		
+                    lines = file_data.split("\n")
+                    oldcourse =''
+                    oldsub =''
+                    oldmod=''
+                    oldchap=''
+                    oldtop=''
+                    corsetid =0
+                    subid =0
+                    modid=0
+                    chapid=0
+                    topid=0
+                    tochk=''
+                    no = 0
+                    for line in lines:						
+                        no = no + 1
+                        if no > 1:
+                            fields = line.split(",")
+                            tochk = str(fields[4]).replace('///',',').replace('\r','')
+                            if tochk != oldcourse:
+                                oldcourse = tochk
+                                cor = LXPModel.CourseSet.objects.all().filter(courseset_name__exact = oldcourse )
+                                if not cor:
+                                    cor = LXPModel.CourseSet.objects.create(courseset_name = oldcourse )
+                                    cor.save()
+                                    corsetid=cor.id
+                                else:
+                                    for x in cor:
+                                        corsetid=x.id
+                            tochk = str(fields[0]).replace('///',',').replace('\r','')
+                            if tochk != oldsub:
+                                oldsub = tochk
+                                sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+                                if not sub:
+                                    sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+                                    sub.save()
+                                    subid=sub.id
+                                else:
+                                    for x in sub:
+                                        subid=x.id  
+                            tochk = str(fields[1]).replace('///',',').replace('\r','')
+                            if tochk != oldmod:
+                                oldmod = tochk
+                                mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
+                                if not mod:
+                                    mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
+                                    mod.save()
+                                    modid=mod.id
+                                else:
+                                    for x in mod:
+                                        modid=x.id 
+                            tochk = str(fields[2]).replace('///',',').replace('\r','')
+                            if tochk != oldchap:
+                                oldchap = tochk
+                                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
+                                if not chap:
+                                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
+                                    chap.save()
+                                    chapid=chap.id
+                                else:
+                                    for x in chap:
+                                        chapid=x.id 
+                            tochk = str(fields[3]).replace('///',',').replace('\r','')
+                            if tochk != oldtop:
+                                oldtop = tochk
+                                top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
+                                if not top:
+                                    top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
+                                    top.save()
+                                    topid1=top.id 
+                                else:
+                                    for x in top:
+                                        topid1=x.id 
+                            coursesetdet = LXPModel.CourseSetDetails.objects.create(
+                                        courseset_id =corsetid,
+                                        subject_id=subid,
+                                        module_id=modid,
+                                        chapter_id=chapid,
+                                        topic_id=topid1
+                                        )
+                            coursesetdet.save()
+            return render(request,'cto/courseset/cto_upload_courseset_details_csv.html')
+    except:
+        return render(request,'lxpapp/404page.html')
 
 def load_modules(request):
-    subject_id = request.GET.get('subject')
-    modules = LXPModel.Module.objects.filter(subject_id=subject_id).order_by('module_name')
-    context = {'modules': modules}
-    return render(request, 'hr/module_dropdown_list_options.html', context)
-
+    try:
+        subject_id = request.GET.get('subject')
+        modules = LXPModel.Module.objects.filter(subject_id=subject_id).order_by('module_name')
+        context = {'modules': modules}
+        return render(request, 'hr/module_dropdown_list_options.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
 def load_chapters(request):
-    module_id = request.GET.get('module')
-    chapters = LXPModel.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
-    context = {'chapters': chapters}
-    return render(request, 'hr/chapter_dropdown_list_options.html', context)
+    try:
+        module_id = request.GET.get('module')
+        chapters = LXPModel.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
+        context = {'chapters': chapters}
+        return render(request, 'hr/chapter_dropdown_list_options.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
 
 def load_topics(request):
-    chapter_id = request.GET.get('chapter')
-    topics = LXPModel.Topic.objects.filter(chapter_id=chapter_id).order_by('topic_name')
-    context = {'topics': topics}
-    return render(request, 'hr/topic_dropdown_list_options.html', context)
-
-
-
+    try:
+        chapter_id = request.GET.get('chapter')
+        topics = LXPModel.Topic.objects.filter(chapter_id=chapter_id).order_by('topic_name')
+        context = {'topics': topics}
+        return render(request, 'hr/topic_dropdown_list_options.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def getcredentials(request):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -1087,73 +1134,84 @@ def getcredentials(request):
 
 @login_required
 def cto_sync_youtube_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
     #pllist = LXPModel.IncludePlaylist.objects.all().filter(playlist_id__in =LXPModel.Playlist.objects.all().order_by('name'))
-    pllist = LXPModel.Playlist.objects.all().order_by('name')
-    return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
-
+            pllist = LXPModel.Playlist.objects.all().order_by('name')
+            return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
+    except:
+        return render(request,'lxpapp/404page.html')
 @login_required
 def cto_sync_youtube_start_view(request):
-    if request.method=='POST':
-        pm = PlaylistManager()
-        credentials = getcredentials(request)
-        
-        alllist = pm.initializePlaylist(credentials)
-        plcount = 1
-        maxcount = alllist.__len__()
-        for PL_ID in alllist:
-                PL_NAME = ''#LXPModel.Playlist.objects.values('name').filter(playlist_id = PL_ID)
-                print(str(plcount) + ' ' + PL_NAME)
-                pm.getAllVideosForPlaylist(PL_ID,credentials,maxcount,plcount,PL_NAME)
-                plcount = plcount + 1
-                HttpResponse(loader.get_template('cto/youtube/cto_sync_youtube.html').render(
-                    {
-                        "plname": PL_NAME,
-                        "maxcount": maxcount,
-                        "plcount": plcount
-                    }
-                    ))
-        dict={
-        'total_learner':0,
-        'total_trainer':0,
-        'total_exam':0,
-        'total_question':0,
-        }
-        return render(request,'cto/cto_dashboard.html',context=dict)
-    pllist = LXPModel.Playlist.objects.all().order_by('name')
-    return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})    
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                pm = PlaylistManager()
+                credentials = getcredentials(request)
+                
+                alllist = pm.initializePlaylist(credentials)
+                plcount = 1
+                maxcount = alllist.__len__()
+                for PL_ID in alllist:
+                        PL_NAME = ''#LXPModel.Playlist.objects.values('name').filter(playlist_id = PL_ID)
+                        print(str(plcount) + ' ' + PL_NAME)
+                        pm.getAllVideosForPlaylist(PL_ID,credentials,maxcount,plcount,PL_NAME)
+                        plcount = plcount + 1
+                        HttpResponse(loader.get_template('cto/youtube/cto_sync_youtube.html').render(
+                            {
+                                "plname": PL_NAME,
+                                "maxcount": maxcount,
+                                "plcount": plcount
+                            }
+                            ))
+                dict={
+                'total_learner':0,
+                'total_trainer':0,
+                'total_exam':0,
+                'total_question':0,
+                }
+                return render(request,'cto/cto_dashboard.html',context=dict)
+            pllist = LXPModel.Playlist.objects.all().order_by('name')
+            return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})    
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def cto_sync_youtube_byselected_playlist_start_view(request):
-    if request.method=='POST':
-        if 'dblist' in request.POST:
-            pllist = LXPModel.Playlist.objects.all().order_by('name')
-            return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
-        elif 'cloudlist' in request.POST:
-            pm = PlaylistManager()
-            credentials = getcredentials(request)
-            pl =  pm.initializePlaylist(credentials)
-            pllist = LXPModel.Playlist.objects.all().order_by('name')
-            return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
-        elif 'startselected' in request.POST:
-            pm = PlaylistManager()
-            selectedlist = request.POST.getlist('playlist[]')
-            maxcount = selectedlist.__len__()
-            plcount = 1
-            credentials = getcredentials(request)
-            for PL_NAME in selectedlist:
-                print(str(plcount) + ' of ' + str(maxcount))
-                _id = PL_NAME 
-                playlist = LXPModel.Playlist.objects.values_list('playlist_id', flat=True).get(id=PL_NAME)
-                pm.getAllVideosForPlaylist(playlist,credentials,maxcount,plcount,_id)
-                plcount= plcount + 1
-    dict={
-    'total_learner':0,
-    'total_trainer':0,
-    'total_exam':0,
-    'total_question':0,
-    }
-    return render(request,'cto/cto_dashboard.html',context=dict)
-
+    try:
+        if str(request.session['utype']) == 'cto':
+            if request.method=='POST':
+                if 'dblist' in request.POST:
+                    pllist = LXPModel.Playlist.objects.all().order_by('name')
+                    return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
+                elif 'cloudlist' in request.POST:
+                    pm = PlaylistManager()
+                    credentials = getcredentials(request)
+                    pl =  pm.initializePlaylist(credentials)
+                    pllist = LXPModel.Playlist.objects.all().order_by('name')
+                    return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})
+                elif 'startselected' in request.POST:
+                    pm = PlaylistManager()
+                    selectedlist = request.POST.getlist('playlist[]')
+                    maxcount = selectedlist.__len__()
+                    plcount = 1
+                    credentials = getcredentials(request)
+                    for PL_NAME in selectedlist:
+                        print(str(plcount) + ' of ' + str(maxcount))
+                        _id = PL_NAME 
+                        playlist = LXPModel.Playlist.objects.values_list('playlist_id', flat=True).get(id=PL_NAME)
+                        pm.getAllVideosForPlaylist(playlist,credentials,maxcount,plcount,_id)
+                        plcount= plcount + 1
+            dict={
+            'total_learner':0,
+            'total_trainer':0,
+            'total_exam':0,
+            'total_question':0,
+            }
+            return render(request,'cto/cto_dashboard.html',context=dict)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
 @login_required
 def get_message_from_httperror(e):
     return e.error_details[0]['message']

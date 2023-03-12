@@ -162,3 +162,80 @@ class BatchForm(forms.ModelForm):
             'stdate': forms.DateInput(format='%d/%m/%Y'),
             'enddate': forms.DateInput(format='%d/%m/%Y')
         }
+
+class ExamForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ExamForm, self).__init__(*args, **kwargs)
+        self.fields['questiontpye'].label = 'Question Type'
+    class Meta:
+        model=models.Exam
+        fields=['exam_name','questiontpye','batch']
+
+class McqQuestionForm(forms.ModelForm):
+    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='MCQ'),empty_label="Exam Name", to_field_name="id")
+    class Meta:
+        model=models.McqQuestion
+        fields=['marks','question','option1','option2','option3','option4','answer']
+        widgets = {
+            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50,'autofocus': True})
+        }
+
+class ShortQuestionForm(forms.ModelForm):
+    examID=forms.ModelChoiceField(queryset=models.Exam.objects.all().filter(questiontpye='ShortAnswer'),empty_label="Exam Name", to_field_name="id")
+    class Meta:
+        model=models.McqQuestion
+        fields=['marks','question']
+        widgets = {
+            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50, 'autofocus': True})
+        }
+
+class YTExamQuestionForm(forms.ModelForm):
+    playlistID=forms.ModelChoiceField(queryset=models.Playlist.objects.all(),empty_label="Play List Name", to_field_name="id")
+    videoID=forms.ModelChoiceField(queryset=models.Video.objects.all(),empty_label="Video Name", to_field_name="id")
+    class Meta:
+        model=models.YTExamQuestion
+        fields=['marks','question','option1','option2','option3','option4','answer']
+        widgets = {
+            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50,'autofocus': True})
+        }
+
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = models.Material
+        fields = ('subject', 'module', 'chapter', 'topic','mtype','urlvalue','description')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['module'].queryset = models.Module.objects.none()
+
+        if 'subject' in self.data:
+            try:
+                subject_id = int(self.data.get('subject'))
+                self.fields['module'].queryset = models.Module.objects.filter(subject_id=subject_id).order_by('module_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['module'].queryset = self.instance.subject.module_set.order_by('subject_name')
+
+        self.fields['chapter'].queryset = models.Module.objects.none()
+        if 'module' in self.data:
+            try:
+                module_id = int(self.data.get('module'))
+                self.fields['chapter'].queryset = models.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['chapter'].queryset = self.instance.module.chapter_set.order_by('chapter_name')
+
+
+        self.fields['topic'].queryset = models.Chapter.objects.none()
+        if 'chapter' in self.data:
+            try:
+                chapter_id = int(self.data.get('chapter'))
+                self.fields['topic'].queryset = models.Topic.objects.filter(chapter_id=chapter_id).order_by('topic_name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty Topic queryset
+        elif self.instance.pk:
+            self.fields['topic'].queryset = self.instance.chapter.topic_set.order_by('topic_name')
