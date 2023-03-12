@@ -3,6 +3,8 @@
 {% block content %}
 
 <head>
+<link rel="stylesheet" href="/static/assets/css/style.css">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -57,7 +59,7 @@
           </div>
           <div class="col-md-3 col-xl-3">
             <br>
-            <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Details">
+            <input type="button" class="btn btn-primary id="btnAddProduct" onclick="addProduct();" value="Add Details">
 
           </div>
         </div>
@@ -157,7 +159,9 @@
         return
       }
       products.push(newProduct);
-      var html = "<table id='tblData' border='1|1' >";
+      
+      var html = "<div class='table-responsive'>";
+      html = "<table id='tblData' border='1|1' >";
       html += "<td>ID</td>";
       html += "<td>Subject</td>";
       html += "<td>Module</td>";
@@ -175,6 +179,7 @@
         html += "</tr>";
       }
       html += "</table>";
+      html += "</div>";
       document.getElementById("demo").innerHTML = html;
     }
     function deleteProduct(product_id, e) {
@@ -248,9 +253,4 @@
     });
 
   </script>
-  {% if messages %}
-  {% for message in messages %}
-  {{ message }}
-  {% endfor %}
-  {% endif %}
   {% endblock content %}

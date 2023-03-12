@@ -12,6 +12,20 @@ from social_django.models import UserSocialAuth
 def login(request):
     return render(request, 'lxpapp/index.html')
 
+
+@login_required
+def user_change_password_view(request):
+    try:    
+        sub = forms.ContactusForm()
+        if request.method == 'POST':
+            u = request.user
+            u.set_password(request.POST['passid'])
+            u.save() # Add this line
+                
+        return render(request, 'lxpapp/users/changepassword.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
 @login_required
 def home(request):
     if request.user.is_authenticated:

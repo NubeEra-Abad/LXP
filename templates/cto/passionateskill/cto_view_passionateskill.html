@@ -1,37 +1,66 @@
 {% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-add-passionateskill">Add Passionate Skill</a></li>
-      <li class="breadcrumb-item active" aria-current="page">View Passionate Skills</li>
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-add-passionateskill">Add Passionate Skills</a></li>
+      <li class="breadcrumb-item active" aria-current="page">View Passionate Skill</li>
     </ol>
   </nav>
 </div>
-<div class="card-body">
-  <div class="table-responsive">
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Passionate Skill Name</th>
-          <th>Update</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for t in passionateskills %}
-        <tr>
-          <td> {{t.passionateskill_name}}</td>
-          <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-passionateskill' t.id  %}"><span
-                class="	far fa-edit"></span></a></td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-passionateskill' t.id  %}"
-              onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<head>
+  <link rel="stylesheet" href="/static/assets/css/style.css">
+</head>
+<div class="main-wrapper">
+  <div class="page-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 col-lg-8 col-md-12">
+          <div class="tak-instruct-group">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="settings-widget">
+                  <div class="settings-inner-blk p-0">
+                    <div class="comman-space pb-0">
+                      <div class="settings-referral-blk course-instruct-blk  table-responsive">
+
+                        <table class="table table-nowrap mb-0">
+                          <thead>
+                            <tr>
+                              <th>Passionate Skill Name</th>
+                              <th>Update</th>
+                              <th>Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              {% for t in passionateskills %}
+                            <tr>
+                              <td> {{t.passionateskill_name}}</td>
+                              <td><a class="btn btn-primary btn-xs"
+                                  href="{% url 'cto-update-passionateskill' t.id  %}"><span
+                                    class="	far fa-edit"></span></a></td>
+                              <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-passionateskill' t.id  %}"
+                                  onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a>
+                              </td>
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %}

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>NubeEra</title>
+  <link rel="stylesheet" href="lib/bootstrap-grid.processed.css">
+  <link rel="icon" type="image/png" href="https://www.nubeera.com/img/logo.ico">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.6/css/flag-icon.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4//static/assets/owl.carousel.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4//static/assets/owl.theme.default.min.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://www.nubeera.com/styles/style.processed.css">
+  <link rel="stylesheet" href="https://www.nubeera.com/styles/style.team.css">
+  <link rel="stylesheet" href="https://www.nubeera.com/styles/style.footer.css">
+  <style>
+    #loadMore {
+      padding-bottom: 30px;
+      padding-top: 30px;
+      text-align: center;
+      width: 100%;
+    }
+
+    #loadMore a {
+      background: #007bff;
+      border-radius: 3px;
+      color: white;
+      display: inline-block;
+      padding: 10px 30px;
+      transition: all 0.25s ease-out;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #loadMore a:hover {
+      background-color: #007bff;
+      color: aliceblue;
+    }
+
+    .jumbotron {
+      margin-bottom: 0px;
+    }
+  </style>
+</head>
+
+<body class="ru home">
+  {% include "lxpapp/navbar.html" %}
+
+  <main class="site-content">
+    <section class="hero">
+      <div class="container">
+        <div class="row slide-ksc align-items-center">
+          <div class="col-md-6">
+            <div class="text">
+              <h2>Moving
+                <div class="lead">Dump to Intelligent System</div>
+              </h2>
+            </div>
+          </div>
+          <div class="col-md-6 imagesWrap" data-tilt>
+            <div class="images">
+              <img class="deskHd" src="https://www.nubeera.com/img/MainPage/NEV2_500X326.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="bg-gradient3 cta">
+      <div class="container text-center">
+        <p class="lead">
+        <h2>Welcome to <span>NubeEra</span></h2>
+        </p>
+        <p class="text-justify">NubeEra is a collaboration of skilled team having years of
+          experience in information technology industry. Feather to our cap are our data scientist leaders,
+          each spending decades of tenure in the industry bringing us plethora of knowledge and unsurpassed skills
+          to help us set new milestones.</p>
+        <p class="text-justify">Our core areas of focus are artificial intelligence, database, software architecture
+          and cloud computing. We provide services like; shifting your process from hardware to virtual network and/or
+          cloud;
+          data processing; data analytics; and train your resources in such a way to boost productivity with
+          lesser time and resources.</p>
+      </div>
+    </section>
+
+    <section class="whyUs">
+      <div class="container">
+        <h3 class="text-center">Why To Choose Us?</h3>
+        <p>A Choice that makes a big difference in your career. NubeEra is committed to helping its students
+          to reach their goals and their training experiences, by providing the innovative surroundings and faculties.
+        </p>
+    </section>
+    <div class="row whyusRow">
+      <div class="col-md-4 whyusBox-1" style=" data-aos= " fade-right data-aos-easing="ease-in-sine">
+        <h1 class="text-center"><i class="fa fa-user"></i></h1>
+        <h4 class="text-center">IT experts as trainers</h4>
+        <p>Learning a technology with a professional who is well expertise in that solve 60% of your needs.</p>
+      </div>
+      <div class="col-md-4 whyusBox-2" style="data-aos=" fade-right data-aos-easing="ease-in-sine">
+        <h1 class="text-center"><i class="fa fa-laptop"></i></h1>
+        <h4 class="text-center">Fully Hands-On Training</h4>
+        <p>We support any training with more practical classes. So, we always prefers to give hands-on training.</p>
+      </div>
+      <div class="col-md-4 whyusBox-3" style=" data-aos=" fade-right data-aos-easing="ease-in-sine">
+        <h1 class="text-center"><i class="fa fa-clock-o"></i></h1>
+        <h4 class="text-center">Flexible Timings</h4>
+        <p>Learning a technology with a professional who is well expertise in that solve 60% of your needs.</p>
+      </div>
+      <div class="col-md-4 whyusBox-4" style=" data-aos=" fade-right data-aos-easing="ease-in-sine">
+        <h1 class="text-center"><i class="fa fa-money"></i></h1>
+        <h4 class="text-center">Affordable Fees</h4>
+        <p>We are dead cheap in fees. Quality training with less price is only at NubeEra.</p>
+      </div>
+      <div class="col-md-4 whyusBox-5" style=" data-aos=" fade-right data-aos-easing="ease-in-sine">
+        <h1 class="text-center"><i class="fa fa-book"></i></h1>
+        <h4 class="text-center">Interview Preparation</h4>
+        <p>Every course in covered with interview point questions and real-time scenarios of what the company may
+          look
+          after from you.</p>
+      </div>
+      <div class="col-md-4 whyusBox-6" style=" data-aos=" fade-right data-aos-easing="ease-in-sine">
+        <h1 class="text-center"><i class="fa fa-desktop"></i></h1>
+        <h4 class="text-center">Lab Support</h4>
+        <p>If you need software assistance we are here to back you up. Bring your laptop and load the required
+          software and learn.</p>
+      </div>
+    </div>
+    </div>
+    </section>
+    <section>
+      <div class="container-fluid strips">
+        <h3 class="text-center">Be It Life Or Death, We Crave Only Triumph !</h3>
+      </div>
+      </setion>
+
+
+      <section>
+        <div class="container">
+          <h3 class="text-center">Client List</h3>
+          <div class="owl-carousel owl-theme">
+            <div class="item">
+              <img src="https://www.nubeera.com/img/client list/capgemini logo.png" alt=""
+                style="height: 180px; width: 200px; margin-top: 30px; margin-left: 90px;">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/client list/logo.png" alt=""
+                style="margin-top: 90px; width:250px; height: 80px; margin-left: 90px;">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/client list/vodafone logo.png" alt=""
+                style="height: 180px; width: 200px; margin-top: 30px; margin-left: 90px;">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/client list/cognizant logo.png" alt=""
+                style="height: 180px; width: 200px; margin-top: 30px; margin-left: 90px;">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/client list/john deere logo.png" alt=""
+                style="height: 180px; width: 200px; margin-top: 30px; margin-left: 90px;">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrapper">
+          <h3>A Glance Over Our Reviews</h3>
+          <div class="review-carousel section-padding ">
+            <div class="row">
+              <div class="col-lg-4 col-md-6 blogBox moreBox">
+                <div class="single-review ">
+                  <p class="text-justify">
+                    I am an ex-student. They boosted my confidence, knowledge and skills...<a
+                      href="https://g.page/NubeEra/review"> Read More </a>
+                  </p>
+                  <h5 class="text-center">Abbas Khan</h5>
+                  <p>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 blogBox moreBox">
+                <div class="single-review ">
+                  <p class="text-justify">
+                    The knowledge sharing was very efficient and to the point. Really gave...<a
+                      href="https://g.page/NubeEra/review"> Read More </a>
+                  </p>
+                  <h5 class="text-center">Atharva Bhamburkar</h5>
+                  <p>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="single-review blogBox moreBox">
+                  <p class="text-justify">
+                    I am an experienced software architect, but wanted more so joined their train...<a
+                      href="https://g.page/NubeEra/review"> Read More </a>
+                  </p>
+                  <h5 class="text-center">Prasad Kulkarni</h5>
+                  <p>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="single-review blogBox moreBox " style="display: none;">
+                  <p class="text-justify">
+                    Nubeera truly cares about getting you where you want. Will recommend...<a
+                      href="https://g.page/NubeEra/review"> Read More </a>
+                  </p>
+                  <h5 class="text-center">Shaikh salman</h5>
+                  <p>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="single-review blogBox moreBox" style="display: none;">
+                  <p class="text-justify">
+                    NubeEra is a well versed organization. They boosted my skills. Their stru...<a
+                      href="https://g.page/NubeEra/review"> Read More </a>
+                  </p>
+                  <h5 class="text-center ">AKASH AMRAO</h5>
+                  <p>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="single-review blogBox moreBox" style="display: none;">
+                  <p class="text-justify">
+                    Excellent sessions, deep insight and knowledge of the topics and techn...<a
+                      href="https://g.page/NubeEra/review"> Read More </a>
+                  </p>
+                  <h5 class="text-center">kashif shaikh</h5>
+                  <p>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div id="loadMore" style="">
+            <a href="#">Load More</a>
+          </div>
+      </section>
+      <section>
+        <div class="container">
+          <h3 class="text-center">Meet Our Partners</h3>
+          <div class="owl-carousel owl-theme">
+            <div class="item">
+              <img src="https://www.nubeera.com/img/MainPage/Google.png" alt="">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/MainPage/aws.jpg" alt="">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/MainPage/microsoft.jpg" alt="">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/MainPage/Google.png" alt="">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/MainPage/aws.jpg" alt="">
+            </div>
+            <div class="item">
+              <img src="https://www.nubeera.com/img/MainPage/microsoft.jpg" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <h6>About us</h6>
+          <p class="text-justify">NubeEra is a collaboration of skilled team having years of experience in information
+            technology industry. Feather to our cap are our data scientist leaders,
+            each spending decades of tenure in the industry bringing us plethora of knowledge and unsurpassed skills to
+            help us set new milestones.</p>
+        </div>
+        <div class="col-xs-6 col-md-3">
+          <h6>Quick Links</h6>
+          <ul class="footer-links">
+            <li><a href="https://www.nubeera.com/contactUs.php">Contact Us</a></li>
+            <li><a href="https://www.nubeera.com/AboutUs.php">About Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-sm-6 col-xs-12">
+          <p class="copyright-text">Copyright &copy; 2022 All Rights Reserved by
+            <a href="https://www.nubeera.com/index.php">NubeEra</a>.
+          </p>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <ul class="social-icons">
+            <li><a class="facebook" href="https://www.facebook.com/NubeEra"><i class="fa fa-facebook"></i></a></li>
+            <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a class="youtube" href="https://www.youtube.com/channel/UC8gl7BNdhxFbjZ9DF6b_Mmg"><i
+                  class="fa fa-youtube-play"></i></a></li>
+            <li><a class="linkedin" href="https://www.linkedin.com/company/nubeera"><i class="fa fa-linkedin"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="46fadfe17d6337646f2f7e7a-text/javascript" src="https://www.nubeera.com/lib/vanilla-tilt.min.js"></script>
+  <script type="46fadfe17d6337646f2f7e7a-text/javascript" src="https://unpkg.com/aos@2.3.0/dist/aos.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'
+    type="46fadfe17d6337646f2f7e7a-text/javascript"></script>
+  <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
+    type="46fadfe17d6337646f2f7e7a-text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+    type="46fadfe17d6337646f2f7e7a-text/javascript"></script>
+  <script src="https://www.nubeera.com/js/navmenu.js" type="46fadfe17d6337646f2f7e7a-text/javascript"></script>
+  <script src="https://www.nubeera.com/js/main.js" type="46fadfe17d6337646f2f7e7a-text/javascript"></script>
+  <script src="https://www.nubeera.com/js/scroll_indecator.js" type="46fadfe17d6337646f2f7e7a-text/javascript"></script>
+  <script>
+
+    $( document ).ready(function () {
+		$(".moreBox").slice(0, 3).show();
+		if ($(".blogBox:hidden").length != 0) {
+			$("#loadMore").show();
+		}		
+		$("#loadMore").on('click', function (e) {
+			e.preventDefault();
+			$(".moreBox:hidden").slice(0, 6).slideDown();
+			if ($(".moreBox:hidden").length == 0) {
+				$("#loadMore").fadeOut('slow');
+			}
+		});
+	});
+    
+    $('.owl-carousel').owlCarousel({
+      loop: false,
+      autoplay: false,
+      autoplayTimeout: 2500,
+      margin: 10,
+      nav: false,
+      dots: false,
+      responsive: {
+        0: {
+          items: 1
+        },
+        600: {
+          items: 2
+        },
+        1000: {
+          items: 4
+        }
+      }
+    })
+  </script>
+
+  <script src="https://www.nubeera.com//cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
+    data-cf-settings="46fadfe17d6337646f2f7e7a-|49" defer=""></script>
+  <script>(function () { var js = "window['__CF$cv$params']={r:'7762d0c10c29927d',m:'tYivf7eN1SN6NTmpvD1mOKh5VBetTQ5OAOnGnsKkPaM-1670474347-0-AfF/chfZVa9QyavW8dvh28haJGrlitXW8l2HVXoZmKRAVi5zyjAUbZ8VwfAd9bS0tDEYEDAd8nfGDJAxWrNPwEGvfvsI1g1lI3nKnDPNd7r3e3CADmb7CYqfelfOLQn8FQ==',s:[0x42f55ade7a,0xad33bc2111],u:'/cdn-cgi/challenge-platform/h/g'};var now=Date.now()/1000,offset=14400,ts=''+(Math.floor(now)-Math.floor(now%offset)),_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/h/g/scripts/alpha/invisible.js?ts='+ts,document.getElementsByTagName('head')[0].appendChild(_cpo);"; var _0xh = document.createElement('iframe'); _0xh.height = 1; _0xh.width = 1; _0xh.style.position = 'absolute'; _0xh.style.top = 0; _0xh.style.left = 0; _0xh.style.border = 'none'; _0xh.style.visibility = 'hidden'; document.body.appendChild(_0xh); function handler() { var _0xi = _0xh.contentDocument || _0xh.contentWindow.document; if (_0xi) { var _0xj = _0xi.createElement('script'); _0xj.nonce = ''; _0xj.innerHTML = js; _0xi.getElementsByTagName('head')[0].appendChild(_0xj); } } if (document.readyState !== 'loading') { handler(); } else if (window.addEventListener) { document.addEventListener('DOMContentLoaded', handler); } else { var prev = document.onreadystatechange || function () { }; document.onreadystatechange = function (e) { prev(e); if (document.readyState !== 'loading') { document.onreadystatechange = prev; handler(); } }; } })();</script>
+</body>
+
+</html>

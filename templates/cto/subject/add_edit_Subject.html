@@ -1,20 +1,31 @@
+
+
+
 {% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-                    {% include "common/form_editing/form_template.html" with messages=messages  form=form button_text="Edit Subject"%}
-                </div>
-                <!-- /.card -->
-            </div>
+<link rel="stylesheet" href="/static/assets/css/style.css">
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-subject">View Subject</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
+    </ol>
+  </nav>
+</div>
+<h2 style="text-align:center; ">{{page_title}}</h2>
+<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+  {%csrf_token%}
+  <div class="form-group">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          {% include "common/form_editing/form_template.html" with messages=messages  form=form%}
         </div>
+      </div>
     </div>
-</section>
+  </div>
+</form>
+
 {% endblock content %}

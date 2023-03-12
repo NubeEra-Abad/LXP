@@ -3,6 +3,7 @@ from django.contrib import admin
 from lxpapp import views
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
 urlpatterns = [
     
     path('admin/', admin.site.urls),
@@ -26,6 +27,10 @@ urlpatterns = [
     path('active-user/<userid>/<int:pk>', views.active_user_view,name='active-user'),
     path('inactive-user/<int:pk>', views.inactive_user_view,name='inactive-user'),
     path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),
+
+    path('userlogin', LoginView.as_view(template_name='lxpapp/users/login.html'),name='userlogin'),
+    path('register', LoginView.as_view(template_name='lxpapp/users/register.html'),name='register'),
+    path('user-change-password', views.user_change_password_view,name='user-change-password'),
 ]
 
 

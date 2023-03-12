@@ -27,6 +27,7 @@
     }
   </script>
 </head>
+<link rel="stylesheet" href="/static/assets/css/style.css">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
@@ -40,10 +41,10 @@
     <h4>Upload a Course Set CSV File: </h4>
     <form onsubmit="return validateForm()" method="POST" enctype="multipart/form-data">
       {%csrf_token%}
-      <label for="courseset_name">Course Set Name</label>
-      <input type="file" name="select_file" id="select_file">
+      <label for="select_file">Select File</label>
+      <input type="file" class="btn btn-primary"  name="select_file" id="select_file">
       <br><br>
-      <button type="submit">Upload</button>
+      <button class="btn btn-primary"  type="submit">Upload</button>
       <BR>
     </form>
     <div id="waiting" style="display:none">

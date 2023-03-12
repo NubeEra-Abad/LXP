@@ -3,7 +3,8 @@
 {% block content %}
 
 <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/static/assets/css/style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -18,7 +19,7 @@
     </ol>
   </nav>
 </div>
-  <h2 style="text-align:center; color:blue;">Add Course Set</h2>
+  <h2 style="text-align:center;">Add Course Set</h2>
   <form method="POST" id="coursesetForm" data-modules-url="{% url 'ajax_load_modules' %}" autocomplete="off"
     style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
@@ -57,7 +58,7 @@
           </div>
           <div class="col-md-3 col-xl-3">
             <br>
-            <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Details">
+            <input class="btn btn-primary" type="button" id="btnAddProduct" onclick="addProduct();" value="Add Details">
 
           </div>
         </div>

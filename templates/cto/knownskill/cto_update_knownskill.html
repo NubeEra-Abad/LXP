@@ -1,6 +1,7 @@
 {% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+<link rel="stylesheet" href="/static/assets/css/style.css">
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -13,19 +14,18 @@
 <h3 style="text-align:center;">Update Known Skills</h3>
 <div>
   <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">
-      {% csrf_token %}
-        <label for="knownskill_name">Known Skill Name</label>
-          {% render_field knownskillForm.knownskill_name class="form-control" placeholder="Known Skill Name" value=sub %}
-<br><br>
-    <input type="submit" value="Update">
+    {% csrf_token %}
+    <div class="form-group">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="form-control-label">Known Skill Name</label>
+            {% render_field knownskillForm.knownskill_name class="form-control" placeholder="Known Skill Name" value=sub %}
+          </div>
+        </div>
+      </div>
+      </div>
+    <input type="submit" value="Update" class="btn btn-primary">
   </form>
 </div>
-
-{% if messages %}
-  {% for message in messages %}
-    {{ message }}
-  {% endfor %}
-{% endif %}
-
-<br><br><br><br><br><br><br><br>
 {% endblock content %}

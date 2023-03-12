@@ -14,15 +14,20 @@
       line-height: 50px;
     }
   </style>
-
+<link rel="stylesheet" href="/static/assets/css/style.css">
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Sync Videos</li>
+    </ol>
+  </nav>
+</div>
 
   <script src="https://unpkg.com/htmx.org@1.4.1"></script>
   <script src="https://unpkg.com/htmx.org/dist/ext/class-tools.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap core CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 
 <form onsubmit="return ShowProcessing()" method="POST" action="{% url 'cto-sync-youtube-start' %}" style="margin-left: 100px;">
