@@ -3,6 +3,8 @@
 {% block content %}
 
 <head>
+<link rel="stylesheet" href="/static/assets/css/style.css">
+
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -167,7 +169,7 @@
       </ol>
     </nav>
   </div>
-  <h2 style="text-align:center; color:blue;">Add Batch</h2>
+  <h2 style="text-align:center;">Add Batch</h2>
   <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">

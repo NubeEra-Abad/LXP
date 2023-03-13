@@ -20,7 +20,7 @@ urlpatterns = [
     path('indexpage', views.afterlogin_view,name='indexpage'),   
 
     path('adminclick', views.adminclick_view),
-    path('adminlogin', LoginView.as_view(template_name='lxpapp/adminlogin.html'),name='adminlogin'),
+    path('userlogin', LoginView.as_view(template_name='lxpapp/users/userlogin.html'),name='userlogin'),
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
     path('admin-view-user', views.admin_view_user_view,name='admin-view-user'),
     path('update-user/<userfirstname>/<userlastname>/<userid>/<int:pk>', views.update_user_view,name='update-user'),
@@ -28,9 +28,12 @@ urlpatterns = [
     path('inactive-user/<int:pk>', views.inactive_user_view,name='inactive-user'),
     path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),
 
-    path('userlogin', LoginView.as_view(template_name='lxpapp/users/login.html'),name='userlogin'),
+    # path('userlogin', LoginView.as_view(template_name='lxpapp/users/login.html'),name='userlogin'),
     path('register', LoginView.as_view(template_name='lxpapp/users/register.html'),name='register'),
     path('user-change-password', views.user_change_password_view,name='user-change-password'),
+    path('termsandconditions', TemplateView.as_view(template_name='lxpapp/users/term-condition.html'),name='termsandconditions'),
+    path('privacypolicy', TemplateView.as_view(template_name='lxpapp/users/privacy-policy.html'),name='privacypolicy'),
+
 ]
 
 

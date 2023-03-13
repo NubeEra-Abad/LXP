@@ -21,7 +21,9 @@ def user_change_password_view(request):
             u = request.user
             u.set_password(request.POST['passid'])
             u.save() # Add this line
-                
+            from django.contrib.auth import update_session_auth_hash
+            update_session_auth_hash(request, u)
+            return HttpResponseRedirect('indexpage')  
         return render(request, 'lxpapp/users/changepassword.html')
     except:
         return render(request,'lxpapp/404page.html')
@@ -172,7 +174,7 @@ def afterlogin_view(request):
 def adminclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('indexpage')
-    return HttpResponseRedirect('adminlogin')
+    return HttpResponseRedirect('userlogin')
 
 @login_required
 def admin_dashboard_view(request):

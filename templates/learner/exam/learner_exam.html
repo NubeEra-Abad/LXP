@@ -1,0 +1,42 @@
+{% extends 'learner/learnerbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+<link rel="stylesheet" href="/static/assets/css/style.css">
+  
+</head>
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Exams</li>
+    </ol>
+  </nav>
+</div>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Exams</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Exam Name</th>
+          <th>Take Exam</th>
+          <th>Results</th>
+        </tr>
+      </thead>
+      {% for t in exams %}
+      <tr>
+        <td> {{t.exam_name}}</td>
+        <td><a class="btn btn-success" href="{% url 'learner-take-exam' t.id  %}"><span class="	fas fa-angle-double-up"></span></a></td>
+        <td><a class="btn btn-primary" href="{% url 'learner-show-exam-reuslt' t.id  %}"><span class="fas fa-angle-double-right"></span></a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<br><br><br><br><br><br>
+{% endblock content %}

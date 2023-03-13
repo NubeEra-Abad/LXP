@@ -1,102 +1,137 @@
-<!DOCTYPE html>
 {% load widget_tweaks %}
-<html lang="en" dir="ltr">
-  <head>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from dreamslms.dreamguystech.com/html/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 11 Oct 2022 14:23:59 GMT -->
+
+<head>
     <meta charset="utf-8">
-    <title></title>
-    <style media="screen">
-      body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: linear-gradient(to right, #b92b27, #1565c0)
-}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Dreams LMS</title>
 
-.box {
-    width: 500px;
-    padding: 40px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background: #191919;
+    <link rel="shortcut icon" type="image/x-icon" href="/static/assets/img/favicon.svg">
 
-    text-align: center;
-    transition: 0.25s;
-    margin-top: 100px
-}
+    <link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
 
-.box input[type="text"],
-.box input[type="password"] {
-    border: 0;
-    background: none;
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #3498db;
-    padding: 10px 10px;
-    width: 250px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s
-}
+    <link rel="stylesheet" href="/static/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/static/assets/plugins/fontawesome/css/all.min.css">
 
-.box h1 {
-    color: white;
-    text-transform: uppercase;
-    font-weight: 500
-}
+    <link rel="stylesheet" href="/static/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/assets/css/owl.theme.default.min.css">
 
-.box input[type="text"]:focus,
-.box input[type="password"]:focus {
-    width: 300px;
-    border-color: #2ecc71
-}
+    <link rel="stylesheet" href="/static/assets/plugins/feather/feather.css">
 
-.box input[type="submit"] {
-    border: 0;
-    background: none;
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #2ecc71;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s;
-    cursor: pointer
-}
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+</head>
 
-.box input[type="submit"]:hover {
-    background: #2ecc71
-}
+<body>
 
+    <div class="main-wrapper log-wrap">
+        <div class="row">
 
-    </style>
-  </head>
-  <body>
-    {% include "lxpapp/navbar.html" %}
-    <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <form class="box" method="post">
-                    {% csrf_token %}
-                    <h1>Admin Login</h1>
-                    <p class="text-muted"> Please enter your login and password!</p>
-                     {% render_field form.username class="form-control" placeholder="Username" %}
-                     {% render_field form.password class="form-control" placeholder="Password" %}
-                     <input type="submit" name="" value="Login">
+            <div class="col-md-6 login-bg">
+                <div class="owl-carousel login-slide owl-theme">
+                    <div class="welcome-login">
+                        <div class="login-banner">
+                            <img src="/static/assets/img/login-img.png" class="img-fluid" alt="Logo">
+                        </div>
+                        <div class="mentor-course text-center">
+                            <h2>Welcome to <br>DreamsLMS Courses.</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                        </div>
+                    </div>
+                    <div class="welcome-login">
+                        <div class="login-banner">
+                            <img src="/static/assets/img/login-img.png" class="img-fluid" alt="Logo">
+                        </div>
+                        <div class="mentor-course text-center">
+                            <h2>Welcome to <br>DreamsLMS Courses.</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                        </div>
+                    </div>
+                    <div class="welcome-login">
+                        <div class="login-banner">
+                            <img src="/static/assets/img/login-img.png" class="img-fluid" alt="Logo">
+                        </div>
+                        <div class="mentor-course text-center">
+                            <h2>Welcome to <br>DreamsLMS Courses.</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                </form>
+            <div class="col-md-6 login-wrap-bg">
+
+                <div class="login-wrapper">
+                    <div class="loginbox">
+                        <div class="w-100">
+                            <div class="img-logo">
+                                <img src="/static/assets/img/logo.png" class="img-fluid" alt="Logo">
+                                <div class="back-home">
+                                    <a href="indexpage">Back to Home</a>
+                                </div>
+                            </div>
+                            <h1>Sign into Your Account</h1>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="form-control-label">User Name</label>
+                                    {% render_field form.username class="form-control" placeholder="Enter your user name" %}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">Password</label>
+                                    <div class="pass-group">
+                                        {% render_field form.password class="form-control" placeholder="Enter your password" %}
+                                        <span class="feather-eye toggle-password"></span>
+                                    </div>
+                                </div>
+                                <div class="forgot">
+                                    <span><a class="forgot-link" href="forgot-password.html">Forgot Password
+                                            ?</a></span>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-start" type="submit">Sign In</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="google-bg text-center">
+                        <span><a href="#">Or sign in with</a></span>
+                        <div class="sign-google">
+                            <ul>
+                                <li><a href="{% url 'social:begin' 'google-oauth2' %}"><img
+                                            src="/static/assets/img/net-icon-01.png" class="img-fluid" alt="Logo"> Sign
+                                        In using Google</a></li>
+                            </ul>
+                        </div>
+                        <p class="mb-0">New User ? <a href="register">Create an Account</a></p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-</div>
-<br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br>
-{% include "lxpapp/footer.html" %}
-  </body>
+    {% if messages %}
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+    {% endif %}
+
+    <script src="/static/assets/js/jquery-3.6.0.min.js"></script>
+
+    <script src="/static/assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/static/assets/js/owl.carousel.min.js"></script>
+
+    <script src="/static/assets/js/script.js"></script>
+</body>
+
+<!-- Mirrored from dreamslms.dreamguystech.com/html/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 11 Oct 2022 14:24:00 GMT -->
+
 </html>

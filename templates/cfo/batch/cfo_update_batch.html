@@ -3,17 +3,11 @@
 {% block content %}
 
 <head>
+  <link rel="stylesheet" href="/static/assets/css/style.css">
+
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"></script>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <style>
     a:link {
       text-decoration: none;
@@ -184,15 +178,16 @@
 <BR>
 
 <body>
-  <div>
-    <ol class="breadcrumb text-right">
-      <li><a href="/cfo/cfo-dashboard">Dashboard</a></li>
-      <li><a href="/cfo/cfo-add-batch">Add Batch</a></li>
-      <li><a href="/cfo/cfo-view-batch">View Batches</a></li>
-      <li class="active">Update Batch</li>
-    </ol>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../../../../cfo/cfo-dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="../../../../cfo/cfo-add-batch">Add Batch</a></li>
+        <li class="breadcrumb-item"><a href="../../../../cfo/cfo-view-batch">View Batch</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Update Batch</li>
+      </ol>
+    </nav>
   </div>
-  <h2 style="text-align:center; color:blue;">Update Batch</h2>
+  <h2 style="text-align:center;">Update Batch</h2>
   <form onsubmit="return validateForm()" method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">

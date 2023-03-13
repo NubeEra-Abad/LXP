@@ -1,29 +1,107 @@
-<ul class="sidebar navbar-nav">
-    <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">
-            <span class="text-center">
-                <h6>{{request.user.first_name}} {{request.user.last_name}}</h6>
-            </span>
-            <span class="text-center">
-                <h6>Learner</h6>
-            </span>
-        </a>
-    <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-        </a>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="" id="pagesDropdown" role="button"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-sitemap"></i>
-            <span>Course Material</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-            <a class="dropdown-item" href="../../../../learner/learner-add-material">Add Material</a>
-            <a class="dropdown-item" href="../../../../learner/learner-view-material">View Material</a>
-            <a class="dropdown-item" href="../../../../learner/learner-upload-material-details-csv">Upload Material CSV</a>
+<div class="col-xl-3 col-lg-4 col-md-12 theiaStickySidebar">
+        <div class="settings-widget dash-profile">
+            <div class="settings-menu p-0">
+                <div class="profile-bg">
+                    <img src="/static/assets/img/instructor-profile-bg.jpg" alt="">
+                    <div class="profile-img">
+                        <a href="instructor-profile.html"><img src="/static/assets/img/user/user2.jpg" alt=""></a>
+                    </div>
+                </div>
+                <div class="profile-group">
+                    <div class="profile-name text-center">
+                        <h4><a href="instructor-profile.html">{{request.user.first_name}} {{request.user.last_name}}</a></h4>
+                        <h6><a href="instructor-profile.html">({{request.user.username}})</a></h6>
+                        <h6>Learner</h6>
+                        <!-- <img src="request.user.social_auth.model.pic" alt=""> -->
+                    </div>
+                </div>
+            </div>
         </div>
-    </li>
-</ul>
+        <div class="settings-widget account-settings">
+            <div class="settings-menu">
+                <h3>DASHBOARD</h3>
+                <ul>
+                    <li class="nav-item active">
+                        <a href="../../../../learner/learner-dashboard" class="nav-link">
+                            <i class="feather-home"></i> My Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../learner/learner-exam" class="nav-link">
+                            <i class="feather-book"></i> Exam
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../learner/learner-short-exam" class="nav-link">
+                            <i class="feather-star"></i> Short Exam
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../learner/learner-view-mcqquestion-exams" class="nav-link">
+                            <i class="feather-star"></i> MCQ Question
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../learner/learner-view-shortquestion" class="nav-link">
+                            <i class="feather-star"></i> shortquestion
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../learner/learner-pending-short-exam-reuslt" class="nav-link">
+                            <i class="feather-star"></i> Pending Exams
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../learner/learner-view-ytexamquestion" class="nav-link">
+                            <i class="feather-star"></i> Session Video Question
+                        </a>
+                    </li>
+                </ul>
+                <div class="instructor-title">
+                    <h3>ACCOUNT SETTINGS</h3>
+                </div>
+                <ul>
+                    <li class="nav-item">
+                        <a href="instructor-edit-profile.html" class="nav-link ">
+                            <i class="feather-settings"></i> Edit Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="instructor-security.html" class="nav-link">
+                            <i class="feather-user"></i> Security
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="instructor-social-profiles.html" class="nav-link">
+                            <i class="feather-refresh-cw"></i> Social Profiles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="instructor-notification.html" class="nav-link">
+                            <i class="feather-bell"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="instructor-profile-privacy.html" class="nav-link">
+                            <i class="feather-lock"></i> Profile Privacy
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="instructor-delete-profile.html" class="nav-link">
+                            <i class="feather-trash-2"></i> Delete Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="instructor-linked-account.html" class="nav-link">
+                            <i class="feather-user"></i> Linked Accounts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../logout" class="nav-link">
+                            <i class="feather-power"></i> Sign Out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>

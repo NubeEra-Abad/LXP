@@ -2,6 +2,8 @@
 {% load widget_tweaks %}
 {% block content %}
 <head>
+<link rel="stylesheet" href="/static/assets/css/style.css">
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -12,11 +14,12 @@
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
 			<li class="breadcrumb-item"><a href="../../../../trainer/trainer-view-material">View Material</a></li>
+			<li class="breadcrumb-item"><a href="../../../../trainer/trainer-upload-material-details-csv">Upload Material CSV</a></li>
 			<li class="breadcrumb-item active" aria-current="page">Add Material</li>
 		</ol>
 	</nav>
 </div>
-<h2 style="text-align:center; color:blue;">Add Material</h2>
+<h2 style="text-align:center;">Add Material</h2>
 <form method="POST" id="materialForm" data-modules-url="{% url 'ajax_load_modules' %}" autocomplete="off"
 	style="margin:100px;margin-top: 0px;">
 	{%csrf_token%}

@@ -337,9 +337,9 @@ def trainer_add_exam_view(request):
                         return redirect(reverse('trainer-add-exam'))
                     try:
                         qtype = form.cleaned_data.get('questiontpye')
-                        batch = form.cleaned_data.get('batchID')
+                        batch = form.cleaned_data.get('batch').pk
                         exam = LXPModel.Exam.objects.create(
-                                                    exam_name = name,questiontpye=qtype,batch=batch)
+                                                    exam_name = name,questiontpye=qtype,batch_id=batch)
                         exam.save()
                         messages.success(request, "Successfully Updated")
                         return redirect(reverse('trainer-add-exam'))

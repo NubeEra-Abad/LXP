@@ -1,24 +1,18 @@
 {% extends 'trainer/trainerbase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+<link rel="stylesheet" href="/static/assets/css/style.css">
+<div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="../../../../trainer/trainer-view-exam">View Exam</a></li>
+      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-upload-exam-csv">Upload Exam CSV</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
+      </ol>
+    </nav>
+  </div>
 <section class="content">
-    <div>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            {% for t in breadcrumbsetting %}
-
-            {% if t.head == "Active" %}
-            <li class="breadcrumb-item active" aria-current="page">{{t.link}}</li>
-            {% else %}
-            <li class="breadcrumb-item"><a href="{{t.link}}">{{t.head}}</a></li>
-            {% endif %}
-
-
-            {% endfor %}
-          </ol>
-        </nav>
-      </div>
-      
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -27,7 +21,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
-                    {% include "common/form_editing/form_template.html" with messages=messages  form=form button_text="Edit Exam"%}
+                    {% include "common/form_editing/form_template.html" with messages=messages  form=form%}
                 </div>
                 <!-- /.card -->
             </div>

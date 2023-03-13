@@ -1,6 +1,7 @@
 {% extends 'trainer/trainerbase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+<link rel="stylesheet" href="/static/assets/css/style.css">
 
 <body>
   <div>
@@ -13,7 +14,7 @@
     </nav>
   </div>
 
-<h2 style="text-align:center; color:blue;">Add Mcq Question</h2>
+<h2 style="text-align:center;">Add Mcq Question</h2>
 {% if messages %}
   {% for message in messages %}
     {{ message }}
