@@ -93,10 +93,23 @@ class BaseAuth:
             pic =str(out['response']['picture']).replace('=s96-c','')
             UserSocialAuth.objects.filter(user_id=user.id).update(pic=pic)
             picuser = UserPics.objects.all().filter(user_id=user.id,pic =pic)
+            usercode = UserSocialAuth.objects.values_list('usercode', flat=True).get(user_id=user.id)
             if not picuser: 
                 picuser= UserPics.objects.create(user_id=user.id,picpath =pic)
                 picuser.save()
+            if not usercode: 
+                code = self.getrandom(user.id)
+                UserSocialAuth.objects.filter(user_id=user.id).update(usercode=code)
         return user
+    def getrandom(self,user_id):
+        import random
+        from social_django.models import UserSocialAuth
+        not_unique = True
+        while not_unique:
+            unique_ref = random.randint(10000000, 99999999)
+            if not UserSocialAuth.objects.filter(usercode=unique_ref):
+                not_unique = False
+        return str(unique_ref)
 
     def disconnect(self, *args, **kwargs):
         pipeline = self.strategy.get_disconnect_pipeline(self)

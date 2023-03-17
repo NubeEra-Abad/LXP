@@ -5,6 +5,7 @@ from django.db.models import Q, Sum
 import requests
 import humanize
 import datetime
+
 class UserPics(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     picpath = models.TextField(default='')
@@ -535,3 +536,25 @@ class YTExamResultDetails(models.Model):
     ytexamresult=models.ForeignKey(YTExamResult,on_delete=models.SET_NULL, null=True)
     question = models.ForeignKey(YTExamQuestion,on_delete=models.SET_NULL, null=True)
     selected=models.CharField(max_length=200)
+
+class VideoToUnlock(models.Model):
+    playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)
+    video=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True)
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+
+class VideoWatched(models.Model):
+    video=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True)
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+
+class LearnerPlaylistCount(models.Model):
+    playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    count = models.PositiveIntegerField(default=0)
+
+class SessionMaterial(models.Model):
+    playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)
+    video=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True)
+    cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))
+    mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
+    urlvalue=models.CharField(max_length=200)
+    description=models.CharField(max_length=200)

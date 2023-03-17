@@ -1,0 +1,97 @@
+{% extends 'lxpapp/adminbase.html' %}
+{% block content %}
+{%load static%}
+<div class="main-wrapper">
+  <div class="page-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="showing-list">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="d-flex align-items-center">
+                    <div class="view-icons">
+
+                      <a href="..\..\..\admin-view-user-grid" class="list-view"><i class="feather-grid"></i></a>
+                      <a href="..\..\..\admin-view-user-list" class="list-view active"><i class="feather-list"></i></a>
+                    </div>
+                    <div class="show-result">
+                      <h4>Showing 1-9 of 50 results</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="student-grid-blk">
+                {% for t in users %}
+
+                {% if not forloop.counter|divisibleby:2 %}
+                <div class="row">
+                  {% endif %}
+                  <div class="col-md-6">
+                    <div class="student-list flex-fill">
+                      <div class="student-img">
+                        <a href="{% url 'update-user' t.user.first_name t.user.last_name t.user_id t.id  %}">
+                          <img class="img-fluid" alt="" src="{{t.pic}}" style="width:100px">
+                        </a>
+                      </div>
+                      <div class="student-content">
+                        <h5><a href="{% url 'update-user' t.user.first_name t.user.last_name t.user_id t.id  %}">
+                            {% if t.status%}
+                            <b>{{t.user.first_name}} {{t.user.last_name}} </b>
+                            {% else %}
+                            <b>
+                              <font style="color:red;">{{t.user.first_name}} {{t.user.last_name}} (On Hold)
+                            </b> </font>
+                            {% endif %}
+                          </a></h5>
+                        {{t.uid}}
+                        <h6>{% if t.utype == 0 or t.utype == 2 %}
+                          Learner
+                          {% elif t.utype == 1 %}
+                          Trainer
+                          {% elif t.utype == 3 %}
+                          CTO
+                          {% elif t.utype == 4 %}
+                          CFO
+                          {% endif %}</h6>
+
+                        <h5>
+                          {% if t.utype == 0 or t.utype == 2 %}
+                          {{t.course_name}}
+                          {% endif %}
+                        </h5>
+                        <div class="student-info">
+                          <div class="loc-blk d-flex justify-content-center">
+                            <i class="fas fa-mobile-alt"></i>
+                            <p> {{t.mobile}}</p>
+                          </div>
+                          </ul>
+                          {% if t.status%}
+                          <center>
+                            <a class="btn btn-success btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="far fa-eye"></span></a>
+                            <B>User is Active</B>
+                          </center>
+                          {% else %}
+                          <center>
+                            <a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id  %}"><span class="far fa-eye-slash"></span></a>
+                            <B><font style="color:red;">User is On Hold</font></B>
+                          </center>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {% endfor %}
+                  {% if not forloop.counter|divisibleby:2 %}
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endblock content %}

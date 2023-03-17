@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
 
     path('trainer-dashboard', views.trainer_dashboard_view,name='trainer-dashboard'),
+
     path('trainer-material', views.trainer_material_view,name='trainer-material'),
     path('trainer-add-material', views.trainer_add_material_view,name='trainer-add-material'),
     path('trainer-update-material/<int:pk>', views.trainer_update_material_view,name='trainer-update-material'),
@@ -15,6 +16,15 @@ urlpatterns = [
     path('trainer-material-start-upload-file', views.trainer_material_start_upload_file_view,name='trainer-material-start-upload-file'),
     path('trainer-upload-material-details-csv', views.trainer_upload_material_details_csv_view,name='trainer-upload-material-details-csv'),
 
+    path('trainer-sessionmaterial', views.trainer_sessionmaterial_view,name='trainer-sessionmaterial'),
+    path('trainer-add-sessionmaterial', views.trainer_add_sessionmaterial_view,name='trainer-add-sessionmaterial'),
+    path('trainer-update-sessionmaterial/<int:pk>', views.trainer_update_sessionmaterial_view,name='trainer-update-sessionmaterial'),
+    path('trainer-view-sessionmaterial', views.trainer_view_sessionmaterial_view,name='trainer-view-sessionmaterial'),
+    path('trainer-delete-sessionmaterial/<int:pk>', views.trainer_delete_sessionmaterial_view,name='trainer-delete-sessionmaterial'),
+    path('trainer-show-sessionmaterial/<sessionmaterialtype>,/<int:pk>', views.trainer_show_sessionmaterial_view,name='trainer-show-sessionmaterial'),
+    
+    path('ajax/load-videos/', views.load_videos, name='ajax_load_videos'),
+    
     path('trainer-exam', views.trainer_exam_view,name='trainer-exam'),
     path('trainer-add-exam', views.trainer_add_exam_view,name='trainer-add-exam'),
     path('trainer-update-exam/<int:pk>', views.trainer_update_exam_view,name='trainer-update-exam'),
@@ -45,4 +55,12 @@ urlpatterns = [
     path('trainer-update-ytexamquestion/<int:pk>', views.trainer_update_ytexamquestion_view,name='trainer-update-ytexamquestion'),
     path('trainer-view-ytexamquestion', views.trainer_view_ytexamquestion_view,name='trainer-view-ytexamquestion'),
     path('trainer-delete-ytexamquestion/<int:pk>', views.trainer_delete_ytexamquestion_view,name='trainer-delete-ytexamquestion'),
+
+    path('trainer-view-learner-video', views.trainer_view_learner_video_view,name='trainer-view-learner-video'),
+    path('trainer-learner-video-course/<int:user_id>/<userfirstname>/<userlastname>', views.trainer_learner_video_Course_view,name='trainer-learner-video-course'),
+    path('trainer-learner-video-course-subject/<int:user_id>/<userfirstname>/<userlastname>', views.trainer_learner_video_Course_subject_view,name='trainer-learner-video-course-subject'),
+    path('trainer-learner-video-list/<int:subject_id>,/<int:user_id>', views.trainer_learner_video_list_view,name='trainer-learner-video-list'),
+    path('trainer-learner-show-video/<int:subject_id>,/<int:video_id>', views.trainer_learner_show_video_view,name='trainer-learner-show-video'),
+    path('trainer-learner-approve-video/<int:pk>/<int:studid>', views.trainer_learner_approve_video,name='trainer-learner-approve-video'),
+    path('trainer-learner-approveall-video/<int:userid>/<subject_id>', views.trainer_learner_approveall_video,name='trainer-learner-approveall-video'),
 ]

@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Sum,Count,Q
 from django.urls import reverse
+from social_django.models import UserSocialAuth
 
 @login_required    
 def trainer_dashboard_view(request):
@@ -294,6 +295,103 @@ def trainer_upload_material_details_csv_view(request):
     return render(request,'trainer/material/trainer_upload_material_details_csv.html')
 
 @login_required
+def trainer_sessionmaterial_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            return render(request,'trainer/sessionmaterial/trainer_sessionmaterial.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_add_sessionmaterial_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            if request.method=='POST':
+                sessionmaterialForm=LXPFORM.SessionMaterialForm(request.POST)
+                playlist = request.POST.get('playlist')
+                video = request.POST.get('video')
+                mtype = request.POST.get('mtype')
+                urlvalue = request.POST.get('urlvalue')
+                description = request.POST.get('description')
+                sessionmaterial = LXPModel.SessionMaterial.objects.create(playlist_id = playlist,video_id = video,mtype = mtype,urlvalue = urlvalue,description = description)
+                sessionmaterial.save()
+                
+            sessionmaterialForm=LXPFORM.SessionMaterialForm()
+            return render(request,'trainer/sessionmaterial/trainer_add_sessionmaterial.html',{'sessionmaterialForm':sessionmaterialForm})
+    except:
+        return render(request,'lxpapp/404page.html')
+    
+@login_required
+def trainer_update_sessionmaterial_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            sessionmaterialForm=LXPFORM.SessionMaterialForm(request.POST)
+            if request.method=='POST':
+                playlist = request.POST.get('playlist')
+                video = request.POST.get('video')
+                mtype = request.POST.get('mtype')
+                urlvalue = request.POST.get('urlvalue')
+                description = request.POST.get('description')
+                
+                sessionmaterial = LXPModel.SessionMaterial.objects.get(id=pk)
+                sessionmaterial.playlist_id = playlist
+                sessionmaterial.video_id = video
+                sessionmaterial.mtype = mtype
+                sessionmaterial.urlvalue = urlvalue
+                sessionmaterial.description = description
+                sessionmaterial.save()
+                sessionmaterials = LXPModel.SessionMaterial.objects.all()
+                return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
+            return render(request,'trainer/sessionmaterial/trainer_update_sessionmaterial.html',{'sessionmaterialForm':sessionmaterialForm})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_view_sessionmaterial_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            sessionmaterials = LXPModel.SessionMaterial.objects.all()
+            return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_delete_sessionmaterial_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            sessionmaterial=LXPModel.SessionMaterial.objects.get(id=pk)
+            sessionmaterial.delete()
+            sessionmaterials = LXPModel.SessionMaterial.objects.all()
+            return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_show_sessionmaterial_view(request,sessionmaterialtype,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            details= LXPModel.SessionMaterial.objects.all().filter(id=pk)
+            if sessionmaterialtype == 'HTML':
+                return render(request,'trainer/sessionmaterial/trainer_sessionmaterial_htmlshow.html',{'details':details})
+            if sessionmaterialtype == 'URL':
+                return render(request,'trainer/sessionmaterial/trainer_sessionmaterial_urlshow.html',{'details':details})
+            if sessionmaterialtype == 'PDF':
+                return render(request,'trainer/sessionmaterial/trainer_sessionmaterial_pdfshow.html',{'details':details})
+            if sessionmaterialtype == 'Video': 
+                return render(request,'trainer/sessionmaterial/trainersessionmaterial_videoshow.html',{'details':details})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+def load_videos(request):
+    try:
+        playlist_id = request.GET.get('playlist')
+        videos = LXPModel.PlaylistItem.objects.raw('SELECT  lxpapp_video.id as id,lxpapp_video.id as pk, lxpapp_video.name FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) WHERE  lxpapp_playlistitem.playlist_id = ' + str(playlist_id) + ' ORDER BY  lxpapp_video.name')
+        context = {'videos': videos}
+        return render(request, 'hr/video_dropdown_list_options.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
 def trainer_exam_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
@@ -304,7 +402,7 @@ def trainer_exam_view(request):
 
 @login_required
 def trainer_add_exam_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             form = LXPFORM.ExamForm(request.POST or None)
             breadcrumblink = []
@@ -348,7 +446,7 @@ def trainer_add_exam_view(request):
                 else:
                     messages.error(request, "Fill Form Properly")
             return render(request, 'trainer/exam/add_edit_exam.html', context)
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -668,11 +766,11 @@ def trainer_delete_shortquestion_view(request,pk):
 
 @login_required
 def trainer_pending_short_exam_result_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             pending = LXPModel.ShortResult.objects.all().filter( learner_id__in = User.objects.all(),exam_id__in = LXPModel.Exam.objects.all(),status = False)
             return render(request,'trainer/shortexam/trainer_pending_short_exam_reuslt.html',{'pending':pending})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -727,7 +825,7 @@ def trainer_ytexamquestion_view(request):
 
 @login_required
 def trainer_add_ytexamquestion_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 ytexamquestionForm=LXPFORM.YTExamQuestionForm(request.POST)
@@ -756,7 +854,7 @@ def trainer_add_ytexamquestion_view(request):
                     print("form is invalid")
             ytexamquestionForm=LXPFORM.YTExamQuestionForm()
             return render(request,'trainer/ytexamquestion/trainer_add_ytexamquestion.html',{'ytexamquestionForm':ytexamquestionForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -800,3 +898,97 @@ def trainer_delete_ytexamquestion_view(request,pk):
         return render(request,'trainer/ytexamquestion/trainer_view_ytexamquestion.html',{'ytexamquestions':ytexamquestions})
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_view_learner_video_view(request):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, social_auth_usersocialauth.pic, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(DISTINCT lxpapp_courseset.courseset_name) AS courseset_name, lxpapp_learnerdetails.mobile FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_batchlearner ON (auth_user.id = lxpapp_batchlearner.learner_id) LEFT OUTER JOIN lxpapp_batchCOURSESET ON (lxpapp_batchlearner.batch_id = lxpapp_batchCOURSESET.batch_id) LEFT OUTER JOIN lxpapp_COURSESET ON (lxpapp_batchCOURSESET.COURSESET_id = lxpapp_COURSESET.id) LEFT OUTER JOIN lxpapp_learnerdetails ON (auth_user.id = lxpapp_learnerdetails.learner_id) WHERE (social_auth_usersocialauth.utype = 0 OR social_auth_usersocialauth.utype = 2) AND social_auth_usersocialauth.status = 1 GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, lxpapp_learnerdetails.mobile ')
+            return render(request,'trainer/learnervideo/trainer_view_learner_video.html',{'learner':learner})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_learner_video_Course_view(request,user_id,userfirstname,userlastname):
+#    try:    
+        if str(request.session['utype']) == 'trainer':
+            videos1 = LXPModel.BatchCourseSet.objects.raw('SELECT DISTINCT lxpapp_courseset.id,  lxpapp_courseset.courseset_name,lxpapp_batchcourseset.batch_id FROM  lxpapp_batchcourseset   INNER JOIN lxpapp_courseset ON (lxpapp_batchcourseset.courseset_id = lxpapp_courseset.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourseset.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(user_id))
+            return render(request,'trainer/learnervideo/trainer_learner_video_course.html',{'videos':videos1,'userfirstname':userfirstname,'userlastname':userlastname,'user_id':user_id})
+ #   except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_learner_video_Course_subject_view(request,user_id,userfirstname,userlastname):
+#    try:    
+        if str(request.session['utype']) == 'trainer':
+            
+            subject = LXPModel.Playlist.objects.raw('SELECT ID AS id, NAME, VTOTAL, Mtotal, SUM(VWATCHED) AS VWatched,((100*VWATCHED)/VTOTAL) as per, THUMBNAIL_URL FROM (SELECT YYY.ID, YYY.NAME, YYY.THUMBNAIL_URL, ( SELECT COUNT(XX.ID) FROM LXPAPP_PLAYLISTITEM XX WHERE XX.PLAYLIST_ID = YYY.ID ) AS Vtotal, ( SELECT COUNT(zz.ID) FROM LXPAPP_sessionmaterial zz WHERE zz.PLAYLIST_ID = YYY.ID ) AS Mtotal, (SELECT COUNT (LXPAPP_VIDEOWATCHED.ID) AS a FROM LXPAPP_PLAYLISTITEM GHGH LEFT OUTER JOIN LXPAPP_VIDEOWATCHED ON ( GHGH.VIDEO_ID = LXPAPP_VIDEOWATCHED.VIDEO_ID ) WHERE GHGH.PLAYLIST_ID = YYY.ID AND LXPAPP_VIDEOWATCHED.LEARNER_ID = ' + str( user_id) + ') AS VWatched FROM LXPAPP_BATCHLEARNER INNER JOIN LXPAPP_BATCH ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCH.ID) INNER JOIN LXPAPP_BATCHRECORDEDVDOLIST ON (LXPAPP_BATCH.ID = LXPAPP_BATCHRECORDEDVDOLIST.BATCH_ID) INNER JOIN LXPAPP_PLAYLIST YYY ON (LXPAPP_BATCHRECORDEDVDOLIST.PLAYLIST_ID = YYY.ID) WHERE LXPAPP_BATCHLEARNER.LEARNER_ID = ' + str(user_id) + ') GROUP BY ID, NAME, VTOTAL ORDER BY NAME')
+            videocount = LXPModel.LearnerPlaylistCount.objects.all().filter(learner_id = user_id)
+            countpresent =False
+            if videocount:
+                countpresent = True
+            per = 0
+            tc = 0
+            wc = 0
+            for x in subject:
+                if not videocount:
+                    countsave = LXPModel.LearnerPlaylistCount.objects.create(playlist_id = x.id, learner_id = user_id,count =x.Vtotal )
+                    countsave.save()
+                tc += x.Vtotal
+                wc += x.VWatched
+            try:
+                per = (100*int(wc))/int(tc)
+            except:
+                per =0
+            dif = tc- wc
+            return render(request,'trainer/learnervideo/trainer_learner_video_course_subject.html',{'user_id':user_id,'subject':subject,'userfirstname':userfirstname,'userlastname':userlastname,'dif':dif,'per':per,'wc':wc,'tc':tc})
+ #   except:
+        return render(request,'lxpapp/404page.html')
+ 
+@login_required
+def trainer_learner_video_list_view(request,subject_id,user_id):
+    #try:     
+        if str(request.session['utype']) == 'trainer':
+            subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
+            list = LXPModel.PlaylistItem.objects.raw('SELECT DISTINCT mainvid.id, mainvid.name, IFNULL((SELECT lxpapp_videowatched.video_id FROM lxpapp_videowatched WHERE lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id = mainvid.id), 0) AS watched, IFNULL((SELECT lxpapp_videotounlock.video_id FROM lxpapp_videotounlock WHERE lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id = mainvid.id), 0) AS unlocked FROM lxpapp_video mainvid INNER JOIN lxpapp_playlistitem ON (mainvid.id = lxpapp_playlistitem.video_id) WHERE lxpapp_playlistitem.playlist_id = ' + str (subject_id) + ' AND mainvid.name <> "Deleted video"')  
+            return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'user_id':user_id})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_learner_approve_video(request,pk,studid):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            unlock = LXPModel.VideoToUnlock.objects.create(learner_id=studid,video_id=pk)
+            unlock.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    #except:
+        return render(request,'lxpapp/404page.html') 
+
+@login_required
+def trainer_learner_approveall_video(request,userid,subject_id):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            videos=LXPModel.Playlist.objects.raw('SELECT   lxpapp_video.id FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) where lxpapp_playlistitem.playlist_id = ' + str (subject_id))
+            for x in videos:
+                unlock = LXPModel.VideoToUnlock.objects.create(learner_id=userid,video_id=x.id)
+                unlock.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_learner_show_video_view(request,subject_id,video_id):
+    try:    
+        if str(request.session['utype']) == 'trainer':
+            subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
+            Videos=LXPModel.Video.objects.all().filter(id=video_id)
+            topicname =''
+            url=''
+            for x in Videos:
+                topicname =x.name
+                url = "https://www.youtube.com/embed/" + x.video_id
+            return render(request,'trainer/learnervideo/trainer_learner_show_video.html',{'topicname':topicname,'url':url,'subjectname':subjectname,'subject_id':subject_id})
+    except:
+        return render(request,'lxpapp/404page.html')
+

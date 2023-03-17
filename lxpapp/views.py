@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from social_django.models import UserSocialAuth
+from django.contrib.auth import update_session_auth_hash
 
 def login(request):
     return render(request, 'lxpapp/index.html')
@@ -21,7 +22,6 @@ def user_change_password_view(request):
             u = request.user
             u.set_password(request.POST['passid'])
             u.save() # Add this line
-            from django.contrib.auth import update_session_auth_hash
             update_session_auth_hash(request, u)
             return HttpResponseRedirect('indexpage')  
         return render(request, 'lxpapp/users/changepassword.html')
@@ -31,6 +31,8 @@ def user_change_password_view(request):
 @login_required
 def home(request):
     if request.user.is_authenticated:
+        # user = User.objects.raw('SELECT   auth_user.id,  auth_user.password,  auth_user.last_login,  auth_user.is_superuser,  auth_user.username,  auth_user.first_name,  auth_user.email,  auth_user.is_staff,  auth_user.is_active,  auth_user.date_joined,  auth_user.last_name,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  social_auth_usersocialauth.extra_data,  social_auth_usersocialauth.user_id,  social_auth_usersocialauth.utype,  social_auth_usersocialauth.status,  social_auth_usersocialauth.modified,  social_auth_usersocialauth.pic,  social_auth_usersocialauth.usercode,  social_auth_usersocialauth.created FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)')
+        # update_session_auth_hash(request, user)
         return HttpResponseRedirect('indexpage')  
     return render(request,'lxpapp/404page.html')
 
@@ -62,6 +64,7 @@ def afterlogin_view(request):
                 else:
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                     return render(request,'loginrelated/wait_for_approval.html')
+                
             elif xx.utype == 2  or xx.utype == 0 :
                 if xx.status:
                     learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
@@ -145,7 +148,7 @@ def afterlogin_view(request):
                             else:
                                 print("form is invalid")
                                 return render(request,'lxpapp/404page.html')
-                            return render(request,'loginrelated/wait_for_approval.html')
+                            return HttpResponseRedirect('indexpage')
                         learnerdetailsForm=forms.LearnerDetailsForm()
                         pskills = models.PassionateSkill.objects.all()
                         kskills = models.KnownSkill.objects.all()
@@ -213,11 +216,21 @@ def getUserTable(request):
     users = UserSocialAuth.objects.raw('SELECT   SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME,  LXPAPP_LEARNERDETAILS.MOBILE FROM  SOCIAL_AUTH_USERSOCIALAUTH  LEFT OUTER JOIN AUTH_USER ON (SOCIAL_AUTH_USERSOCIALAUTH.USER_ID = AUTH_USER.ID)  LEFT OUTER JOIN LXPAPP_LEARNERDETAILS ON (AUTH_USER.ID = LXPAPP_LEARNERDETAILS.LEARNER_ID) ORDER BY  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME')
     return users
 @login_required
-def admin_view_user_view(request):
+def admin_view_user_list_view(request):
     try:    
         if str(request.session['utype']) == 'admin':
             users = getUserTable(request)
-            return render(request,'lxpapp/users/admin_view_user.html',{'users':users})
+            return render(request,'lxpapp/users/admin_view_user_list.html',{'users':users})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+    
+@login_required
+def admin_view_user_grid_view(request):
+    try:    
+        if str(request.session['utype']) == 'admin':
+            users = getUserTable(request)
+            return render(request,'lxpapp/users/admin_view_user_grid.html',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -237,7 +250,7 @@ def update_user_view(request,userfirstname,userlastname,userid,pk):
                 users.utype = usertype[0]
                 users.save()
                 users = getUserTable(request)
-                return HttpResponseRedirect('/admin-view-user',{'users':users})
+                return HttpResponseRedirect('/admin-view-user-list',{'users':users})
             learnercourses = ''
             users = UserSocialAuth.objects.all().filter(id=pk)
             userdetails = models.LearnerDetails.objects.all().filter(learner_id=userid)
@@ -257,7 +270,7 @@ def active_user_view(request,userid,pk):
             if not isfirstlogin:
                 isfirstlogin =models.IsFirstLogIn.objects.create(user_id = userid)
                 isfirstlogin.save()
-            return HttpResponseRedirect('/admin-view-user',{'users':users})
+            return HttpResponseRedirect('/admin-view-user-list',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -268,7 +281,7 @@ def inactive_user_view(request,pk):
             cursor = connection.cursor()
             cursor.execute("UPDATE social_auth_usersocialauth SET status = 0 WHERE id = " + str(pk))
             users = models.User.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
-            return HttpResponseRedirect('/admin-view-user',{'users':users})
+            return HttpResponseRedirect('/admin-view-user-list',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -292,6 +305,6 @@ def delete_user_view(request,userid,pk):
             # cursor.execute("DELETE FROM social_auth_usersocialauth WHERE id = " + str(pk))
             # cursor.execute("DELETE FROM auth_user WHERE id = " + str(userid))
             users = models.User.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(request.user.id))
-            return HttpResponseRedirect('/admin-view-user',{'users':users})
+            return HttpResponseRedirect('/admin-view-user-list',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')

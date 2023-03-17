@@ -10,7 +10,7 @@ from .storage import DjangoUserMixin, DjangoAssociationMixin, \
     DjangoPartialMixin, BaseDjangoStorage
 from .fields import JSONField
 from .managers import UserSocialAuthManager
-
+from datetime import datetime
 
 USER_MODEL = getattr(settings, setting_name('USER_MODEL'), None) or \
     getattr(settings, 'AUTH_USER_MODEL', None) or \
@@ -32,13 +32,13 @@ class AbstractUserSocialAuth(models.Model, DjangoUserMixin):
     provider = models.CharField(max_length=32)
     uid = models.CharField(max_length=UID_LENGTH, db_index=True)
     extra_data = JSONField()
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now())
     modified = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
     utype = models.IntegerField(default=0)
     objects = UserSocialAuthManager()
-    pic = models.TextField()
-
+    pic = models.TextField(default='')
+    usercode = models.TextField(default='')
     def __str__(self):
         return str(self.user)
 
@@ -108,7 +108,7 @@ class Code(models.Model, DjangoCodeMixin):
     email = models.EmailField(max_length=EMAIL_LENGTH)
     code = models.CharField(max_length=32, db_index=True)
     verified = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    timestamp = models.DateTimeField(db_index=True,default=datetime.now())
 
     class Meta:
         app_label = "social_django"
@@ -121,7 +121,7 @@ class Partial(models.Model, DjangoPartialMixin):
     next_step = models.PositiveSmallIntegerField(default=0)
     backend = models.CharField(max_length=32)
     data = JSONField()
-    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    timestamp = models.DateTimeField(db_index=True,default=datetime.now())
 
     class Meta:
         app_label = "social_django"

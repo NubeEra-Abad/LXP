@@ -4,39 +4,36 @@
 
 <head>
   <link rel="stylesheet" href="/static/assets/css/style.css">
-
 </head>
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Short Exams</li>
-  </ol>
-</nav>
-<br><br>
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Short Exams</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-
-          <th>Exam Name</th>
-          <th>Take Exam</th>
-          <th>Results</th>
-        </tr>
-      </thead>
-      {% for t in shortexams %}
-      <tr> 
-        <td> {{t.exam_name}}</td>
-        <td><a class="btn btn-success" href="{% url 'learner-take-short-exam' t.id  %}"><span class="fas fa-angle-double-up"></span></a></td>
-        <td><a class="btn btn-primary" href="{% url 'learner-show-short-exam-reuslt' t.id  %}"><span class="fas fa-angle-double-right"></span></a></td>
-      </tr>
-      {% endfor %}
-    </table>
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Short Exams</li>
+    </ol>
+  </nav>
   </div>
-</div>
+  <div class="container">
+    <div class="panel panel-primary">
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
 
-<br><br><br><br><br><br>
-{% endblock content %}
+            <th>Exam Name</th>
+            <th>Take Exam</th>
+            <th>Results</th>
+          </tr>
+        </thead>
+        {% for t in shortexams %}
+        <tr>
+          <td> {{t.exam_name}}</td>
+          <td><a class="btn btn-success" href="{% url 'learner-take-short-exam' t.id  %}"><span
+                class="fas fa-angle-double-up"></span></a></td>
+          <td><a class="btn btn-primary" href="{% url 'learner-show-short-exam-reuslt' t.id  %}"><span
+                class="fas fa-angle-double-right"></span></a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% endblock content %}

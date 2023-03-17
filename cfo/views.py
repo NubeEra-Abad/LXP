@@ -294,11 +294,11 @@ def cfo_view_batch_view(request):
 
 @login_required
 def cfo_view_batch_details_view(request,batchname,pk):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             batchs = LXPModel.Batch.objects.raw("SELECT lxpapp_batch.id,  GROUP_CONCAT(DISTINCT lxpapp_courseset.courseset_name) as courseset_name,  lxpapp_batch.stdate,  lxpapp_batch.enddate,  GROUP_CONCAT(DISTINCT trainer.first_name || ' ' || trainer.last_name) AS trainer_name,  GROUP_CONCAT(DISTINCT learner.first_name || ' ' || learner.last_name) AS learner_name FROM  lxpapp_batchcourseset  LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchcourseset.batch_id = lxpapp_batch.id)  LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)  LEFT OUTER JOIN lxpapp_batchtrainer ON (lxpapp_batch.id = lxpapp_batchtrainer.batch_id)  LEFT OUTER JOIN auth_user trainer ON (lxpapp_batchtrainer.trainer_id = trainer.id)  LEFT OUTER JOIN lxpapp_courseset ON (lxpapp_batchcourseset.courseset_id = lxpapp_courseset.id)  LEFT OUTER JOIN auth_user learner ON (lxpapp_batchlearner.learner_id = learner.id) WHERE lxpapp_batch.id = " + str(pk))
             return render(request,'cfo/batch/cfo_view_batch_details.html',{'batchs':batchs,'batchname':batchname})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

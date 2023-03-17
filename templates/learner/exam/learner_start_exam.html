@@ -3,8 +3,14 @@
 {%load static%}
 
 <head>
-    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <style>
+       
+        body {
+            background-color: #f1f1f1;
+        }
+
         #regForm {
             background-color: #ffffff;
             margin: 100px auto;
@@ -60,20 +66,17 @@
     </style>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 </head>
-<div>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="../../../../learner/learner-exam">Dashboard</a></li>
-            <li><a href="/learner/learner-exam">Exams</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Running Exam</li>
-        </ol>
-    </nav>
-</div>
+<ol class="breadcrumb text-right">
+    <li><a href="learner-dashboard">Dashboard</a></li>
+    <li><a href="/learner/learner-exam">Exams</a></li>
+    <li class="active">Running Exam</li>
+</ol>
+<div class="jumbotron my-4">
     <h3 style="text-align: center;">{{exam.exam_name}}</h3>
 
     <form id="regForm" method='post'>
         {% csrf_token %}
-        <div align="right " id="displaytimer"><b>Timer: 0 seconds</b></div>
+    <div align="right " id="displaytimer"><b>Timer: 0 seconds</b></div>
 
         {% for q in questions%}
         <div class="tab">{{q.question}}
@@ -113,11 +116,8 @@
         </div>
         <input id='timer' type='hidden' name="timer" value="">
     </form>
-    <div id="waiting" style="display:none">
-        <img src="/static/image/processing-gif-image-5.gif">
-      </div>
+</div>
 <script>
-    
     var currentTab = 0; // Current tab is set to be the first tab (0)
     showTab(currentTab); // Display the current tab
 
@@ -152,7 +152,6 @@
         if (currentTab >= x.length) {
             // ... the form gets submitted:
             document.getElementById("regForm").submit();
-            $('#waiting').show();
             return false;
         }
         // Otherwise, display the correct tab:

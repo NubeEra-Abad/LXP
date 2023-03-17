@@ -1,52 +1,9 @@
 {% extends 'lxpapp/adminbase.html' %}
 {% block content %}
 {%load static%}
-
 <head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/gh/jeffreydwalter/ColReorderWithResize@9ce30c640e394282c9e0df5787d54e5887bc8ecc/ColReorderWithResize.js"></script>
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-
-    select.multiselect {
-      width: 50%;
-      height: 204px;
-      line-height: 50px;
-    }
-
-    select.singleselect {
-      width: 50%;
-    }
-
-    table.dataTable tr.odd {
-      background-color: #E2E4FF;
-    }
-
-    table.dataTable tr.even {
-      background-color: white;
-    }
-  </style>
-  <script src="https://unpkg.com/htmx.org@1.4.1"></script>
-  <script src="https://unpkg.com/htmx.org/dist/ext/class-tools.js"></script>
+  <link rel="stylesheet" href="/static/assets/css/style.css">
 </head>
-<br><br>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -114,12 +71,4 @@
       </div>
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
-    crossorigin="anonymous"></script>
-  <script src="/static/multiselect-dropdown.js"></script>
-</div>
-
-<br><br><br><br><br><br>
 {% endblock content %}

@@ -1101,6 +1101,7 @@ def load_modules(request):
         return render(request, 'hr/module_dropdown_list_options.html', context)
     except:
         return render(request,'lxpapp/404page.html')
+    
 def load_chapters(request):
     try:
         module_id = request.GET.get('module')
