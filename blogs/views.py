@@ -273,21 +273,6 @@ def active_user_view(request,userid,pk):
             return HttpResponseRedirect('/admin-view-user-list',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
-    
-@login_required
-def admin_user_reset_password_view(request,pk):
-    try:    
-        if str(request.session['utype']) == 'admin':
-
-            u = request.user
-            usertochange = models.User.objects.all().filter(id = pk)
-            usertochange.set_password('Nubeera@123')
-            usertochange.save() # Add this line
-            update_session_auth_hash(request, u)
-            users = getUserTable(request)
-            return HttpResponseRedirect('/admin-view-user-list',{'users':users})
-    except:
-        return render(request,'lxpapp/404page.html')
 
 @login_required
 def inactive_user_view(request,pk):

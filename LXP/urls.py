@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin-view-user-grid', views.admin_view_user_grid_view,name='admin-view-user-grid'),
     path('update-user/<userfirstname>/<userlastname>/<userid>/<int:pk>', views.update_user_view,name='update-user'),
     path('active-user/<userid>/<int:pk>', views.active_user_view,name='active-user'),
+    path('admin-user-reset-password/<int:pk>', views.admin_user_reset_password_view,name='admin-user-reset-password'),
     path('inactive-user/<int:pk>', views.inactive_user_view,name='inactive-user'),
     path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),
 
@@ -34,6 +35,7 @@ urlpatterns = [
     path('user-change-password', views.user_change_password_view,name='user-change-password'),
     path('termsandconditions', TemplateView.as_view(template_name='lxpapp/users/term-condition.html'),name='termsandconditions'),
     path('privacypolicy', TemplateView.as_view(template_name='lxpapp/users/privacy-policy.html'),name='privacypolicy'),
+    path('ushms', TemplateView.as_view(template_name='blogs/ushms.html'),name='ushms'),
 
 ]
 

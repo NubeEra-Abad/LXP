@@ -1,6 +1,8 @@
 {% extends 'lxpapp/adminbase.html' %}
 {% block content %}
 {%load static%}
+
+<link rel="stylesheet" href="/static/assets/css/style.css">
 <div class="main-wrapper">
   <div class="page-content">
     <div class="container">
@@ -71,13 +73,13 @@
                           </ul>
                           {% if t.status%}
                           <center>
-                            <a class="btn btn-success btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="far fa-eye"></span></a>
-                            <B>User is Active</B>
+                            <a class="btn btn-primary btn-xs" href="{% url 'inactive-user' t.id  %}"><span class="far fa-eye"></span>
+                            <B>Active</B></a>
                           </center>
                           {% else %}
                           <center>
-                            <a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id  %}"><span class="far fa-eye-slash"></span></a>
-                            <B><font style="color:red;">User is On Hold</font></B>
+                            <a class="btn btn-danger btn-xs" href="{% url 'active-user' t.user_id t.id  %}"><span class="far fa-eye-slash"></span>
+                            <B>On Hold</B></a>
                           </center>
                           {% endif %}
                         </div>

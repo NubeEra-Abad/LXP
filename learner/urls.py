@@ -17,13 +17,12 @@ urlpatterns = [
 
     path('learner-video-course', views.learner_video_Course_view,name='learner-video-course'),
     path('learner-video-course-subject', views.learner_video_Course_subject_view,name='learner-video-course-subject'),
-        path('learner-video-list/<int:subject_id>', views.learner_video_list_view,name='learner-video-list'),
+    path('learner-video-list/<int:subject_id>', views.learner_video_list_view,name='learner-video-list'),
     path('learner-show-video/<int:subject_id>,/<int:video_id>', views.learner_show_video_view,name='learner-show-video'),
     path('learner-video-sesseionmaterial-list/<subject_id>/<video_id>', views.learner_video_sesseionmaterial_list_view,name='learner-video-sesseionmaterial-list'),
     path('learner-see-sesseionmaterial/<subject_id>/<video_id>/<int:pk>', views.learner_see_sesseionmaterial_view,name='learner-see-sesseionmaterial'),
 
     path('learner-studymaterial-course', views.learner_studymaterial_course_view,name='learner-studymaterial-course'),
-    
-
-    path('learner-studymaterial-course-subject', views.learner_studymaterial_course_subject_view,name='learner-studymaterial-course-subject'),
+    path('learner-studymaterial-course-subject/<coursename>/<int:courseset_id>', views.learner_studymaterial_course_subject_view,name='learner-studymaterial-course-subject'),
+    path('learner-studymaterial-subject-chapter/<coursename>/<subjectname>/<int:subject_id>', views.learner_studymaterial_subject_chapter_view,name='learner-studymaterial-subject-chapter'),
 ]

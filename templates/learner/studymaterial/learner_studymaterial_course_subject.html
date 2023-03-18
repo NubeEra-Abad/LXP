@@ -1,171 +1,220 @@
 {% extends 'learner/learnerbase.html' %}
 {% block content %}
 {%load static%}
-<div class="main-wrapper">
-  <div>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Session Recorded Videos</li>
-      </ol>
-    </nav>
-  </div>
-  <section class="course-content">
+<div class="inner-banner">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-9">
-          <div class="showing-list">
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="d-flex align-items-center">
-                  <div class="view-icons">
-                    <a href=" " class="grid-view"><i
-                        class="feather-grid"></i></a>
-                    <a href=" " class="list-view active"><i
-                        class="feather-list"></i></a>
-                  </div>
-                  <div class="show-result">
-                    <h4>Showing 1-9 of 50 results</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="show-filter add-course-info ">
-                  <div class="row gx-2 align-items-center">
-                    <div class="col-md-6 col-item">
-                      <div class=" search-group">
-                        <i class="feather-search"></i>
-                        <input type="text" class="form-control" placeholder="Search our courses">
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-item">
-                      <div class="form-group select-form mb-0">
-                        <select class="form-select select" name="sellist1">
-                          <option>Newly published </option>
-                          <option>published 1</option>
-                          <option>published 2</option>
-                          <option>published 3</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% for t in subjects %}
-          <div class="row">
-            <div class="col-lg-12 col-md-12 d-flex">
-              <div class="course-box course-design list-course d-flex">
-                <div class="product">
-                  <div class="product-img">
-                    <a href="#">
-                      <img class="img-fluid" alt="" src="{{t.thumbnail_url}}">
-                    </a>
-                  </div>
-                  <div class="product-content">
-                    <div class="head-course-title">
-                      <h3 class="title"><a href="#">{{t.id}} _ {{t.name}}</a></h3>
-                    </div>
-                    <div class="course-info border-bottom-0 pb-0 d-flex align-items-center">
-                      <div class="rating-img d-flex align-items-center">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2>{{coursename}}</h2>
+                <p>Learn Web Development by building 25 websites and mobile apps using HTML, CSS, Javascript,
+                    PHP, Python, MySQL & more!</p>
+                <div class="course-info d-flex align-items-center border-bottom-0 m-0 p-0">
+                    <div class="cou-info">
                         <img src="/static/assets/img/icon/icon-01.svg" alt="">
-                        <p>{{t.Vtotal}}</p>
-                      </div>
-                      <div class="course-view d-flex align-items-center">
-                        <img src="/static/assets/img/icon/icon-02.svg" alt="">
-                        <p>{{t.VWatched}}</p>
-                      </div>
-                      <div class="course-view d-flex align-items-center">
-                        <img src="/static/assets/img/icon/messages.svg" alt="">
-                        <p>{{t.Mtotal}}</p>
-                      </div>
-
+                        <p>__ Lesson</p>
                     </div>
-                    <progress id="file" value="{{t.VWatched}}" max="{{t.Vtotal}}"> </progress>
-                  </div>
+                    <div class="cou-info">
+                        <img src="/static/assets/img/icon/timer-icon.svg" alt="">
+                        <p>__ min</p>
+                    </div>
+                    <div class="cou-info">
+                        <img src="/static/assets/img/icon/people.svg" alt="">
+                        <p>__ students enrolled</p>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-          {% endfor %}
+        </div>
+    </div>
+</div>
+<section class="page-content course-sec">
+    <div class="container">
+        <div class="row">
+            <div>
+                <div class="card overview-sec">
+                    <div class="card-body">
+                        <h5 class="subs-title">Overview</h5>
+                        <h6>Course Description</h6>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                            Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                            unknown printer took a galley of type and scrambled it to make a type specimen book.
+                            It has survived not only five centuries, but also the leap into electronic
+                            typesetting, remaining essentially unchanged.</p>
+                        <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem
+                            Ipsum passages, and more recently with desktop publishing software like Aldus
+                            PageMaker including versions of Lorem Ipsum.</p>
+                        <h6>What you'll learn</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Become a UX designer.</li>
+                                    <li>You will be able to add UX designer to your CV</li>
+                                    <li>Become a UI designer.</li>
+                                    <li>Build & test a full website design.</li>
+                                    <li>Build & test a full mobile app.</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Learn to design websites & mobile phone apps.</li>
+                                    <li>You'll learn how to choose colors.</li>
+                                    <li>Prototype your designs with interactions.</li>
+                                    <li>Export production ready assets.</li>
+                                    <li>All the techniques used by UX professionals</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h6>Requirements</h6>
+                        <ul class="mb-0">
+                            <li>You will need a copy of Adobe XD 2019 or above. A free trial can be downloaded
+                                from Adobe.</li>
+                            <li>No previous design experience is needed.</li>
+                            <li class="mb-0">No previous Adobe XD skills are needed.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card content-sec">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h5 class="subs-title">Course Content</h5>
+                            </div>
+                            <div class="col-sm-6 text-sm-end">
+                                <h6>__ Lectures __min</h6>
+                            </div>
+                        </div>
+                        {% for t in list %}
+                        <div class="course-card">
+                            {% if t.srno == 1 %}
+                            <h6 class="cou-title">
+                                <a class="collapsed" data-bs-toggle="collapse" href="#collapseOne{{t.id}}"
+                                    aria-expanded="false">{{t.subject_name}} </a>
+                            </h6>
+                            
+
+                            {% endif %}
+                            <div id="collapseOne{{t.id}}" class="card-collapse collapse" style="">
+                                <ul>
+                                    <li>
+                                        <p><img src="/static/assets/img/icon/play.svg" alt="" class="me-2">
+                                            {{t.chapter_name}}
+                                        <div>
+                                            <a href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id %}">Preview</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+
+<footer class="footer">
+
+    <div class="footer-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="footer-widget footer-about">
+                        <div class="footer-logo">
+                            <img src="/static/assets/img/logo.png" alt="logo">
+                        </div>
+                        <div class="footer-about-content">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat mauris
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat mauris</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-2 col-md-6">
+
+                    <div class="footer-widget footer-menu">
+                        <h2 class="footer-title">For Trainer</h2>
+                        <ul>
+                            <li><a href="instructor-profile.html">Profile</a></li>
+                            <li><a href="login.html">Login</a></li>
+                            <li><a href="register.html">Register</a></li>
+                            <li><a href="instructor-list.html">Trainer</a></li>
+                            <li><a href="deposit-instructor-dashboard.html"> Dashboard</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-lg-2 col-md-6">
+
+                    <div class="footer-widget footer-menu">
+                        <h2 class="footer-title">For Student</h2>
+                        <ul>
+                            <li><a href="student-profile.html">Profile</a></li>
+                            <li><a href="login.html">Login</a></li>
+                            <li><a href="register.html">Register</a></li>
+                            <li><a href="students-list.html">Student</a></li>
+                            <li><a href="deposit-student-dashboard.html"> Dashboard</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="footer-widget footer-contact">
+                        <h2 class="footer-title">News letter</h2>
+                        <div class="news-letter">
+                            <form>
+                                <input type="text" class="form-control" placeholder="Enter your email address"
+                                    name="email">
+                            </form>
+                        </div>
+                        <div class="footer-contact-info">
+                            <div class="footer-address">
+                                <img src="/static/assets/img/icon/icon-20.svg" alt="" class="img-fluid">
+                                <p> 3556 Beech Street, San Francisco,<br> California, CA 94108 </p>
+                            </div>
+                            <p>
+                                <img src="/static/assets/img/icon/icon-19.svg" alt="" class="img-fluid">
+                                <a href="https://dreamslms.dreamguystech.com/cdn-cgi/l/email-protection"
+                                    class="__cf_email__"
+                                    data-cfemail="2a4e584f4b47594647596a4f524b475a464f04494547">[email&#160;protected]</a>
+                            </p>
+                            <p class="mb-0">
+                                <img src="/static/assets/img/icon/icon-21.svg" alt="" class="img-fluid">
+                                +19 123-456-7890
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-bottom">
+        <div class="container">
+
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="privacy-policy">
+                            <ul>
+                                <li><a href="term-condition.html">Terms</a></li>
+                                <li><a href="privacy-policy.html">Privacy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="copyright-text">
+                            <p class="mb-0">&copy; 2022 DreamsLMS. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
-      </div>
     </div>
-  </section>
+</footer>
 </div>
-<script>
-
-  updateSubTotal()
-    ;
-
-  function updateSubTotal() {
-    var table = document.getElementById("dev-table"),
-      sumVal = 0;
-    sumVal1 = 0;
-    var n = "";
-    for (var i = 1; i < table.rows.length; i++) {
-      n = table.rows[i].cells[0].innerHTML;
-      if (n == 'Totals :') {
-        break;
-      }
-      sumVal = sumVal + parseFloat(table.rows[i].cells[1].innerHTML);
-      sumVal1 = sumVal1 + parseFloat(table.rows[i].cells[2].innerHTML);
-    }
-
-    document.getElementById("val").innerHTML = sumVal;
-    document.getElementById("val1").innerHTML = sumVal1;
-    document.getElementById("val2").innerHTML = ((sumVal1 * 100) / sumVal).toPrecision(2) + "%";
-  }
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<div style="text-align: center">
-  <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-</div>
-<script>
-  var xValues = ["Total", "Watch", "To be Watch", ""];
-  var yValues = ["{{tc}}", "{{wc}}", "{{dif}}", ""];
-  var barColors = ["red", "green", "blue", ""];
-
-  new Chart("myChart", {
-    type: "bar",
-    data: {
-      labels: xValues,
-      datasets: [{
-        backgroundColor: barColors,
-        data: yValues
-      }]
-    },
-    options: {
-      title: {
-        display: true,
-        text: "Video Subject List of Course : {{coursename}}"
-      }
-    }
-  });
-</script>
-<script>
-  var xValues = ["Total", "Watch", "To be Watch", ""];
-  var yValues = ["{{tc}}", "{{wc}}", "{{dif}}", 0];
-  var barColors = ["red", "green", "blue", ""];
-
-  new Chart("myChart1", {
-    type: "bar",
-    data: {
-      labels: xValues,
-      datasets: [{
-        backgroundColor: barColors,
-        data: yValues
-      }]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: "Video Subject List of Course : {{coursename}}"
-      }
-    }
-  });
-</script>
 {% endblock content %}

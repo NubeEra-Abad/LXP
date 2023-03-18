@@ -62,7 +62,7 @@
                         <a class="btn btn-success" href="{% url 'learner-show-video' subject_id t.id  %}"><span
                             class="far fa-eye"></span></a>
                         {% else %}
-                        <a href="{% url 'learner-show-video' subject_id t.id  %}" class="btn btn-danger"><span class="far fa-eye"></span></a>
+                        <a class="btn btn-danger"><span class="far fa-eye"></span></a>
                         {% endif %}
 
                         {% if t.matid > 0 %}
