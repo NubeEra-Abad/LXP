@@ -314,14 +314,23 @@ def learner_studymaterial_course_subject_view(request,coursename,courseset_id):
 #    try:     
         if str(request.session['utype']) == 'learner':
             list = LXPModel.Subject.objects.raw("SELECT id, CASE WHEN srno != 1 THEN '' ELSE srno END as srno ,subject_name, chapter_name FROM (    SELECT DISTINCT  lxpapp_subject.id,    lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name,ROW_NUMBER() OVER(PARTITION BY lxpapp_subject.subject_name) as srno FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_subject ON (lxpapp_coursesetdetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id) WHERE lxpapp_coursesetdetails.courseset_id = " + str(courseset_id) + " group by lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name )" )
-            return render(request,'learner/studymaterial/learner_studymaterial_course_subject.html',{'list':list,'coursename':coursename})
+            return render(request,'learner/studymaterial/learner_studymaterial_course_subject.html',{'list':list,'coursename':coursename,'courseset_id':courseset_id})
  #   except:
         return render(request,'lxpapp/404page.html')
 
-def learner_studymaterial_subject_chapter_view(request,coursename,subjectname,subject_id):
+def learner_studymaterial_subject_chapter_view(request,coursename,subjectname,subject_id,courseset_id):
+#    try:     
+        if str(request.session['utype']) == 'learner': 
+            list = LXPModel.Subject.objects.raw("SELECT   lxpapp_chapter.id,  lxpapp_topic.id as topicid,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name,  ROW_NUMBER()OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno FROM  lxpapp_coursesetdetails  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  LEFT OUTER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id) WHERE  lxpapp_coursesetdetails.subject_id = " + str(subject_id) + " AND  lxpapp_coursesetdetails.courseset_id = " + str(courseset_id) + " GROUP BY  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name  ORDER BY  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name")
+            #list = LXPModel.Topic.objects.all().filter(chapter_id__in = LXPModel.Chapter.objects.all().distinct().filter(id__in = LXPModel.CourseSetDetails.objects.all().filter(subject_id=subject_id,courseset_id=courseset_id))).distinct()
+            return render(request,'learner/studymaterial/learner_studymaterial_subject_chapter.html',{'list':list,'coursename':coursename,'subjectname':subjectname,'subject_id':subject_id,'courseset_id':courseset_id})
+ #   except:
+        return render(request,'lxpapp/404page.html')
+
+def learner_studymaterial_chapter_topic_view(request,coursename,subjectname,chaptername,subject_id,chapter_id,courseset_id):
 #    try:     
         if str(request.session['utype']) == 'learner':
-            list = LXPModel.Subject.objects.raw("SELECT  lxpapp_chapter.id,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name,  ROW_NUMBER() OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno,  lxpapp_material.description,  lxpapp_material.urlvalue,  lxpapp_material.mtype   FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id)  INNER JOIN lxpapp_material ON (lxpapp_topic.id = lxpapp_material.topic_id)  AND (lxpapp_material.chapter_id = lxpapp_chapter.id) WHERE  lxpapp_coursesetdetails.subject_id = " + str(subject_id) + " ORDER BY  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name" )
-            return render(request,'learner/studymaterial/learner_studymaterial_subject_chapter.html',{'list':list,'coursename':coursename,'subjectname':subjectname})
+            list = LXPModel.Subject.objects.raw("SELECT DISTINCT lxpapp_topic.topic_name, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, lxpapp_material.chapter_id, lxpapp_material.subject_id, lxpapp_material.id AS matid, lxpapp_topic.id, ROW_NUMBER()OVER (PARTITION BY lxpapp_topic.topic_name) AS srno FROM lxpapp_topic INNER JOIN lxpapp_material ON (lxpapp_material.topic_id = lxpapp_topic.id) AND (lxpapp_material.subject_id = " + str(subject_id) + ") WHERE lxpapp_topic.chapter_id = " + str(chapter_id))
+            return render(request,'learner/studymaterial/learner_studymaterial_chapter_topic.html',{'list':list,'coursename':coursename,'subjectname':subjectname,'chaptername':chaptername,'subject_id':subject_id,'chapter_id':chapter_id})
  #   except:
         return render(request,'lxpapp/404page.html')

@@ -10,10 +10,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h5 class="subs-title">Subject Content of <B><i>{{subjectname}}</h5></i></B>
-                            </div>
-                            <div class="col-sm-6 text-sm-end">
-                                <h6>__ Lectures __min</h6>
+                                <h5 class="subs-title">Topic Content of <B><i>{{chaptername}}</h5>
                             </div>
                         </div>
                         {% for t in list %}
@@ -21,21 +18,21 @@
                             {% if t.srno == 1 %}
                             <h6 class="cou-title">
                                 <a class="collapsed" data-bs-toggle="collapse" href="#collapseOne{{t.id}}"
-                                    aria-expanded="false">{{t.id}} - {{t.chapter_name}} </a>
+                                    aria-expanded="false">{{t.id}} - {{t.topic_name}} </a>
                             </h6>
-
                             {% endif %}
                             <div id="collapseOne{{t.id}}" class="card-collapse collapse" style="">
                                 <ul>
                                     <li>
                                         <p><img src="/static/assets/img/icon/play.svg" alt="" class="me-2">
-                                            {{t.topic_name}}
-                                        
-                                        {% if t.srno == 1 %}
+                                            {{t.description}}
                                         <div>
-                                            <a href="{% url 'learner-studymaterial-chapter-topic' coursename subjectname t.chapter_name|urlencode subject_id t.id courseset_id %}">Preview</a>
+                                            {{t.mtype}}
                                         </div>
-                                        {% endif %}
+                                        <div>
+                                            <a href="#">Preview</a>
+                                        </div>
+
                                     </li>
                                 </ul>
                             </div>
@@ -46,12 +43,14 @@
             </div>
         </div>
 </section>
+
 <footer class="footer">
 
     <div class="footer-top">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6">
+
                     <div class="footer-widget footer-about">
                         <div class="footer-logo">
                             <img src="/static/assets/img/logo.png" alt="logo">

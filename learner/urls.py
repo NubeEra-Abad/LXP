@@ -24,5 +24,6 @@ urlpatterns = [
 
     path('learner-studymaterial-course', views.learner_studymaterial_course_view,name='learner-studymaterial-course'),
     path('learner-studymaterial-course-subject/<coursename>/<int:courseset_id>', views.learner_studymaterial_course_subject_view,name='learner-studymaterial-course-subject'),
-    path('learner-studymaterial-subject-chapter/<coursename>/<subjectname>/<int:subject_id>', views.learner_studymaterial_subject_chapter_view,name='learner-studymaterial-subject-chapter'),
+    path('learner-studymaterial-subject-chapter/<coursename>/<subjectname>/<int:subject_id>/<int:courseset_id>', views.learner_studymaterial_subject_chapter_view,name='learner-studymaterial-subject-chapter'),
+    path('learner-studymaterial-chapter-topic/<coursename>/<subjectname>/<chaptername>/<int:subject_id>/<int:chapter_id>/<int:courseset_id>', views.learner_studymaterial_chapter_topic_view,name='learner-studymaterial-chapter-topic'),
 ]

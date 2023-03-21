@@ -87,19 +87,21 @@
                             {% if t.srno == 1 %}
                             <h6 class="cou-title">
                                 <a class="collapsed" data-bs-toggle="collapse" href="#collapseOne{{t.id}}"
-                                    aria-expanded="false">{{t.subject_name}} </a>
+                                    aria-expanded="false">{{t.id}} - {{t.subject_name}} </a>
                             </h6>
-                            
-
                             {% endif %}
                             <div id="collapseOne{{t.id}}" class="card-collapse collapse" style="">
                                 <ul>
                                     <li>
                                         <p><img src="/static/assets/img/icon/play.svg" alt="" class="me-2">
                                             {{t.chapter_name}}
+                                            {% if t.srno == 1 %}
                                         <div>
-                                            <a href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id %}">Preview</a>
+                                            <a
+                                                href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id courseset_id %}">Preview</a>
                                         </div>
+                                        {% endif %}
+
                                     </li>
                                 </ul>
                             </div>
