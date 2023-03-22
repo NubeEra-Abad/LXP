@@ -9,6 +9,7 @@ from django.shortcuts import (HttpResponse, HttpResponseRedirect,
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
+import json
 
 @login_required
 def cfoclick_view(request):
@@ -235,6 +236,7 @@ def cfo_update_batch_view(request,pk):
                 btrnr["id"]=c.id
                 btrnr["name"]=c.name
                 bPList.append(btrnr)
+            bPList = json.dumps(bPList)
             
             btrainer = []
             for c in batchtrainers:
@@ -255,10 +257,8 @@ def cfo_update_batch_view(request,pk):
                 btrnr["fee"]=c.fee
                 blearner.append(btrnr)
             courses =  LXPModel.Course.objects.all()
-            import json
             btrainer = json.dumps(btrainer)
             blearner = json.dumps(blearner)
-            bPList = json.dumps(bPList)
             query = LXPModel.Batch.objects.get(id=pk)
             stdate = (query.stdate).strftime('%Y-%m-%d')
             enddate = (query.enddate).strftime('%Y-%m-%d')

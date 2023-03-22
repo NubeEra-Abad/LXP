@@ -11,30 +11,111 @@
     </ol>
   </nav>
 </div>
-<div class="card-body">
-  <div class="table-responsive">
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Subject Name</th>
-          <th>Module Name</th>
-          <th>Update</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for t in modules %}
-        <tr>
-          <td> {{t.subject}}</td>
-          <td> {{t.module_name}}</td>
-          <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-module' t.id  %}"><span
-                class="	far fa-edit"></span></a></td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-module' t.id  %}"
-              onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
-        </tr>
+<div class="main-wrapper">
+  <section class="course-content">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-9">
+
+                  <div class="showing-list">
+                      <div class="row">
+                          <div class="col-lg-6">
+                              <div class="d-flex align-items-center">
+                                  <div class="view-icons">
+                                      <a href="course-grid.html" class="grid-view"><i
+                                              class="feather-grid"></i></a>
+                                      <a href="course-list.html" class="list-view active"><i
+                                              class="feather-list"></i></a>
+                                  </div>
+                                  <div class="show-result">
+                                      <h4>Showing 1-9 of 50 results</h4>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="show-filter add-course-info ">
+                                  <form action="#">
+                                      <div class="row gx-2 align-items-center">
+                                          <div class="col-md-6 col-item">
+                                              <div class=" search-group">
+                                                  <i class="feather-search"></i>
+                                                  <input type="text" class="form-control"
+                                                      placeholder="Search our courses">
+                                              </div>
+                                          </div>
+                                          <div class="col-md-6 col-lg-6 col-item">
+                                              <div class="form-group select-form mb-0">
+                                                  <select class="form-select select" name="sellist1">
+                                                      <option>Newly published </option>
+                                                      <option>published 1</option>
+                                                      <option>published 2</option>
+                                                      <option>published 3</option>
+                                                  </select>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                    {% for t in modules %}
+                      <div class="col-lg-12 col-md-12 d-flex">
+                          <div class="course-box course-design list-course d-flex">
+                              <div class="product">
+                                  <div class="product-img">
+                                      <a href="{% url 'cto-update-module' t.id  %}">
+                                          <img class="img-fluid" alt=""
+                                              src="{{t.image}}">
+                                      </a>
+                                      <div class="price">
+                                          <h3>Rs. {{t.price}}</h3>
+                                      </div>
+                                  </div>
+                                  <div class="product-content">
+                                      <div class="head-course-title">
+                                          <h3 class="title"><a href="{% url 'cto-update-module' t.id  %}">{{t.module_name}}</a></h3>
+                                          <div class="all-btn all-category d-flex align-items-center">
+                                            <a class="btn btn-danger btn-xs" href="{% url 'cto-delete-module' t.id  %}"
+                                            onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a>
+                                          </div>
+                                      </div>
+                                      <div class="course-info border-bottom-0 pb-0 d-flex align-items-center">
+                                          <div class="rating-img d-flex align-items-center">
+                                              <img src="/static/assets/img/icon/icon-01.svg" alt="">
+                                              <p>__+ Lesson</p>
+                                          </div>
+                                          <div class="course-view d-flex align-items-center">
+                                              <img src="/static/assets/img/icon/icon-02.svg" alt="">
+                                              <p>__hr __min</p>
+                                          </div>
+                                      </div>
+                                      <div class="course-group d-flex mb-0">
+                                          <div class="course-group-img d-flex">
+                                              <div class="course-name">
+                                                  <h4>{{t.desciption}}</h4>
+                                                  <p>Trainer</p>
+                                              </div>
+                                          </div>
+                                          <div
+                                              class="course-share d-flex align-items-center justify-content-center">
+                                              <a href="#rate"><i class="fa-regular fa-heart"></i></a>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
         {% endfor %}
-      </tbody>
-    </table>
-  </div>
+
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
 </div>
 {% endblock content %}
+
+    

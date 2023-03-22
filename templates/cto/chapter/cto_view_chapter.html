@@ -17,7 +17,7 @@
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
       <thead>
         <tr>
-          <th>Module Name</th>
+          <th>Subject Name</th>
           <th>Chapter Name</th>
           <th>Update</th>
           <th>Delete</th>
@@ -26,7 +26,7 @@
       <tbody>
         {% for t in chapters %}
         <tr>
-          <td> {{t.module}}</td>
+          <td> {{t.subject}}</td>
           <td> {{t.chapter_name}}</td>
           <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-chapter' t.id  %}"><span
                 class="	far fa-edit"></span></a></td>

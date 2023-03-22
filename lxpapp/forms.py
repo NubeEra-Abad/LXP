@@ -39,20 +39,54 @@ class SubjectForm(forms.ModelForm):
         model=models.Subject
         fields=['subject_name']
 
-class ModuleForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ModuleForm, self).__init__(*args, **kwargs)
-    
-    class Meta:
-        model=models.Module
-        fields=['module_name','subject']
-
 class ChapterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ChapterForm, self).__init__(*args, **kwargs)
     class Meta:
         model=models.Chapter
-        fields=['chapter_name','module']
+        fields=['subject', 'chapter_name']
+
+
+class MainHeadForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MainHeadForm, self).__init__(*args, **kwargs)
+        self.fields['mainhead_name'].label = 'Main Head Name'
+    
+
+    mainhead_name = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    class Meta:
+        model=models.MainHead
+        
+        fields=['mainhead_name']
+
+class SubHeadForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SubHeadForm, self).__init__(*args, **kwargs)
+        self.fields['mainhead'].label = 'Main Head Name'
+        self.fields['subhead_name'].label = 'Sub Head Name'
+    
+
+    subhead_name = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    class Meta:
+        model=models.SubHead
+        
+        fields=['mainhead','subhead_name']
+
+        
+class ModuleForm(forms.ModelForm):
+    class Meta:
+        model=models.Module 
+        fields=['mainhead','subhead']
+    def __init__(self, *args, **kwargs):
+        super(ModuleForm, self).__init__(*args, **kwargs)
 
 class TopicForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

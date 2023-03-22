@@ -41,3 +41,4 @@ pandas
 Django-import-export
 pytube
 oauth2client
+django-ckeditor

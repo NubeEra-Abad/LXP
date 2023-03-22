@@ -184,10 +184,173 @@ def cto_delete_knownskill_view(request,pk):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def cto_subject_view(request):
+def cto_add_mainhead_view(request):
     try:
         if str(request.session['utype']) == 'cto':
-            return render(request,'cto/subject/cto_subject.html')
+            form = LXPFORM.MainHeadForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Main Head'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('mainhead_name')
+                    mainhead = LXPModel.MainHead.objects.all().filter(mainhead_name__iexact = name)
+                    if mainhead:
+                        messages.info(request, 'Main Head Name Already Exist')
+                        return redirect(reverse('cto-add-mainhead'))
+                    try:
+                        mainhead = LXPModel.MainHead.objects.create(
+                                                    mainhead_name = name)
+                        mainhead.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-mainhead'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/mainhead/add_edit_mainhead.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_update_mainhead_view(request, pk):
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.MainHead, id=pk)
+            form = LXPFORM.MainHeadForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'mainhead_id': pk,
+                'page_title': 'Edit Main Head'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('mainhead_name')
+                    mainhead = LXPModel.MainHead.objects.all().filter(mainhead_name__iexact = name).exclude(id=pk)
+                    if mainhead:
+                        messages.info(request, 'Main Head Name Already Exist')
+                        return redirect(reverse('cto-update-mainhead', args=[pk]))
+                    try:
+                        mainhead = LXPModel.MainHead.objects.get(id=pk)
+                        mainhead.mainhead_name = name
+                        mainhead.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-update-mainhead', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/mainhead/add_edit_mainhead.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+
+@login_required
+def cto_view_mainhead_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            mainheads = LXPModel.MainHead.objects.all()
+            return render(request,'cto/mainhead/cto_view_mainhead.html',{'mainheads':mainheads})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_delete_mainhead_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            mainhead=LXPModel.MainHead.objects.get(id=pk)
+            mainhead.delete()
+            return HttpResponseRedirect('/cto/mainhead/cto-view-mainhead')
+        mainheads = LXPModel.MainHead.objects.all()
+        return render(request,'cto/mainhead/cto_view_mainhead.html',{'mainheads':mainheads})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_add_subhead_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.SubHeadForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Sub Head'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('subhead_name')
+                    mainid = form.cleaned_data.get('mainhead').pk
+                    subhead = LXPModel.SubHead.objects.all().filter(subhead_name__iexact = name)
+                    if subhead:
+                        messages.info(request, 'Sub Head Name Already Exist')
+                        return redirect(reverse('cto-add-subhead'))
+                    try:
+                        subhead = LXPModel.SubHead.objects.create(mainhead_id =mainid,
+                                                    subhead_name = name)
+                        subhead.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-subhead'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/subhead/add_edit_subhead.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_update_subhead_view(request, pk):
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.SubHead, id=pk)
+            form = LXPFORM.SubHeadForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'subhead_id': pk,
+                'page_title': 'Edit Sub Head'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('subhead_name')
+                    mainid = form.cleaned_data.get('mainhead').pk
+                    subhead = LXPModel.SubHead.objects.all().filter(subhead_name__iexact = name).exclude(id=pk)
+                    if subhead:
+                        messages.info(request, 'Sub Head Name Already Exist')
+                        return redirect(reverse('cto-update-subhead', args=[pk]))
+                    try:
+                        subhead = LXPModel.SubHead.objects.get(id=pk)
+                        subhead.mainhead_id = mainid
+                        subhead.subhead_name = name
+                        subhead.save()
+                        messages.success(request, "Successfully Updated")
+                        subheads = LXPModel.SubHead.objects.all()
+                        return render(request,'cto/subhead/cto_view_subhead.html',{'subheads':subheads})
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/subhead/add_edit_subhead.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+
+@login_required
+def cto_view_subhead_view(request):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            subheads = LXPModel.SubHead.objects.all()
+            return render(request,'cto/subhead/cto_view_subhead.html',{'subheads':subheads})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_delete_subhead_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            subhead=LXPModel.SubHead.objects.get(id=pk)
+            subhead.delete()
+            subheads = LXPModel.SubHead.objects.all()
+            return render(request,'cto/subhead/cto_view_subhead.html',{'subheads':subheads})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -337,109 +500,6 @@ def cto_upload_subject_details_csv_view(request):
             return render(request,'cto/subject/cto_upload_subject_details_csv.html')
     except:
         return render(request,'lxpapp/404page.html')
-    
-@login_required
-def cto_module_view(request):
-    try:
-        if str(request.session['utype']) == 'cto':
-            return render(request,'cto/module/cto_module.html')
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def cto_add_module_view(request):
-    try:
-        if str(request.session['utype']) == 'cto':
-            form = LXPFORM.ModuleForm(request.POST or None)
-            context = {
-                'form': form,
-                'page_title': 'Add Module'
-            }
-            if request.method == 'POST':
-                if form.is_valid():
-                    name = form.cleaned_data.get('module_name')
-                    subject = form.cleaned_data.get('subject').pk
-                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name)
-                    if module:
-                        messages.info(request, 'Module Name Already Exist')
-                        return redirect(reverse('cto-add-module'))
-                    try:
-                        module = LXPModel.Module.objects.create(
-                                                    module_name = name,
-                                                    subject_id = subject)
-                        module.save()
-                        messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-module'))
-                    except Exception as e:
-                        messages.error(request, "Could Not Add " + str(e))
-                else:
-                    messages.error(request, "Fill Form Properly")
-            return render(request, 'cto/module/add_edit_module.html', context)
-    except:
-        return render(request,'lxpapp/404page.html')
-    
-@login_required
-def cto_update_module_view(request, pk):
-    try:
-        if str(request.session['utype']) == 'cto':
-            instance = get_object_or_404(LXPModel.Module, id=pk)
-            form = LXPFORM.ModuleForm(request.POST or None, instance=instance)
-            context = {
-                'form': form,
-                'module_id': pk,
-                'page_title': 'Edit Module'
-            }
-            if request.method == 'POST':
-                if form.is_valid():
-                    name = form.cleaned_data.get('module_name')
-                    subject = form.cleaned_data.get('subject').pk
-                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name).exclude(id=pk)
-                    if module:
-                        messages.info(request, 'Module Name Already Exist')
-                        return redirect(reverse('cto-update-module', args=[pk]))
-                    try:
-                        module = LXPModel.Module.objects.get(id=pk)
-                        module.module_name = name
-                        module.subject_id = subject
-                        module.save()
-                        messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-update-module', args=[pk]))
-                    except Exception as e:
-                        messages.error(request, "Could Not Add " + str(e))
-                else:
-                    messages.error(request, "Fill Form Properly")
-            return render(request, 'cto/module/add_edit_module.html', context)
-    except:
-        return render(request,'lxpapp/404page.html')
-    
-@login_required
-def cto_view_module_view(request):
-    try:
-        if str(request.session['utype']) == 'cto':
-            c_list = LXPModel.Module.objects.all()
-            return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def cto_delete_module_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'cto':  
-            module=LXPModel.Module.objects.get(id=pk)
-            module.delete()
-            return HttpResponseRedirect('/cto/module/cto-view-module')
-        modules = LXPModel.Module.objects.all()
-        return render(request,'cto/module/cto_view_module.html',{'modules':modules})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def cto_chapter_view(request):
-    try:
-        if str(request.session['utype']) == 'cto':
-            return render(request,'cto/chapter/cto_chapter.html')
-    except:
-        return render(request,'lxpapp/404page.html')
 
 @login_required
 def cto_add_chapter_view(request):
@@ -453,7 +513,7 @@ def cto_add_chapter_view(request):
             if request.method == 'POST':
                 if form.is_valid():
                     name = form.cleaned_data.get('chapter_name')
-                    module = form.cleaned_data.get('module').pk
+                    subject = form.cleaned_data.get('subject').pk
                     chapter = LXPModel.Chapter.objects.all().filter(chapter_name__iexact = name)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
@@ -461,7 +521,7 @@ def cto_add_chapter_view(request):
                     try:
                         chapter = LXPModel.Chapter.objects.create(
                                                     chapter_name = name,
-                                                    module_id = module)
+                                                    subject_id = subject)
                         chapter.save()
                         messages.success(request, "Successfully Updated")
                         return redirect(reverse('cto-add-chapter'))
@@ -487,7 +547,7 @@ def cto_update_chapter_view(request, pk):
             if request.method == 'POST':
                 if form.is_valid():
                     name = form.cleaned_data.get('chapter_name')
-                    module = form.cleaned_data.get('module').pk
+                    subject = form.cleaned_data.get('subject').pk
                     chapter = LXPModel.Chapter.objects.all().filter(chapter_name__iexact = name).exclude(id=pk)
                     if chapter:
                         messages.info(request, 'Chapter Name Already Exist')
@@ -495,10 +555,11 @@ def cto_update_chapter_view(request, pk):
                     try:
                         chapter = LXPModel.Chapter.objects.get(id=pk)
                         chapter.chapter_name = name
-                        chapter.module_id = module
+                        chapter.subject_id = subject
                         chapter.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-update-chapter', args=[pk]))
+                        chapters = LXPModel.Chapter.objects.all()
+                        return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':chapters})
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -527,6 +588,135 @@ def cto_delete_chapter_view(request,pk):
         return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':chapters})
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_add_module_view(request):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.ModuleForm(request.POST or None)
+            clist = LXPModel.Subject.objects.raw('SELECT    lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')
+            sub = ''
+            oldsub = ''
+            js = '[{' 
+            a = 1
+            for x in clist:
+                sub = x.subject_name
+                if sub != oldsub:
+                    if a != 1:
+                        js = js[:len(js)-2]
+                        js += ']},{'    
+                    oldsub = sub
+                    a = 2
+                    js += 'id: "s___' + str(x.id) + '", text: "' + str(sub) + '", expanded: false, items: ['
+                
+                js += '       { id: "c___' + str(x.chapter_id) + '", text: "' + str(x.chapter_name) + '" }, '
+                    # [{
+                    #     id: 2, text: "Kendo UI Project", expanded: false, items:
+                    #     [
+                    #         { id: 3, text: "about.html" },
+                    #         { id: 4, text: "index.html" },
+                    #         { id: 5, text: "logo.png" }
+                    #     ]
+                    # }]
+            js = js[:len(js)-2]
+            js += ']}]' 
+            context = {
+                'form': form,
+                'js': js,
+                'page_title': 'Add Module'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = request.POST.get('module_name')
+                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name)
+                    if module:
+                        messages.info(request, 'Module Name Already Exist')
+                        return redirect(reverse('cto-add-module'))
+                    try:
+                        mainhead = form.cleaned_data.get('mainhead').pk
+                        subhead = form.cleaned_data.get('subhead').pk
+                        desciption = request.POST.get('desciption')
+                        whatlearn = request.POST.get('whatlearn')
+                        themecolor = request.POST.get('themecolor')
+                        tags = request.POST.get('tags')
+                        image = request.POST.get ('image')
+                        price = request.POST.get ('price')
+                        module = LXPModel.Module.objects.create(
+                                                    module_name = name,
+                                                    mainhead_id = mainhead,
+                                                    subhead_id = subhead,
+                                                    desciption = desciption,
+                                                    whatlearn = whatlearn,
+                                                    themecolor = themecolor,
+                                                    image = image,
+                                                    price = price,
+                                                    tags = tags)
+                        module.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-module'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/module/add_edit_module.html', context)
+    #except:
+        return render(request,'lxpapp/404page.html')
+    
+@login_required
+def cto_update_module_view(request, pk):
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Module, id=pk)
+            form = LXPFORM.ModuleForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'module_id': pk,
+                'page_title': 'Edit Module'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('module_name')
+                    subject = form.cleaned_data.get('subject').pk
+                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name).exclude(id=pk)
+                    if module:
+                        messages.info(request, 'Module Name Already Exist')
+                        return redirect(reverse('cto-update-module', args=[pk]))
+                    try:
+                        module = LXPModel.Module.objects.get(id=pk)
+                        module.module_name = name
+                        module.subject_id = subject
+                        module.save()
+                        c_list = LXPModel.Module.objects.all()
+                        return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/module/add_edit_module.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+    
+@login_required
+def cto_view_module_view(request):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            c_list = LXPModel.Module.objects.all()
+            return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_delete_module_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'cto':  
+            module=LXPModel.Module.objects.get(id=pk)
+            module.delete()
+            return HttpResponseRedirect('/cto/module/cto-view-module')
+        modules = LXPModel.Module.objects.all()
+        return render(request,'cto/module/cto_view_module.html',{'modules':modules})
+    except:
+        return render(request,'lxpapp/404page.html')
+
 
 @login_required
 def cto_topic_view(request):
@@ -1093,6 +1283,15 @@ def cto_upload_courseset_details_csv_view(request):
     except:
         return render(request,'lxpapp/404page.html')
 
+def load_subheads(request):
+    try:
+        mainhead_id = request.GET.get('mainhead')
+        subheads = LXPModel.SubHead.objects.filter(mainhead_id=mainhead_id).order_by('subhead_name')
+        context = {'subheads': subheads}
+        return render(request, 'hr/subhead_dropdown_list_options.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
 def load_modules(request):
     try:
         subject_id = request.GET.get('subject')
@@ -1104,8 +1303,8 @@ def load_modules(request):
     
 def load_chapters(request):
     try:
-        module_id = request.GET.get('module')
-        chapters = LXPModel.Chapter.objects.filter(module_id=module_id).order_by('chapter_name')
+        subject_id = request.GET.get('subject')
+        chapters = LXPModel.Chapter.objects.filter(subject_id=subject_id).order_by('chapter_name')
         context = {'chapters': chapters}
         return render(request, 'hr/chapter_dropdown_list_options.html', context)
     except:

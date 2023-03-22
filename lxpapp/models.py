@@ -5,6 +5,7 @@ from django.db.models import Q, Sum
 import requests
 import humanize
 import datetime
+from colorfield.fields import ColorField
 
 class UserPics(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
@@ -41,7 +42,7 @@ class IsFirstLogIn(models.Model):
     def __str__(self):
         return self.user
 
-
+#Need to del
 class Subject(models.Model):
     subject_name = models.CharField(max_length=200)
 
@@ -50,20 +51,58 @@ class Subject(models.Model):
             return self.subject_name
         except:
             return self
-
-class Module(models.Model):
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    module_name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.module_name
-
 class Chapter(models.Model):
     chapter_name = models.CharField(max_length=200)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.chapter_name
+    
+# class Module(models.Model):
+#     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+#     module_name = models.CharField(max_length=200)
+
+#     def __str__(self):
+#         return self.module_name
+
+class MainHead(models.Model):
+    mainhead_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        try:
+            return self.mainhead_name
+        except:
+            return self
+
+class SubHead(models.Model):
+    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
+    subhead_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.subhead_name
+class Module(models.Model):
+    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
+    subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)
+    module_name = models.CharField(max_length=200)
+    desciption = models.CharField(max_length=1000,default='')
+    whatlearn = models.CharField(max_length=1000,default='')
+    includes = models.CharField(max_length=1000,default='')
+    cat=(('1','Red'),('2','Green'),('3','Blue'),('4','Orange'))
+    themecolor=models.CharField(max_length=200,choices=cat,default='Green')
+    tags = models.CharField(max_length=10000,default='')
+    image = models.CharField(max_length=1000,default='')
+    price = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.module_name
+
+class ModuleChapter(models.Model):
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return self.chapter.chapter_name
+
 
 class Topic(models.Model):
     topic_name = models.CharField(max_length=200)

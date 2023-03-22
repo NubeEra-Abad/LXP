@@ -19,24 +19,31 @@ urlpatterns = [
     path('cto-view-knownskill', views.cto_view_knownskill_view,name='cto-view-knownskill'),
     path('cto-delete-knownskill/<int:pk>', views.cto_delete_knownskill_view,name='cto-delete-knownskill'),
 
-    path('cto-subject', views.cto_subject_view,name='cto-subject'),
     path('cto-add-subject', views.cto_add_subject_view,name='cto-add-subject'),
     path('cto-update-subject/<int:pk>', views.cto_update_subject_view,name='cto-update-subject'),
     path('cto-view-subject', views.cto_view_subject_view,name='cto-view-subject'),
     path('cto-delete-subject/<int:pk>', views.cto_delete_subject_view,name='cto-delete-subject'),
     path('cto-upload-subject-details-csv', views.cto_upload_subject_details_csv_view,name='cto-upload-subject-details-csv'),
 
-    path('cto-module', views.cto_module_view,name='cto-module'),
-    path('cto-add-module', views.cto_add_module_view,name='cto-add-module'),
-    path('cto-update-module/<int:pk>', views.cto_update_module_view,name='cto-update-module'),
-    path('cto-view-module', views.cto_view_module_view,name='cto-view-module'),
-    path('cto-delete-module/<int:pk>', views.cto_delete_module_view,name='cto-delete-module'),
-
-    path('cto-chapter', views.cto_chapter_view,name='cto-chapter'),
     path('cto-add-chapter', views.cto_add_chapter_view,name='cto-add-chapter'),
     path('cto-update-chapter/<int:pk>', views.cto_update_chapter_view,name='cto-update-chapter'),
     path('cto-view-chapter', views.cto_view_chapter_view,name='cto-view-chapter'),
     path('cto-delete-chapter/<int:pk>', views.cto_delete_chapter_view,name='cto-delete-chapter'),
+
+    path('cto-add-mainhead', views.cto_add_mainhead_view,name='cto-add-mainhead'),
+    path('cto-update-mainhead/<int:pk>', views.cto_update_mainhead_view,name='cto-update-mainhead'),
+    path('cto-view-mainhead', views.cto_view_mainhead_view,name='cto-view-mainhead'),
+    path('cto-delete-mainhead/<int:pk>', views.cto_delete_mainhead_view,name='cto-delete-mainhead'),
+
+    path('cto-add-subhead', views.cto_add_subhead_view,name='cto-add-subhead'),
+    path('cto-update-subhead/<int:pk>', views.cto_update_subhead_view,name='cto-update-subhead'),
+    path('cto-view-subhead', views.cto_view_subhead_view,name='cto-view-subhead'),
+    path('cto-delete-subhead/<int:pk>', views.cto_delete_subhead_view,name='cto-delete-subhead'),
+
+    path('cto-add-module', views.cto_add_module_view,name='cto-add-module'),
+    path('cto-update-module/<int:pk>', views.cto_update_module_view,name='cto-update-module'),
+    path('cto-view-module', views.cto_view_module_view,name='cto-view-module'),
+    path('cto-delete-module/<int:pk>', views.cto_delete_module_view,name='cto-delete-module'),
 
     path('cto-topic', views.cto_topic_view,name='cto-topic'),
     path('cto-add-topic', views.cto_add_topic_view,name='cto-add-topic'),
@@ -60,8 +67,10 @@ urlpatterns = [
     path('cto-delete-courseset/<int:pk>', views.cto_delete_courseset_view,name='cto-delete-courseset'),
     path('cto-upload-courseset-details-csv', views.cto_upload_courseset_details_csv_view,name='cto-upload-courseset-details-csv'),
 
-    path('ajax/load-modules/', views.load_modules, name='ajax_load_modules'),
+    path('ajax/load-subheads/', views.load_subheads, name='ajax_load_subheads'),
     path('ajax/load-chapters/', views.load_chapters, name='ajax_load_chapters'),
+
+    path('ajax/load-modules/', views.load_modules, name='ajax_load_modules'),
     path('ajax/load-topics/', views.load_topics, name='ajax_load_topics'),
 
 
