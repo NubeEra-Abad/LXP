@@ -264,7 +264,7 @@ def active_user_view(request,userid,pk):
     try:    
         if str(request.session['utype']) == 'admin':
             cursor = connection.cursor()
-            cursor.execute("UPDATE social_auth_usersocialauth SET status = 1 WHERE id = " + str(pk))
+            cursor.execute("UPDATE social_auth_usersocialauth SET status = 1, utype = CASE WHEN utype = 0 THEN 2 ELSE utype END WHERE id = " + str(pk))
             users = models.User.objects.raw("SELECT * FROM social_auth_usersocialauth where user_id = " + str(pk))
             isfirstlogin =models.IsFirstLogIn.objects.all().filter(user_id = userid)
             if not isfirstlogin:

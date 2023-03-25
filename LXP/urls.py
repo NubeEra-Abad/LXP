@@ -4,6 +4,10 @@ from lxpapp import views
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 urlpatterns = [
     
     path('admin/', admin.site.urls),
@@ -38,5 +42,6 @@ urlpatterns = [
     path('ushms', TemplateView.as_view(template_name='blogs/ushms.html'),name='ushms'),
 
 ]
-
-
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL,
+                              document_root=settings.MEDIA_ROOT)

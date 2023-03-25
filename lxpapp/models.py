@@ -91,6 +91,7 @@ class Module(models.Model):
     themecolor=models.CharField(max_length=200,choices=cat,default='Green')
     tags = models.CharField(max_length=10000,default='')
     image = models.CharField(max_length=1000,default='')
+    banner = models.CharField(max_length=1000,default='')
     price = models.IntegerField(default=0)
     
     def __str__(self):
@@ -456,9 +457,8 @@ class TrainerNotification(models.Model):
 
 class Material(models.Model):
     subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
-    module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
     chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
-    topic=models.ForeignKey(Topic,on_delete=models.SET_NULL, null=True)
+    topic=models.CharField(max_length=200)
     cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))
     mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
     urlvalue=models.CharField(max_length=200)
@@ -478,9 +478,9 @@ class Batch(models.Model):
    def __str__(self):
       return self.batch_name
 
-class BatchCourseSet(models.Model):
+class BatchModule(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
-   courseset=models.ForeignKey(CourseSet,on_delete=models.SET_NULL, null=True)
+   module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
 
 class BatchRecordedVDOList(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
@@ -597,3 +597,7 @@ class SessionMaterial(models.Model):
     mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
     urlvalue=models.CharField(max_length=200)
     description=models.CharField(max_length=200)
+
+class LearnerMaterialWatched(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    material=models.ForeignKey(Material,on_delete=models.SET_NULL, null=True)

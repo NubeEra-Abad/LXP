@@ -105,7 +105,7 @@
                                     aria-expanded="false">{{t.chapter_name}} </a>
                             </h6>
                             {% endif %}
-                            <div id="collapseOne{{t.chapter_id}}" class="card-collapse collapse" style="">
+                            <div id="collapseOne{{t.chapter_id}}" class="card-collapse collapse" >
                                 <ul>
                                     <li>
                                         <p>
@@ -121,12 +121,8 @@
                                             <i class="far fa-clone" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
                                             {% endif %}
                                             {{t.topic}}
-                                            {% if t.srno == 1 %}
                                         <div>
-                                            <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id modulename module_id %}">Preview</a>
                                         </div>
-                                        {% endif %}
-
                                     </li>
                                 </ul>
                             </div>

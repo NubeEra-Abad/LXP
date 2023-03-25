@@ -6,7 +6,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Study Material Course</li>
+        <li class="breadcrumb-item active" aria-current="page">Study Material Modules</li>
       </ol>
     </nav>
   </div>
@@ -19,9 +19,9 @@
               <div class="col-lg-6">
                 <div class="d-flex align-items-center">
                   <div class="view-icons">
-                    <a href="../../../learner/learner-video-course-subject" class="grid-view"><i
+                    <a href="../../../learner/learner-studymaterial-module" class="grid-view"><i
                         class="feather-grid"></i></a>
-                    <a href="../../../learner/learner-video-course-subject" class="list-view active"><i
+                    <a href="../../../learner/learner-studymaterial-module" class="list-view active"><i
                         class="feather-list"></i></a>
                   </div>
                   <div class="show-result">
@@ -53,19 +53,19 @@
               </div>
             </div>
           </div>
-          {% for t in subject %}
+          {% for t in modules %}
           <div class="row">
             <div class="col-lg-12 col-md-12 d-flex">
               <div class="course-box course-design list-course d-flex">
                 <div class="product">
                   <div class="product-img">
-                    <a href="{% url 'learner-studymaterial-course-subject' t.courseset_name t.id %}">
-                      <img class="img-fluid" alt="" src="/static/image/courses.png">
+                    <a href="{% url 'learner-studymaterial-module-chapter' t.module_name t.id %}">
+                      <img class="img-fluid" alt="" src={{t.image}}>
                     </a>
                   </div>
                   <div class="product-content">
                     <div class="head-course-title">
-                      <h3 class="title"><a href="{% url 'learner-studymaterial-course-subject' t.courseset_name t.id %}">{{t.courseset_name}}</a></h3>
+                      <h3 class="title"><a href="{% url 'learner-studymaterial-module-chapter' t.module_name t.id %}">{{t.module_name}}</a></h3>
                     </div>
                     <div class="progress-stip">
                       <div class="progress-bar bg-success progress-bar-striped " style="width:{{t.per}}%">

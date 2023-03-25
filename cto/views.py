@@ -448,13 +448,9 @@ def cto_upload_subject_details_csv_view(request):
                     file_data = csv_file.read().decode("utf-8")		
                     lines = file_data.split("\n")
                     oldsub =''
-                    oldmod=''
                     oldchap=''
-                    oldtop=''
                     subid =0
-                    modid=0
                     chapid=0
-                    topid=0
                     no = 0
                     for line in lines:						
                         no = no + 1
@@ -470,33 +466,12 @@ def cto_upload_subject_details_csv_view(request):
                                 else:
                                     for x in sub:
                                         subid=x.id  
-                            if fields[1] != oldmod:
-                                oldmod = fields[1] 
-                                mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
-                                if not mod:
-                                    mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
-                                    mod.save()
-                                    modid=mod.id
-                                else:
-                                    for x in mod:
-                                        modid=x.id 
-                            if fields[2] != oldchap:
-                                oldchap = fields[2] 
-                                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
+                            if fields[1] != oldchap:
+                                oldchap = fields[1] 
+                                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
                                 if not chap:
-                                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
+                                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
                                     chap.save()
-                                    chapid=chap.id
-                                else:
-                                    for x in chap:
-                                        chapid=x.id 
-                            if fields[3] != oldtop:
-                                oldtop = fields[3] 
-                                top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
-                                if not top:
-                                    top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
-                                    top.save()
-                                    topid=top.id
             return render(request,'cto/subject/cto_upload_subject_details_csv.html')
     except:
         return render(request,'lxpapp/404page.html')
@@ -583,11 +558,12 @@ def cto_delete_chapter_view(request,pk):
         if str(request.session['utype']) == 'cto':  
             chapter=LXPModel.Chapter.objects.get(id=pk)
             chapter.delete()
-            return HttpResponseRedirect('/cto/chapter/cto-view-chapter')
-        chapters = LXPModel.Chapter.objects.all()
-        return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':chapters})
+            chapters = LXPModel.Chapter.objects.all()
+            return render(request,'cto/chapter/cto_view_chapter.html',{'chapters':chapters})
     except:
         return render(request,'lxpapp/404page.html')
+    return render(request,'lxpapp/404page.html')
+    
 
 @login_required
 def cto_add_module_view(request):
@@ -603,61 +579,68 @@ def cto_add_module_view(request):
                 sub = x.subject_name
                 if sub != oldsub:
                     if a != 1:
-                        js = js[:len(js)-2]
+                        js = js[:len(js)-1]
                         js += ']},{'    
                     oldsub = sub
                     a = 2
-                    js += 'id: "s___' + str(x.id) + '", text: "' + str(sub) + '", expanded: false, items: ['
+                    js += 'id: "s___' + str(x.id) + '", text: "' + str(sub).replace('\r','') + '", expanded: false, items: ['
                 
-                js += '       { id: "c___' + str(x.chapter_id) + '", text: "' + str(x.chapter_name) + '" }, '
-                    # [{
-                    #     id: 2, text: "Kendo UI Project", expanded: false, items:
-                    #     [
-                    #         { id: 3, text: "about.html" },
-                    #         { id: 4, text: "index.html" },
-                    #         { id: 5, text: "logo.png" }
-                    #     ]
-                    # }]
-            js = js[:len(js)-2]
+                js += ' { id: "c___' + str(x.chapter_id) + '", text: "' + str(x.chapter_name).replace('\r','') + '" },'
+            js = js[:len(js)-1]
             js += ']}]' 
+            bchapter = []
+
             context = {
                 'form': form,
                 'js': js,
-                'page_title': 'Add Module'
+                'page_title': 'Add Module',
+                'chapterlistbyid' : bchapter
             }
             if request.method == 'POST':
-                if form.is_valid():
-                    name = request.POST.get('module_name')
-                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name)
-                    if module:
-                        messages.info(request, 'Module Name Already Exist')
-                        return redirect(reverse('cto-add-module'))
-                    try:
-                        mainhead = form.cleaned_data.get('mainhead').pk
-                        subhead = form.cleaned_data.get('subhead').pk
-                        desciption = request.POST.get('desciption')
-                        whatlearn = request.POST.get('whatlearn')
-                        themecolor = request.POST.get('themecolor')
-                        tags = request.POST.get('tags')
-                        image = request.POST.get ('image')
-                        price = request.POST.get ('price')
-                        module = LXPModel.Module.objects.create(
-                                                    module_name = name,
-                                                    mainhead_id = mainhead,
-                                                    subhead_id = subhead,
-                                                    desciption = desciption,
-                                                    whatlearn = whatlearn,
-                                                    themecolor = themecolor,
-                                                    image = image,
-                                                    price = price,
-                                                    tags = tags)
-                        module.save()
-                        messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-module'))
-                    except Exception as e:
-                        messages.error(request, "Could Not Add " + str(e))
-                else:
-                    messages.error(request, "Fill Form Properly")
+                name = request.POST.get('module_name')
+                module = LXPModel.Module.objects.all().filter(module_name__iexact = name)
+                if module:
+                    messages.info(request, 'Module Name Already Exist')
+                    return redirect(reverse('cto-add-module'))
+                try:
+                    mainhead = request.POST.get('mainhead')
+                    subhead = request.POST.get('subhead')
+                    desciption = request.POST.get('desciption')
+                    whatlearn = request.POST.get('whatlearn')
+                    includes = request.POST.get('includes')
+                    themecolor = request.POST.get('themecolor')
+                    tags = request.POST.get('tag-output')
+                    tags = str(tags).replace('<span class="close">x</span>','')
+                    if ',' not in tags:
+                        tags = tags + '<span class="close">x</span>'
+                    image = request.POST.get ('image')
+                    banner = request.POST.get ('banner')
+                    price = request.POST.get ('price')
+                    chapterlist = request.POST.get ('chapterlist')
+                    module = LXPModel.Module.objects.create(
+                                                module_name = name,
+                                                mainhead_id = mainhead,
+                                                subhead_id = subhead,
+                                                desciption = desciption,
+                                                whatlearn = whatlearn,
+                                                themecolor = themecolor,
+                                                includes = includes,
+                                                image = image,
+                                                banner = banner,
+                                                price = price,
+                                                tags = tags)
+                    module.save()
+                    fields = chapterlist.split(",")
+                    for x in fields:
+                        if x[0:4] != "s___":
+                           ch = LXPModel.ModuleChapter.objects.create(
+                                    module_id = module.id,
+                                    chapter_id = x[4:])
+                           ch.save()
+                    messages.success(request, "Successfully Updated")
+                    return redirect(reverse('cto-add-module'))
+                except Exception as e:
+                    messages.error(request, "Could Not Add " + str(e))
             return render(request, 'cto/module/add_edit_module.html', context)
     #except:
         return render(request,'lxpapp/404page.html')
@@ -666,32 +649,108 @@ def cto_add_module_view(request):
 def cto_update_module_view(request, pk):
     try:
         if str(request.session['utype']) == 'cto':
+            module_name = ''
+            desciption = ''
+            whatlearn = ''
+            includes = ''
+            image = ''
+            price = ''
+            tags = ''
+            banner = ''
             instance = get_object_or_404(LXPModel.Module, id=pk)
+            modbyid = LXPModel.Module.objects.all().filter(id=pk)
+            
+
+            for x in modbyid:
+                module_name = x.module_name
+                desciption = x.desciption
+                whatlearn = x.whatlearn
+                includes = x.includes
+                image = x.image
+                price = x.price
+                tags = x.tags
+                banner = x.banner
+            tags = tags.replace(', ','<span class="close">x</span>, ')
+            tags += '<span class="close">x</span>'
             form = LXPFORM.ModuleForm(request.POST or None, instance=instance)
+            clist = LXPModel.Subject.objects.raw('SELECT    lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')
+            chapbyid= list(LXPModel.ModuleChapter.objects.raw('SELECT 1 as id,  lxpapp_chapter.chapter_name FROM  lxpapp_modulechapter  INNER JOIN lxpapp_chapter ON (lxpapp_modulechapter.chapter_id = lxpapp_chapter.id)  WHERE lxpapp_modulechapter.module_id = ' + str(pk)))
+
+            bchapter = []
+            for c in chapbyid:
+                btrnr={}
+                btrnr["name"]=str(c.chapter_name).replace('\r','')
+                bchapter.append(btrnr)
+            sub = ''
+            oldsub = ''
+            js = '[{' 
+            a = 1
+            for x in clist:
+                sub = x.subject_name
+                if sub != oldsub:
+                    if a != 1:
+                        js = js[:len(js)-1]
+                        js += ']},{'    
+                    oldsub = sub
+                    a = 2
+                    js += 'id: "s___' + str(x.id) + '", text: "' + str(sub).replace('\r','') + '", expanded: false, items: ['
+                
+                js += ' { id: "c___' + str(x.chapter_id) + '", text: "' + str(x.chapter_name).replace('\r','') + '" },'
+            js = js[:len(js)-1]
+            js += ']}]' 
             context = {
                 'form': form,
+                'js': js,
                 'module_id': pk,
-                'page_title': 'Edit Module'
+                'page_title': 'Edit Module',
+                'chapterlistbyid' : bchapter,
+                'mod_name' : module_name,
+                'desciption' : desciption,
+                'whatlearn' : whatlearn,
+                'includes' : includes,
+                'image' : image,
+                'banner' : banner,
+                'price' : price,
+                'tags' : tags
             }
             if request.method == 'POST':
-                if form.is_valid():
-                    name = form.cleaned_data.get('module_name')
-                    subject = form.cleaned_data.get('subject').pk
-                    module = LXPModel.Module.objects.all().filter(module_name__iexact = name).exclude(id=pk)
-                    if module:
-                        messages.info(request, 'Module Name Already Exist')
-                        return redirect(reverse('cto-update-module', args=[pk]))
-                    try:
-                        module = LXPModel.Module.objects.get(id=pk)
-                        module.module_name = name
-                        module.subject_id = subject
-                        module.save()
-                        c_list = LXPModel.Module.objects.all()
-                        return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
-                    except Exception as e:
-                        messages.error(request, "Could Not Add " + str(e))
-                else:
-                    messages.error(request, "Fill Form Properly")
+                name = request.POST.get('module_name')
+                module = LXPModel.Module.objects.all().filter(module_name__iexact = name).exclude(id=pk)
+                if module:
+                    messages.info(request, 'Module Name Already Exist')
+                    return redirect(reverse('cto-update-module', args=[pk]))
+                try:
+                    module = LXPModel.Module.objects.get(id=pk)
+                    mainhead = request.POST.get('mainhead')
+                    subhead = request.POST.get('subhead')
+                    desciption = request.POST.get('desciption')
+                    whatlearn = request.POST.get('whatlearn')
+                    includes = request.POST.get('includes')
+                    themecolor = request.POST.get('themecolor')
+                    tags = request.POST.get('tag-output')
+                    tags = str(tags).replace('<span class="close">x</span>','')
+                    if ',' not in tags:
+                        tags = tags + '<span class="close">x</span>'
+                    image = request.POST.get ('image')
+                    banner = request.POST.get ('banner')
+                    price = request.POST.get ('price')
+                    chapterlist = request.POST.get ('chapterlist')
+                    module.module_name = name
+                    module.mainhead_id = mainhead
+                    module.subhead_id = subhead
+                    module.desciption = desciption
+                    module.whatlearn = whatlearn
+                    module.themecolor = themecolor
+                    module.includes = includes
+                    module.image = image
+                    module.banner = banner
+                    module.price = price
+                    module.tags = tags
+                    module.save()
+                    c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
+                    return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
+                except Exception as e:
+                    messages.error(request, "Could Not Add " + str(e))
             return render(request, 'cto/module/add_edit_module.html', context)
     except:
         return render(request,'lxpapp/404page.html')
@@ -700,7 +759,7 @@ def cto_update_module_view(request, pk):
 def cto_view_module_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = LXPModel.Module.objects.all()
+            c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
             return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -711,9 +770,8 @@ def cto_delete_module_view(request,pk):
         if str(request.session['utype']) == 'cto':  
             module=LXPModel.Module.objects.get(id=pk)
             module.delete()
-            return HttpResponseRedirect('/cto/module/cto-view-module')
-        modules = LXPModel.Module.objects.all()
-        return render(request,'cto/module/cto_view_module.html',{'modules':modules})
+        c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
+        return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
     except:
         return render(request,'lxpapp/404page.html')
 

@@ -22,8 +22,14 @@ urlpatterns = [
     path('learner-video-sesseionmaterial-list/<subject_id>/<video_id>', views.learner_video_sesseionmaterial_list_view,name='learner-video-sesseionmaterial-list'),
     path('learner-see-sesseionmaterial/<subject_id>/<video_id>/<int:pk>', views.learner_see_sesseionmaterial_view,name='learner-see-sesseionmaterial'),
 
-    path('learner-studymaterial-course', views.learner_studymaterial_course_view,name='learner-studymaterial-course'),
-    path('learner-studymaterial-course-subject/<coursename>/<int:courseset_id>', views.learner_studymaterial_course_subject_view,name='learner-studymaterial-course-subject'),
-    path('learner-studymaterial-subject-chapter/<coursename>/<subjectname>/<int:subject_id>/<int:courseset_id>', views.learner_studymaterial_subject_chapter_view,name='learner-studymaterial-subject-chapter'),
-    path('learner-studymaterial-chapter-topic/<coursename>/<subjectname>/<chaptername>/<int:subject_id>/<int:chapter_id>/<int:courseset_id>', views.learner_studymaterial_chapter_topic_view,name='learner-studymaterial-chapter-topic'),
+    path('learner-studymaterial-module', views.learner_studymaterial_module_view,name='learner-studymaterial-module'),
+    path('learner-studymaterial-module-chapter/<modulename>/<int:module_id>', views.learner_studymaterial_module_chapter_view,name='learner-studymaterial-module-chapter'),
+    path('learner-studymaterial-chapter-show/<int:chapter_id>/<modulename>/<int:module_id>', views.learner_studymaterial_chapter_show_view,name='learner-studymaterial-chapter-show'),
+    path('learner-studymaterial-show/<studymaterialtype>/<int:pk>', views.learner_show_studymaterial_view,name='learner-studymaterial-show'),
+    path('ajax/save-topic/', views.save_topic, name='ajax_save_topic'),
+
+    path('learner-availablecourse-module', views.learner_availablecourse_module_view,name='learner-availablecourse-module'),
+    path('learner-availablecourse-module-chapter/<modulename>/<int:module_id>', views.learner_availablecourse_module_chapter_view,name='learner-availablecourse-module-chapter'),
+    
 ]
+#<a href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id courseset_id %}">Preview</a>

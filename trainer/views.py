@@ -32,32 +32,23 @@ def trainer_dashboard_view(request):
         return render(request,'lxpapp/404page.html')
  
 @login_required
-def trainer_material_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            return render(request,'trainer/material/trainer_material.html')
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
 def trainer_add_material_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 materialForm=LXPFORM.MaterialForm(request.POST)
                 subject = request.POST.get('subject')
-                module = request.POST.get('module')
                 chapter = request.POST.get('chapter')
-                topic = request.POST.get('topic')
                 mtype = request.POST.get('mtype')
+                topic = request.POST.get('topic')
                 urlvalue = request.POST.get('urlvalue')
                 description = request.POST.get('description')
-                material = LXPModel.Material.objects.create(subject_id = subject,module_id = module,chapter_id = chapter,topic_id = topic,mtype = mtype,urlvalue = urlvalue,description = description)
+                material = LXPModel.Material.objects.create(subject_id = subject,chapter_id = chapter,topic = topic,mtype = mtype,urlvalue = urlvalue,description = description)
                 material.save()
                 
             materialForm=LXPFORM.MaterialForm()
             return render(request,'trainer/material/trainer_add_material.html',{'materialForm':materialForm})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
     
 @login_required
@@ -67,18 +58,16 @@ def trainer_update_material_view(request,pk):
             materialForm=LXPFORM.MaterialForm(request.POST)
             if request.method=='POST':
                 subject = request.POST.get('subject')
-                module = request.POST.get('module')
                 chapter = request.POST.get('chapter')
-                topic = request.POST.get('topic')
                 mtype = request.POST.get('mtype')
+                topic = request.POST.get('topic')
                 urlvalue = request.POST.get('urlvalue')
                 description = request.POST.get('description')
                 
                 material = LXPModel.Material.objects.get(id=pk)
                 material.subject_id = subject
-                material.module_id = module
                 material.chapter_id = chapter
-                material.topic_id = topic
+                material.topic = topic
                 material.mtype = mtype
                 material.urlvalue = urlvalue
                 material.description = description
@@ -221,12 +210,9 @@ def trainer_upload_material_details_csv_view(request):
             mat_url =''
             mat_desc =''
             oldsub =''
-            oldmod=''
             oldchap=''
-            oldtop=''
-            corsetid =0
+            top=''
             subid =0
-            modid=0
             chapid=0
             topid=0
             tochk=''
@@ -235,9 +221,9 @@ def trainer_upload_material_details_csv_view(request):
                 no = no + 1
                 if no > 1:
                     fields = line.split(",")
-                    mat_type = str(fields[4]).replace('///',',').replace('\r','')
-                    mat_url = str(fields[5]).replace('///',',').replace('\r','')
-                    mat_desc = str(fields[6]).replace('///',',').replace('\r','')
+                    mat_type = str(fields[3]).replace('///',',').replace('\r','')
+                    mat_url = str(fields[4]).replace('///',',').replace('\r','')
+                    mat_desc = str(fields[5]).replace('///',',').replace('\r','')
                     tochk = str(fields[0]).replace('///',',').replace('\r','')
                     if tochk != oldsub:
                         oldsub = tochk
@@ -250,43 +236,22 @@ def trainer_upload_material_details_csv_view(request):
                             for x in sub:
                                 subid=x.id  
                     tochk = str(fields[1]).replace('///',',').replace('\r','')
-                    if tochk != oldmod:
-                        oldmod = tochk
-                        mod = LXPModel.Module.objects.all().filter(module_name__exact = oldmod,subject_id=subid)
-                        if not mod:
-                            mod = LXPModel.Module.objects.create(module_name = oldmod,subject_id=subid)
-                            mod.save()
-                            modid=mod.id
-                        else:
-                            for x in mod:
-                                modid=x.id 
-                    tochk = str(fields[2]).replace('///',',').replace('\r','')
                     if tochk != oldchap:
                         oldchap = tochk
-                        chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,module_id=modid)
+                        chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
                         if not chap:
-                            chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,module_id=modid)
+                            chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
                             chap.save()
                             chapid=chap.id
                         else:
                             for x in chap:
                                 chapid=x.id 
-                    tochk = str(fields[3]).replace('///',',').replace('\r','')
-                    if tochk != oldtop:
-                        oldtop = tochk
-                        top = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtop,chapter_id=chapid)
-                        if not top:
-                            top = LXPModel.Topic.objects.create(topic_name = oldtop,chapter_id=chapid)
-                            top.save()
-                            topid1=top.id 
-                        else:
-                            for x in top:
-                                topid1=x.id 
+                    top = str(fields[2]).replace('///',',').replace('\r','')
+                    
                     mat = LXPModel.Material.objects.create(
                                 subject_id=subid,
-                                module_id=modid,
                                 chapter_id=chapid,
-                                topic_id=topid1,
+                                topic =top,
                                 mtype = mat_type,
                                 urlvalue = mat_url,
                                 description = mat_desc
@@ -619,6 +584,8 @@ def trainer_mcqquestion_view(request):
 def trainer_add_mcqquestion_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
+            storage = messages.get_messages(request)
+            storage.used = True
             if request.method=='POST':
                 mcqquestionForm=LXPFORM.McqQuestionForm(request.POST)
                 if mcqquestionForm.is_valid(): 
@@ -632,6 +599,7 @@ def trainer_add_mcqquestion_view(request):
                         exam=LXPModel.Exam.objects.get(id=request.POST.get('examID'))
                         mcqquestion = LXPModel.McqQuestion.objects.create(exam_id = exam.id,question = questiontext,option1=request.POST.get('option1'),option2=request.POST.get('option2'),option3=request.POST.get('option3'),option4=request.POST.get('option4'),answer=request.POST.get('answer'),marks=request.POST.get('marks'))
                         mcqquestion.save()
+                        messages.info(request, 'Mcq Question added')
                 else:
                     print("form is invalid")
             mcqquestionForm=LXPFORM.McqQuestionForm()

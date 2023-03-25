@@ -6,7 +6,6 @@ urlpatterns = [
 
     path('trainer-dashboard', views.trainer_dashboard_view,name='trainer-dashboard'),
 
-    path('trainer-material', views.trainer_material_view,name='trainer-material'),
     path('trainer-add-material', views.trainer_add_material_view,name='trainer-add-material'),
     path('trainer-update-material/<int:pk>', views.trainer_update_material_view,name='trainer-update-material'),
     path('trainer-view-material', views.trainer_view_material_view,name='trainer-view-material'),

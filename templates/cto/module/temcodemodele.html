@@ -71,7 +71,6 @@
 					{% render_field form.subhead class="form-control"%}
 				</div>
 			</div>
-			
 			<div>
 				<div class="row">
 					<div class="col-md-12 col-xl-12">
@@ -80,7 +79,7 @@
 								<label for="chapter_name">Chapters</label>
 								<div id="treeview"></div>
 								<input type="text" name="chapterlist" id="chapterlist" class="form-control"
-									placeholder="chapter list" hidden>
+									placeholder="chapter list">
 							</div>
 						</div>
 					</div>
@@ -138,14 +137,6 @@
 					<label for="image">Image Link</label>
 					<input type="text" name="image" id="image" class="form-control" placeholder="Path to Image" required
 						value={{image}}>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-12 col-xl-12">
-					<label for="banner">Banner Link</label>
-					<input type="text" name="banner" id="banner" class="form-control" placeholder="Path to Banner Image" required
-						value={{banner}}>
 				</div>
 			</div>
 			<div class="row">
@@ -224,16 +215,6 @@ debugger;
 		treeview.select(bar);
 		treeview.dataItem(bar).set("checked", true);
 	};
-	var checkedNodes = [],
-			treeView = $("#treeview").data("kendoTreeView"),
-			message;
-
-		checkedNodeIds(treeView.dataSource.view(), checkedNodes);
-
-		if (checkedNodes.length > 0) {
-			message = checkedNodes.join(",");
-		}
-		document.getElementById("chapterlist").value = message;
 
 </script>
 <script>
@@ -274,5 +255,8 @@ debugger;
 		}
 		tagOutput.value = tagArray.join(", ");
 	}
+
+
+
 </script>
 {% endblock content %}
