@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'social_django',        #add this
     'django.contrib.humanize',  # A set of Django template filters useful for adding a “human touch” to data.
-    'colorfield',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
