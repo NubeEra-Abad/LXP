@@ -3,6 +3,7 @@ from learner import views
 urlpatterns = [
     path('learnerclick', views.learnerclick_view),
     path('learner-dashboard', views.learner_dashboard_view,name='learner-dashboard'),
+    
     path('learner-exam', views.learner_exam_view,name='learner-exam'),
     path('learner-take-exam/<int:pk>', views.learner_take_exam_view,name='learner-take-exam'),
     path('learner-start-exam/<int:pk>', views.learner_start_exam_view,name='learner-start-exam'),
@@ -23,13 +24,18 @@ urlpatterns = [
     path('learner-see-sesseionmaterial/<subject_id>/<video_id>/<int:pk>', views.learner_see_sesseionmaterial_view,name='learner-see-sesseionmaterial'),
 
     path('learner-studymaterial-module', views.learner_studymaterial_module_view,name='learner-studymaterial-module'),
-    path('learner-studymaterial-module-chapter/<modulename>/<int:module_id>', views.learner_studymaterial_module_chapter_view,name='learner-studymaterial-module-chapter'),
-    path('learner-studymaterial-chapter-show/<int:chapter_id>/<modulename>/<int:module_id>', views.learner_studymaterial_chapter_show_view,name='learner-studymaterial-chapter-show'),
+    path('learner-studymaterial-module-chapter/<int:module_id>', views.learner_studymaterial_module_chapter_view,name='learner-studymaterial-module-chapter'),
+    path('learner-studymaterial-chapter-show/<int:chapter_id>/<int:module_id>', views.learner_studymaterial_chapter_show_view,name='learner-studymaterial-chapter-show'),
     path('learner-studymaterial-show/<studymaterialtype>/<int:pk>', views.learner_show_studymaterial_view,name='learner-studymaterial-show'),
     path('ajax/save-topic/', views.save_topic, name='ajax_save_topic'),
 
     path('learner-availablecourse-module', views.learner_availablecourse_module_view,name='learner-availablecourse-module'),
     path('learner-availablecourse-module-chapter/<modulename>/<int:module_id>', views.learner_availablecourse_module_chapter_view,name='learner-availablecourse-module-chapter'),
     
+    path('learner-chapterexam/<int:chapter_id>/<int:module_id>', views.learner_chapterexam_view,name='learner-chapterexam'),
+    path('learner-take-chapterexam/<int:pk>', views.learner_take_chapterexam_view,name='learner-take-chapterexam'),
+    path('learner-start-chapterexam/<int:pk>', views.learner_start_chapterexam_view,name='learner-start-chapterexam'),
+    path('learner-show-chapterexam-reuslt/<int:pk>', views.learner_show_chapterexam_reuslt_view,name='learner-show-chapterexam-reuslt'),
+    path('learner-show-chapterexam-reuslt-details/<int:pk>', views.learner_show_chapterexam_reuslt_details_view,name='learner-show-chapterexam-reuslt-details'),
 ]
 #<a href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id courseset_id %}">Preview</a>

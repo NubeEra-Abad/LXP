@@ -1,8 +1,19 @@
 from django import forms
 from social_django.models import UserSocialAuth
+from django.contrib.auth.models import User
 
 from . import models
 
+class UserRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+                'username', 
+                'password', 
+                'email', 
+                'first_name', 
+                'last_name'
+        ]
 
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)
@@ -103,7 +114,7 @@ class LearnerDetailsForm(forms.ModelForm):
     )
     class Meta:
         model=models.LearnerDetails
-        fields=['user_full_name','mobile','iswhatsapp','whatsappno']
+        fields=['user_full_name','mobile','iswhatsapp','whatsappno','profile_pic']
 
 class CourseForm(forms.ModelForm):
     class Meta:
@@ -220,3 +231,11 @@ class SessionMaterialForm(forms.ModelForm):
                 pass
         elif self.instance.pk:
             self.fields['video'].queryset = self.instance.playlist.video_set.order_by('name')
+
+class ChapterQuestionForm(forms.ModelForm):
+    class Meta:
+        model=models.ChapterQuestion
+        fields=['subject', 'chapter','marks','question','option1','option2','option3','option4','answer']
+        widgets = {
+            'question': forms.Textarea(attrs={'rows': 3, 'cols': 50,'autofocus': True})
+        }

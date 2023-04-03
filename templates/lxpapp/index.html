@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from dreamslms.dreamguystech.com/html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 11 Oct 2022 14:21:20 GMT -->
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -44,6 +42,7 @@
                                     <span></span>
                                 </span>
                             </a>
+                            
                             <a href="index.html" class="navbar-brand logo">
                                 <img src="/static/assets/img/logo.png" class="img-fluid" alt="Logo">
                             </a>
@@ -171,7 +170,7 @@
                                         alt="Logo">oogle</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link header-login" href="../../../../register">Signup</a>
+                                <a class="nav-link header-login" href="../../../../signup">Signup</a>
                             </li>
                         </ul>
                     </div>
@@ -610,7 +609,7 @@
                                         <div class="course-group d-flex">
                                             <div class="course-group-img d-flex">
                                                 <a href="instructor-profile.html"><img
-                                                        src="/static/assets/img/user/user2.jpg" alt=""
+                                                        src="{{request.user.profile_pic}}" alt=""
                                                         class="img-fluid"></a>
                                                 <div class="course-name">
                                                     <h4><a href="instructor-profile.html">Jenis R.</a></h4>
@@ -1027,7 +1026,7 @@
                             <div class="product-content">
                                 <div class="course-group d-flex">
                                     <div class="course-group-img d-flex">
-                                        <a href="instructor-profile.html"><img src="/static/assets/img/user/user2.jpg"
+                                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}"
                                                 alt="" class="img-fluid"></a>
                                         <div class="course-name">
                                             <h4><a href="instructor-profile.html">John Smith</a></h4>
@@ -1177,7 +1176,7 @@
                             <div class="product-content">
                                 <div class="course-group d-flex">
                                     <div class="course-group-img d-flex">
-                                        <a href="instructor-profile.html"><img src="/static/assets/img/user/user2.jpg"
+                                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}"
                                                 alt="" class="img-fluid"></a>
                                         <div class="course-name">
                                             <h4><a href="instructor-profile.html">John Smith</a></h4>
@@ -1689,7 +1688,7 @@
                                         <div class="four-testimonial-founder">
                                             <div class="fount-about-img">
                                                 <a href="instructor-profile.html"><img
-                                                        src="/static/assets/img/user/user2.jpg" alt=""
+                                                        src="{{request.user.profile_pic}}" alt=""
                                                         class="img-fluid"></a>
                                             </div>
                                             <h3><a href="instructor-profile.html">David Lee</a></h3>
@@ -2154,7 +2153,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="copyright-text">
-                                    <p class="mb-0">&copy; 2022 DreamsLMS. All rights reserved.</p>
+                                    <p class="mb-0">&copy; 2022 NubeeraLXP. All rights reserved.</p>
                                 </div>
                             </div>
                         </div>
@@ -2186,7 +2185,5 @@
 
     <script src="/static/assets/js/script.js"></script>
 </body>
-
-<!-- Mirrored from dreamslms.dreamguystech.com/html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 11 Oct 2022 14:22:23 GMT -->
 
 </html>

@@ -73,17 +73,20 @@ def afterlogin_view(request):
                         return render(request,'learner/learner_dashboard.html')
                     else:
                         if request.method=='POST':
-                            learnerdetailsForm=forms.LearnerDetailsForm(request.POST)
+                            learnerdetailsForm=forms.LearnerDetailsForm(request.POST,request.FILES)
                             if learnerdetailsForm.is_valid():
                                 user_full_name = learnerdetailsForm.cleaned_data["user_full_name"]
                                 mobile = learnerdetailsForm.cleaned_data["mobile"]
                                 iswhatsapp = learnerdetailsForm.cleaned_data["iswhatsapp"]
                                 whatsappno = learnerdetailsForm.cleaned_data["whatsappno"]
-                                learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
-                                                                                    user_full_name= user_full_name,
-                                                                                    mobile=mobile,
-                                                                                    iswhatsapp=iswhatsapp,
-                                                                                    whatsappno=whatsappno)
+                                learnerdetails=learnerdetailsForm.save(commit=False)
+
+                                learner_id=request.user.id
+                                user_full_name= user_full_name
+                                mobile=mobile
+                                iswhatsapp=iswhatsapp
+                                whatsappno=whatsappno
+                                
                                 learnerdetails.save()
                                 
                                 obj = models.LearnerDetails.objects.latest('id')

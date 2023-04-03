@@ -52,7 +52,7 @@
                 <div class="course-info d-flex align-items-center border-bottom-0 m-0 p-0">
                     <div class="cou-info">
                         <img src="/static/assets/img/icon/icon-01.svg" alt="">
-                        <p>__ Lesson</p>
+                        <p>{{Topiccount}} Lesson</p>
                     </div>
                     <div class="cou-info">
                         <img src="/static/assets/img/icon/timer-icon.svg" alt="">
@@ -75,7 +75,7 @@
                     <div class="card-body">
                         <h5 class="subs-title">Overview</h5>
                         <h6>Course Description</h6>
-                        <p>{{d.desciption}}</p>
+                        <p>{{d.description}}</p>
                         <h6>What you'll learn</h6>
                         <div class="row">
                             <div class="col-md-6">
@@ -120,13 +120,12 @@
                                             {%elif t.mtype == "HTML" %}
                                             <i class="far fa-clone" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
                                             {% endif %}
-                                            {{t.topic}}
+                                            {{t.topic}} 
                                             {% if t.srno == 1 %}
                                         <div>
-                                            <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id modulename module_id %}">Preview</a>
+                                            <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id module_id %}">Let's Start</a>
                                         </div>
                                         {% endif %}
-
                                     </li>
                                 </ul>
                             </div>

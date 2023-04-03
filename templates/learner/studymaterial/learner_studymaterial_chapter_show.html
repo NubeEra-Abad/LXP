@@ -9,12 +9,14 @@
 <link rel="stylesheet" href="/static/assets/css/feather.css">
 
 <link rel="stylesheet" href="/static/assets/css/style.css">
+
 <div>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="../../../../learner/learner-studymaterial-module">Courses</a></li>
-            <li class="breadcrumb-item"><a href="../../../../learner/learner-studymaterial-module-chapter/{{modulename}}/{{module_id}} ">{{modulename}}</a></li>
+            <li class="breadcrumb-item"><a href="../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
+            </li>
             <li class="breadcrumb-item active" aria-current="page">Preview</li>
         </ol>
     </nav>
@@ -28,10 +30,10 @@
                 </h6>
                 <div id="collapseOne" class="card-collapse ">
                     <div class="progress-stip">
-                        <div class="progress-bar bg-success progress-bar-striped active-stip"></div>
+                        <div class="progress-bar bg-success progress-bar-striped " style="width:{{per}}%"></div>
                     </div>
                     <div class="student-percent lesson-percent">
-                        <p>10hrs<span>50%</span></p>
+                        <p>{{watchcount}} out of {{Topiccount}} completed<span>{{per}}%</span></p>
                     </div>
                     <ul>
                         {% for t in list %}
@@ -62,6 +64,16 @@
                                 <img src="/static/assets/img/icon/lock.svg" alt="">
                             </div>
                             {% endif %}
+                        </li>
+                        {% if forloop.last %}
+                        <li>
+                            <p class="play-intro">
+                                <a href="{% url 'learner-chapterexam' t.chapter_id module_id %}">Exam</a>
+                            </p>
+                            <div>
+                                <img src="/static/assets/img/icon/exam.svg" alt="">
+                            </div>
+                            {% endif %}
 
                         </li>
                         {% endfor %}
@@ -71,19 +83,17 @@
         </div>
     </div>
     <div class="col-lg-8">
-        <div class="student-widget lesson-introduction">
-            <div class="lesson-widget-group">
-                <div id="instruction">
-                    <h4 class="tittle">Preview Window</h4>
-                    <p>
-                        Please click topic name present on left side to see preview here.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="tittle" id="iframeHeading"></h4>
-                </div>
-                <iframe id="myIframe"></iframe>
+        <div id="mydiv" class="lesson-introduction">
+            <div id="instruction">
+                <h4 class="tittle">Preview Window</h4>
+                <p>
+                    Please click topic name present on left side to see preview here.
+                </p>
             </div>
+            <div>
+                <h4 class="tittle" id="iframeHeading"></h4>
+            </div>
+            <iframe id="myIframe"></iframe>
         </div>
     </div>
 </div>
@@ -100,6 +110,8 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $("#mydiv").css("height", ($(document).height() - 50) + "px");
+
     const links = $('.link');
     const myIframe = $('#myIframe');
     const iframeHeading = $('#iframeHeading');
@@ -119,7 +131,11 @@
             url: "{% url 'ajax_save_topic' %}",
             method: 'POST',
             contentType: 'application/json',
-            data: { id: selectedValue },
+            data: {
+                id: selectedValue,
+                module_id: '{{module_id}}',
+                chapter_id: '{{chapter_id}}'
+            },
             success: function (response) {
                 console.log('Updated model successfully');
             },

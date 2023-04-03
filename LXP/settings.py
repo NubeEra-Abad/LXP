@@ -29,8 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -64,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware', #add 
+    #'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 CSRF_COOKIE_SECURE=False
 ROOT_URLCONF = 'LXP.urls'
@@ -186,3 +185,29 @@ MESSAGE_TAGS = {
         messages.WARNING: 'alert-warning',
         messages.ERROR: 'alert-danger',
 }
+# AUTHENTICATION_BACKENDS = (
+#     'django.contrib.auth.backends.ModelBackend',
+#     'social_core.backends.github.GithubOAuth2',
+#     'social_core.backends.twitter.TwitterOAuth',
+#     'social_core.backends.facebook.FacebookOAuth2',
+#     'social_core.backends.google.GoogleOAuth2',
+# )
+
+# # Social Auth Login Facebook
+# SOCIAL_AUTH_FACEBOOK_KEY = '1346019242792593'  # App ID
+# SOCIAL_AUTH_FACEBOOK_SECRET = '67d2c449cce04b913a5d57f971ccf529'  # App Secret
+
+# # Social Auth Login Twitter
+# SOCIAL_AUTH_TWITTER_KEY = '9TD8f5fhasdsbf4w61GSM9'
+# SOCIAL_AUTH_TWITTER_SECRET = 'mwtdcUe4uOvvjDk2Ausb45gsasdasdasashw65454TNSx'
+
+# # Social Auth Login Github
+# SOCIAL_AUTH_GITHUB_KEY = 'ba5e9414a8222a152d9a'
+# SOCIAL_AUTH_GITHUB_SECRET = 'e2ac3f9a818dc8082cebbd67800c05f8206bf277'
+
+# # Social Auth Login 
+# SOCIAL_AUTH_LOGIN_ERROR_URL = '/settings/'
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/indexpage'
+# SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
+

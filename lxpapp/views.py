@@ -9,10 +9,75 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 from social_django.models import UserSocialAuth
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
+from datetime import datetime
+login_time = datetime.now()
+logout_time  = datetime.now()
+from django.http import HttpResponse
+
+def signup(request):
+        if request.method=="POST":
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            username = request.POST['username']
+            password = request.POST['password']
+            email = request.POST['email']
+            newuser = User.objects.create_user(
+                first_name=first_name, 
+                last_name=last_name,
+                username=username,
+                password=password,
+                email=email
+            )
+            try:
+                newuser.save()
+            except:
+                return HttpResponse("Something went wrong.")
+        else:
+            form = forms.UserRegistrationForm()
+        return render(request, 'loginrelated/signup.html', {'form':form})
+
+
+def session_expire_view(request):
+    A = models.LastUserLogin.objects.all()
+    if A:
+        for x in A:
+            id = x.id
+            logout_time = datetime.now()
+            dur = str( logout_time - login_time).split(".")[0]
+            userlog = models.UserLog.objects.create(
+                    user_id = id,
+                    login = login_time,
+                    logout = logout_time,
+                    dur = dur
+                    )
+            userlog.save()
+    models.LastUserLogin.objects.all().delete()
+    return render(request, 'loginrelated/user_session_expire.html')
 
 def login(request):
     return render(request, 'lxpapp/index.html')
 
+@receiver(user_logged_in)
+def post_login(sender, user, request, **kwargs):
+    if not user.is_staff:
+        pic = UserSocialAuth.objects.only('pic').get(user_id=user.id).pic
+        User.objects.filter(id=user.id).update(profile_pic=pic)
+    login_time = datetime.now()
+
+@receiver(user_logged_out)
+def post_logout(sender, user, request, **kwargs):
+    logout_time = datetime.now()
+    dur = str( logout_time - login_time).split(".")[0]
+    userlog = models.UserLog.objects.create(
+              user = user,
+              login = login_time,
+              logout = logout_time,
+              dur = dur
+            )
+    userlog.save()
+    models.LastUserLogin.objects.all().delete()
 
 @login_required
 def user_change_password_view(request):
@@ -24,7 +89,7 @@ def user_change_password_view(request):
             u.save() # Add this line
             update_session_auth_hash(request, u)
             return HttpResponseRedirect('indexpage')  
-        return render(request, 'lxpapp/users/changepassword.html')
+        return render(request, 'loginrelated/changepassword.html')
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -35,6 +100,7 @@ def home(request):
         # update_session_auth_hash(request, user)
         return HttpResponseRedirect('indexpage')  
     return render(request,'lxpapp/404page.html')
+
 
 def afterlogin_view(request):
     user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
@@ -67,6 +133,7 @@ def afterlogin_view(request):
                 
             elif xx.utype == 2  or xx.utype == 0 :
                 if xx.status:
+                    request.session.set_expiry(2400)
                     learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
                     if learnerdetails:
                         request.session['utype'] = 'learner'
@@ -215,6 +282,11 @@ def contactus_view(request):
 def getUserTable(request):
     users = UserSocialAuth.objects.raw('SELECT   SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME,  LXPAPP_LEARNERDETAILS.MOBILE FROM  SOCIAL_AUTH_USERSOCIALAUTH  LEFT OUTER JOIN AUTH_USER ON (SOCIAL_AUTH_USERSOCIALAUTH.USER_ID = AUTH_USER.ID)  LEFT OUTER JOIN LXPAPP_LEARNERDETAILS ON (AUTH_USER.ID = LXPAPP_LEARNERDETAILS.LEARNER_ID) ORDER BY  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME')
     return users
+
+@login_required
+def getUserTableWithAdmin(request):
+    users = UserSocialAuth.objects.raw('SELECT   SOCIAL_AUTH_USERSOCIALAUTH.ID,  SOCIAL_AUTH_USERSOCIALAUTH.USER_ID,  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME,  LXPAPP_LEARNERDETAILS.MOBILE FROM  SOCIAL_AUTH_USERSOCIALAUTH  LEFT OUTER JOIN AUTH_USER ON (SOCIAL_AUTH_USERSOCIALAUTH.USER_ID = AUTH_USER.ID)  LEFT OUTER JOIN LXPAPP_LEARNERDETAILS ON (AUTH_USER.ID = LXPAPP_LEARNERDETAILS.LEARNER_ID) ORDER BY  AUTH_USER.FIRST_NAME,  AUTH_USER.LAST_NAME')
+    return users
 @login_required
 def admin_view_user_list_view(request):
     try:    
@@ -232,6 +304,24 @@ def admin_view_user_grid_view(request):
             users = getUserTable(request)
             return render(request,'lxpapp/users/admin_view_user_grid.html',{'users':users})
     except:
+        return render(request,'lxpapp/404page.html')
+    
+@login_required
+def admin_view_user_log_view(request):
+    #try:    
+        if str(request.session['utype']) == 'admin':
+            users = User.objects.all()
+            return render(request,'lxpapp/users/admin_view_user_log.html',{'users':users})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def admin_view_user_log_details_view(request,user_id):
+    #try:    
+        if str(request.session['utype']) == 'admin':
+            users = models.UserLog.objects.all().filter(user_id = user_id)
+            return render(request,'lxpapp/users/admin_view_user_log_details.html',{'users':users})
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

@@ -31,7 +31,8 @@ def cto_dashboard_view(request):
             'total_exam':0,
             'total_shortCourse':0,
             'total_question':0,
-            'total_learner':0
+            'total_learner':0,
+            'final':'final'
             }
         return render(request,'cto/cto_dashboard.html',context=dict)
     except:
@@ -570,7 +571,7 @@ def cto_add_module_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
             form = LXPFORM.ModuleForm(request.POST or None)
-            clist = LXPModel.Subject.objects.raw('SELECT    lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')
+            clist = LXPModel.Subject.objects.raw('SELECT  Distinct  lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')
             sub = ''
             oldsub = ''
             js = '[{' 
@@ -605,7 +606,7 @@ def cto_add_module_view(request):
                 try:
                     mainhead = request.POST.get('mainhead')
                     subhead = request.POST.get('subhead')
-                    desciption = request.POST.get('desciption')
+                    description = request.POST.get('description')
                     whatlearn = request.POST.get('whatlearn')
                     includes = request.POST.get('includes')
                     themecolor = request.POST.get('themecolor')
@@ -621,7 +622,7 @@ def cto_add_module_view(request):
                                                 module_name = name,
                                                 mainhead_id = mainhead,
                                                 subhead_id = subhead,
-                                                desciption = desciption,
+                                                description = description,
                                                 whatlearn = whatlearn,
                                                 themecolor = themecolor,
                                                 includes = includes,
@@ -650,7 +651,7 @@ def cto_update_module_view(request, pk):
     try:
         if str(request.session['utype']) == 'cto':
             module_name = ''
-            desciption = ''
+            description = ''
             whatlearn = ''
             includes = ''
             image = ''
@@ -663,7 +664,7 @@ def cto_update_module_view(request, pk):
 
             for x in modbyid:
                 module_name = x.module_name
-                desciption = x.desciption
+                description = x.description
                 whatlearn = x.whatlearn
                 includes = x.includes
                 image = x.image
@@ -705,7 +706,7 @@ def cto_update_module_view(request, pk):
                 'page_title': 'Edit Module',
                 'chapterlistbyid' : bchapter,
                 'mod_name' : module_name,
-                'desciption' : desciption,
+                'description' : description,
                 'whatlearn' : whatlearn,
                 'includes' : includes,
                 'image' : image,
@@ -723,7 +724,7 @@ def cto_update_module_view(request, pk):
                     module = LXPModel.Module.objects.get(id=pk)
                     mainhead = request.POST.get('mainhead')
                     subhead = request.POST.get('subhead')
-                    desciption = request.POST.get('desciption')
+                    description = request.POST.get('description')
                     whatlearn = request.POST.get('whatlearn')
                     includes = request.POST.get('includes')
                     themecolor = request.POST.get('themecolor')
@@ -738,7 +739,7 @@ def cto_update_module_view(request, pk):
                     module.module_name = name
                     module.mainhead_id = mainhead
                     module.subhead_id = subhead
-                    module.desciption = desciption
+                    module.description = description
                     module.whatlearn = whatlearn
                     module.themecolor = themecolor
                     module.includes = includes
@@ -747,7 +748,7 @@ def cto_update_module_view(request, pk):
                     module.price = price
                     module.tags = tags
                     module.save()
-                    c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
+                    c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
                     return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
                 except Exception as e:
                     messages.error(request, "Could Not Add " + str(e))
@@ -759,7 +760,7 @@ def cto_update_module_view(request, pk):
 def cto_view_module_view(request):
     #try:
         if str(request.session['utype']) == 'cto':
-            c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
+            c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
             return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -770,7 +771,7 @@ def cto_delete_module_view(request,pk):
         if str(request.session['utype']) == 'cto':  
             module=LXPModel.Module.objects.get(id=pk)
             module.delete()
-        c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.desciption,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
+        c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
         return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
     except:
         return render(request,'lxpapp/404page.html')

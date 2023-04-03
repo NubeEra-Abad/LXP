@@ -4,7 +4,7 @@
                 <div class="profile-bg">
                     <img src="/static/assets/img/instructor-profile-bg.jpg" alt="">
                     <div class="profile-img">
-                        <a href="instructor-profile.html"><img src="/static/assets/img/user/user2.jpg" alt=""></a>
+                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}" alt=""></a>
                     </div>
                 </div>
                 <div class="profile-group">
@@ -33,12 +33,12 @@
                     </li>
                     <li class="nav-item">
                         <a href="../../../../../../../../../../../../learner/learner-studymaterial-module" class="nav-link">
-                            <i class="feather-star"></i> Study Materials
+                            <i class="feather-star"></i> My Enrolled Courses
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="../../../../../../../../../../../../learner/learner-availablecourse-module" class="nav-link">
-                            <i class="feather-book"></i> Course Available
+                            <i class="feather-book"></i> All Courses to Enrolled
                         </a>
                     </li>
                     <li class="nav-item">

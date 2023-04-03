@@ -5,7 +5,7 @@
                 <div class="profile-bg">
                     <img src="/static/assets/img/instructor-profile-bg.jpg" alt="">
                     <div class="profile-img">
-                        <a href="instructor-profile.html"><img src="/static/assets/img/user/user2.jpg" alt=""></a>
+                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}" alt=""></a>
                     </div>
                 </div>
                 <div class="profile-group">
@@ -13,6 +13,7 @@
                         <h4><a href="instructor-profile.html">{{request.user.first_name}} {{request.user.last_name}}</a></h4>
                         <h6><a href="instructor-profile.html">({{request.user.username}})</a></h6>
                         <h6>CTO</h6>
+                        {{ pic }}
                         <!-- <img src="request.user.social_auth.model.pic" alt=""> -->
                     </div>
                 </div>

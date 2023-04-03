@@ -5,7 +5,16 @@ from django.db.models import Q, Sum
 import requests
 import humanize
 import datetime
-from colorfield.fields import ColorField
+
+class UserLog(models.Model):
+    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    login =  models.DateTimeField(default=datetime.datetime.now)
+    logout = models.DateTimeField(default=datetime.datetime.now)
+    dur = models.CharField(default='',max_length=200)
+    session_id = models.CharField(default='',max_length=200)
+
+
+
 
 class UserPics(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
@@ -28,6 +37,7 @@ class LearnerDetails(models.Model):
     mobile = models.IntegerField(default=0)
     iswhatsapp = models.BooleanField(default=False)
     whatsappno = models.IntegerField(default=0)
+    profile_pic= models.ImageField(upload_to='profile_pic/user/',null=True,blank=True)
     
 class LearnerDetailsPSkill(models.Model):
     learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.SET_NULL, null=True)
@@ -84,7 +94,7 @@ class Module(models.Model):
     mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
     subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)
     module_name = models.CharField(max_length=200)
-    desciption = models.CharField(max_length=1000,default='')
+    description = models.CharField(max_length=1000,default='')
     whatlearn = models.CharField(max_length=1000,default='')
     includes = models.CharField(max_length=1000,default='')
     cat=(('1','Red'),('2','Green'),('3','Blue'),('4','Orange'))
@@ -600,4 +610,38 @@ class SessionMaterial(models.Model):
 
 class LearnerMaterialWatched(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
     material=models.ForeignKey(Material,on_delete=models.SET_NULL, null=True)
+
+class LastUserLogin(models.Model):
+    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+
+
+class ChapterQuestion(models.Model):
+   subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
+   chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
+   question=models.CharField(max_length=600)
+   option1=models.CharField(max_length=200)
+   option2=models.CharField(max_length=200)
+   option3=models.CharField(max_length=200)
+   option4=models.CharField(max_length=200)
+   cat=(('1','Option1'),('2','Option2'),('3','Option3'),('4','Option4'))
+   answer=models.CharField(max_length=200,choices=cat)
+   marks=models.IntegerField(default=0)
+
+class ChapterResult(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
+    marks = models.PositiveIntegerField()
+    wrong = models.PositiveIntegerField()
+    correct = models.PositiveIntegerField()
+    timetaken = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now=True)
+
+class ChapterResultDetails(models.Model):
+    chapterresult=models.ForeignKey(ChapterResult,on_delete=models.SET_NULL, null=True)
+    question = models.ForeignKey(ChapterQuestion,on_delete=models.SET_NULL, null=True)
+    selected=models.CharField(max_length=200)

@@ -4,7 +4,7 @@
                 <div class="profile-bg">
                     <img src="/static/assets/img/instructor-profile-bg.jpg" alt="">
                     <div class="profile-img">
-                        <a href="instructor-profile.html"><img src="/static/assets/img/user/user2.jpg" alt=""></a>
+                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}" alt=""></a>
                     </div>
                 </div>
                 <div class="profile-group">
@@ -28,12 +28,17 @@
                     </li>
                     <li class="nav-item">
                         <a href="../../../../trainer/trainer-view-material" class="nav-link">
-                            <i class="feather-book"></i> Material
+                            <i class="feather-book"></i> Study Material
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="../../../../trainer/trainer-view-sessionmaterial" class="nav-link">
                             <i class="feather-book"></i> Session Material
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../../../trainer/trainer-view-chapterquestion" class="nav-link">
+                            <i class="feather-star"></i> Chapter Wise MCQ
                         </a>
                     </li>
                     <li class="nav-item">

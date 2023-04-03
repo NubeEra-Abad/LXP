@@ -62,4 +62,10 @@ urlpatterns = [
     path('trainer-learner-show-video/<int:subject_id>,/<int:video_id>', views.trainer_learner_show_video_view,name='trainer-learner-show-video'),
     path('trainer-learner-approve-video/<int:pk>/<int:studid>', views.trainer_learner_approve_video,name='trainer-learner-approve-video'),
     path('trainer-learner-approveall-video/<int:userid>/<subject_id>', views.trainer_learner_approveall_video,name='trainer-learner-approveall-video'),
+
+    path('trainer-add-chapterquestion', views.trainer_add_chapterquestion_view,name='trainer-add-chapterquestion'),
+    path('trainer-update-chapterquestion/<int:pk>', views.trainer_update_chapterquestion_view,name='trainer-update-chapterquestion'),
+    path('trainer-view-chapterquestion', views.trainer_view_chapterquestion_view,name='trainer-view-chapterquestion'),
+    path('trainer-view-chapterquestion-chapter/<int:chapter_id>', views.trainer_view_chapterquestion_chapter_view,name='trainer-view-chapterquestion-chapter'),
+    path('trainer-delete-chapterquestion/<int:pk>', views.trainer_delete_chapterquestion_view,name='trainer-delete-chapterquestion'),
 ]

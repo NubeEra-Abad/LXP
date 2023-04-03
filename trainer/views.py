@@ -960,3 +960,81 @@ def trainer_learner_show_video_view(request,subject_id,video_id):
     except:
         return render(request,'lxpapp/404page.html')
 
+@login_required
+def trainer_add_chapterquestion_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            storage = messages.get_messages(request)
+            storage.used = True
+            if request.method=='POST':
+                chapterquestionForm=LXPFORM.ChapterQuestionForm(request.POST)
+                if chapterquestionForm.is_valid(): 
+                    questiontext = chapterquestionForm.cleaned_data["question"]
+                    chapterquestion = LXPModel.ChapterQuestion.objects.all().filter(question__iexact = questiontext)
+                    if chapterquestion:
+                        messages.info(request, 'Chapter Question Name Already Exist')
+                        chapterquestionForm=LXPFORM.ChapterQuestionForm()
+                        return render(request,'trainer/chapterquestion/trainer_add_chapterquestion.html',{'chapterquestionForm':chapterquestionForm})                  
+                    else:
+                        chapterquestion = LXPModel.ChapterQuestion.objects.create(subject_id = chapterquestionForm.cleaned_data["subject"].pk,chapter_id = chapterquestionForm.cleaned_data["chapter"].pk,question = questiontext,option1=request.POST.get('option1'),option2=request.POST.get('option2'),option3=request.POST.get('option3'),option4=request.POST.get('option4'),answer=request.POST.get('answer'),marks=request.POST.get('marks'))
+                        chapterquestion.save()
+                        messages.info(request, 'Chapter  Question added')
+                else:
+                    print("form is invalid")
+            chapterquestionForm=LXPFORM.ChapterQuestionForm()
+            return render(request,'trainer/chapterquestion/trainer_add_chapterquestion.html',{'chapterquestionForm':chapterquestionForm})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_update_chapterquestion_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            chapterquestion = LXPModel.ChapterQuestion.objects.get(id=pk)
+            chapterquestionForm=LXPFORM.ChapterQuestionForm(request.POST,instance=chapterquestion)
+            if request.method=='POST':
+                if chapterquestionForm.is_valid(): 
+                    chapterquestiontext = chapterquestionForm.cleaned_data["chapterquestion_name"]
+                    chapterquestion = LXPModel.ChapterQuestion.objects.all().filter(chapterquestion_name__iexact = chapterquestiontext).exclude(id=pk)
+                    if chapterquestion:
+                        messages.info(request, 'ChapterQuestion Name Already Exist')
+                        return render(request,'trainer/chapterquestion/trainer_update_chapterquestion.html',{'chapterquestionForm':chapterquestionForm})
+                    else:
+                        chapterquestionForm.save()
+                        chapterquestions = LXPModel.ChapterQuestion.objects.all()
+                        return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
+            return render(request,'trainer/chapterquestion/trainer_update_chapterquestion.html',{'chapterquestionForm':chapterquestionForm,'ex':chapterquestion.chapterquestion_name,'sub':chapterquestion.questiontpye})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_view_chapterquestion_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            chapterquestions = LXPModel.ChapterQuestion.objects.raw('SELECT DISTINCT  lxpapp_chapter.id,  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name FROM  lxpapp_chapterquestion  INNER JOIN lxpapp_chapter ON (lxpapp_chapterquestion.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_subject ON (lxpapp_chapterquestion.subject_id = lxpapp_subject.id)')
+            return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_view_chapterquestion_chapter_view(request,chapter_id):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            chapterquestions = LXPModel.ChapterQuestion.objects.all().filter(chapter_id__in = LXPModel.Chapter.objects.all().filter(id=chapter_id))
+            chapter_name = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
+
+            return render(request,'trainer/chapterquestion/trainer_view_chapterquestion_chapter.html',{'chapterquestions':chapterquestions,'chapter_name':chapter_name})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_delete_chapterquestion_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            chapterquestion=LXPModel.ChapterQuestion.objects.get(id=pk)
+            chapterquestion.delete()
+            return HttpResponseRedirect('/trainer/trainer-view-chapterquestion')
+        chapterquestions = LXPModel.ChapterQuestion.objects.all()
+        return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
+    except:
+        return render(request,'lxpapp/404page.html')
