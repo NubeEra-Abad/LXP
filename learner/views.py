@@ -357,7 +357,6 @@ def save_topic(request):
                     mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=c.id)
                     mat.save()
                 
-            return JsonResponse({'status': 'success'})
     except:
         return render(request,'lxpapp/404page.html')
 @login_required
