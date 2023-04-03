@@ -1,5 +1,4 @@
 asgiref
-Django==3.0.14
 django-widget-tweaks
 Pillow
 pytz
