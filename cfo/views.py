@@ -112,7 +112,7 @@ def cfo_delete_coursetype_view(request,pk):
 from django.db import transaction
 @login_required
 def cfo_add_batch_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cfo':
             if request.method=='POST':
                 batchForm=LXPFORM.BatchForm(request.POST)
@@ -154,7 +154,7 @@ def cfo_add_batch_view(request):
             modules =  LXPModel.Module.objects.all()
             PList =  LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners,'modules':modules,'PList':PList})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

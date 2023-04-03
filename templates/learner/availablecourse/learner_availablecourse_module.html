@@ -65,7 +65,11 @@
                       <img class="img-fluid" alt="" src="{{t.image}}">
                     </a>
                     <div class="price">
+                      {% if t.price == 0 %}
+                        <h3 style="color: green;">FREE</h3>
+                      {% else %}
                       <h3>Rs. {{t.price}}</h3>
+                      {% endif %}
                     </div>
                   </div>
                   <div class="product-content">

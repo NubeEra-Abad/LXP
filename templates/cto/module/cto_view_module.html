@@ -71,7 +71,11 @@
                                               src="{{t.image}}">
                                       </a>
                                       <div class="price">
-                                          <h3>Rs. {{t.price}}</h3>
+                                        {% if t.price == 0 %}
+                                          <h3 style="color: green;">FREE</h3>
+                                        {% else %}
+                                        <h3>Rs. {{t.price}}</h3>
+                                        {% endif %}
                                       </div>
                                   </div>
                                   <div class="product-content">

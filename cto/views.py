@@ -337,11 +337,11 @@ def cto_update_subhead_view(request, pk):
 
 @login_required
 def cto_view_subhead_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             subheads = LXPModel.SubHead.objects.all()
             return render(request,'cto/subhead/cto_view_subhead.html',{'subheads':subheads})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -568,7 +568,7 @@ def cto_delete_chapter_view(request,pk):
 
 @login_required
 def cto_add_module_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             form = LXPFORM.ModuleForm(request.POST or None)
             clist = LXPModel.Subject.objects.raw('SELECT  Distinct  lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')
@@ -643,7 +643,7 @@ def cto_add_module_view(request):
                 except Exception as e:
                     messages.error(request, "Could Not Add " + str(e))
             return render(request, 'cto/module/add_edit_module.html', context)
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
     
 @login_required
@@ -758,11 +758,11 @@ def cto_update_module_view(request, pk):
     
 @login_required
 def cto_view_module_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'cto':
             c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')
             return render(request,'cto/module/cto_view_module.html',{'modules':c_list})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

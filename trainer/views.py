@@ -33,7 +33,7 @@ def trainer_dashboard_view(request):
  
 @login_required
 def trainer_add_material_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             if request.method=='POST':
                 materialForm=LXPFORM.MaterialForm(request.POST)
@@ -48,7 +48,7 @@ def trainer_add_material_view(request):
                 
             materialForm=LXPFORM.MaterialForm()
             return render(request,'trainer/material/trainer_add_material.html',{'materialForm':materialForm})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
     
 @login_required
@@ -869,11 +869,11 @@ def trainer_delete_ytexamquestion_view(request,pk):
 
 @login_required
 def trainer_view_learner_video_view(request):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, social_auth_usersocialauth.pic, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(DISTINCT lxpapp_courseset.courseset_name) AS courseset_name, lxpapp_learnerdetails.mobile FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_batchlearner ON (auth_user.id = lxpapp_batchlearner.learner_id) LEFT OUTER JOIN lxpapp_batchCOURSESET ON (lxpapp_batchlearner.batch_id = lxpapp_batchCOURSESET.batch_id) LEFT OUTER JOIN lxpapp_COURSESET ON (lxpapp_batchCOURSESET.COURSESET_id = lxpapp_COURSESET.id) LEFT OUTER JOIN lxpapp_learnerdetails ON (auth_user.id = lxpapp_learnerdetails.learner_id) WHERE (social_auth_usersocialauth.utype = 0 OR social_auth_usersocialauth.utype = 2) AND social_auth_usersocialauth.status = 1 GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, lxpapp_learnerdetails.mobile ')
             return render(request,'trainer/learnervideo/trainer_view_learner_video.html',{'learner':learner})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -915,34 +915,34 @@ def trainer_learner_video_Course_subject_view(request,user_id,userfirstname,user
  
 @login_required
 def trainer_learner_video_list_view(request,subject_id,user_id):
-    #try:     
+    try:     
         if str(request.session['utype']) == 'trainer':
             subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
             list = LXPModel.PlaylistItem.objects.raw('SELECT DISTINCT mainvid.id, mainvid.name, IFNULL((SELECT lxpapp_videowatched.video_id FROM lxpapp_videowatched WHERE lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id = mainvid.id), 0) AS watched, IFNULL((SELECT lxpapp_videotounlock.video_id FROM lxpapp_videotounlock WHERE lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id = mainvid.id), 0) AS unlocked FROM lxpapp_video mainvid INNER JOIN lxpapp_playlistitem ON (mainvid.id = lxpapp_playlistitem.video_id) WHERE lxpapp_playlistitem.playlist_id = ' + str (subject_id) + ' AND mainvid.name <> "Deleted video"')  
             return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'user_id':user_id})
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_learner_approve_video(request,pk,studid):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             unlock = LXPModel.VideoToUnlock.objects.create(learner_id=studid,video_id=pk)
             unlock.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-    #except:
+    except:
         return render(request,'lxpapp/404page.html') 
 
 @login_required
 def trainer_learner_approveall_video(request,userid,subject_id):
-    #try:
+    try:
         if str(request.session['utype']) == 'trainer':
             videos=LXPModel.Playlist.objects.raw('SELECT   lxpapp_video.id FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) where lxpapp_playlistitem.playlist_id = ' + str (subject_id))
             for x in videos:
                 unlock = LXPModel.VideoToUnlock.objects.create(learner_id=userid,video_id=x.id)
                 unlock.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-    #except:
+    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required

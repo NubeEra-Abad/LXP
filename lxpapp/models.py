@@ -466,13 +466,32 @@ class TrainerNotification(models.Model):
         return self.trainernotification_message
 
 class Material(models.Model):
-    subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
-    chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
-    topic=models.CharField(max_length=200)
-    cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))
-    mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
-    urlvalue=models.CharField(max_length=200)
-    description=models.CharField(max_length=200)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    id = models.AutoField(primary_key=True)
+    serial_number = models.IntegerField(default=0)
+    topic = models.CharField(max_length=200)
+    cat = (('PDF', 'PDF'), ('HTML', 'HTML'), ('Video', 'Video'), ('URL', 'URL'))
+    mtype = models.CharField(max_length=200, choices=cat, default='PDF')
+    urlvalue = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+
+    class Meta:
+        ordering = ['subject', 'chapter', 'serial_number']
+
+    def save(self, *args, **kwargs):
+        if not self.serial_number:
+            last_material = Material.objects.filter(
+                subject=self.subject,
+                chapter=self.chapter
+            ).order_by('-serial_number').first()
+            if last_material:
+                self.serial_number = last_material.serial_number + 1
+            else:
+                self.serial_number = 1
+        super(Material, self).save(*args, **kwargs)
+
+
 
 class CourseType(models.Model):
     coursetype_name = models.CharField(max_length=200)
@@ -640,6 +659,12 @@ class ChapterResult(models.Model):
     correct = models.PositiveIntegerField()
     timetaken = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
+    def get_percentage(self):
+        try:
+            perc = self.correct * 100 / (self.wrong + self.correct)
+        except:
+            perc = self.correct * 100 / 1
+        return perc
 
 class ChapterResultDetails(models.Model):
     chapterresult=models.ForeignKey(ChapterResult,on_delete=models.SET_NULL, null=True)

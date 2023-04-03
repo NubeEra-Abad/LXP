@@ -67,6 +67,16 @@
         </div>
     </div>
 </div>
+<table id="myTable" class="table table-bordered">
+    {% for item in list %}
+
+        <!-- still in the outer loop iterating over qs -->
+        <tr>
+            <td>{{item.flag}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <section class="page-content course-sec">
     <div class="container">
         <div class="row">
@@ -102,7 +112,7 @@
                             {% if t.srno == 1 %}
                             <h6 class="cou-title">
                                 <a class="collapsed" data-bs-toggle="collapse" href="#collapseOne{{t.chapter_id}}"
-                                    aria-expanded="false">{{t.chapter_name}} </a>
+                                    aria-expanded="false">{{forloop.counter}} {{t.chapter_name}} </a>
                             </h6>
                             {% endif %}
                             <div id="collapseOne{{t.chapter_id}}" class="card-collapse collapse" style="">
@@ -120,11 +130,20 @@
                                             {%elif t.mtype == "HTML" %}
                                             <i class="far fa-clone" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
                                             {% endif %}
-                                            {{t.topic}} 
+                                            {{t.topic}}
                                             {% if t.srno == 1 %}
+                                            {% if t.flag == 'yes'%}
                                         <div>
-                                            <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id module_id %}">Let's Start</a>
+                                            <a
+                                                href="{% url 'learner-studymaterial-chapter-show' t.chapter_id module_id %}">Let's
+                                                Start</a>
                                         </div>
+                                        {% else %}
+                                        <div>
+                                            <img src="/static/assets/img/icon/lock.svg" alt="">
+                                            <a>Complete Previous Chapters to Unlock</a>
+                                        </div>
+                                        {% endif %}
                                         {% endif %}
                                     </li>
                                 </ul>

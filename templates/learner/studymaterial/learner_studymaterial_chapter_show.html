@@ -15,14 +15,17 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="../../../../learner/learner-studymaterial-module">Courses</a></li>
-            <li class="breadcrumb-item"><a href="../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
+            <li class="breadcrumb-item"><a
+                    href="../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">Preview</li>
         </ol>
     </nav>
 </div>
+<button onclick="toggleVisibility()">Toggle Visibility</button>
+
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-4" id="hide-show">
         <div class="lesson-group">
             <div class="course-card">
                 <h6 class="cou-title">
@@ -65,7 +68,7 @@
                             </div>
                             {% endif %}
                         </li>
-                        {% if forloop.last %}
+                        {% if forloop.last and exam > 0 and per == 100 %}
                         <li>
                             <p class="play-intro">
                                 <a href="{% url 'learner-chapterexam' t.chapter_id module_id %}">Exam</a>
@@ -93,7 +96,7 @@
             <div>
                 <h4 class="tittle" id="iframeHeading"></h4>
             </div>
-            <iframe id="myIframe"></iframe>
+            <iframe id="myIframe" style="width: 100%; height: 100%; border: none;"></iframe>
         </div>
     </div>
 </div>
@@ -123,9 +126,20 @@
         const selectedLink = $(this);
         const selectedValue = selectedLink.data('id');
         const selectedText = selectedLink.text();
-        myIframe.attr('src', selectedLink.attr('href') + '?id=' + selectedValue);
-        iframeHeading.text(selectedText);
+        const selectedHref = selectedLink.attr('href');
 
+        // Check if the link is a YouTube link
+        const youtubePattern = /^https?:\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/[\w-]+/;
+        const isYoutube = youtubePattern.test(selectedHref);
+
+        // Update the iframe source and heading
+        myIframe.attr('src', selectedLink.attr('href') + '?id=' + selectedValue);
+        // Add the allowfullscreen attribute if the link is a YouTube video
+        if (selectedLink.attr('href').includes('youtube')) {
+            myIframe.attr('allowfullscreen', true);
+        } else {
+            myIframe.removeAttr('allowfullscreen');
+        }
         // Make AJAX request to update model with selected ID
         $.ajax({
             url: "{% url 'ajax_save_topic' %}",
@@ -145,4 +159,16 @@
         });
     });
 </script>
+
+<script>
+    function toggleVisibility() {
+        var elem = document.getElementById("hide-show");
+        if (elem.style.display === "none") {
+            elem.style.display = "block";
+        } else {
+            elem.style.display = "none";
+        }
+    }
+</script>
+
 {% endblock content %}

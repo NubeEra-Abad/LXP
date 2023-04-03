@@ -33,9 +33,9 @@ urlpatterns = [
     path('learner-availablecourse-module-chapter/<modulename>/<int:module_id>', views.learner_availablecourse_module_chapter_view,name='learner-availablecourse-module-chapter'),
     
     path('learner-chapterexam/<int:chapter_id>/<int:module_id>', views.learner_chapterexam_view,name='learner-chapterexam'),
-    path('learner-take-chapterexam/<int:pk>', views.learner_take_chapterexam_view,name='learner-take-chapterexam'),
-    path('learner-start-chapterexam/<int:pk>', views.learner_start_chapterexam_view,name='learner-start-chapterexam'),
-    path('learner-show-chapterexam-reuslt/<int:pk>', views.learner_show_chapterexam_reuslt_view,name='learner-show-chapterexam-reuslt'),
+    path('learner-take-chapterexam/<int:chapter_id>/<int:module_id>', views.learner_take_chapterexam_view,name='learner-take-chapterexam'),
+    path('learner-start-chapterexam/<int:chapter_id>/<int:module_id>', views.learner_start_chapterexam_view,name='learner-start-chapterexam'),
+    path('learner-show-chapterexam-reuslt/<int:chapter_id>/<int:module_id>', views.learner_show_chapterexam_reuslt_view,name='learner-show-chapterexam-reuslt'),
     path('learner-show-chapterexam-reuslt-details/<int:pk>', views.learner_show_chapterexam_reuslt_details_view,name='learner-show-chapterexam-reuslt-details'),
 ]
 #<a href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id courseset_id %}">Preview</a>
