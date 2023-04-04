@@ -3,14 +3,28 @@
 {%load static%}
 
 <head>
-<link rel="stylesheet" href="/static/assets/css/style.css">
+  <link rel="stylesheet" href="/static/assets/css/style.css">
 </head>
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../learner/learner-exam">Exams</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Result Details</li>
+      <li class="breadcrumb-item"><a href="../../../../../../../../learner/learner-dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="../../../../../../../../learner/learner-studymaterial-module">Courses</a>
+      </li>
+      <li class="breadcrumb-item"><a
+          href="../../../../../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
+      </li>
+      <li class="breadcrumb-item"><a
+          href="../../../../../../../../learner/learner-studymaterial-chapter-show/{{chapter_id}}/{{module_id}} ">{{chaptername}}</a>
+      </li>
+      <li class="breadcrumb-item"><a
+          href="../../../../../../../../learner/learner-chapterexam/{{chapter_id}}/{{module_id}} ">Exams</a>
+      </li>
+      <li class="breadcrumb-item"><a
+          href="../../../../../../../../learner/learner-show-chapterexam-reuslt/{{chapter_id}}/{{module_id}} ">Exam Details</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Result Details of Attempt {{attempt}}
+      </li>
     </ol>
   </nav>
 </div>
@@ -34,7 +48,7 @@
           <th>Obtained Mark</th>
         </tr>
       </thead>
-      {% for t in exams %}
+      {% for t in chapterexams %}
       <tr>
         <td> {{t.question.question}}</td>
         <td> {{t.question.option1}}</td>

@@ -67,16 +67,7 @@
         </div>
     </div>
 </div>
-<table id="myTable" class="table table-bordered">
-    {% for item in list %}
 
-        <!-- still in the outer loop iterating over qs -->
-        <tr>
-            <td>{{item.flag}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 <section class="page-content course-sec">
     <div class="container">
         <div class="row">
@@ -104,15 +95,15 @@
                                 <h5 class="subs-title">Course Content</h5>
                             </div>
                             <div class="col-sm-6 text-sm-end">
-                                <h6>__ Lectures __min</h6>
+                                <h6>{{Topiccount}} Lectures <img src="/static/assets/img/icon/icon-01.svg" alt=""> __min</h6>
                             </div>
                         </div>
                         {% for t in list %}
                         <div class="course-card">
                             {% if t.srno == 1 %}
                             <h6 class="cou-title">
-                                <a class="collapsed" data-bs-toggle="collapse" href="#collapseOne{{t.chapter_id}}"
-                                    aria-expanded="false">{{forloop.counter}} {{t.chapter_name}} </a>
+                                <a class="collapsed " data-bs-toggle="collapse" href="#collapseOne{{t.chapter_id}}"
+                                    aria-expanded="false">{{forloop.counter}} <p class="fa fa-angle-double-right"></p> {{t.chapter_name}}    </a>
                             </h6>
                             {% endif %}
                             <div id="collapseOne{{t.chapter_id}}" class="card-collapse collapse" style="">
@@ -120,15 +111,15 @@
                                     <li>
                                         <p>
                                             {% if t.mtype == "PDF" %}
-                                            <i class="	fa fa-file-pdf-o" aria-hidden="true"> &nbsp; &nbsp; &nbsp; &nbsp;
+                                            &nbsp; &nbsp; &nbsp; &nbsp;<i class="	fa fa-file-pdf-o" aria-hidden="true"> &nbsp; &nbsp; &nbsp; &nbsp;
                                             </i>
                                             {%elif t.mtype == "Video" %}
-                                            <i class="fa fa-file-video-o" aria-hidden="true"> &nbsp; &nbsp; &nbsp;
+                                            &nbsp; &nbsp; &nbsp; &nbsp;<i class="fa fa-file-video-o" aria-hidden="true"> &nbsp; &nbsp; &nbsp;
                                                 &nbsp; </i>
                                             {%elif t.mtype == "URL" %}
-                                            <i class="fa fa-link" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
+                                            &nbsp; &nbsp; &nbsp; &nbsp;<i class="fa fa-link" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
                                             {%elif t.mtype == "HTML" %}
-                                            <i class="far fa-clone" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
+                                            &nbsp; &nbsp; &nbsp; &nbsp;<i class="far fa-clone" aria-hidden="true">&nbsp; &nbsp; &nbsp; &nbsp; </i>
                                             {% endif %}
                                             {{t.topic}}
                                             {% if t.srno == 1 %}

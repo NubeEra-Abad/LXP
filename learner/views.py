@@ -322,6 +322,50 @@ def learner_studymaterial_module_chapter_view(request,module_id):
 #    try:     
         if str(request.session['utype']) == 'learner':
             list = LXPModel.Module.objects.raw("SELECT id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, per, CASE WHEN ROW_NUMBER() OVER (ORDER BY srno) = 1 THEN 'yes' WHEN LAG(per) OVER (ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM ( SELECT lxpapp_material.id, ROW_NUMBER() OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, ( SELECT per FROM ( SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / (lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.module_id = main.module_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + " ) a ORDER BY per DESC, 1 ) AS per FROM lxpapp_modulechapter main LEFT OUTER JOIN lxpapp_material ON (main.chapter_id = lxpapp_material.chapter_id) LEFT OUTER JOIN lxpapp_chapter ON (main.chapter_id = lxpapp_chapter.id) WHERE main.module_id = " + str(module_id) + " ) subquery")
+            
+            
+            #list = LXPModel.Module.objects.raw("SELECT id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, questions, per, CASE WHEN questions = 0 THEN 'yes' WHEN Row_number() OVER ( ORDER BY srno) = 1 THEN 'yes' WHEN Lag(per) OVER ( ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM (SELECT lxpapp_material.id, Row_number() OVER ( partition BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, (SELECT Count (lxpapp_chapterquestion.id) AS questions FROM lxpapp_chapterquestion WHERE lxpapp_chapterquestion.chapter_id = main.chapter_id) AS questions, (SELECT per FROM (SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / ( lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct ) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.module_id = main.module_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + ") a ORDER BY per DESC, 1) AS per FROM lxpapp_modulechapter main LEFT OUTER JOIN lxpapp_material ON ( main.chapter_id = lxpapp_material.chapter_id ) LEFT OUTER JOIN lxpapp_chapter ON ( main.chapter_id = lxpapp_chapter.id ) WHERE main.module_id = " + str(module_id) + ") subquery")
+            # from django.db.models import F, Max, Case, When, IntegerField, CharField, Value
+            # from django.db.models.functions import RowNumber
+            # from django.db.models.expressions import Window, Subquery, OuterRef
+            # per_subquery = (
+            #     LXPModel.ChapterResult.objects.filter(
+            #         module_id=module_id,
+            #         chapter_id=OuterRef('chapter_id'),
+            #         learner_id=request.user.id,
+            #     ).annotate(
+            #         per=F('correct') * 100 / (F('wrong') + F('correct'))
+            #     ).order_by('-per', 'id')
+            #     .values('per')[:1]
+            # )
+
+            # flag_annotation = Case(
+            #     When(
+            #         srno=1,
+            #         then=Value('yes')
+            #     ),
+            #     When(
+            #         per__gt=0,
+            #         then=Value('yes')
+            #     ),
+            #     default=Value('no'),
+            #     output_field=CharField()
+            # )
+
+            # list = (
+            #     LXPModel.Material.objects.annotate(
+            #         srno=Window(
+            #             expression=RowNumber(),
+            #             partition_by=F('chapter__chapter_name'),
+            #         ),
+            #         per=Subquery(per_subquery),
+            #         flag=flag_annotation,
+            #     ).filter(
+            #         chapter__modulechapter__module_id=module_id
+            #     ).order_by('srno')
+            #     .values('id', 'srno', 'chapter__chapter_name', 'chapter_id', 'topic', 'mtype', 'urlvalue', 'description', 'per', 'flag')
+            # )
+
             count = LXPModel.Module.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_modulechapter INNER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_modulechapter.module_id = ' + str(module_id) + ' ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.module_id = ' + str(module_id) + ' ) as watchcount )')
             moddet = LXPModel.Module.objects.raw("SELECT lxpapp_module.id, lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_module  INNER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id) WHERE lxpapp_module.id = " + str(module_id) )
             Topiccount = 0
@@ -528,10 +572,12 @@ def learner_show_chapterexam_reuslt_view(request,chapter_id,module_id):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_show_chapterexam_reuslt_details_view(request,pk):
+def learner_show_chapterexam_reuslt_details_view(request,result_id,attempt,chapter_id,module_id):
     try:    
         if str(request.session['utype']) == 'learner':
-            chapterexams=LXPModel.ChapterResultDetails.objects.all().filter(question_id__in = LXPModel.ChapterQuestion.objects.all(), mcqresult_id = pk)
-            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result_details.html',{'chapterexams':chapterexams})
+            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
+            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
+            chapterexams=LXPModel.ChapterResultDetails.objects.all().filter(question_id__in = LXPModel.ChapterQuestion.objects.all(), chapterresult_id = result_id)
+            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result_details.html',{'chapterexams':chapterexams,'attempt':attempt,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})
     except:
         return render(request,'lxpapp/404page.html')

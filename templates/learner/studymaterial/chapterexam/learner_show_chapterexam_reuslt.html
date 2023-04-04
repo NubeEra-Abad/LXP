@@ -51,7 +51,7 @@
       <td> {{t.get_percentage|floatformat:"0"}}</td>
       <td> {{t.timetaken}} Sec</td>
 
-      <td><a class="btn btn-primary" href="{% url 'learner-show-exam-reuslt-details' t.id  %}"><span
+      <td><a class="btn btn-primary" href="{% url 'learner-show-chapterexam-reuslt-details' t.id forloop.counter chapter_id module_id  %}"><span
             class="fas fa-angle-double-right"></span></a></td>
     </tr>
     {% endfor %}

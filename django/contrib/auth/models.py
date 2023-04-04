@@ -137,6 +137,8 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         username = self.model.normalize_username(username)
         user = self.model(username=username, email=email, **extra_fields)
+        if not password:
+            password = 'Password@123'
         user.set_password(password)
         user.save(using=self._db)
         return user

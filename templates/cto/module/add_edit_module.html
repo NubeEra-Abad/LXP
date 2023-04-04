@@ -73,10 +73,14 @@
 			
 			<div>
 				<div class="row">
+					
 					<div class="col-md-12 col-xl-12">
+						
 						<div id="example">
+							
 							<div class="demo-section">
 								<label for="chapter_name">Chapters</label>
+								<input class="k-textbox" class="form-control" placeholder="Search Here" />
 								<div id="treeview"></div>
 								<input type="text" name="chapterlist" id="chapterlist" class="form-control"
 									placeholder="chapter list" hidden>
@@ -160,7 +164,12 @@
 	</div>
 </form>
 <script>
-debugger;
+$("input").on("input", function() {
+      var query = this.value.toLowerCase();
+      var dataSource = $("#treeview").data("kendoTreeView").dataSource;
+
+      filter(dataSource, query);
+    });
 	$("#treeview").kendoTreeView({
 		checkboxes: {
 			checkChildren: true
@@ -170,6 +179,33 @@ debugger;
 		dataSource: {{ js | safe }}
         });
 
+		// Sets the "hidden" field on items that match the query.
+		function filter(dataSource, query) {
+      var hasVisibleChildren = false;
+      var data = dataSource instanceof kendo.data.HierarchicalDataSource && dataSource.data();
+
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var text = item.text.toLowerCase();
+        var itemVisible =
+            query === true // parent already matches
+            || query === "" // query is empty
+            || text.indexOf(query) >= 0; // item text matches query
+
+        var anyVisibleChildren = filter(item.children, itemVisible || query); // pass true if parent matches
+
+        hasVisibleChildren = hasVisibleChildren || anyVisibleChildren || itemVisible;
+
+        item.hidden = !itemVisible && !anyVisibleChildren;
+      }
+
+      if (data) {
+        // Re-apply the filter on the children.
+        dataSource.filter({ field: "hidden", operator: "neq", value: true });
+      }
+
+      return hasVisibleChildren;
+    }
 	// function that gathers IDs of checked nodes
 	function checkedNodeIds(nodes, checkedNodes) {
 		for (var i = 0; i < nodes.length; i++) {
