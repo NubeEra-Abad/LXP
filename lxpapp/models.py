@@ -670,3 +670,36 @@ class ChapterResultDetails(models.Model):
     chapterresult=models.ForeignKey(ChapterResult,on_delete=models.SET_NULL, null=True)
     question = models.ForeignKey(ChapterQuestion,on_delete=models.SET_NULL, null=True)
     selected=models.CharField(max_length=200)
+
+class UserActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    url = models.CharField(max_length=2048)
+    method = models.CharField(max_length=16)
+    status_code = models.IntegerField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f'{self.user.username} accessed {self.url} ({self.status_code})'
+
+
+class ErrorLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    url = models.CharField(max_length=2048)
+    exception = models.TextField()
+    traceback = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f'Error occurred while processing {self.url}'
+
+class LearnerCart(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    status=models.IntegerField(default=0)
+

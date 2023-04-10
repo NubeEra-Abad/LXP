@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 
 from .validators import UnicodeUsernameValidator
 
-
 def update_last_login(sender, user, **kwargs):
     """
     A signal receiver which updates the last_login date for
@@ -124,7 +123,9 @@ class Group(models.Model):
     def natural_key(self):
         return (self.name,)
 
+from lxpapp import activate
 
+from django.contrib.auth.tokens import default_token_generator
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -141,6 +142,31 @@ class UserManager(BaseUserManager):
             password = 'Password@123'
         user.set_password(password)
         user.save(using=self._db)
+        token = default_token_generator.make_token(user)
+        profile = UserProfile.objects.create(user_id = user.id, activation_token = token)
+        profile.save()
+        activation_url = reverse('activate', kwargs={
+            'uidb64': user.id,
+            'token': default_token_generator.make_token(user)
+        })
+
+        from django.contrib.sites.models import Site
+        domain = Site.objects.get_current().domain
+        path = activation_url
+        url = f'https://{domain}{path}'
+
+        #activation_link = request.build_absolute_uri(activation_url)
+
+        # Construct the activation email
+        subject = 'New User Login'
+        message = f'Hi, \n\n{user.username} is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n{activation_url}'
+        from_email = 'info@nubeera.com'
+        recipient_list = ['nubeera.imranali@gmail.com']
+
+        # Send the activation email
+        
+        send_mail(subject, message, from_email, recipient_list)
+        #activate.send_activation_email(request, user)
         return user
 
     def create_user(self, username, email=None, password=None, **extra_fields):
@@ -465,3 +491,33 @@ class AnonymousUser:
 
     def get_username(self):
         return self.username
+    
+from django.urls import reverse
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    activation_token = models.CharField(max_length=2048)
+
+    def __str__(self):
+        return self.user.username
+    def send_activation_email(self, request):
+        # Construct the activation URL using the user's ID and activation token
+        activation_url = reverse('activate', kwargs={
+            'uidb64': self.user.pk,
+            'token': default_token_generator.make_token(self.user)
+        })
+        activation_link = request.build_absolute_uri(activation_url)
+
+        # Construct the activation email
+        subject = 'Activate Your Account'
+        message = f'Hi {self.user.username},\n\nPlease click the following link to activate your account:\n\n{activation_link}'
+        from_email = 'nubeera.imranali@gmail.com'
+        recipient_list = [self.user.email]
+
+        # Send the activation email
+        send_mail(subject, message, from_email, recipient_list)
+
+    def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        super().save(*args, **kwargs)
+        if request:
+            self.send_activation_email(request)

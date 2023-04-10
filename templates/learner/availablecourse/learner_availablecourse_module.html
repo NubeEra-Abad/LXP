@@ -2,7 +2,7 @@
 {% block content %}
 {%load static%}
 <link rel="stylesheet" href="/static/assets/css/style.css">
-<div class="main-wrapper">
+<div class="main-wrapper"> 
   <div>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -77,9 +77,9 @@
                       <h3 class="title"><a href="{% url 'learner-availablecourse-module-chapter' t.module_name t.id %}">{{t.module_name}}</a></h3>
                       
                       <div class="all-btn all-category d-flex align-items-center">
-                        <a href="checkout.html" class="btn btn-primary">Add to Cart</a>
+                        <a data-id="{{ t.id }}" class="link btn btn-primary" onclick="addToCart('{{ t.id }}')">Add to Cart</a>
                       </div>
-                    </div>
+                    </div> 
                     <p>{{t.description}}</p>
                     <div class="course-info border-bottom-0 pb-0 d-flex align-items-center">
                       <div class="rating-img d-flex align-items-center">
@@ -103,5 +103,45 @@
     </div>
   </section>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script>
+  const links = $('.link');
+  links.on('click', function (event) {
+      
+      // Make AJAX request to update model with selected ID
+      $.ajax({
+          url: "{% url 'ajax_save_cart' %}",
+          method: 'POST',
+          contentType: 'application/json',
+          data: {
+              id: selectedValue,
+              module_id: '{{module_id}}'
+          },
+          success: function (response) {
+              console.log('Updated model successfully');
+          },
+          error: function (error) {
+              console.log('Error updating model: ', error);
+          }
+      });
+  });
+</script> -->
+
+<script>
+
+  function addToCart(Id) {
+    $.ajax({
+      url: "{% url 'ajax_save_cart' %}",
+        type: 'POST',
+        data: { 'id': Id },
+        success: function(response) {
+            // Handle success response
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+        }
+    });
+}
+</script>
 
 {% endblock content %}

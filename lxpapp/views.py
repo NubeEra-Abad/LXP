@@ -307,20 +307,20 @@ def admin_view_user_grid_view(request):
         return render(request,'lxpapp/404page.html')
     
 @login_required
-def admin_view_user_log_view(request):
-    try:    
-        if str(request.session['utype']) == 'admin':
-            users = User.objects.all()
-            return render(request,'lxpapp/users/admin_view_user_log.html',{'users':users})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
 def admin_view_user_log_details_view(request,user_id):
     try:    
         if str(request.session['utype']) == 'admin':
             users = models.UserLog.objects.all().filter(user_id = user_id)
             return render(request,'lxpapp/users/admin_view_user_log_details.html',{'users':users})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def admin_view_user_activity_details_view(request,user_id):
+    try:    
+        if str(request.session['utype']) == 'admin':
+            users = models.UserActivity.objects.all().filter(user_id = user_id)
+            return render(request,'lxpapp/users/admin_view_user_activity_details.html',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -413,3 +413,54 @@ def delete_user_view(request,userid,pk):
             return HttpResponseRedirect('/admin-view-user-list',{'users':users})
     except:
         return render(request,'lxpapp/404page.html')
+    
+
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from django.conf import settings
+
+def add_emails_to_video(request):
+    # Get the video ID and email addresses from the form data
+    # video_id = request.POST.get('video_id')
+    # emails = request.POST.get('emails')
+    
+    video_id = "OgZSIZiY5Zk"
+    emails = ["nubeera.imranali@gmail.com"]
+    import os
+    import google_auth_oauthlib.flow
+    scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
+    # Authenticate with the YouTube API using the API key
+    
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+    client_secrets_file = "GoogleCredV1.json"
+
+    # Get credentials and create an API client
+    flow = None
+    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        client_secrets_file, scopes)
+    flow.run_local_server()
+    credentials = flow.credentials
+    # credentials = service_account.Credentials.from_service_account_file(
+    #     settings.GOOGLE_SERVICE_ACCOUNT_FILE,
+    #     scopes=['https://www.googleapis.com/auth/youtube.force-ssl']
+    # )
+    youtube = build('youtube', 'v3', credentials=credentials)
+
+    # Add the email addresses to the video's privacy settings
+    body = {
+        'id': video_id,
+        'contentDetails': {
+            'private': True,
+            'whitelistedPrivacyRegions': ['US'],
+            'whitelistedUsers': emails
+        }
+    }
+    response = youtube.videos().update(
+        part='contentDetails',
+        body=body
+    ).execute()
+    print(response)
+    whitelisted_users = response['items'][0]['contentDetails']['whitelistedUsers']
+    print(whitelisted_users)
+    # Redirect the user to a success page
+    return redirect('success_page')

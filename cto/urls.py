@@ -3,8 +3,6 @@ from cto import views
 from django.contrib.auth.views import LoginView
 urlpatterns = [
 
-    path('ctoclick', views.ctoclick_view),
-    path('ctologin', LoginView.as_view(template_name='cto/ctologin.html'),name='ctologin'),
     path('cto-dashboard', views.cto_dashboard_view,name='cto-dashboard'),
 
     path('cto-passionateskill', views.cto_passionateskill_view,name='cto-passionateskill'),

@@ -1,7 +1,6 @@
 from django.urls import path
 from learner import views
 urlpatterns = [
-    path('learnerclick', views.learnerclick_view),
     path('learner-dashboard', views.learner_dashboard_view,name='learner-dashboard'),
     
     path('learner-exam', views.learner_exam_view,name='learner-exam'),
@@ -37,5 +36,8 @@ urlpatterns = [
     path('learner-start-chapterexam/<int:chapter_id>/<int:module_id>', views.learner_start_chapterexam_view,name='learner-start-chapterexam'),
     path('learner-show-chapterexam-reuslt/<int:chapter_id>/<int:module_id>', views.learner_show_chapterexam_reuslt_view,name='learner-show-chapterexam-reuslt'),
     path('learner-show-chapterexam-reuslt-details/<int:result_id>/<int:attempt>/<int:chapter_id>/<int:module_id>', views.learner_show_chapterexam_reuslt_details_view,name='learner-show-chapterexam-reuslt-details'),
+
+    path('ajax/save-cart/', views.save_cart, name='ajax_save_cart'),
+
 ]
 #<a href="{% url 'learner-studymaterial-subject-chapter' coursename t.subject_name t.id courseset_id %}">Preview</a>

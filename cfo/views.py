@@ -11,12 +11,6 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 import json
 
-@login_required
-def cfoclick_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('indexpage')
-    return render(request,'cfo/cfoclick.html')
- 
 @login_required    
 def cfo_dashboard_view(request):
     try:

@@ -16,12 +16,6 @@ from django.shortcuts import (HttpResponse, HttpResponseRedirect,
                               get_object_or_404, redirect, render)
 from django.urls import reverse
 
-@login_required
-def ctoclick_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('indexpage')
-    return render(request,'cto/ctoclick.html')
-
 @login_required    
 def cto_dashboard_view(request):
     try:
