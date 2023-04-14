@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.manager import EmptyManager
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
+from django.conf import settings as conf_settings
 from .validators import UnicodeUsernameValidator
 
 def update_last_login(sender, user, **kwargs):
@@ -150,13 +150,7 @@ class UserManager(BaseUserManager):
             'token': default_token_generator.make_token(user)
         })
         
-        import sys
-        from django.conf import settings as conf_settings
-        if conf_settings.DEBUG:
-            url = sys.argv[-1] + activation_url
-        else:
-            url = 'https://lxp.nubeera.com' + activation_url
-        activation_url = url
+        activation_url = conf_settings.ACTIVAION_SERVER + activation_url
         #activation_link = request.build_absolute_uri(activation_url)
 
         # Construct the activation email
