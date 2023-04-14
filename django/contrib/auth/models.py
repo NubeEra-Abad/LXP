@@ -149,17 +149,26 @@ class UserManager(BaseUserManager):
             'uidb64': user.id,
             'token': default_token_generator.make_token(user)
         })
-
-        from django.contrib.sites.models import Site
-        domain = Site.objects.get_current().domain
-        path = activation_url
-        url = f'https://{domain}{path}'
-
+        
+        import sys
+        from django.conf import settings as conf_settings
+        if conf_settings.DEBUG:
+            url = sys.argv[-1] + activation_url
+        else:
+            url = 'https://lxp.nubeera.com' + activation_url
+        activation_url = url
         #activation_link = request.build_absolute_uri(activation_url)
 
         # Construct the activation email
         subject = 'New User Login'
-        message = f'Hi, \n\n{user.username} is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n{activation_url}'
+        message = 'Hi, \n\n' + user.username + ' is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n' + activation_url 
+            
+        # message = 'Hi, \n\n' + user.username + ' is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n'\
+        # + 'For Trainer : ' + activation_url + '/1\n\n' \
+        # + 'For Learner : ' + activation_url + '/2\n\n' \
+        # + 'For CTO : ' + activation_url + '/3\n\n' \
+        # + 'For CFO : ' + activation_url + '/4\n\n' \
+        
         from_email = 'info@nubeera.com'
         recipient_list = ['nubeera.imranali@gmail.com']
 
