@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
 
     path('cto-dashboard', views.cto_dashboard_view,name='cto-dashboard'),
+    path('cto-switch-user', views.cto_switch_user_view,name='cto-switch-user'),
 
     path('cto-passionateskill', views.cto_passionateskill_view,name='cto-passionateskill'),
     path('cto-add-passionateskill', views.cto_add_passionateskill_view,name='cto-add-passionateskill'),

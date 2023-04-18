@@ -29,35 +29,30 @@
 </head>
 
 <body>
+<div class="main-wrapper"> 
+    <div class="bs-example">
+  <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background-color: #000000;">
+    <a style="color: #ffffff;text-decoration: none; " href="/">
+      <font face="Comic sans MS" size=" 5">NubeEra</font><br />
+    </a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
+    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+      <div class="navbar-nav">
+        <a style="          padding-left: 30px;      " href="/" class="nav-item nav-link active">Home</a>
 
-
-  <div class="bs-example">
-    <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background-color: #000000;">
-      <a style="color: #ffffff;text-decoration: none; " href="/">
-        <font face="Comic sans MS" size=" 5">NubeEra</font><br />
-      </a>
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-        <div class="navbar-nav">
-          <a style="          padding-left: 30px;      " href="/" class="nav-item nav-link active">Home</a>
-
-          <a href="{% url 'social:begin' 'google-oauth2' %}" class="nav-item nav-link">Login With Google</a>
-          <a href="/adminclick" class="nav-item nav-link">Admin</a>
-        </div>
-
-        <div class="navbar-nav">
-          <a href="/aboutus" class="nav-item nav-link">About Us</a>
-          <a href="/contactus" class="nav-item nav-link">Contact Us</a>
-        </div>
+        <a href="{% url 'social:begin' 'google-oauth2' %}" class="nav-item nav-link">Login With Google</a>
+        <a href="/adminclick" class="nav-item nav-link">Admin</a>
       </div>
-    </nav>
-  </div>
 
-
+      <div class="navbar-nav">
+        <a href="/aboutus" class="nav-item nav-link">About Us</a>
+        <a href="/contactus" class="nav-item nav-link">Contact Us</a>
+      </div>
+    </div>
+  </nav>
+</div>
 </body>
 
-</html>

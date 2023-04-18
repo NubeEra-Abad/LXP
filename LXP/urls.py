@@ -24,6 +24,7 @@ urlpatterns = [
     path('contactus', views.contactus_view),
     path('indexpage', views.afterlogin_view,name='indexpage'),   
     path('user-session-expired', views.session_expire_view,name='user-session-expired'),   
+    path('admin-switch-user', views.admin_switch_user_view,name='admin-switch-user'),
 
     path('adminclick', views.adminclick_view),
     path('userlogin', LoginView.as_view(template_name='loginrelated/userlogin.html'),name='userlogin'),

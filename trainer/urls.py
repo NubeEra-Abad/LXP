@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
 
     path('trainer-dashboard', views.trainer_dashboard_view,name='trainer-dashboard'),
+    path('trainer-switch-user', views.trainer_switch_user_view,name='trainer-switch-user'),
 
     path('trainer-add-material', views.trainer_add_material_view,name='trainer-add-material'),
     path('trainer-update-material/<int:pk>', views.trainer_update_material_view,name='trainer-update-material'),

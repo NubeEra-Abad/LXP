@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/static/assets/plugins/aos/aos.css">
 
     <link rel="stylesheet" href="/static/assets/css/style.css">
+
 </head>
 
 <body>
@@ -32,7 +33,7 @@
 
         <header class="header">
             <div class="header-fixed">
-                <nav class="navbar navbar-expand-lg header-nav scroll-sticky">
+                <nav class="navbar navbar-expand-lg header-nav scroll-sticky" style="display: 50px;">
                     <div class="container">
                         <div class="navbar-header">
                             <a id="mobile_btn" href="javascript:void(0);">
@@ -50,7 +51,7 @@
                         <div class="main-menu-wrapper">
                             <div class="menu-header">
                                 <a href="index.html" class="menu-logo">
-                                    <img src="/static/assets/img/logo.png" class="img-fluid" alt="Logo">
+                                    <img src="/static/assets/img/logo.png"  class="img-fluid" alt="Logo">
                                 </a>
                                 <a id="menu_close" class="menu-close" href="javascript:void(0);">
                                     <i class="fas fa-times"></i>
@@ -166,12 +167,15 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link header-sign" href="{% url 'social:begin' 'google-oauth2' %}">Login
-                                    with <img src="/static/assets/img/net-icon-01.png" class="img-fluid"
+                                    with <img src="/static/assets/img/net-icon-01.png" style="height: 25px; width: 25px;" class="img-fluid"
                                         alt="Logo">oogle</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link header-login" href="../../../../signup">Signup</a>
+                                <a class="nav-link header-sign" href="../../../../signup">Signup</a>
                             </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link header-login" href="../../../../signup">Signup</a>
+                            </li> -->
                         </ul>
                     </div>
                 </nav>
@@ -215,10 +219,10 @@
                                 <p>Trusted by over 15K Users <br>worldwide since 2022</p>
                                 <div class="trust-rating d-flex align-items-center">
                                     <div class="rate-head">
-                                        <h2><span>1000</span>+</h2>
+                                        <h2><span>1500</span>+</h2>
                                     </div>
                                     <div class="rating d-flex align-items-center">
-                                        <h2 class="d-inline-block average-rating">4.4</h2>
+                                        <h2 class="d-inline-block average-rating">4.8</h2>
                                         <i class="fas fa-star filled"></i>
                                         <i class="fas fa-star filled"></i>
                                         <i class="fas fa-star filled"></i>
@@ -328,12 +332,16 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon.png" alt="">
+                                    <img src="/static/assets/img/Deops.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Angular Development</div>
+                                 <div class="feature-text"><b><h5>DevOps</h5></b>
+                                    <b><h6>Docker</h6></b>
+                                    <b><h6>Ansible</h6></b>
+                                    <b><h6>Terraform</h6></b>
+                                 </div>
                                 </div>
-                            </div>
+                            </div>  
                             <p>40 Trainers</p>
                         </div>
                     </div>
@@ -341,10 +349,14 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-01.png" alt="">
+                                    <img src="/static/assets/img/bigdata.jfif" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Docker Development</div>
+                                 <div class="feature-text"><b><h5>BigData</h5></b>
+                                    <b><h6>Hadoop</h6></b>
+                                    <b><h6>Spark</h6></b>
+                                    <b><h6>DataBriks</h6></b>
+                                 </div>
                                 </div>
                             </div>
                             <p>45 Trainers</p>
@@ -354,10 +366,14 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-02.png" alt="">
+                                    <img src="/static/assets/img/cloud.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Node JS Frontend</div>
+                                    <div class="feature-text"><b><h5>Cloud</h5></b>
+                                    <b><h6>AWS</h6></b>
+                                    <b><h6>MS-Azure</h6></b>
+                                    <b><h6>GCP</h6></b>
+                                    </div>
                                 </div>
                             </div>
                             <p>40 Trainers</p>
@@ -367,10 +383,17 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-03.png" alt="">
+                                    <img src="/static/assets/img/Ai-ml.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Swift Development</div>
+                                    <div class="feature-text"><b><h5>AI/ML</h5></b>
+                                        <b><h6>DS</h6></b>
+                                        <b><h6>ML</h6></b>
+                                        <b><h6>AI</h6></b>
+                                        <b><h6>IOT</h6></b>
+
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <p>23 Trainers</p>
@@ -380,10 +403,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-04.png" alt="">
+                                    <img src="/static/assets/img/Python" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Python Development</div>
+                                    <div class="feature-text"> Python </div>
                                 </div>
                             </div>
                             <p>30 Trainers</p>
@@ -393,10 +416,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-05.png" alt="">
+                                    <img src="/static/assets/img/Linux">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">React<br> Native</div>
+                                    <div class="feature-text"> Linux </div>
                                 </div>
                             </div>
                             <p>80 Trainers</p>
@@ -406,10 +429,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-04.png" alt="">
+                                    <img src="/static/assets/img/jenkins.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Angular Development</div>
+                                    <div class="feature-text"> Jenkins </div>
                                 </div>
                             </div>
                             <p>40 Trainers</p>
@@ -422,7 +445,7 @@
                                     <img src="/static/assets/img/categories-icon-01.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Docker Development</div>
+                                    <div class="feature-text"> SysOps </div>
                                 </div>
                             </div>
                             <p>45 Trainers</p>
@@ -435,7 +458,7 @@
                                     <img src="/static/assets/img/categories-icon-02.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Node JS Frontend</div>
+                                    <div class="feature-text"> Node JS Frontend </div>
                                 </div>
                             </div>
                             <p>40 Trainers</p>
@@ -448,7 +471,7 @@
                                     <img src="/static/assets/img/categories-icon-03.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Swift Development</div>
+                                    <div class="feature-text"> Swift Development </div>
                                 </div>
                             </div>
                             <p>23 Trainers</p>
@@ -458,10 +481,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-04.png" alt="">
+                                    <img src="/static/assets/img/categories-icon.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Python Development</div>
+                                    <div class="feature-text"> Angular Development </div>
                                 </div>
                             </div>
                             <p>30 Trainers</p>
@@ -471,10 +494,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-01.png" alt="">
+                                    <img src="/static/assets/img/ebD.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Docker Development</div>
+                                    <div class="feature-text"> Web Development </div>
                                 </div>
                             </div>
                             <p>45 Trainers</p>
@@ -484,10 +507,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-02.png" alt="">
+                                    <img src="/static/assets/img/JS" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Node JS Frontend</div>
+                                    <div class="feature-text"> JavaScript </div>
                                 </div>
                             </div>
                             <p>40 Trainers</p>
@@ -497,10 +520,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-03.png" alt="">
+                                    <img src="/static/asse/img/php.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Swift Development</div>
+                                    <div class="feature-text"> PHP </div>
                                 </div>
                             </div>
                             <p>23 Trainers</p>
@@ -510,10 +533,10 @@
                         <div class="feature-bg">
                             <div class="feature-header">
                                 <div class="feature-icon">
-                                    <img src="/static/assets/img/categories-icon-04.png" alt="">
+                                    <img src="/static/assets/img/bootstrap.jfif" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text">Python Development</div>
+                                    <div class="feature-text"> Bootstrap </div>
                                 </div>
                             </div>
                             <p>30 Trainers</p>
