@@ -594,15 +594,3 @@ def save_cart(request):
             return JsonResponse({'status': 'success'})    
     except:
         return render(request,'lxpapp/404page.html')
-
-from django.urls import reverse
-from django.shortcuts import redirect
-from django.contrib.auth import logout
-@login_required
-def learner_switch_user_view(request):
-    logout(request)
-    redirect_uri = request.build_absolute_uri(reverse('social:complete', args=['google-oauth2']))
-    authorize_url = reverse('social:begin', args=['google-oauth2'])
-
-    # Redirect the user to the Google OAuth2 authentication page
-    return redirect(authorize_url + '?next=' + redirect_uri)

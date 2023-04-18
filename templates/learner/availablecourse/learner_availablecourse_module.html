@@ -1,7 +1,6 @@
 {% extends 'learner/learnerbase.html' %}
 {% block content %}
 {%load static%}
-
 <link rel="stylesheet" href="/static/assets/css/style.css">
 <div class="main-wrapper"> 
   <div>
@@ -130,27 +129,15 @@
 
 <script>
 
-function addToCart(Id) {
+  function addToCart(Id) {
     $.ajax({
-        url: '/ajax_save_cart/',
+      url: "{% url 'ajax_save_cart' %}",
         type: 'POST',
         data: { 'id': Id },
         success: function(response) {
-            console.log(response);  // Log the response to the console
-            if (response.status === 'success') {
-                var cartList = $('#cart-list');
-                cartList.empty();  // Clear the contents of the cart list
-                
-                // Loop through the cart items and create list items for each
-                for (var i = 0; i < response.cartItems.length; i++) {
-                    var item = response.cartItems[i];
-                    var newItem = $('<li>').text(item.name);
-                    cartList.append(newItem);
-                }
-            }
+            // Handle success response
         },
         error: function(xhr, status, error) {
-            console.log(error);  // Log the error to the console
             // Handle error response
         }
     });

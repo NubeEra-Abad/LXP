@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.manager import EmptyManager
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings as conf_settings
+
 from .validators import UnicodeUsernameValidator
 
 def update_last_login(sender, user, **kwargs):
@@ -149,20 +149,17 @@ class UserManager(BaseUserManager):
             'uidb64': user.id,
             'token': default_token_generator.make_token(user)
         })
-        
-        activation_url = conf_settings.ACTIVAION_SERVER + activation_url
+
+        from django.contrib.sites.models import Site
+        domain = Site.objects.get_current().domain
+        path = activation_url
+        url = f'https://{domain}{path}'
+
         #activation_link = request.build_absolute_uri(activation_url)
 
         # Construct the activation email
         subject = 'New User Login'
-        message = 'Hi, \n\n' + user.username + ' is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n' + activation_url 
-            
-        # message = 'Hi, \n\n' + user.username + ' is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n'\
-        # + 'For Trainer : ' + activation_url + '/1\n\n' \
-        # + 'For Learner : ' + activation_url + '/2\n\n' \
-        # + 'For CTO : ' + activation_url + '/3\n\n' \
-        # + 'For CFO : ' + activation_url + '/4\n\n' \
-        
+        message = f'Hi, \n\n{user.username} is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n{activation_url}'
         from_email = 'info@nubeera.com'
         recipient_list = ['nubeera.imranali@gmail.com']
 
@@ -365,7 +362,7 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    profile_pic = models.CharField(_('profile picture'), max_length=150, blank=True)
+    profile_pic = models.CharField(_('profile picture'), max_length=150, blank=True,null=True)
     email = models.EmailField(_('email address'), blank=True)
     is_staff = models.BooleanField(
         _('staff status'),
