@@ -799,7 +799,7 @@ button.bg-danger:hover {
 	-webkit-justify-content: space-between;
 	-ms-flex-pack: space-between;
     position: relative;
-	height: 70px;
+	height: 110px;
 	padding: 0 20px;
 	margin-bottom: 0;
 	transition-duration: 0.4s;
@@ -2694,7 +2694,7 @@ html.menu-opened body {
 	font-weight: 600;
 }
 [dir='rtl'] .testimonial-four .slick-prev:before {
-    content: '→';
+    content: 'â†’';
 }
 .testimonial-four .slick-next:before {
 	font-family: "Font Awesome 5 Free";
@@ -2703,7 +2703,7 @@ html.menu-opened body {
 	font-weight: 600;
 }
 [dir='rtl'] .testimonial-four .slick-next:before {
-    content: '←';
+    content: 'â†';
 }
 .testimonial-all {
 	padding: 40px;
@@ -9943,7 +9943,7 @@ input[type=password]::-ms-clear
 		margin-bottom: 5px;
 	}
 	.header-navbar-rht li a.header-sign {
-		min-width: 110px;
+		min-width: 97px;
 		padding: 8px 15px;
 		font-size: 14px;
 	}
@@ -9951,7 +9951,7 @@ input[type=password]::-ms-clear
 		font-size: 14px;
 	}
 	.logo {
-		width: 130px;
+		/* width: 130px; */
 	}
 	.google-bg {
 		padding: 25px;

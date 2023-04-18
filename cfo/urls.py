@@ -5,7 +5,6 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
 
     path('cfo-dashboard', views.cfo_dashboard_view,name='cfo-dashboard'),
-    path('cfo-switch-user', views.cfo_switch_user_view,name='cfo-switch-user'),
 
     path('cfo-add-coursetype', views.cfo_add_coursetype_view,name='cfo-add-coursetype'),
     path('cfo-update-coursetype/<int:pk>', views.cfo_update_coursetype_view,name='cfo-update-coursetype'),

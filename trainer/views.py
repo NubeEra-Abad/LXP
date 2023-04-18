@@ -1038,13 +1038,3 @@ def trainer_delete_chapterquestion_view(request,pk):
         return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
     except:
         return render(request,'lxpapp/404page.html')
-
-from django.contrib.auth import logout
-@login_required
-def trainer_switch_user_view(request):
-    logout(request)
-    redirect_uri = request.build_absolute_uri(reverse('social:complete', args=['google-oauth2']))
-    authorize_url = reverse('social:begin', args=['google-oauth2'])
-
-    # Redirect the user to the Google OAuth2 authentication page
-    return redirect(authorize_url + '?next=' + redirect_uri)
