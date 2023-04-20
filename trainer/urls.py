@@ -15,7 +15,7 @@ urlpatterns = [
     path('trainer-material-start-upload-file', views.trainer_material_start_upload_file_view,name='trainer-material-start-upload-file'),
     path('trainer-upload-material-details-csv', views.trainer_upload_material_details_csv_view,name='trainer-upload-material-details-csv'),
     path('trainer-upload-material-folder', views.trainer_upload_material_folder_view,name='trainer-upload-material-folder'),
-    path('trainer-start-upload-material-folder', views.trainer_start_Upload_material_folder_view,name='trainer-start-upload-material-folder'),
+    path('trainer-start-upload-material-folder', views.trainer_start_upload_material_folder_view,name='trainer-start-upload-material-folder'),
 
     path('trainer-sessionmaterial', views.trainer_sessionmaterial_view,name='trainer-sessionmaterial'),
     path('trainer-add-sessionmaterial', views.trainer_add_sessionmaterial_view,name='trainer-add-sessionmaterial'),
