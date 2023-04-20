@@ -260,6 +260,34 @@ def trainer_upload_material_details_csv_view(request):
     return render(request,'trainer/material/trainer_upload_material_details_csv.html')
 
 @login_required
+def trainer_upload_material_folder_view(request):
+    return render(request,'trainer/material/trainer_Upload_material_folder.html')
+
+
+import os
+from pathlib import Path
+def trainer_start_upload_material_folder_view(request):
+    if request.method=="POST":
+        folder=request.POST["select_folder"]
+        folder = str.replace(folder,'/','\\')
+        path ='D:\\upload\\iLMS'
+        path =folder
+
+        filelist = []
+        folder = ''
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                filelist.append(os.path.join(root,file))
+        for filewithpath in filelist:
+            fullfolderpath = os.path.dirname(filewithpath)
+            onlyfilenamewithextension = os.path.basename(filewithpath)
+            file_extension = Path(onlyfilenamewithextension).suffix
+            path=os.path.dirname(filewithpath)
+            onlyFoldername = os.path.basename(path)
+            onlyfilenamewithoutextension = Path(filewithpath).stem
+            
+        return  redirect("/")
+@login_required
 def trainer_sessionmaterial_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
