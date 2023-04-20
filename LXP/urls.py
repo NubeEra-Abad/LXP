@@ -50,6 +50,9 @@ urlpatterns = [
 
     path('add-emails-to-video/', views.add_emails_to_video, name='add_emails_to_video'),
 
+
+    path('nubeera-docs', TemplateView.as_view(template_name='docs/docsindex.html'),name='nubeera-docs'),
+
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
