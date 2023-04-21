@@ -80,11 +80,11 @@ def trainer_update_material_view(request,pk):
 
 @login_required
 def trainer_view_material_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'trainer':
             materials = LXPModel.Material.objects.all()
             return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -137,6 +137,12 @@ s3 = boto3.client(
 @login_required  
 def upload_material_file_to_s3(request,file, bucket_name, acl="public-read"):
     try:
+        file_path = file
+        with open(file_path, 'rb') as f:
+            s3.upload_fileobj(f, settings.AWS_BUCKET_NAME, 'path/to/remote/file')
+
+        file_url = f"https://{settings.AWS_BUCKET_NAME}.s3.amazonaws.com/path/to/remote/file"
+
         filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
         print("intered in function")
         s3.upload_fileobj(
@@ -144,8 +150,7 @@ def upload_material_file_to_s3(request,file, bucket_name, acl="public-read"):
             bucket_name,
             filename,
             ExtraArgs={
-                "ACL": acl,
-                "ContentType": file.content_type
+                "ACL": acl
             }
         )
     except Exception as e:
@@ -272,20 +277,68 @@ def trainer_start_upload_material_folder_view(request):
         folder = str.replace(folder,'/','\\')
         path ='D:\\upload\\iLMS'
         path =folder
-
+        oldsub =''
+        oldchap=''
+        tochk=''
+        subid =0
+        chapid=0
         filelist = []
         folder = ''
         for root, dirs, files in os.walk(path):
             for file in files:
                 filelist.append(os.path.join(root,file))
+        filename = ''
         for filewithpath in filelist:
+            filename = filewithpath
             fullfolderpath = os.path.dirname(filewithpath)
             onlyfilenamewithextension = os.path.basename(filewithpath)
             file_extension = Path(onlyfilenamewithextension).suffix
             path=os.path.dirname(filewithpath)
             onlyFoldername = os.path.basename(path)
             onlyfilenamewithoutextension = Path(filewithpath).stem
-            
+            subname = os.path.abspath(os.path.join(fullfolderpath, os.pardir))
+            tochk = os.path.basename(subname)
+            if tochk != oldsub:
+                oldsub = tochk
+            sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+            if not sub:
+                sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+                sub.save()
+                subid=sub.id
+            else:
+                for x in sub:
+                    subid=x.id  
+            Srno = 0
+            tochk = onlyFoldername
+            if tochk != oldchap:
+                oldchap = tochk
+                Srno = 1
+                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
+                if not chap:
+                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
+                    chap.save()
+                    chapid=chap.id
+                else:
+                    Srno = Srno + 1
+                    for x in chap:
+                        chapid=x.id
+            topic = onlyfilenamewithoutextension
+            doctype = ''
+            if str(file_extension).upper() == 'PDF':
+                doctype = 'PDF'
+            desc = topic
+            ofs = open(filename, 'w') # ofs is file object
+            link = upload_material_file_to_s3(request, filename, settings.AWS_BUCKET_NAME)
+            data = LXPModel.Material.objects.create(
+                    serial_number = Srno,
+                    topic = topic,
+                    mtype = doctype,
+                    urlvalue = link,
+                    description = desc,
+                    chapter_id = chapid,
+                    subject_id = subid
+            )
+            data.save()
         return  redirect("/")
 @login_required
 def trainer_sessionmaterial_view(request):

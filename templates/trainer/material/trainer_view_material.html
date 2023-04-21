@@ -5,9 +5,10 @@
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-add-material">Add Material</a></li>
-			<li class="breadcrumb-item"><a href="../../../../trainer/trainer-upload-material-details-csv">Upload Material CSV</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'trainer-dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'trainer-add-material' %}">Add Material</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'trainer-upload-material-details-csv' %}">Upload Material CSV</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'trainer-upload-material-folder' %}">Upload Material Folder</a></li>
       <li class="breadcrumb-item active" aria-current="page">View Material</li>
     </ol>
   </nav>

@@ -15,6 +15,16 @@ from datetime import datetime
 login_time = datetime.now()
 logout_time  = datetime.now()
 from django.http import HttpResponse
+from django.contrib.auth import logout
+from django.urls import reverse
+
+@login_required
+def switch_user_view(request):
+    logout(request)
+    google_auth_url = reverse('social:begin', args=['google-oauth2'])
+    redirect_uri = request.build_absolute_uri(reverse('social:complete', args=['google-oauth2']))
+    authorize_url = reverse('social:begin', args=['google-oauth2'])
+    return redirect('/social-auth/login/google-oauth2/')
 
 def signup(request):
         if request.method=="POST":

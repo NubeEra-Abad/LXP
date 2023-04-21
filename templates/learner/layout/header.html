@@ -1,7 +1,7 @@
 <div class="main-wrapper">
     <header class="header header-page">
         <div class="header-fixed">
-            <nav class="navbar navbar-expand-lg header-nav scroll-sticky">
+            <nav class="navbar navbar-expand-lg header-nav scroll-sticky" style="height: 102px;">
                 <div class="container ">
                     <div class="navbar-header">
                         <a id="mobile_btn" href="javascript:void(0);">
@@ -26,14 +26,13 @@
                         </div>
                         <ul class="main-nav">
                             <li>
-                                <a href="index.html">Home</a>
+                                <a href="../../../../learner/learner-dashboard">Home</a>
                             </li>
                             <li class="has-submenu active">
-                                <a href="#">Learner <i class="fas fa-chevron-down"></i></a>
+                                <a href="#">Trainer <i class="fas fa-chevron-down"></i></a>
                                 <ul class="submenu">
-                                    <li class="active"><a href="instructor-dashboard.html">Dashboard</a></li>
                                     <li class="has-submenu">
-                                        <a href="instructor-list.html">Learner</a>
+                                        <a href="instructor-list.html">Trainer</a>
                                         <ul class="submenu">
                                             <li><a href="instructor-list.html">List</a></li>
                                             <li><a href="instructor-grid.html">Grid</a></li>
@@ -45,7 +44,7 @@
                                     <li><a href="instructor-orders.html">Orders</a></li>
                                     <li><a href="instructor-payouts.html">Payouts</a></li>
                                     <li><a href="instructor-tickets.html">Support Ticket</a></li>
-                                    <li><a href="instructor-edit-profile.html">Learner Profile</a></li>
+                                    <li><a href="instructor-edit-profile.html">Trainer Profile</a></li>
                                     <li><a href="instructor-security.html">Security</a></li>
                                     <li><a href="instructor-social-profiles.html">Social Profiles</a></li>
                                     <li><a href="instructor-notification.html">Notifications</a></li>
@@ -385,20 +384,22 @@
                                     </div>
                                     <div class="user-text">
                                         <h6>{{request.user.first_name}} {{request.user.last_name}}</h6>
-                                        <p class="text-muted mb-0">Learner</p>
+                                        <p class="text-muted mb-0">CTO</p>
                                     </div>
                                 </div>
-                                <a class="dropdown-item" href="instructor-dashboard.html"><i
+                                <a class="dropdown-item" href="../../../../learner/learner-dashboard"><i
                                         class="feather-home me-1"></i> Dashboard</a>
-                                        <a class="dropdown-item" href="../../../../../../../../../../../../user-change-password"><i
-                                            class="feather-star me-1"></i> Change Password</a>
+                                <a class="dropdown-item" href="../../../../user-change-password"><i
+                                        class="feather-star me-1"></i> Change Password</a>
+                                        <a class="dropdown-item" href="{% url 'switch-user' %}"><i
+                                            class="fas fa-bezier-curve me-1"></i> Switch User</a>
                                 <div class="dropdown-item night-mode">
                                     <span><i class="feather-moon me-1"></i> Night Mode </span>
                                     <div class="form-check form-switch check-on m-0">
                                         <input class="form-check-input" type="checkbox" id="night-mode">
                                     </div>
                                 </div>
-                                <a class="dropdown-item" href="../../../../../../../../logout"><i class="feather-log-out me-1"></i>
+                                <a class="dropdown-item" href="../../../../logout"><i class="feather-log-out me-1"></i>
                                     Logout</a>
                             </div>
                         </li>
