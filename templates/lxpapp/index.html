@@ -43,15 +43,16 @@
                                     <span></span>
                                 </span>
                             </a>
-                            
+
                             <a href="index.html" class="navbar-brand logo">
-                                <img src="/static/assets/img/logo.png" class="img-fluid" alt="Logo">
+                                <img src="/static/assets/img/logo.png" style="height: 85px; width: 125px;"
+                                    class="img-fluid" alt="Logo">
                             </a>
                         </div>
                         <div class="main-menu-wrapper">
                             <div class="menu-header">
                                 <a href="index.html" class="menu-logo">
-                                    <img src="/static/assets/img/logo.png"  class="img-fluid" alt="Logo">
+                                    <img src="/static/assets/img/logo.png" class="img-fluid" alt="Logo">
                                 </a>
                                 <a id="menu_close" class="menu-close" href="javascript:void(0);">
                                     <i class="fas fa-times"></i>
@@ -167,8 +168,8 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link header-sign" href="{% url 'social:begin' 'google-oauth2' %}">Login
-                                    with <img src="/static/assets/img/net-icon-01.png" style="height: 25px; width: 25px;" class="img-fluid"
-                                        alt="Logo">oogle</a>
+                                    with <img src="/static/assets/img/net-icon-01.png"
+                                        style="height: 25px; width: 25px;" class="img-fluid" alt="Logo">oogle</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link header-sign" href="../../../../signup">Signup</a>
@@ -335,13 +336,21 @@
                                     <img src="/static/assets/img/Deops.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                 <div class="feature-text"><b><h5>DevOps</h5></b>
-                                    <b><h6>Docker</h6></b>
-                                    <b><h6>Ansible</h6></b>
-                                    <b><h6>Terraform</h6></b>
-                                 </div>
+                                    <div class="feature-text"><b>
+                                            <h5>DevOps</h5>
+                                        </b>
+                                        <b>
+                                            <h6>Docker</h6>
+                                        </b>
+                                        <b>
+                                            <h6>Ansible</h6>
+                                        </b>
+                                        <b>
+                                            <h6>Terraform</h6>
+                                        </b>
+                                    </div>
                                 </div>
-                            </div>  
+                            </div>
                             <p>40 Trainers</p>
                         </div>
                     </div>
@@ -352,11 +361,19 @@
                                     <img src="/static/assets/img/bigdata.jfif" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                 <div class="feature-text"><b><h5>BigData</h5></b>
-                                    <b><h6>Hadoop</h6></b>
-                                    <b><h6>Spark</h6></b>
-                                    <b><h6>DataBriks</h6></b>
-                                 </div>
+                                    <div class="feature-text"><b>
+                                            <h5>BigData</h5>
+                                        </b>
+                                        <b>
+                                            <h6>Hadoop</h6>
+                                        </b>
+                                        <b>
+                                            <h6>Spark</h6>
+                                        </b>
+                                        <b>
+                                            <h6>DataBriks</h6>
+                                        </b>
+                                    </div>
                                 </div>
                             </div>
                             <p>45 Trainers</p>
@@ -369,10 +386,18 @@
                                     <img src="/static/assets/img/cloud.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text"><b><h5>Cloud</h5></b>
-                                    <b><h6>AWS</h6></b>
-                                    <b><h6>MS-Azure</h6></b>
-                                    <b><h6>GCP</h6></b>
+                                    <div class="feature-text"><b>
+                                            <h5>Cloud</h5>
+                                        </b>
+                                        <b>
+                                            <h6>AWS</h6>
+                                        </b>
+                                        <b>
+                                            <h6>MS-Azure</h6>
+                                        </b>
+                                        <b>
+                                            <h6>GCP</h6>
+                                        </b>
                                     </div>
                                 </div>
                             </div>
@@ -386,14 +411,24 @@
                                     <img src="/static/assets/img/Ai-ml.png" alt="">
                                 </div>
                                 <div class="feature-cont">
-                                    <div class="feature-text"><b><h5>AI/ML</h5></b>
-                                        <b><h6>DS</h6></b>
-                                        <b><h6>ML</h6></b>
-                                        <b><h6>AI</h6></b>
-                                        <b><h6>IOT</h6></b>
+                                    <div class="feature-text"><b>
+                                            <h5>AI/ML</h5>
+                                        </b>
+                                        <b>
+                                            <h6>DS</h6>
+                                        </b>
+                                        <b>
+                                            <h6>ML</h6>
+                                        </b>
+                                        <b>
+                                            <h6>AI</h6>
+                                        </b>
+                                        <b>
+                                            <h6>IOT</h6>
+                                        </b>
 
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <p>23 Trainers</p>
@@ -632,8 +667,7 @@
                                         <div class="course-group d-flex">
                                             <div class="course-group-img d-flex">
                                                 <a href="instructor-profile.html"><img
-                                                        src="{{request.user.profile_pic}}" alt=""
-                                                        class="img-fluid"></a>
+                                                        src="{{request.user.profile_pic}}" alt="" class="img-fluid"></a>
                                                 <div class="course-name">
                                                     <h4><a href="instructor-profile.html">Jenis R.</a></h4>
                                                     <p>Trainer</p>
@@ -1049,8 +1083,8 @@
                             <div class="product-content">
                                 <div class="course-group d-flex">
                                     <div class="course-group-img d-flex">
-                                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}"
-                                                alt="" class="img-fluid"></a>
+                                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}" alt=""
+                                                class="img-fluid"></a>
                                         <div class="course-name">
                                             <h4><a href="instructor-profile.html">John Smith</a></h4>
                                             <p>Trainer</p>
@@ -1199,8 +1233,8 @@
                             <div class="product-content">
                                 <div class="course-group d-flex">
                                     <div class="course-group-img d-flex">
-                                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}"
-                                                alt="" class="img-fluid"></a>
+                                        <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}" alt=""
+                                                class="img-fluid"></a>
                                         <div class="course-name">
                                             <h4><a href="instructor-profile.html">John Smith</a></h4>
                                             <p>Trainer</p>
@@ -1711,8 +1745,7 @@
                                         <div class="four-testimonial-founder">
                                             <div class="fount-about-img">
                                                 <a href="instructor-profile.html"><img
-                                                        src="{{request.user.profile_pic}}" alt=""
-                                                        class="img-fluid"></a>
+                                                        src="{{request.user.profile_pic}}" alt="" class="img-fluid"></a>
                                             </div>
                                             <h3><a href="instructor-profile.html">David Lee</a></h3>
                                             <span>Founder of Awesomeux Technology</span>
@@ -2143,13 +2176,17 @@
                                 <div class="footer-contact-info">
                                     <div class="footer-address">
                                         <img src="/static/assets/img/icon/icon-20.svg" alt="" class="img-fluid">
-                                        <p> 3556 Beech Street, San Francisco,<br> California, CA 94108 </p>
+                                          <!-- <p>Training Center Officer: </p> -->
+                                        <p> T9, Office Aids Building, STPI (Software Technology, Park of India), MIDC
+                                            Industrial Area, Chilkalthana, Sambhaji Nagar/Aurangabad, Maharashtra 431007
+                                        </p>
+                                        <p style="margin-left:90px;">Adenta municipal Assmebly, 2nd Nana Kanton Street, Accra, Ghana</p>
                                     </div>
                                     <p>
                                         <img src="/static/assets/img/icon/icon-19.svg" alt="" class="img-fluid">
                                         <a href="https://dreamslms.dreamguystech.com/cdn-cgi/l/email-protection"
                                             class="__cf_email__"
-                                            data-cfemail="d9bdabbcb8b4aab5b4aa99bca1b8b4a9b5bcf7bab6b4">[email&#160;protected]</a>
+                                            data-cfemail="d9bdabbcb8b4aab5b4aa99bca1b8b4a9b5bcf7bab6b4">info@nubeera.com</a>
                                     </p>
 
                                 </div>

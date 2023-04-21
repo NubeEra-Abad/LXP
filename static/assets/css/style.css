@@ -813,7 +813,7 @@ button.bg-danger:hover {
 	display: -ms-flexbox;
 	display: flex;
 	list-style: none;
-	margin: 0;
+	margin: -21px;
 	padding: 0;
 }
 .main-nav > li.active > a {
@@ -953,6 +953,7 @@ button.bg-danger:hover {
 	border: 3px solid #B4A7F5;
 	color: #fff;
 	padding: 10px 15px;
+	margin-left: -12px;
 }
 .add-header-bg .header-navbar-rht li a.header-sign:hover {
 	background: #fff;
@@ -2117,6 +2118,7 @@ html.menu-opened body {
 }
 .product-img img {
     width: 100%;
+	height: 100%;
     border-radius: 4px 4px 0 0;
 	transform: translateZ(0);
 	transition: all 2000ms cubic-bezier(.19,1,.22,1) 0ms;
