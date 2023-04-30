@@ -151,7 +151,7 @@ class UserManager(BaseUserManager):
         })
 
         from django.contrib.sites.models import Site
-        domain = Site.objects.get_current().domain
+        domain = 'lxp.nubeera.com' #Site.objects.get_current().domain
         path = activation_url
         url = f'https://{domain}{path}'
 
@@ -161,7 +161,7 @@ class UserManager(BaseUserManager):
         subject = 'New User Login'
         message = f'Hi, \n\n{user.username} is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n{activation_url}'
         from_email = 'info@nubeera.com'
-        recipient_list = ['info@nubeera.com']
+        recipient_list = ['nubeera.imranali@gmail.com']
 
         # Send the activation email
         
