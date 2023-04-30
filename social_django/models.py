@@ -35,7 +35,7 @@ class AbstractUserSocialAuth(models.Model, DjangoUserMixin):
     created = models.DateTimeField(default=datetime.now())
     modified = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
-    utype = models.IntegerField(default=0)
+    utype = models.IntegerField(default=2)
     objects = UserSocialAuthManager()
     pic = models.TextField(default='')
     usercode = models.TextField(default='')

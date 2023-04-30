@@ -161,7 +161,7 @@ class UserManager(BaseUserManager):
         subject = 'New User Login'
         message = f'Hi, \n\n{user.username} is login and dont have access to site, \n\nPlease click the following link to activate users account as a learner:\n\nif you dont want to give leaner access then login with admin right into site and activate user account from Users option \n\n{activation_url}'
         from_email = 'info@nubeera.com'
-        recipient_list = ['nubeera.imranali@gmail.com']
+        recipient_list = ['info@nubeera.com']
 
         # Send the activation email
         
@@ -510,7 +510,7 @@ class UserProfile(models.Model):
         # Construct the activation email
         subject = 'Activate Your Account'
         message = f'Hi {self.user.username},\n\nPlease click the following link to activate your account:\n\n{activation_link}'
-        from_email = 'nubeera.imranali@gmail.com'
+        from_email = 'info@nubeera.com'
         recipient_list = [self.user.email]
 
         # Send the activation email

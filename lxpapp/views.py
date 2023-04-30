@@ -189,6 +189,7 @@ def afterlogin_view(request):
                             username = u.first_name + ' ' + u.last_name
                         return render(request,'loginrelated/add_learnerdetails.html',{'learnerdetailsForm':learnerdetailsForm,'pskills':pskills,'kskills':kskills,'username':username})
                 else:
+                    return render(request,'loginrelated/wait_for_approval.html')
                     learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
                     if learnerdetails:
                         isfirstlogin = models.IsFirstLogIn.objects.all().filter(user_id = request.user.id)
@@ -435,7 +436,7 @@ def add_emails_to_video(request):
     # emails = request.POST.get('emails')
     
     video_id = "OgZSIZiY5Zk"
-    emails = ["nubeera.imranali@gmail.com"]
+    emails = ["info@nubeera.com"]
     import os
     import google_auth_oauthlib.flow
     scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]

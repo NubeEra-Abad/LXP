@@ -473,7 +473,7 @@ class Material(models.Model):
     topic = models.CharField(max_length=200)
     cat = (('PDF', 'PDF'), ('HTML', 'HTML'), ('Video', 'Video'), ('URL', 'URL'))
     mtype = models.CharField(max_length=200, choices=cat, default='PDF')
-    urlvalue = models.CharField(max_length=200)
+    urlvalue = models.CharField(max_length=2000)
     description = models.CharField(max_length=200)
 
     class Meta:

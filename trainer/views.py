@@ -129,20 +129,14 @@ def allowed_file(name):
 # Connect to the s3 service
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=settings.AWS_ACCESS_KEY,
-    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+    aws_access_key_id='AKIATZQFG2PZIUPD23GA',
+    aws_secret_access_key='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'
 )
 #upload file to s3 w/ acl as public
 
 @login_required  
 def upload_material_file_to_s3(request,file, bucket_name, acl="public-read"):
     try:
-        file_path = file
-        with open(file_path, 'rb') as f:
-            s3.upload_fileobj(f, settings.AWS_BUCKET_NAME, 'path/to/remote/file')
-
-        file_url = f"https://{settings.AWS_BUCKET_NAME}.s3.amazonaws.com/path/to/remote/file"
-
         filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
         print("intered in function")
         s3.upload_fileobj(
@@ -150,7 +144,8 @@ def upload_material_file_to_s3(request,file, bucket_name, acl="public-read"):
             bucket_name,
             filename,
             ExtraArgs={
-                "ACL": acl
+                "ACL": acl,
+                "ContentType": file.content_type
             }
         )
     except Exception as e:
@@ -271,31 +266,30 @@ def trainer_upload_material_folder_view(request):
 
 import os
 from pathlib import Path
-def trainer_start_upload_material_folder_view(request):
-    if request.method=="POST":
-        folder=request.POST["select_folder"]
-        folder = str.replace(folder,'/','\\')
-        path ='D:\\upload\\iLMS'
-        path =folder
-        oldsub =''
-        oldchap=''
-        tochk=''
-        subid =0
-        chapid=0
-        filelist = []
-        folder = ''
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                filelist.append(os.path.join(root,file))
-        filename = ''
-        for filewithpath in filelist:
-            filename = filewithpath
-            fullfolderpath = os.path.dirname(filewithpath)
-            onlyfilenamewithextension = os.path.basename(filewithpath)
-            file_extension = Path(onlyfilenamewithextension).suffix
-            path=os.path.dirname(filewithpath)
+def upload_folder_to_s3(path, bucket_name):
+    s3 = boto3.client(
+    "s3",
+    aws_access_key_id='AKIAVV2TMMSHQ46LTJ6R',
+    aws_secret_access_key='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'
+)
+    oldsub =''
+    oldchap=''
+    tochk=''
+    subid =0
+    chapid=0
+    filelist = []
+    folder = ''
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            s3.upload_file(file_path, bucket_name, file_path)
+            aws_link = s3.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': file_path}, ExpiresIn=604800) # 1 week
+            fullfolderpath = os.path.dirname(file_path)
+            path=os.path.dirname(file_path)
             onlyFoldername = os.path.basename(path)
-            onlyfilenamewithoutextension = Path(filewithpath).stem
+            onlyfilenamewithoutextension = Path(file_path).stem
+            onlyfilenamewithextension = os.path.basename(file_path)
+            file_extension = Path(onlyfilenamewithextension).suffix
             subname = os.path.abspath(os.path.join(fullfolderpath, os.pardir))
             tochk = os.path.basename(subname)
             if tochk != oldsub:
@@ -324,21 +318,31 @@ def trainer_start_upload_material_folder_view(request):
                         chapid=x.id
             topic = onlyfilenamewithoutextension
             doctype = ''
-            if str(file_extension).upper() == 'PDF':
-                doctype = 'PDF'
+            file_extension = file_extension.replace('.','')
+            if str(file_extension).upper() == 'VIDEO':
+                doctype = 'Video'
+            else :
+                doctype = str(file_extension).upper()
             desc = topic
-            ofs = open(filename, 'w') # ofs is file object
-            link = upload_material_file_to_s3(request, filename, settings.AWS_BUCKET_NAME)
             data = LXPModel.Material.objects.create(
                     serial_number = Srno,
                     topic = topic,
                     mtype = doctype,
-                    urlvalue = link,
+                    urlvalue = aws_link,
                     description = desc,
                     chapter_id = chapid,
                     subject_id = subid
             )
             data.save()
+
+def trainer_start_upload_material_folder_view(request):
+    if request.method=="POST":
+        folder=request.POST["select_folder"]
+        folder = str.replace(folder,'/','\\')
+        path ='D:\\upload\\iLMS'
+        path =folder
+        AWS_BUCKET_NAME='nubeera-study'
+        upload_folder_to_s3(path, AWS_BUCKET_NAME)
         return  redirect("/")
 @login_required
 def trainer_sessionmaterial_view(request):
@@ -950,11 +954,11 @@ def trainer_delete_ytexamquestion_view(request,pk):
 
 @login_required
 def trainer_view_learner_video_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'trainer':
             learner = UserSocialAuth.objects.raw('SELECT social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, social_auth_usersocialauth.pic, auth_user.first_name, auth_user.last_name, GROUP_CONCAT(DISTINCT lxpapp_courseset.courseset_name) AS courseset_name, lxpapp_learnerdetails.mobile FROM social_auth_usersocialauth LEFT OUTER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) LEFT OUTER JOIN lxpapp_batchlearner ON (auth_user.id = lxpapp_batchlearner.learner_id) LEFT OUTER JOIN lxpapp_batchCOURSESET ON (lxpapp_batchlearner.batch_id = lxpapp_batchCOURSESET.batch_id) LEFT OUTER JOIN lxpapp_COURSESET ON (lxpapp_batchCOURSESET.COURSESET_id = lxpapp_COURSESET.id) LEFT OUTER JOIN lxpapp_learnerdetails ON (auth_user.id = lxpapp_learnerdetails.learner_id) WHERE (social_auth_usersocialauth.utype = 0 OR social_auth_usersocialauth.utype = 2) AND social_auth_usersocialauth.status = 1 GROUP BY social_auth_usersocialauth.id, social_auth_usersocialauth.user_id, auth_user.first_name, auth_user.last_name, lxpapp_learnerdetails.mobile ')
             return render(request,'trainer/learnervideo/trainer_view_learner_video.html',{'learner':learner})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
