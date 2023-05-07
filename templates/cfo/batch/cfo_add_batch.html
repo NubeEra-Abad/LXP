@@ -124,15 +124,15 @@
       debugger;
       products.push(newProduct);
       var html = "<table id='tblData' border='1|1' >";
-      html += "<td>ID</td>";
+      html += "<td hidden>ID</td>";
       html += "<td>Name</td>";
-      html += "<td>Fee</td>";
+      html += "<td hidden>Fee</td>";
       html += "<td>Action</td>";
       for (var i = 0; i < products.length; i++) {
         html += "<tr>";
-        html += "<td>" + products[i].product_id + "</td>";
+        html += "<td hidden>" + products[i].product_id + "</td>";
         html += "<td>" + products[i].product_name + "</td>";
-        html += "<td>" + products[i].product_desc + "</td>";
+        html += "<td hidden>" + products[i].product_desc + "</td>";
         html += "<td><button type='submit' onClick='deleteProduct(\"" + products[i].product_id + "\", this);'/>Delete Item</button></td>";
         html += "</tr>";
       }
@@ -214,8 +214,8 @@
           {{t.user.last_name}}</option>
         {% endfor %}
       </select>
-      <label for="product">Fee</label><BR>
-      <input id="product_desc" name="product" type="number" size="28" />
+      <label for="product" hidden>Fee</label><BR>
+      <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
       <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Learner">
       <p id="demo"></p>
       <button class="btn btn-primary form-control" type="submit" onclick="return generateJSON(event);">SUBMIT</button>

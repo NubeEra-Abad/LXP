@@ -328,11 +328,11 @@ def admin_view_user_log_details_view(request,user_id):
 
 @login_required
 def admin_view_user_activity_details_view(request,user_id):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'admin':
             users = models.UserActivity.objects.all().filter(user_id = user_id)
             return render(request,'lxpapp/users/admin_view_user_activity_details.html',{'users':users})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
