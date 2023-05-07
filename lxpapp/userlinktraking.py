@@ -101,7 +101,7 @@ class UserActivityMiddleware:
                 traceback=traceback.format_exc()
             )
             raise e
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and not request.path.__contains__('email-decode.min.js') and request.path != '/':
             UserActivity.objects.create(
                 user=request.user,
                 url=request.path,

@@ -475,3 +475,40 @@ def add_emails_to_video(request):
     print(whitelisted_users)
     # Redirect the user to a success page
     return redirect('success_page')
+
+import os
+import boto3
+from django.conf import settings
+def upload_folder(request):
+    if request.method == 'POST':
+        # Get the uploaded folder from the form data
+        uploaded_folder = request.FILES['folder']
+        print('Temporary file path:', uploaded_folder.temporary_file_path())
+        # Upload the folder to S3
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id='AKIATZQFG2PZIUPD23GA',
+            aws_secret_access_key='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'
+        )
+        acl="public-read"
+        for root, dirs, files in os.walk(uploaded_folder.temporary_file_path()):
+            for file in files:
+                file_path = os.path.join(root, file)
+                s3_key = os.path.relpath(file_path, uploaded_folder.temporary_file_path()).replace("\\", "/")
+                with open(file_path, 'rb') as f:
+                    filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
+                    
+                    s3.upload_fileobj(
+                    f,
+                    settings.AWS_BUCKET_NAME,
+                    filename,
+                    ExtraArgs={
+                        "ACL": acl,
+                        "ContentType": file.content_type
+                    }
+                )
+                    print(f"Uploaded {file_path} to S3 bucket {settings.AWS_STORAGE_BUCKET_NAME} with key {s3_key}")
+
+        return render(request, 'lxpapp/upload_form.html')
+    else:
+        return render(request, 'lxpapp/upload_form.html')
