@@ -62,9 +62,9 @@
               <div class="product-content">
                 <div class="head-course-title">
                   {% if t.watched %}
-                  <h3 class="title">{{t.id}} _ {{t.name}}</a></h3>
+                  <h3 class="title">{{t.name}}</a></h3>
                   {% else %}
-                  <h3 style="text-align:center; color:rgb(182, 40, 40);" class="title">{{t.id}} _ {{t.name}}</a>
+                  <h3 style="text-align:center; color:rgb(182, 40, 40);" class="title">{{t.name}}</a>
                     {% endif %}
                   </h3>
                   <a class="btn btn-success" href="{% url 'trainer-learner-show-video' subject_id t.id  %}"><span

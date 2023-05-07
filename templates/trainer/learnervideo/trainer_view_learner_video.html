@@ -2,7 +2,21 @@
 {% block content %}
 {%load static%}
 <link rel="stylesheet" href="/static/assets/css/style.css">
+<script>
+  function myFunction() {
+    var input = document.getElementById("Search");
+    var filter = input.value.toLowerCase();
+    var nodes = document.getElementsByClassName('target');
 
+    for (i = 0; i < nodes.length; i++) {
+      if (nodes[i].innerText.toLowerCase().includes(filter)) {
+        nodes[i].style.display = "block";
+      } else {
+        nodes[i].style.display = "none";
+      }
+    }
+  }
+</script>
 <div class="main-wrapper">
   <div>
     <nav aria-label="breadcrumb">
@@ -21,12 +35,9 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="d-flex align-items-center">
-                    <div class="view-icons">
-                      <a href="../../../trainer/trainer-view-learner-video" class="list-view active"><i class="feather-list"></i></a>
-                    </div>
-                    <div class="show-result">
-                      <h4>Showing 1-9 of 50 results</h4>
-                    </div>
+                    <td style="padding-right: 10px">
+                      <input type="text" id="Search" onkeyup="myFunction()" placeholder="Please enter a search term.."
+                        title="Type in a name">
                   </div>
                 </div>
               </div>
@@ -38,7 +49,7 @@
                 <div class="row">
                   {% endif %}
                   <div class="col-md-6">
-                    <div class="student-list flex-fill">
+                    <div class="student-list flex-fill target">
                       <div class="student-img">
                         <a href="{% url 'trainer-learner-video-course-subject' t.user_id t.first_name t.last_name %}">
                           <img class="img-fluid" alt="" src="{{t.pic}}" style="width:100px">
