@@ -77,13 +77,8 @@
     var jsonData = [];
     function generateJSON(e) {
       debugger;
-      let x = document.forms[0]["field3"].value;
-      if (x == "") {
-        alert("Course must be Selected");
-        e.preventDefault();
-        return false;
-      }
-      x = document.forms[0]["field1"].value;
+      
+      let x = document.forms[0]["field1"].value;
       if (x == "") {
         alert("Trainers must be Selected");
         e.preventDefault();

@@ -150,10 +150,10 @@ def cfo_add_batch_view(request):
             return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners,'modules':modules,'PList':PList})
     except:
         return render(request,'lxpapp/404page.html')
-
+import json
 @login_required
 def cfo_update_batch_view(request,pk):
-    try:
+    #try:
         if str(request.session['utype']) == 'cfo':
             batch = LXPModel.Batch.objects.get(id=pk)
             batchForm=LXPFORM.BatchForm(request.POST,instance=batch)
@@ -173,7 +173,6 @@ def cfo_update_batch_view(request,pk):
                             trainerid = str(x)
                             batchtrainertable = LXPModel.BatchTrainer.objects.create(batch_id=pk,trainer_id=trainerid)
                             batchtrainertable.save()
-                        import json
                         det = LXPModel.Batchlearner.objects.all().filter(batch_id=pk)
                         det.delete()
                         json_data = json.loads(request.POST.get('myvalue'))
@@ -251,7 +250,7 @@ def cfo_update_batch_view(request,pk):
             'PList':PList}
             
             return render(request,'cfo/batch/cfo_update_batch.html',context=dict)
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
