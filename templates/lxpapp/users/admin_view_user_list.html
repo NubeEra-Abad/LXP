@@ -41,8 +41,9 @@
                 {% for t in users|sort_by_name %}
                 {% cycle 'row1' 'row2' 'row3' as row_class silent %}
                 {% if row_class == 'row1' %}<tr>{% endif %}
-                  <td>
-                    <div class="student-list flex-fill target">
+                  <td> 
+                    <!-- <div class="student-list flex-fill target" style="height: 300px;width :350px"> -->
+                      <div class="student-list flex-fill target">
                       <div class="student-img">
                         <a href="{% url 'update-user' t.user.first_name t.user.last_name t.user_id t.id  %}">
                           <img class="img-fluid" alt="" src="{{t.pic}}" style="width:100px">

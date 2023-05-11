@@ -37,6 +37,11 @@ urlpatterns = [
     path('learner-show-chapterexam-reuslt/<int:chapter_id>/<int:module_id>', views.learner_show_chapterexam_reuslt_view,name='learner-show-chapterexam-reuslt'),
     path('learner-show-chapterexam-reuslt-details/<int:result_id>/<int:attempt>/<int:chapter_id>/<int:module_id>', views.learner_show_chapterexam_reuslt_details_view,name='learner-show-chapterexam-reuslt-details'),
 
+    path('learner-check-k8sterminal', views.learner_check_k8sterminal_view,name='learner-check-k8sterminal'),
+    path('learner-pyton-terminal', views.learner_python_terminal_view,name='learner-pyton-terminal'),
+    path('learner-linux-terminal', views.learner_linux_terminal_view,name='learner-linux-terminal'),
+    path('learner-cloudshell-terminal', views.learner_cloudshell_terminal_view,name='learner-cloudshell-terminal'),
+
     path('ajax/save-cart/', views.save_cart, name='ajax_save_cart'),
 
 ]

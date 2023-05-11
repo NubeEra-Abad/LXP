@@ -7,6 +7,7 @@ from lxpapp import forms as LXPFORM
 from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.contrib import messages
 
 @login_required
 def learner_dashboard_view(request):
@@ -592,5 +593,68 @@ def save_cart(request):
                  cart = LXPModel.LearnerCart.objects.create(learner_id = request.user.id,module_id=id)
                  cart.save()
             return JsonResponse({'status': 'success'})    
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def learner_check_k8sterminal_view(request):
+    try:
+        if str(request.session['utype']) == 'learner':
+            if request.method=='POST':
+                password = request.POST.get("password")
+                if password == '' or password is None:
+                    messages.info(request, 'Please Enter password')
+                    return render(request,'learner/labs/k8sterminal/learner_check_k8sterminal.html')
+                usage = LXPModel.K8STerminal.objects.all().filter(learner_id= request.user.id)
+                if not usage:
+                    messages.info(request, 'Invalid password or Terminal Setting not found, please contact to your trainer')
+                    return render(request,'learner/labs/k8sterminal/learner_check_k8sterminal.html')
+                totcount = 0
+                passwordmain=''
+                for x in usage:
+                    totcount += x.usagevalue
+                    passwordmain = x.Password
+                usagecount = LXPModel.K8STerminalLearnerCount.objects.all().filter(learner_id= request.user.id)
+                count = 0
+                for x in usagecount:
+                    count += x.usedvalue
+                if password != passwordmain:
+                    messages.info(request, 'Invalid password or Terminal Setting not found, please contact to your trainer')
+                    return render(request,'learner/labs/k8sterminal/learner_check_k8sterminal.html')
+                if count > totcount:
+                    messages.info(request, 'Terminal usage permission exceed, please contact to your trainer')
+                    return render(request,'learner/labs/k8sterminal/learner_check_k8sterminal.html')
+                
+                count += 1
+                usagecount = LXPModel.K8STerminalLearnerCount.objects.create(
+                            learner_id = request.user.id,
+                            usedvalue = 1
+                ).save()
+                return render(request,'learner/labs/k8sterminal/learner_launch_k8sterminal.html')
+            return render(request,'learner/labs/k8sterminal/learner_check_k8sterminal.html')
+    except: 
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def learner_python_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'learner':  
+            return render(request,'learner/labs/python/learner_python_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def learner_linux_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'learner':  
+            return render(request,'learner/labs/linux/learner_linux_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def learner_cloudshell_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'learner':  
+            return render(request,'learner/labs/cloudshell/learner_cloudshell_terminal.html')
     except:
         return render(request,'lxpapp/404page.html')

@@ -1,7 +1,7 @@
 from django import forms
 from social_django.models import UserSocialAuth
 from django.contrib.auth.models import User
-
+from django.db.models import Q
 from . import models
 
 class UserRegistrationForm(forms.ModelForm):
@@ -239,3 +239,10 @@ class ChapterQuestionForm(forms.ModelForm):
         widgets = {
             'question': forms.Textarea(attrs={'rows': 3, 'cols': 50,'autofocus': True})
         }
+
+class K8STerminalForm(forms.ModelForm):
+    learnerID=forms.ModelChoiceField(queryset= User.objects.all().filter(id__in = UserSocialAuth.objects.all().filter(Q(utype=0) | Q(utype=2),status = 1)),empty_label="Learner Name", to_field_name="id")
+    
+    class Meta:
+        model=models.K8STerminal
+        fields=['Password','usagevalue']

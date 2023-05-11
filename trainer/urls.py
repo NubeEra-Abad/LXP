@@ -70,4 +70,15 @@ urlpatterns = [
     path('trainer-view-chapterquestion', views.trainer_view_chapterquestion_view,name='trainer-view-chapterquestion'),
     path('trainer-view-chapterquestion-chapter/<int:chapter_id>', views.trainer_view_chapterquestion_chapter_view,name='trainer-view-chapterquestion-chapter'),
     path('trainer-delete-chapterquestion/<int:pk>', views.trainer_delete_chapterquestion_view,name='trainer-delete-chapterquestion'),
+
+
+    path('trainer-k8sterminal', views.trainer_k8sterminal_view,name='trainer-k8sterminal'),
+    path('trainer-add-k8sterminal', views.trainer_add_k8sterminal_view,name='trainer-add-k8sterminal'),
+    path('trainer-update-k8sterminal/<int:pk>', views.trainer_update_k8sterminal_view,name='trainer-update-k8sterminal'),
+    path('trainer-view-k8sterminal', views.trainer_view_k8sterminal_view,name='trainer-view-k8sterminal'),
+    path('trainer-delete-k8sterminal/<int:pk>', views.trainer_delete_k8sterminal_view,name='trainer-delete-k8sterminal'),
+    
+    path('trainer-pyton-terminal', views.trainer_python_terminal_view,name='trainer-pyton-terminal'),
+    path('trainer-linux-terminal', views.trainer_linux_terminal_view,name='trainer-linux-terminal'),
+    path('trainer-cloudshell-terminal', views.trainer_cloudshell_terminal_view,name='trainer-cloudshell-terminal'),
 ]

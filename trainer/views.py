@@ -1123,3 +1123,112 @@ def trainer_delete_chapterquestion_view(request,pk):
         return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_k8sterminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            return render(request,'trainer/labs/k8sterminal/trainer_k8sterminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_add_k8sterminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            if request.method=='POST':
+                k8sterminalForm=LXPFORM.K8STerminalForm(request.POST)
+                learner_id = request.POST['user_name']
+                usagevalue = request.POST.get('usagevalue')
+                password1 = request.POST.get("password")
+                password2 = request.POST.get("confirmpassword")
+                if password1 and password2 and password1 != password2:
+                    messages.info(request, 'password_mismatch')
+                else:
+                    k8sterminal = LXPModel.K8STerminal.objects.create(
+                        trainer_id = request.user.id,
+                        learner_id = learner_id,
+                        Password = password1,
+                        usagevalue = usagevalue)
+                    k8sterminal.save()
+                    messages.info(request, 'Record Saved')
+            k8sterminalForm=LXPFORM.K8STerminalForm()
+            users = User.objects.raw('SELECT DISTINCT   auth_user.id,  auth_user.password,  auth_user.is_superuser,  auth_user.username,  auth_user.last_name,  auth_user.email,  auth_user.first_name,  social_auth_usersocialauth.utype,  social_auth_usersocialauth.status,  social_auth_usersocialauth.uid FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.status = 1 AND   (social_auth_usersocialauth.utype = 0 OR  social_auth_usersocialauth.utype = 2 ) ORDER BY auth_user.first_name, auth_user.last_name')
+            return render(request,'trainer/labs/k8sterminal/trainer_add_k8sterminal.html',{'k8sterminalForm':k8sterminalForm,'users':users})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_update_k8sterminal_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':
+            k8sterminal = LXPModel.K8STerminal.objects.get(id=pk)
+            k8sterminalForm=LXPFORM.K8STerminalForm(request.POST,instance=k8sterminal)
+            if request.method=='POST':
+                if k8sterminalForm.is_valid(): 
+                    k8sterminaltext = k8sterminalForm.cleaned_data["k8sterminal_name"]
+                    chaptertext = k8sterminalForm.cleaned_data["chapterID"]
+                    subjecttext = k8sterminalForm.cleaned_data["subjectID"]
+                    k8sterminal = LXPModel.K8STerminal.objects.all().filter(k8sterminal_name__iexact = k8sterminaltext).exclude(id=pk)
+                    if k8sterminal:
+                        messages.info(request, 'K8STerminal Name Already Exist')
+                        return render(request,'trainer/labs/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm})
+                    else:
+                        chapter = LXPModel.Video.objects.get(chapter_name=chaptertext)
+                        subject = LXPModel.Playlist.objects.get(subject_name=subjecttext)
+                        k8sterminal = LXPModel.K8STerminal.objects.get(id=pk)
+                        k8sterminal.k8sterminal_name = k8sterminaltext
+                        k8sterminal.subject_id = subject.id
+                        k8sterminal.chapter_id = chapter.id
+                        k8sterminal.save()
+                        c_list = LXPModel.K8STerminal.objects.filter(chapter_id__in=LXPModel.Video.objects.all())
+                        return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':c_list})
+            return render(request,'trainer/labs/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm,'sub':k8sterminal.k8sterminal_name})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_view_k8sterminal_view(request):
+    #try:
+        if str(request.session['utype']) == 'trainer':
+            k8sterminals = LXPModel.K8STerminal.objects.all().filter(learner_id__in = User.objects.all().order_by('first_name').filter(id__in=UserSocialAuth.objects.all()))
+            return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_delete_k8sterminal_view(request,pk):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            k8sterminal=LXPModel.K8STerminal.objects.get(id=pk)
+            k8sterminal.delete()
+            return HttpResponseRedirect('/trainer/trainer-view-k8sterminal')
+        k8sterminals = LXPModel.K8STerminal.objects.all()
+        return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
+    except:
+        return render(request,'lxpapp/404page.html')
+
+
+@login_required
+def trainer_python_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            return render(request,'trainer/labs/python/trainer_python_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_linux_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            return render(request,'trainer/labs/linux/trainer_linux_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_cloudshell_terminal_view(request):
+    try:
+        if str(request.session['utype']) == 'trainer':  
+            return render(request,'trainer/labs/cloudshell/trainer_cloudshell_terminal.html')
+    except:
+        return render(request,'lxpapp/404page.html')

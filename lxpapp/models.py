@@ -703,3 +703,12 @@ class LearnerCart(models.Model):
     module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
     status=models.IntegerField(default=0)
 
+class K8STerminal(models.Model):
+    trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='%(class)s_requests_trainer')
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='%(class)s_requests_learner')
+    Password=models.TextField()
+    usagevalue=models.PositiveIntegerField(default=0)
+
+class K8STerminalLearnerCount(models.Model):
+    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    usedvalue=models.PositiveIntegerField(default=0)

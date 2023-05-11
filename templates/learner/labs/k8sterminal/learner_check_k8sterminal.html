@@ -1,0 +1,29 @@
+{% extends 'learner/learnerbase.html' %}
+{% block content %}
+{%load static%}
+<body>
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'learner-dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">K8S Terminal</li>
+    </ol>
+  </nav>
+</div>
+<h2 style="text-align:center; ">K8S Terminal</h2>
+<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    <div class="form-group">
+      <label for="password">Password</label><br>
+        <input type="password" id="password" name="password" autofocus><br>
+    </div>
+    <button type="submit" class="btn btn-primary">Start</button>
+  </form>
+{% if messages %}
+{% for message in messages %}
+<div class="alert {{ message.tags }}" role="alert-warning">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+<br><br><br>
+{% endblock content %}
