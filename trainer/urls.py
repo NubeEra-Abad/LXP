@@ -81,4 +81,6 @@ urlpatterns = [
     path('trainer-pyton-terminal', views.trainer_python_terminal_view,name='trainer-pyton-terminal'),
     path('trainer-linux-terminal', views.trainer_linux_terminal_view,name='trainer-linux-terminal'),
     path('trainer-cloudshell-terminal', views.trainer_cloudshell_terminal_view,name='trainer-cloudshell-terminal'),
+
+    
 ]

@@ -11,7 +11,7 @@ from social_django.models import UserSocialAuth
 
 @login_required    
 def trainer_dashboard_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'trainer':
             notification = LXPModel.TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
             mco = LXPModel.Exam.objects.filter(questiontpye='MCQ').count()
@@ -28,7 +28,9 @@ def trainer_dashboard_view(request):
             'notifications':notification,
             }
             return render(request,'trainer/trainer_dashboard.html',context=dict)
-    except:
+        else:
+            return render(request,'loginrelated/diffrentuser.html')
+    #except:
         return render(request,'lxpapp/404page.html')
  
 @login_required

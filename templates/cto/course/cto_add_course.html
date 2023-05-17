@@ -3,7 +3,8 @@
 {% block content %}
 
 <head>
-<link rel="stylesheet" href="/static/assets/css/style.css">
+<link rel="stylesheet" href="/static/getskills/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -12,14 +13,23 @@
 </head>
 <div>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-course">View Course</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-upload-course-details-csv">Upload Course CSV</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Add Course</li>
-    </ol>
+    <ul class="breadcrumb">
+      <li ><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li ><a href="../../../../cto/cto-view-course">View Course</a></li>
+      <li ><a href="../../../../cto/cto-upload-course-details-csv">Upload Course CSV</a></li>
+      <li  aria-current="page">Add Course</li>
+    </ul>
   </nav>
 </div>
+<style>
+  ul.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
+
   <h2 style="text-align:center; color:blue;">Add Course</h2>
   <form method="POST" id="courseForm" data-modules-url="{% url 'ajax_load_modules' %}" autocomplete="off"
     style="margin:100px;margin-top: 0px;">
