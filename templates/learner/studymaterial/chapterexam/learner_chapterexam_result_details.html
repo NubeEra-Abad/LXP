@@ -6,26 +6,34 @@
   <link rel="stylesheet" href="/static/dreamlms/css/style.css">
 </head>
 <div>
+  <style>
+    ul.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../../../../../learner/learner-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../../../../../learner/learner-studymaterial-module">Courses</a>
+    <ul class="breadcrumb">
+      <li ><a href="../../../../../../../../learner/learner-dashboard">Dashboard</a></li>
+      <li ><a href="../../../../../../../../learner/learner-studymaterial-module">Courses</a>
       </li>
-      <li class="breadcrumb-item"><a
+      <li ><a
           href="../../../../../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
       </li>
-      <li class="breadcrumb-item"><a
+      <li ><a
           href="../../../../../../../../learner/learner-studymaterial-chapter-show/{{chapter_id}}/{{module_id}} ">{{chaptername}}</a>
       </li>
-      <li class="breadcrumb-item"><a
+      <li ><a
           href="../../../../../../../../learner/learner-chapterexam/{{chapter_id}}/{{module_id}} ">Exams</a>
       </li>
-      <li class="breadcrumb-item"><a
+      <li ><a
           href="../../../../../../../../learner/learner-show-chapterexam-reuslt/{{chapter_id}}/{{module_id}} ">Exam Details</a>
       </li>
-      <li class="breadcrumb-item active" aria-current="page">Result Details of Attempt {{attempt}}
+      <li  aria-current="page">Result Details of Attempt {{attempt}}
       </li>
-    </ol>
+    </ul>
   </nav>
 </div>
 

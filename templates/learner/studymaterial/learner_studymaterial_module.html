@@ -1,13 +1,21 @@
 {% extends 'learner/learnerbase.html' %}
 {% block content %}
 {%load static%}
+<style>
+  ul.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <div class="main-wrapper">
   <div>
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Study Material Modules</li>
-      </ol>
+      <ul class="breadcrumb">
+        <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+        <li  aria-current="page">Study Material Modules</li>
+      </ul>
     </nav>
   </div>
   <section class="course-content">

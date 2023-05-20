@@ -1,13 +1,21 @@
 {% extends 'learner/learnerbase.html' %}
 {% block content %}
 {%load static%}
+<style>
+  ul.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <body>
 <div>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'learner-dashboard' %}">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">K8S Terminal</li>
-    </ol>
+    <ul class="breadcrumb">
+      <li ><a href="{% url 'learner-dashboard' %}">Dashboard</a></li>
+      <li aria-current="page">K8S Terminal</li>
+    </ul>
   </nav>
 </div>
 <h2 style="text-align:center; ">K8S Terminal</h2>

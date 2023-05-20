@@ -4,14 +4,21 @@
 
 <head>
     <link rel="stylesheet" href="/static/dreamlms/css/style.css">
-
+    <style>
+        ul.breadcrumb li+li:before {
+          content: '\f061';
+        display: inline-block;
+        font-family: 'fontAwesome';
+        padding: 0 10px;
+        }
+        </style>
 </head>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="../../../../learner/learner-short-exam">Short Exams</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Start Short Exam</li>
-    </ol>
+    <ul class="breadcrumb">
+        <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+        <li ><a href="../../../../learner/learner-short-exam">Short Exams</a></li>
+        <li  aria-current="page">Start Short Exam</li>
+    </ul>
 </nav>
 <div class="container my-4">
     <input type=button value="Back" onClick="javascript:history.go(-1);" class="btn btn-primary">

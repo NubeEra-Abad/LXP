@@ -88,7 +88,6 @@ class BaseAuth:
         from lxpapp.models import UserPics
         if user:
             if user.last_name == '':
-                UserPics.objects.raw('UPDATE auth_user SET last_name = first_name Where id = ' + str (user.id))
                 cursor = connection.cursor()
                 cursor.execute('UPDATE auth_user SET last_name = first_name Where id = ' + str (user.id))
             

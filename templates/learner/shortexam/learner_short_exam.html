@@ -6,11 +6,19 @@
   <link rel="stylesheet" href="/static/dreamlms/css/style.css">
 </head>
 <div>
+  <style>
+    ul.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Short Exams</li>
-    </ol>
+    <ul class="breadcrumb">
+      <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+      <li aria-current="page">Short Exams</li>
+    </ul>
   </nav>
   </div>
   <div class="container">

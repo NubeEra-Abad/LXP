@@ -3,12 +3,20 @@
 {%load static%}
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
 <div class="main-wrapper">
+  <style>
+    ul.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
   <div>
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Session Recorded Videos</li>
-      </ol>
+      <ul class="breadcrumb">
+        <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+        <li  aria-current="page">Session Recorded Videos</li>
+      </ul>
     </nav>
   </div>
   <section class="course-content">

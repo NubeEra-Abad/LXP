@@ -9,17 +9,24 @@
 <link rel="stylesheet" href="/static/dreamlms/css/feather.css">
 
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
-
+<style>
+    ul.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
 <div>
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="../../../../learner/learner-studymaterial-module">Courses</a></li>
-            <li class="breadcrumb-item"><a
+        <ul class="breadcrumb">
+            <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+            <li ><a href="../../../../learner/learner-studymaterial-module">Courses</a></li>
+            <li ><a
                     href="../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Preview</li>
-        </ol>
+            <li  aria-current="page">Preview</li>
+        </ul>
     </nav>
 </div>
 <button onclick="toggleVisibility()">Toggle Visibility</button>

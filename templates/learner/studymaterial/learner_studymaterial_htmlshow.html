@@ -9,16 +9,23 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
 {% block content %}
-
+<style>
+  ul.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <div>
 	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-			<li class="breadcrumb-item"><a href="../../../../learner/learner-add-material">Add Material</a></li>
-			<li class="breadcrumb-item"><a href="../../../../learner/learner-view-material">View Material</a></li>
-			<li class="breadcrumb-item"><a href="../../../../learner/learner-upload-material-details-csv">Upload Material CSV</a></li>
-			<li class="breadcrumb-item active" aria-current="page">Material Preview</li>
-		</ol>
+		<ul class="breadcrumb">
+			<li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
+			<li ><a href="../../../../learner/learner-add-material">Add Material</a></li>
+			<li ><a href="../../../../learner/learner-view-material">View Material</a></li>
+			<li ><a href="../../../../learner/learner-upload-material-details-csv">Upload Material CSV</a></li>
+			<li  aria-current="page">Material Preview</li>
+		</ul>
 	</nav>
 </div>
   {% for t in details %}
