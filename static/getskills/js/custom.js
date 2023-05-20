@@ -330,20 +330,20 @@
         $(".chatbox .msg_card_body").css('height',ch);
     }
     
-	var domoPanel = function(){
-		const ps = new PerfectScrollbar('.dlab-demo-content');
-		$('.dlab-demo-trigger').on('click', function() {
-				$('.dlab-demo-panel').addClass('show');
-		  });
-		  $('.dlab-demo-close, .bg-close,.dlab_theme_demo').on('click', function() {
-				$('.dlab-demo-panel').removeClass('show');
-		  });
+	// var domoPanel = function(){
+	// 	const ps = new PerfectScrollbar('.dlab-demo-content');
+	// 	$('.dlab-demo-trigger').on('click', function() {
+	// 			$('.dlab-demo-panel').addClass('show');
+	// 	  });
+	// 	  $('.dlab-demo-close, .bg-close,.dlab_theme_demo').on('click', function() {
+	// 			$('.dlab-demo-panel').removeClass('show');
+	// 	  });
 		  
-		  $('.dlab-demo-bx').on('click', function() {
-			  $('.dlab-demo-bx').removeClass('demo-active');
-			  $(this).addClass('demo-active');
-		  });
-	} 
+	// 	  $('.dlab-demo-bx').on('click', function() {
+	// 		  $('.dlab-demo-bx').removeClass('demo-active');
+	// 		  $(this).addClass('demo-active');
+	// 	  });
+	// } 
 	
 	var handleDatetimepicker = function(){
 		if(jQuery("#datetimepicker1").length>0) {

@@ -5,7 +5,6 @@ from requests import ConnectionError, request
 from ..exceptions import AuthFailed
 from ..utils import SSLHttpAdapter, module_member, parse_qs, user_agent
 
-
 class BaseAuth:
     """A authentication backend that authenticates the user based on
     the provider response"""
@@ -84,9 +83,15 @@ class BaseAuth:
         if not isinstance(out, dict):
             return out
         user = out.get('user')
+        from django.db import connection, transaction
         from social_django.models import UserSocialAuth
         from lxpapp.models import UserPics
         if user:
+            if user.last_name == '':
+                UserPics.objects.raw('UPDATE auth_user SET last_name = first_name Where id = ' + str (user.id))
+                cursor = connection.cursor()
+                cursor.execute('UPDATE auth_user SET last_name = first_name Where id = ' + str (user.id))
+            
             user.social_user = out.get('social')
             user.is_new = out.get('is_new')
             pic =out['response']['picture']

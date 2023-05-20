@@ -1,9 +1,21 @@
-{% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
 
 <head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Nubeera LXP</title>
 
+    <link rel="shortcut icon" type="image/x-icon" href="/static/dreamlms/img/favicon.svg">
+
+    <link rel="stylesheet" href="/static/dreamlms/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="/static/dreamlms/css/feather.css">
+
+    <link rel="stylesheet" href="/static/dreamlms/css/style.css">
 	<!-- ckeditor -->
 	<script src="/static/ckeditor/ckeditor.js"></script>
 	<script src="/static/ckeditor/js/sample.js"></script>
@@ -33,18 +45,24 @@
         cursor: pointer;
         color: red;
       }
+	  ul.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
 	</style>
 </head>
 <div>
 	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
+		<ul class="breadcrumb">
 			<li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
 			<li class="breadcrumb-item"><a href="../../../../cto/cto-view-module">View Module</a></li>
 			{% if 'Edit' in page_title %}
 			<li class="breadcrumb-item"><a href="../../../../cto/cto-add-module">Add Module</a></li>
 			{% endif %}
 			<li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
-		</ol>
+		</ul>
 	</nav>
 </div>
 <h2 style="text-align:center;">{{page_title}}</h2>
