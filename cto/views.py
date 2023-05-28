@@ -1396,7 +1396,7 @@ def cto_sync_youtube_view(request):
         return render(request,'lxpapp/404page.html')
 @login_required
 def cto_sync_youtube_start_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 pm = PlaylistManager()
@@ -1426,12 +1426,12 @@ def cto_sync_youtube_start_view(request):
                 return render(request,'cto/cto_dashboard.html',context=dict)
             pllist = LXPModel.Playlist.objects.all().order_by('name')
             return render(request,'cto/youtube/cto_sync_youtube.html',{'pllist':pllist})    
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
     
 @login_required
 def cto_sync_youtube_byselected_playlist_start_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                 if 'dblist' in request.POST:
@@ -1462,7 +1462,7 @@ def cto_sync_youtube_byselected_playlist_start_view(request):
             'total_question':0,
             }
             return render(request,'cto/cto_dashboard.html',context=dict)
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
     
 @login_required

@@ -422,11 +422,6 @@
 			});
 		}
 	}
-	var handleSupport = function(){
-		var support = '<a href="https://1.envato.market/NK3VWO" target="_blank" class="DZ-bt-buy-now DZ-theme-btn"><i class="ti-shopping-cart"></i><span>Buy Now</span></a><a href="https://themeforest.net/item/getskills-online-learning-admin-dashboard-template/38149785/support" target="_blank" class="DZ-bt-support-now DZ-theme-btn"><i class="ti-headphone-alt"></i><span>Support</span></a><!-- Go to www.addthis.com/dashboard to customize your tools --><script type="text/javascript" src="//s7.addthis.com/static/getskills/js/300/addthis_widget.js#pubid=ra-5b221c5e31b4e54b"></script>';
-		jQuery('body').append(support);
-	}
-	
 	/* Function ============ */
 	return {
 		init:function(){
