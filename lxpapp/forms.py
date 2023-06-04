@@ -114,7 +114,7 @@ class LearnerDetailsForm(forms.ModelForm):
     )
     class Meta:
         model=models.LearnerDetails
-        fields=['user_full_name','mobile','iswhatsapp','whatsappno','profile_pic']
+        fields=['user_full_name','mobile','iswhatsapp','whatsappno']
 
 class CourseForm(forms.ModelForm):
     class Meta:

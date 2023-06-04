@@ -73,7 +73,6 @@ def login(request):
 def post_login(sender, user, request, **kwargs):
     if not user.is_staff:
         pic = UserSocialAuth.objects.only('pic').get(user_id=user.id).pic
-        User.objects.filter(id=user.id).update(profile_pic=pic)
     login_time = datetime.now()
 
 @receiver(user_logged_out)

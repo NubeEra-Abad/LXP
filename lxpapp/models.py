@@ -13,9 +13,6 @@ class UserLog(models.Model):
     dur = models.CharField(default='',max_length=200)
     session_id = models.CharField(default='',max_length=200)
 
-
-
-
 class UserPics(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     picpath = models.TextField(default='')
@@ -37,7 +34,6 @@ class LearnerDetails(models.Model):
     mobile = models.IntegerField(default=0)
     iswhatsapp = models.BooleanField(default=False)
     whatsappno = models.IntegerField(default=0)
-    profile_pic= models.ImageField(upload_to='profile_pic/user/',null=True,blank=True)
     
 class LearnerDetailsPSkill(models.Model):
     learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.SET_NULL, null=True)

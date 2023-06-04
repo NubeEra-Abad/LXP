@@ -54,12 +54,11 @@
         alert("Please Enter 10 Digit Mobile No");
         return false;
       }
-  
+  debugger;
       x = document.forms[0]["iswhatsapp"].checked;
-      debugger;
       if (x == false) {
         x = document.forms[0]["whatsappno"].value;
-        if (x.lenght != 10) {
+        if (x.length != 10) {
           alert("Please Enter 10 Digit WhatsApp No");
           return false;
         }
@@ -153,10 +152,6 @@
                 <label class="form-control-label">If no, please provide WhatsApp No.</label>
                 {% render_field learnerdetailsForm.whatsappno class="form-control"%}
               </div>
-                <div class="form-group">
-                  <label class="form-control-label" for="profile_pic">Profile Picture</label>
-                  {% render_field learnerdetailsForm.profile_pic|attr:'required:true' class="form-control" placeholder="" %}
-                </div>
                 
               <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
