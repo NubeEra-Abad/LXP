@@ -5,13 +5,21 @@
 {% load widget_tweaks %}
 {% block content %}
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+<style>
+  ol.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-subject">View Subject</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-upload-subject-details-csv">Upload Subject CSV</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
+      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li><a href="../../../../cto/cto-view-subject">View Subject</a></li>
+      <li><a href="../../../../cto/cto-upload-subject-details-csv">Upload Subject CSV</a></li>
+      <li aria-current="page">{{page_title}}</li>
     </ol>
   </nav>
 </div>

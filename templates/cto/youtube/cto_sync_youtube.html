@@ -14,12 +14,20 @@
       line-height: 50px;
     }
   </style>
+  <style>
+    ol.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Sync Videos</li>
+      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li aria-current="page">Sync Videos</li>
     </ol>
   </nav>
 </div>

@@ -26,14 +26,22 @@
       $('#waiting').show();
     }
   </script>
+  <style>
+    ol.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
 </head>
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
-    <li class="breadcrumb-item"><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Upload a Course Set CSV File</li>
+    <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+    <li><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
+    <li><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
+    <li aria-current="page">Upload a Course Set CSV File</li>
   </ol>
 </nav>
 </div>

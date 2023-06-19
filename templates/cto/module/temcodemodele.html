@@ -35,16 +35,24 @@
 			color: Red;
 		}
 	</style>
+	<style>
+		ol.breadcrumb li+li:before {
+		  content: '\f061';
+		display: inline-block;
+		font-family: 'fontAwesome';
+		padding: 0 10px;
+		}
+		</style>
 </head>
 <div>
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-			<li class="breadcrumb-item"><a href="../../../../cto/cto-view-module">View Module</a></li>
+			<li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+			<li><a href="../../../../cto/cto-view-module">View Module</a></li>
 			{% if 'Edit' in page_title %}
-			<li class="breadcrumb-item"><a href="../../../../cto/cto-add-module">Add Module</a></li>
+			<li><a href="../../../../cto/cto-add-module">Add Module</a></li>
 			{% endif %}
-			<li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
+			<li aria-current="page">{{page_title}}</li>
 		</ol>
 	</nav>
 </div>

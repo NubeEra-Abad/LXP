@@ -14,8 +14,8 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li><a href="../../../../cto/cto-add-subhead">Add Sub Head</a></li>
-      <li aria-current="page">View Sub Heads</li>
+      <li><a href="../../../../cto/cto-add-playlist">Add PlayList</a></li>
+      <li aria-current="page">View PlayLists</li>
     </ol>
   </nav>
 </div>
@@ -24,20 +24,18 @@
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
       <thead>
         <tr>
-          <th>Main Head Name</th>
-          <th>Sub Head Name</th>
+          <th>PlayList Name</th>
           <th>Update</th>
           <th>Delete</th>
         </tr>
       </thead>
       <tbody>
-        {% for t in subheads %}
+        {% for t in playlists %}
         <tr>
-          <td> {{t.mainhead}}</td>
-          <td> {{t.subhead_name}}</td>
-          <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-subhead' t.id  %}"><span
+          <td> {{t.name}}</td>
+          <td><a class="btn btn-primary btn-xs" href="{% url 'cto-update-playlist' t.id  %}"><span
                 class="	far fa-edit"></span></a></td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-subhead' t.id  %}"
+          <td><a class="btn btn-danger btn-xs" href="{% url 'cto-delete-playlist' t.id  %}"
               onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
         </tr>
         {% endfor %}

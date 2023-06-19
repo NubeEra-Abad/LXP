@@ -2,12 +2,20 @@
 {% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+<style>
+  ol.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-add-trainernotification">Add Trainer Notification</a></li>
-      <li class="breadcrumb-item active" aria-current="page">View Trainer Notification</li>
+      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li><a href="../../../../cto/cto-add-trainernotification">Add Trainer Notification</a></li>
+      <li aria-current="page">View Trainer Notification</li>
     </ol>
   </nav>
 </div>

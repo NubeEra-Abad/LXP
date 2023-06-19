@@ -2,14 +2,22 @@
 {% load widget_tweaks %}
 {% block content %}
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+<style>
+  ol.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-upload-courseset-details-csv">Upload Course Set CSV</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
-      <li class="breadcrumb-item active" aria-current="page">View Course Set Details</li>
+      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li><a href="../../../../cto/cto-add-courseset">Add Course Set</a></li>
+      <li><a href="../../../../cto/cto-upload-courseset-details-csv">Upload Course Set CSV</a></li>
+      <li><a href="../../../../cto/cto-view-courseset">View Course Set</a></li>
+      <li aria-current="page">View Course Set Details</li>
     </ol>
   </nav>
 </div>

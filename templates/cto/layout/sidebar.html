@@ -2,13 +2,13 @@
             Sidebar start
         ***********************************-->
 
-        <div class="dlabnav" style='overflow:auto;'>
-    
-        <div class="text-center">
-                <img src="{{request.user.profile_pic}}" width="100" class="img-fluid rounded-circle" alt="">
-                <h4><a href="instructor-profile.html">{{request.user.first_name}} {{request.user.last_name}}</a></h4>
-                <h6>CTO</h6>
-        </div>
+<div class="dlabnav" style='overflow:auto;'>
+
+    <div class="text-center">
+        <img src="{{request.user.profile_pic}}" width="100" class="img-fluid rounded-circle" alt="">
+        <h4><a href="instructor-profile.html">{{request.user.first_name}} {{request.user.last_name}}</a></h4>
+        <h6>CTO</h6>
+    </div>
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
             <li><a href="{% url 'cto-dashboard' %}" class="" aria-expanded="false">
@@ -39,7 +39,7 @@
             </li>
 
             <li><a class="has-arrow " href="{% url 'cto-view-subject' %}" aria-expanded="false">
-                    <i class="bi bi-people"></i>
+                    <i class="bi bi-book"></i>
                     <span class="nav-text">Subjects</span>
                 </a>
                 <ul aria-expanded="false">
@@ -49,7 +49,7 @@
             </li>
 
             <li><a class="has-arrow " href="{% url 'cto-view-chapter' %}" aria-expanded="false">
-                    <i class="bi bi-people"></i>
+                    <i class="bi bi-book-half"></i>
                     <span class="nav-text">Chapters</span>
                 </a>
                 <ul aria-expanded="false">
@@ -60,7 +60,7 @@
 
             <li>
                 <a class="has-arrow " href="{% url 'cto-view-module' %}" aria-expanded="false">
-                    <i class="bi bi-star"></i>
+                    <i class="bi bi-card-list"></i>
                     <span class="nav-text">Modules</span>
                 </a>
                 <ul aria-expanded="false">
@@ -69,10 +69,16 @@
                 </ul>
             </li>
 
-            <li><a href="{% url 'cto-sync-youtube' %}" class="" aria-expanded="false">
-                    <i class="bi bi-grid"></i>
+            <li><a class="has-arrow " href="{% url 'cto-sync-youtube' %}" class="" aria-expanded="false">
+                    <i class="bi bi-arrow-repeat"></i>
                     <span class="nav-text">Sync Videos</span>
                 </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'cto-sync-youtube' %}">Sync Videos</a></li>
+                    <li><a href="{% url 'cto-lxp-upload-doc-file' %}">Video Material Upload</a></li>
+                    <li><a href="{% url 'cto-add-playlist' %}">Add Play List</a></li>
+                    <li><a href="{% url 'cto-view-playlist' %}">View Play List</a></li>
+                </ul>
             <li>
                 <a class="has-arrow " href="{% url 'cto-view-passionateskill' %}" aria-expanded="false">
                     <i class="bi bi-star"></i>
@@ -95,10 +101,10 @@
             </li>
 
             <li><a href="{% url 'logout' %}" class="" aria-expanded="false">
-                <i class="bi bi-grid"></i>
-                <span class="nav-text">Sign Out</span>
-            </a>
-        <li>
+                    <i class="bi bi-door-closed"></i>
+                    <span class="nav-text">Sign Out</span>
+                </a>
+            <li>
         </ul>
     </div>
 </div>

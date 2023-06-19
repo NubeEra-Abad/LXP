@@ -3,24 +3,24 @@
 
 <head>
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>Nubeera LXP</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>Nubeera LXP</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="/static/dreamlms/img/favicon.svg">
+	<link rel="shortcut icon" type="image/x-icon" href="/static/dreamlms/img/favicon.svg">
 
-    <link rel="stylesheet" href="/static/dreamlms/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/dreamlms/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/all.min.css">
 
-    <link rel="stylesheet" href="/static/dreamlms/css/feather.css">
+	<link rel="stylesheet" href="/static/dreamlms/css/feather.css">
 
-    <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+	<link rel="stylesheet" href="/static/dreamlms/css/style.css">
 	<!-- ckeditor -->
 	<script src="/static/ckeditor/ckeditor.js"></script>
 	<script src="/static/ckeditor/js/sample.js"></script>
 	<link rel="stylesheet" href="/static/ckeditor/toolbarconfigurator/lib/codemirror/neo.css">
-	
+
 	<!-- Tree View -->
 	<link href="/static/treeview/kendo.default-main.min.css" rel="stylesheet">
 	<script src="/static/treeview/jquery.min.js"></script>
@@ -33,35 +33,37 @@
 		}
 
 		.tag {
-        display: inline-block;
-        background-color: #eee;
-        padding: 3px 5px;
-        margin-right: 5px;
-        margin-bottom: 5px;
-        border-radius: 5px;
-      }
-      .close {
-        margin-left: 5px;
-        cursor: pointer;
-        color: red;
-      }
-	  ul.breadcrumb li+li:before {
-    content: '\f061';
-  display: inline-block;
-  font-family: 'fontAwesome';
-  padding: 0 10px;
-  }
+			display: inline-block;
+			background-color: #eee;
+			padding: 3px 5px;
+			margin-right: 5px;
+			margin-bottom: 5px;
+			border-radius: 5px;
+		}
+
+		.close {
+			margin-left: 5px;
+			cursor: pointer;
+			color: red;
+		}
+
+		ul.breadcrumb li+li:before {
+			content: '\f061';
+			display: inline-block;
+			font-family: 'fontAwesome';
+			padding: 0 10px;
+		}
 	</style>
 </head>
 <div>
 	<nav aria-label="breadcrumb">
 		<ul class="breadcrumb">
-			<li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-			<li class="breadcrumb-item"><a href="../../../../cto/cto-view-module">View Module</a></li>
+			<li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+			<li><a href="../../../../cto/cto-view-module">View Module</a></li>
 			{% if 'Edit' in page_title %}
-			<li class="breadcrumb-item"><a href="../../../../cto/cto-add-module">Add Module</a></li>
+			<li><a href="../../../../cto/cto-add-module">Add Module</a></li>
 			{% endif %}
-			<li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
+			<li aria-current="page">{{page_title}}</li>
 		</ul>
 	</nav>
 </div>
@@ -88,14 +90,14 @@
 					{% render_field form.subhead class="form-control"%}
 				</div>
 			</div>
-			
+
 			<div>
 				<div class="row">
-					
+
 					<div class="col-md-12 col-xl-12">
-						
+
 						<div id="example">
-							
+
 							<div class="demo-section">
 								<label for="chapter_name">Chapters</label>
 								<input class="k-textbox" class="form-control" placeholder="Search Here" />
@@ -148,7 +150,8 @@
 			<div class="row">
 				<div class="col-md-12 col-xl-12">
 					<label for="tags">Tags</label>
-					<input type="text" name="tag-input" id="tag-input" class="form-control list-unstyled" placeholder="Tags">
+					<input type="text" name="tag-input" id="tag-input" class="form-control list-unstyled"
+						placeholder="Tags">
 					<input type="text" id="tag-output" name="tag-output" class="form-control" readonly hidden>
 				</div>
 			</div>
@@ -165,8 +168,8 @@
 			<div class="row">
 				<div class="col-md-12 col-xl-12">
 					<label for="banner">Banner Link</label>
-					<input type="text" name="banner" id="banner" class="form-control" placeholder="Path to Banner Image" required
-						value={{banner}}>
+					<input type="text" name="banner" id="banner" class="form-control" placeholder="Path to Banner Image"
+						required value={{banner}}>
 				</div>
 			</div>
 			<div class="row">
@@ -182,48 +185,48 @@
 	</div>
 </form>
 <script>
-$("input").on("input", function() {
-      var query = this.value.toLowerCase();
-      var dataSource = $("#treeview").data("kendoTreeView").dataSource;
+	$("input").on("input", function () {
+		var query = this.value.toLowerCase();
+		var dataSource = $("#treeview").data("kendoTreeView").dataSource;
 
-      filter(dataSource, query);
-    });
+		filter(dataSource, query);
+	});
 	$("#treeview").kendoTreeView({
 		checkboxes: {
 			checkChildren: true
 		},
-		
+
 		check: onCheck,
 		dataSource: {{ js | safe }}
         });
 
-		// Sets the "hidden" field on items that match the query.
-		function filter(dataSource, query) {
-      var hasVisibleChildren = false;
-      var data = dataSource instanceof kendo.data.HierarchicalDataSource && dataSource.data();
+	// Sets the "hidden" field on items that match the query.
+	function filter(dataSource, query) {
+		var hasVisibleChildren = false;
+		var data = dataSource instanceof kendo.data.HierarchicalDataSource && dataSource.data();
 
-      for (var i = 0; i < data.length; i++) {
-        var item = data[i];
-        var text = item.text.toLowerCase();
-        var itemVisible =
-            query === true // parent already matches
-            || query === "" // query is empty
-            || text.indexOf(query) >= 0; // item text matches query
+		for (var i = 0; i < data.length; i++) {
+			var item = data[i];
+			var text = item.text.toLowerCase();
+			var itemVisible =
+				query === true // parent already matches
+				|| query === "" // query is empty
+				|| text.indexOf(query) >= 0; // item text matches query
 
-        var anyVisibleChildren = filter(item.children, itemVisible || query); // pass true if parent matches
+			var anyVisibleChildren = filter(item.children, itemVisible || query); // pass true if parent matches
 
-        hasVisibleChildren = hasVisibleChildren || anyVisibleChildren || itemVisible;
+			hasVisibleChildren = hasVisibleChildren || anyVisibleChildren || itemVisible;
 
-        item.hidden = !itemVisible && !anyVisibleChildren;
-      }
+			item.hidden = !itemVisible && !anyVisibleChildren;
+		}
 
-      if (data) {
-        // Re-apply the filter on the children.
-        dataSource.filter({ field: "hidden", operator: "neq", value: true });
-      }
+		if (data) {
+			// Re-apply the filter on the children.
+			dataSource.filter({ field: "hidden", operator: "neq", value: true });
+		}
 
-      return hasVisibleChildren;
-    }
+		return hasVisibleChildren;
+	}
 	// function that gathers IDs of checked nodes
 	function checkedNodeIds(nodes, checkedNodes) {
 		for (var i = 0; i < nodes.length; i++) {
@@ -278,15 +281,15 @@ $("input").on("input", function() {
 		treeview.dataItem(bar).set("checked", true);
 	};
 	var checkedNodes = [],
-			treeView = $("#treeview").data("kendoTreeView"),
-			message;
+		treeView = $("#treeview").data("kendoTreeView"),
+		message;
 
-		checkedNodeIds(treeView.dataSource.view(), checkedNodes);
+	checkedNodeIds(treeView.dataSource.view(), checkedNodes);
 
-		if (checkedNodes.length > 0) {
-			message = checkedNodes.join(",");
-		}
-		document.getElementById("chapterlist").value = message;
+	if (checkedNodes.length > 0) {
+		message = checkedNodes.join(",");
+	}
+	document.getElementById("chapterlist").value = message;
 
 </script>
 <script>
@@ -297,38 +300,38 @@ $("input").on("input", function() {
 	var tagOutput = document.getElementById("tag-output");
 	var tagsArray = [];
 
-	tagInput.addEventListener("keydown", function(event) {
-	  if (event.code === "Space") {
-		event.preventDefault();
-		var tagText = tagInput.value.trim();
-		if (tagText !== "") {
-		  if (!tagsArray.includes(tagText)) {
-			var tag = document.createElement("span");
-			tag.innerHTML = tagText;
-			tag.className = "tag";
-			var closeButton = document.createElement("span");
-			closeButton.innerHTML = "x";
-			closeButton.className = "close";
-			closeButton.onclick = function() {
-			  this.parentElement.remove();
-			  var tagIndex = tagsArray.indexOf(tagText);
-			  if (tagIndex !== -1) {
-				tagsArray.splice(tagIndex, 1);
-				updateTagOutput();
-			  }
-			};
-			tag.appendChild(closeButton);
-			tagInput.value = "";
-			tagInput.insertAdjacentElement("beforebegin", tag);
-			tagsArray.push(tagText);
-			updateTagOutput();
-		  }
+	tagInput.addEventListener("keydown", function (event) {
+		if (event.code === "Space") {
+			event.preventDefault();
+			var tagText = tagInput.value.trim();
+			if (tagText !== "") {
+				if (!tagsArray.includes(tagText)) {
+					var tag = document.createElement("span");
+					tag.innerHTML = tagText;
+					tag.className = "tag";
+					var closeButton = document.createElement("span");
+					closeButton.innerHTML = "x";
+					closeButton.className = "close";
+					closeButton.onclick = function () {
+						this.parentElement.remove();
+						var tagIndex = tagsArray.indexOf(tagText);
+						if (tagIndex !== -1) {
+							tagsArray.splice(tagIndex, 1);
+							updateTagOutput();
+						}
+					};
+					tag.appendChild(closeButton);
+					tagInput.value = "";
+					tagInput.insertAdjacentElement("beforebegin", tag);
+					tagsArray.push(tagText);
+					updateTagOutput();
+				}
+			}
 		}
-	  }
 	});
 
 	function updateTagOutput() {
-	  tagOutput.value = tagsArray.join(", ");
+		tagOutput.value = tagsArray.join(", ");
 	}
-  </script>
+</script>
 {% endblock content %}

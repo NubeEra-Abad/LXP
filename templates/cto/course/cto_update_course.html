@@ -9,15 +9,22 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 </head>
-
+<style>
+  ol.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <body>
   <div>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="../../../../cto/cto-add-course">Add Course</a></li>
-        <li class="breadcrumb-item"><a href="../../../../cto/cto-view-course">View Course</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Update Course</li>
+        <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+        <li><a href="../../../../cto/cto-add-course">Add Course</a></li>
+        <li><a href="../../../../cto/cto-view-course">View Course</a></li>
+        <li aria-current="page">Update Course</li>
       </ol>
     </nav>
     <h2 style="text-align:center; color:blue;">Update Course</h2>

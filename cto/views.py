@@ -15,6 +15,8 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.shortcuts import (HttpResponse, HttpResponseRedirect,
                               get_object_or_404, redirect, render)
 from django.urls import reverse
+from django.conf import settings
+from github import Github
 
 @login_required    
 def cto_dashboard_view(request):
@@ -1546,4 +1548,255 @@ def cto_delete_trainernotification_view(request,pk):
         trainernotifications = LXPModel.TrainerNotification.objects.all()
         return render(request,'cto/trainernotification/cto_view_trainernotification.html',{'trainernotifications':trainernotifications})
     except:
+        return render(request,'lxpapp/404page.html')
+    
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+
+
+@login_required
+def cto_lxp_upload_doc_file_view(request):
+    if request.method == 'POST' and request.FILES['file']:
+        emails = request.POST.get('emails-output')
+        emails = str(emails).replace('<span class="close">x</span>','')
+        fields = emails.split(",")
+        
+        
+        import googleapiclient.discovery
+        scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+        from social_django.models import UserSocialAuth
+        from apiclient.discovery import build
+        from apiclient.errors import HttpError
+        from apiclient.http import MediaFileUpload
+        from oauth2client.client import flow_from_clientsecrets
+        import datetime
+        import pytz
+        CLIENT_SECRETS_FILE = "GoogleCredV1.json"
+        YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube"
+        YOUTUBE_API_SERVICE_NAME = "youtube"
+        YOUTUBE_API_VERSION = "v3"
+
+        playlistname = request.POST.get('playlist')  # Get the video ID from the form
+        playlist_id = LXPModel.Playlist.objects.only('playlist_id').get(name=playlistname).playlist_id
+        video_file = request.FILES.get('video')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        channel_id = request.POST.get('channel_id')
+        channel_name = request.POST.get('channel_name')
+
+        # youtube = build('youtube', 'v3', developerKey='AIzaSyBRlrfvqZLCXUU8oc19PO4Zg2-hB2QMBrI')
+        # flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
+        #                            scope=YOUTUBE_UPLOAD_SCOPE,
+        #                            message="")
+
+        # storage = CLIENT_SECRETS_FILE#os.path.abspath(os.path.join(os.path.dirname(__file__),
+        #                             #CLIENT_SECRETS_FILE))
+        
+        flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+            CLIENT_SECRETS_FILE, YOUTUBE_UPLOAD_SCOPE)
+        flow.run_local_server()
+        credentials = flow.credentials
+        youtube = googleapiclient.discovery.build(
+            YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, credentials=credentials)
+        # Save the video file to a temporary location
+        video_path = os.path.join(settings.MEDIA_ROOT, 'temp_video.mp4')
+        with open(video_path, 'wb+') as destination:
+            for chunk in video_file.chunks():
+                destination.write(chunk)
+
+        try:
+            # Create a new video resource
+            videos_insert_response = youtube.videos().insert(
+                part='snippet,status',
+                body={
+                    'snippet': {
+                        'title': title,
+                        'description': description,
+                    },
+                    'status': {
+                        'privacyStatus': 'private'  # Set video privacy as public
+                    }
+                },
+                media_body=MediaFileUpload(video_path, chunksize=-1, resumable=True)
+            ).execute()
+
+            video_id = videos_insert_response['id']
+            video_url = f'https://www.youtube.com/watch?v={video_id}'
+
+            # Add the video to a playlist
+            youtube.playlistItems().insert(
+                part='snippet',
+                body={
+                    'snippet': {
+                        'playlistId': playlist_id,
+                        'resourceId': {
+                            'kind': 'youtube#video',
+                            'videoId': video_id
+                        }
+                    }
+                }
+            ).execute()
+
+            # Optionally, you can delete the temporary video file
+            os.remove(video_path)
+
+        except Exception as e:
+            # Handle API errors or display an error message
+            error_message = str(e)
+            return render(request,'lxpapp/404page.html')
+
+        file = request.FILES['file']
+        # Connect to the GitHub API
+        access_token = settings.GITHUB_ACCESS_TOKEN
+        github = Github(access_token)
+        # Get the repository
+        repo_owner = settings.GITHUB_REPO_OWNER
+        repo_name = settings.GITHUB_REPO_NAME
+        repo = github.get_repo(f'{repo_owner}/{repo_name}')
+        # Create a new file in the repository
+        new_file = repo.create_file(
+            path=file.name,
+            message='Upload file',
+            content=file.read(),
+            branch='main'  # Replace with your desired branch name
+        )
+        file_url = new_file['content'].download_url
+        file_url = file_url.replace('raw.githubusercontent','github')
+        file_url = file_url.replace('/main/','/blob/main/')
+        # Get the URL of the newly created file
+        #file_url = 'https://raw.githubusercontent.com/' + settings.GITHUB_REPO_OWNER +  '/' + settings.GITHUB_REPO_NAME +  '/main/' + file.name + '?token=A76LNERAQFQXBYUZ77XVTBDEQHWBO'
+
+        video = LXPModel.Video.objects.create(
+                            video_id=video_id,
+                            published_at=datetime.datetime.now(pytz.utc),
+                            name=title,
+                            description=description,
+                            thumbnail_url = '',
+                            channel_id= channel_id,
+                            channel_name=channel_name
+                        )
+        video.save()
+        videocount = LXPModel.Playlist.objects.all().count()
+        PL_id = LXPModel.Playlist.objects.only('id').get(name=playlistname).id
+        plylistitems = LXPModel.PlaylistItem.objects.create(
+            playlist_item_id = '',
+            video_position = videocount,
+            published_at = datetime.datetime.now(pytz.utc),
+            channel_id= channel_id,
+            channel_name=channel_name,
+            is_duplicate = False,
+            is_marked_as_watched = False,
+            num_of_accesses = 0,
+            playlist_id = PL_id,
+            video_id = video.id
+        )
+        plylistitems.save()
+        material = LXPModel.SessionMaterial.objects.create(
+                mtype = 'PDF',
+                urlvalue = file_url,
+                description = description,
+                playlist_id = PL_id,
+                video_id = video.id
+        )
+        material.save()
+        return render(request, 'cto/lxpdocgitupload/success.html', {'file_url': file_url})
+    playlist = LXPModel.Playlist.objects.all().order_by('name')
+    return render(request, 'cto/lxpdocgitupload/upload_recorded_video_material.html',{'playlist': playlist})
+
+
+@login_required
+def cto_add_playlist_view(request):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.PlayListForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Play List'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('name')
+                    playlist = LXPModel.Playlist.objects.all().filter(name__iexact = name)
+                    if playlist:
+                        messages.info(request, 'PlayList Name Already Exist')
+                        return redirect(reverse('cto-add-playlist'))
+                    try:
+                        channel_id = form.cleaned_data.get('channel_id')
+                        channel_name = form.cleaned_data.get('channel_name')
+                        playlist_id = form.cleaned_data.get('playlist_id')
+                        playlist = LXPModel.Playlist.objects.create(
+                                                    name = name,
+                                                    channel_id = channel_id,
+                                                    channel_name = channel_name,
+                                                    playlist_id = playlist_id)
+                        playlist.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-playlist'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/playlist/add_edit_playlist.html', context)
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_update_playlist_view(request, pk):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Playlist, id=pk)
+            form = LXPFORM.PlayListForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'playlist_id': pk,
+                'page_title': 'Edit Play List'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('name')
+                    playlist = LXPModel.Playlist.objects.all().filter(name__iexact = name).exclude(id=pk)
+                    if playlist:
+                        messages.info(request, 'PlayList Name Already Exist')
+                        return redirect(reverse('cto-update-playlist', args=[pk]))
+                    try:
+                        playlist = LXPModel.Playlist.objects.get(id=pk)
+                        name = form.cleaned_data.get('name')
+                        channel_id = form.cleaned_data.get('channel_id')
+                        channel_name = form.cleaned_data.get('channel_name')
+                        playlist_id = form.cleaned_data.get('playlist_id')
+
+                        playlist.name = name
+                        playlist.channel_id = channel_id
+                        playlist.channel_name = channel_name
+                        playlist.playlist_id = playlist_id
+                        playlist.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-view-playlist', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/playlist/add_edit_playlist.html', context)
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+
+@login_required
+def cto_view_playlist_view(request):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            playlists = LXPModel.Playlist.objects.all()
+            return render(request,'cto/playlist/cto_view_playlist.html',{'playlists':playlists})
+    #except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_delete_playlist_view(request,pk):
+    #try:
+        if str(request.session['utype']) == 'cto':  
+            playlist=LXPModel.Playlist.objects.get(id=pk)
+            playlist.delete()
+        playlists = LXPModel.Playlist.objects.all()
+        return render(request,'cto/playlist/cto_view_playlist.html',{'playlists':playlists})
+    #except:
         return render(request,'lxpapp/404page.html')

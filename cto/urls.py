@@ -82,4 +82,11 @@ urlpatterns = [
     path('cto-view-trainernotification', views.cto_view_trainernotification_view,name='cto-view-trainernotification'),
     path('cto-delete-trainernotification/<int:pk>', views.cto_delete_trainernotification_view,name='cto-delete-trainernotification'),
 
+    path('cto-lxp-upload-doc-file', views.cto_lxp_upload_doc_file_view,name='cto-lxp-upload-doc-file'),
+
+    path('cto-add-playlist', views.cto_add_playlist_view,name='cto-add-playlist'),
+    path('cto-update-playlist/<int:pk>', views.cto_update_playlist_view,name='cto-update-playlist'),
+    path('cto-view-playlist', views.cto_view_playlist_view,name='cto-view-playlist'),
+    path('cto-delete-playlist/<int:pk>', views.cto_delete_playlist_view,name='cto-delete-playlist'),
+    
 ]

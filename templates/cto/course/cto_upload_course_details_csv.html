@@ -31,13 +31,21 @@
       $('#waiting').show();
     }
   </script>
+  <style>
+    ol.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
 </head>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="../../../../cto/cto-add-course">Add Course</a></li>
-    <li class="breadcrumb-item"><a href="../../../../cto/cto-view-course">View Course</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Upload a Course CSV File</li>
+    <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+    <li><a href="../../../../cto/cto-add-course">Add Course</a></li>
+    <li><a href="../../../../cto/cto-view-course">View Course</a></li>
+    <li aria-current="page">Upload a Course CSV File</li>
   </ol>
 </nav>
 </div>

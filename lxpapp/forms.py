@@ -246,3 +246,29 @@ class K8STerminalForm(forms.ModelForm):
     class Meta:
         model=models.K8STerminal
         fields=['Password','usagevalue']
+
+
+class PlayListForm(forms.ModelForm):
+    name = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'autofocus': True})
+    )
+    channel_id = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'value': 'UCxdhwzsgcGldYghv6u3nrXw'})
+    )
+    channel_name = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput(attrs={'value': 'Team NubeEra'})
+    )
+    playlist_id = forms.CharField(
+        max_length=90000,
+        #  forms ↓
+        widget=forms.TextInput()
+    )
+    class Meta:
+        model=models.Playlist
+        fields=['channel_id','channel_name','playlist_id','name']

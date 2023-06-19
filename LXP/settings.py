@@ -164,12 +164,12 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 # ##########                  Dev
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '709424261438-iq2t80mcempggouuh8t9os1afuhq2h3l.apps.googleusercontent.com'
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '709424261438-iq2t80mcempggouuh8t9os1afuhq2h3l.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 ##########                  Prod
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-pt71tbhqafb6pfe4p3247mtp6cktc1sl.apps.googleusercontent.com'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
    'https://www.googleapis.com/auth/userinfo.email',
@@ -186,29 +186,7 @@ MESSAGE_TAGS = {
         messages.WARNING: 'alert-warning',
         messages.ERROR: 'alert-danger',
 }
-# AUTHENTICATION_BACKENDS = (
-#     'django.contrib.auth.backends.ModelBackend',
-#     'social_core.backends.github.GithubOAuth2',
-#     'social_core.backends.twitter.TwitterOAuth',
-#     'social_core.backends.facebook.FacebookOAuth2',
-#     'social_core.backends.google.GoogleOAuth2',
-# )
 
-# # Social Auth Login Facebook
-# SOCIAL_AUTH_FACEBOOK_KEY = '1346019242792593'  # App ID
-# SOCIAL_AUTH_FACEBOOK_SECRET = '67d2c449cce04b913a5d57f971ccf529'  # App Secret
-
-# # Social Auth Login Twitter
-# SOCIAL_AUTH_TWITTER_KEY = '9TD8f5fhasdsbf4w61GSM9'
-# SOCIAL_AUTH_TWITTER_SECRET = 'mwtdcUe4uOvvjDk2Ausb45gsasdasdasashw65454TNSx'
-
-# # Social Auth Login Github
-# SOCIAL_AUTH_GITHUB_KEY = 'ba5e9414a8222a152d9a'
-# SOCIAL_AUTH_GITHUB_SECRET = 'e2ac3f9a818dc8082cebbd67800c05f8206bf277'
-
-# # Social Auth Login 
-# SOCIAL_AUTH_LOGIN_ERROR_URL = '/settings/'
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/indexpage'
-# SOCIAL_AUTH_RAISE_EXCEPTIONS = False
-
-
+GITHUB_ACCESS_TOKEN = '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'
+GITHUB_REPO_OWNER = 'teamnubeera'
+GITHUB_REPO_NAME = 'LXP_Video_docs'

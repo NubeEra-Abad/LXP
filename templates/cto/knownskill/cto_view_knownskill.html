@@ -3,14 +3,22 @@
 {% block content %}
 <head>
   <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+  <style>
+    ol.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
 </head>
 <div class="main-wrapper">
   <div>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="../../../../cto/cto-add-knownskill">Add Known Skills</a></li>
-        <li class="breadcrumb-item active" aria-current="page">View Known Skill</li>
+        <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+        <li><a href="../../../../cto/cto-add-knownskill">Add Known Skills</a></li>
+        <li aria-current="page">View Known Skill</li>
       </ol>
     </nav>
   </div>

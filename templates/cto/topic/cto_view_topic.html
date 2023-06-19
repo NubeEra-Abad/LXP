@@ -3,11 +3,19 @@
 {% block content %}
 <div>
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+<style>
+  ol.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-add-topic">Add Topic</a></li>
-      <li class="breadcrumb-item active" aria-current="page">View Topics</li>
+      <li><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li><a href="../../../../cto/cto-add-topic">Add Topic</a></li>
+      <li aria-current="page">View Topics</li>
     </ol>
   </nav>
 </div>

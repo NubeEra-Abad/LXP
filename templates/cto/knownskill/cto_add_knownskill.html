@@ -2,13 +2,21 @@
 {% load widget_tweaks %}
 {% block content %}
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+<style>
+  ul.breadcrumb li+li:before {
+    content: '\f061';
+  display: inline-block;
+  font-family: 'fontAwesome';
+  padding: 0 10px;
+  }
+  </style>
 <div>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../cto/cto-view-knownskill">View Known Skills</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Add Known Skill</li>
-    </ol>
+    <ul class="breadcrumb">
+      <li ><a href="../../../../cto/cto-dashboard">Dashboard</a></li>
+      <li ><a href="../../../../cto/cto-view-knownskill">View Known Skills</a></li>
+      <li aria-current="page">Add Known Skill</li>
+    </ul>
   </nav>
 </div>
 <h2 style="text-align:center; ">Add Known Skill</h2>
