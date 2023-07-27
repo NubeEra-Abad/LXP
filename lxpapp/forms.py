@@ -226,7 +226,7 @@ class SessionMaterialForm(forms.ModelForm):
         if 'playlist' in self.data:
             try:
                 playlist_id = int(self.data.get('playlist'))
-                self.fields['video'].queryset = models.PlaylistItem.objects.all().filter (video_id__in = models.Video.objects.all(),playlist_id = playlist_id)
+                self.fields['video'].queryset = models.PlaylistItem.objects.all().filter (video_id__in = models.Video.objects.all(),playlist_id = playlist_id).distinct()
             except (ValueError, TypeError):
                 pass
         elif self.instance.pk:
