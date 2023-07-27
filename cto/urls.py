@@ -89,4 +89,6 @@ urlpatterns = [
     path('cto-view-playlist', views.cto_view_playlist_view,name='cto-view-playlist'),
     path('cto-delete-playlist/<int:pk>', views.cto_delete_playlist_view,name='cto-delete-playlist'),
     
+    path('cto-view-video-list', views.cto_view_video_list_view,name='cto-view-video-list'),
+    path('cto-delete-video/<int:pk>/<int:pl_id>/<int:vid_id>', views.cto_delete_video_view,name='cto-delete-video'),
 ]

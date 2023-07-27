@@ -1800,3 +1800,23 @@ def cto_delete_playlist_view(request,pk):
         return render(request,'cto/playlist/cto_view_playlist.html',{'playlists':playlists})
     #except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_view_video_list_view(request):
+    #try:
+        if str(request.session['utype']) == 'cto':
+            c_list = LXPModel.PlaylistItem.objects.raw(' SELECT DISTINCT  lxpapp_playlist.id as id, lxpapp_playlistitem.id as item_id, lxpapp_playlist.name as Pl_Name , lxpapp_video.id as vid_id,  lxpapp_video.name as vid_Name FROM  lxpapp_playlistitem  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) ORDER BY  lxpapp_playlist.name,  lxpapp_video.name')
+            return render(request,'cto/youtube/cto_view_video_list.html',{'videos':c_list})
+    #except:
+        return render(request,'lxpapp/404page.html')
+    
+@login_required
+def cto_delete_video_view(request,pk,pl_id,vid_id):
+    #try:
+        if str(request.session['utype']) == 'cto':  
+            delobj = LXPModel.PlaylistItem.objects.all().filter(id = pk).delete()
+            delobj = LXPModel.Video.objects.all().filter(id = vid_id).delete()
+        c_list = LXPModel.PlaylistItem.objects.raw(' SELECT DISTINCT  lxpapp_playlist.id as id, lxpapp_playlistitem.id as item_id, lxpapp_playlist.name as Pl_Name , lxpapp_video.id as vid_id,  lxpapp_video.name as vid_Name FROM  lxpapp_playlistitem  INNER JOIN lxpapp_playlist ON (lxpapp_playlistitem.playlist_id = lxpapp_playlist.id)  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) ORDER BY  lxpapp_playlist.name,  lxpapp_video.name')
+        return render(request,'cto/youtube/cto_view_video_list.html',{'videos':c_list})
+    #except:
+        return render(request,'lxpapp/404page.html')
