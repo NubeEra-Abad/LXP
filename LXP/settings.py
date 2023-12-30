@@ -134,7 +134,7 @@ STATICFILES_DIRS=[
 STATIC_DIR,
  ]
 
-LOGIN_REDIRECT_URL='/indexpage'
+LOGIN_REDIRECT_URL='/home'
 
 #for contact us give your gmail id and password
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'

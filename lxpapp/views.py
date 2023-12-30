@@ -108,7 +108,7 @@ def home(request):
     if request.user.is_authenticated:
         # user = User.objects.raw('SELECT   auth_user.id,  auth_user.password,  auth_user.last_login,  auth_user.is_superuser,  auth_user.username,  auth_user.first_name,  auth_user.email,  auth_user.is_staff,  auth_user.is_active,  auth_user.date_joined,  auth_user.last_name,  social_auth_usersocialauth.provider,  social_auth_usersocialauth.uid,  social_auth_usersocialauth.extra_data,  social_auth_usersocialauth.user_id,  social_auth_usersocialauth.utype,  social_auth_usersocialauth.status,  social_auth_usersocialauth.modified,  social_auth_usersocialauth.pic,  social_auth_usersocialauth.usercode,  social_auth_usersocialauth.created FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id)')
         # update_session_auth_hash(request, user)
-        return HttpResponseRedirect('indexpage')  
+        return HttpResponseRedirect(reverse('indexpage'))
     return render(request,'lxpapp/404page.html')
 
 

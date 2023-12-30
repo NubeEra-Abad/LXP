@@ -25,7 +25,7 @@ urlpatterns = [
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
     path('uploadfolder', views.upload_folder,name='uploadfolder'),   
-    path('indexpage', views.afterlogin_view,name='indexpage'),   
+    path('indexpage/', views.afterlogin_view,name='indexpage'),   
     path('user-session-expired', views.session_expire_view,name='user-session-expired'),   
 
     path('adminclick', views.adminclick_view),
