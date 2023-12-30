@@ -44,10 +44,6 @@ INSTALLED_APPS = [
     'social_django',        #add this
     'django.contrib.humanize',  # A set of Django template filters useful for adding a “human touch” to data.
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',  # specifies google as OAuth provider
     
 ]
 
@@ -122,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
 TIME_ZONE =  'Asia/Kolkata'
 USE_I18N = True
 USE_L10N = True

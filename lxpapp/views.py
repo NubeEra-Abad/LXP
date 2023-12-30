@@ -1,7 +1,6 @@
 from django.shortcuts import render,redirect
 from lxpapp import forms,models
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
@@ -28,9 +27,10 @@ def switch_user_view(request):
 
 def signup(request):
         if request.method=="POST":
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
-            username = request.POST['username']
+            first_name = str(request.POST['first_name']).strip()
+            last_name = str(request.POST['last_name']).strip()
+            import datetime
+            username = first_name.replace(' ','_')+ '_' + last_name.replace(' ','_') + '_' + str( User.objects.all().values_list('id', flat=True).order_by('-id').first())
             password = request.POST['password']
             email = request.POST['email']
             newuser = User.objects.create_user(
@@ -46,7 +46,8 @@ def signup(request):
                 return HttpResponse("Something went wrong.")
         else:
             form = forms.UserRegistrationForm()
-        return render(request, 'loginrelated/signup.html', {'form':form})
+        form1 = forms.UserRegistrationForm()
+        return render(request, 'loginrelated/signup.html', {'form':form1})
 
 
 def session_expire_view(request):

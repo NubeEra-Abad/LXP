@@ -2,7 +2,6 @@ import datetime
 from lxpapp import models as LXPModel
 import requests
 from django.contrib.auth.models import User
-from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from util import *
 import pytz
 from django.db import models
