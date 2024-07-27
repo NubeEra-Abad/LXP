@@ -17,6 +17,9 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.urls import reverse
 
+def logout_view(request):
+    logout(request)
+    return redirect('indexpage')
 @login_required
 def switch_user_view(request):
     logout(request)
