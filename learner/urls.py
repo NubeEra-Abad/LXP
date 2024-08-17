@@ -2,7 +2,7 @@ from django.urls import path
 from learner import views
 urlpatterns = [
     path('learner-dashboard', views.learner_dashboard_view,name='learner-dashboard'),
-    
+    path('learner-edit-Learner-details/<int:user_id>', views.learner_edit_Learner_details_view,name='learner-edit-Learner-details'),
     path('learner-exam', views.learner_exam_view,name='learner-exam'),
     path('learner-take-exam/<int:pk>', views.learner_take_exam_view,name='learner-take-exam'),
     path('learner-start-exam/<int:pk>', views.learner_start_exam_view,name='learner-start-exam'),

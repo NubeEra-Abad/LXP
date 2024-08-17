@@ -152,90 +152,29 @@ def afterlogin_view(request):
                         if request.method=='POST':
                             learnerdetailsForm=forms.LearnerDetailsForm(request.POST)
                             if learnerdetailsForm.is_valid():
+                                profile_pic = request.FILES.get('profile_pic')
                                 user_full_name = learnerdetailsForm.cleaned_data["user_full_name"]
                                 mobile = learnerdetailsForm.cleaned_data["mobile"]
-                                iswhatsapp = learnerdetailsForm.cleaned_data["iswhatsapp"]
                                 whatsappno = learnerdetailsForm.cleaned_data["whatsappno"]
                                 learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
                                                                                     user_full_name= user_full_name,
                                                                                     mobile=mobile,
-                                                                                    iswhatsapp=iswhatsapp,
-                                                                                    whatsappno=whatsappno)
+                                                                                    whatsappno=whatsappno,profile_pic=profile_pic)
                                 learnerdetails.save()
-                                
-                                obj = models.LearnerDetails.objects.latest('id')
-                                selectedlist = request.POST.getlist('listbox1')
-                                for x in selectedlist:
-                                    knownskillid = str(x)
-                                    knownskilltable = models.LearnerDetailsKSkill.objects.create(learnerdetails_id=obj.id,knownskill_id=knownskillid)
-                                    knownskilltable.save()
-                                selectedlist = request.POST.getlist('listbox3')
-                                for x in selectedlist:
-                                    passionateskillid = str(x)
-                                    passionateskilltable = models.LearnerDetailsPSkill.objects.create(learnerdetails_id=obj.id,passionateskill_id=passionateskillid)
-                                    passionateskilltable.save()
                                 send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                             else:
+                                print(learnerdetailsForm.errors)
                                 print("form is invalid")
                                 return render(request,'lxpapp/404page.html')
                             return render(request,'loginrelated/wait_for_approval.html')
                         learnerdetailsForm=forms.LearnerDetailsForm()
-                        pskills = models.PassionateSkill.objects.all()
-                        kskills = models.KnownSkill.objects.all()
-                        
                         user =  User.objects.all().filter(id = request.user.id)
                         username=''
                         for u in user:
                             username = u.first_name + ' ' + u.last_name
-                        return render(request,'loginrelated/add_learnerdetails.html',{'learnerdetailsForm':learnerdetailsForm,'pskills':pskills,'kskills':kskills,'username':username})
+                        return render(request,'loginrelated/add_learnerdetails.html',{'learnerdetailsForm':learnerdetailsForm,'username':username})
                 else:
                     return render(request,'loginrelated/wait_for_approval.html')
-                    learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
-                    if learnerdetails:
-                        isfirstlogin = models.IsFirstLogIn.objects.all().filter(user_id = request.user.id)
-                        if not isfirstlogin:
-                            return render(request,'loginrelated/wait_for_approval.html')
-                        return render(request,'loginrelated/on_hold.html')
-                    else:
-                        if request.method=='POST':
-                            learnerdetailsForm=forms.LearnerDetailsForm(request.POST)
-                            if learnerdetailsForm.is_valid():
-                                user_full_name = learnerdetailsForm.cleaned_data["user_full_name"]
-                                mobile = learnerdetailsForm.cleaned_data["mobile"]
-                                iswhatsapp = learnerdetailsForm.cleaned_data["iswhatsapp"]
-                                whatsappno = learnerdetailsForm.cleaned_data["whatsappno"]
-                                learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
-                                                                                    user_full_name= user_full_name,
-                                                                                    mobile=mobile,
-                                                                                    iswhatsapp=iswhatsapp,
-                                                                                    whatsappno=whatsappno)
-                                learnerdetails.save()
-                                
-                                obj = models.LearnerDetails.objects.latest('id')
-                                selectedlist = request.POST.getlist('listbox1')
-                                for x in selectedlist:
-                                    knownskillid = str(x)
-                                    knownskilltable = models.LearnerDetailsKSkill.objects.create(learnerdetails_id=obj.id,knownskill_id=knownskillid)
-                                    knownskilltable.save()
-                                selectedlist = request.POST.getlist('listbox3')
-                                for x in selectedlist:
-                                    passionateskillid = str(x)
-                                    passionateskilltable = models.LearnerDetailsPSkill.objects.create(learnerdetails_id=obj.id,passionateskill_id=passionateskillid)
-                                    passionateskilltable.save()
-                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                            else:
-                                print("form is invalid")
-                                return render(request,'lxpapp/404page.html')
-                            return HttpResponseRedirect('indexpage')
-                        learnerdetailsForm=forms.LearnerDetailsForm()
-                        pskills = models.PassionateSkill.objects.all()
-                        kskills = models.KnownSkill.objects.all()
-                        
-                        user =  User.objects.all().filter(id = request.user.id)
-                        username=''
-                        for u in user:
-                            username = u.first_name + ' ' + u.last_name
-                        return render(request,'loginrelated/add_learnerdetails.html',{'learnerdetailsForm':learnerdetailsForm,'pskills':pskills,'kskills':kskills,'username':username})
             elif xx.utype == 3:
                 if xx.status:
                     request.session['utype'] = 'cto'
@@ -426,7 +365,6 @@ def delete_user_view(request,userid,pk):
         return render(request,'lxpapp/404page.html')
     
 
-from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from django.conf import settings
 

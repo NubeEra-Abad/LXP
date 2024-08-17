@@ -20,26 +20,6 @@ class ContactusForm(forms.Form):
     Email = forms.EmailField()
     Message = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'rows': 3, 'cols': 30}))
 
-class PassionateSkillForm(forms.ModelForm):
-    passionateskill_name = forms.CharField(
-        max_length=90000,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.PassionateSkill
-        fields=['passionateskill_name']
-
-class KnownSkillForm(forms.ModelForm):
-    knownskill_name = forms.CharField(
-        max_length=90000,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
-    )
-    class Meta:
-        model=models.KnownSkill
-        fields=['knownskill_name']
-
 class SubjectForm(forms.ModelForm):
     subject_name = forms.CharField(
         max_length=90000,
@@ -109,12 +89,21 @@ class TopicForm(forms.ModelForm):
 class LearnerDetailsForm(forms.ModelForm):
     user_full_name = forms.CharField(
         max_length=90000,
-        #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
+        widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'})
     )
+    mobile = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    whatsappno = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    profile_pic = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control'})
+    )
+
     class Meta:
-        model=models.LearnerDetails
-        fields=['user_full_name','mobile','iswhatsapp','whatsappno']
+        model = models.LearnerDetails
+        fields = ['user_full_name', 'mobile', 'whatsappno', 'profile_pic']
 
 class CourseForm(forms.ModelForm):
     class Meta:

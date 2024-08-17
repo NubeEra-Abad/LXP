@@ -250,7 +250,6 @@ def cfo_update_batch_view(request,pk):
             'coursetype':coursetype,
             'bPList':bPList,
             'PList':PList}
-            
             return render(request,'cfo/batch/cfo_update_batch.html',context=dict)
     #except:
         return render(request,'lxpapp/404page.html')

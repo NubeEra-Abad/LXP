@@ -18,31 +18,13 @@ class UserPics(models.Model):
     picpath = models.TextField(default='')
     pic = models.ImageField()
 
-class PassionateSkill(models.Model):
-   passionateskill_name = models.CharField(max_length=200)
-   def __str__(self):
-        return self.passionateskill_name
-
-class KnownSkill(models.Model):
-   knownskill_name = models.CharField(max_length=200)
-   def __str__(self):
-        return self.knownskill_name
-
 class LearnerDetails(models.Model):
-    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    user_full_name = models.CharField(max_length=200)
-    mobile = models.IntegerField(default=0)
-    iswhatsapp = models.BooleanField(default=False)
-    whatsappno = models.IntegerField(default=0)
+        learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+        user_full_name = models.CharField(max_length=200)
+        mobile = models.CharField(max_length=10)
+        whatsappno = models.CharField(max_length=10,default='')
+        profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     
-class LearnerDetailsPSkill(models.Model):
-    learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.SET_NULL, null=True)
-    passionateskill=models.ForeignKey(PassionateSkill,on_delete=models.SET_NULL, null=True)
-
-class LearnerDetailsKSkill(models.Model):
-    learnerdetails=models.ForeignKey(LearnerDetails,on_delete=models.SET_NULL, null=True)
-    knownskill=models.ForeignKey(KnownSkill,on_delete=models.SET_NULL, null=True)
-
 class IsFirstLogIn(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     def __str__(self):

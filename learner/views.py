@@ -1,11 +1,7 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from lxpapp import models as LXPModel
 from lxpapp import forms as LXPFORM
-from django.db.models import Count
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib import messages
 
@@ -659,3 +655,17 @@ def learner_cloudshell_terminal_view(request):
             return render(request,'learner/labs/cloudshell/learner_cloudshell_terminal.html')
     except:
         return render(request,'lxpapp/404page.html')
+    
+@login_required
+def learner_edit_Learner_details_view(request, user_id):
+    user = get_object_or_404(LXPModel.LearnerDetails, learner_id=user_id)
+    
+    if request.method == "POST":
+        form = LXPFORM.LearnerDetailsForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('learner-edit-Learner-details', user_id=user_id)  # Redirect to the user's profile or any other page
+    else:
+        form = LXPFORM.LearnerDetailsForm(instance=user)
+    
+    return render(request, 'learner/learner_edit_details.html', {'form': form, 'user': user})

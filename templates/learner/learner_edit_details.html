@@ -1,0 +1,177 @@
+{% extends 'learner/learnerbase.html' %}
+{% block content %}
+{%load static%}
+<head>
+    <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+    <script type="text/javascript">
+      $().ready(function () {
+        $('#add').click(function () {
+          return !$('#select1 option:selected').remove().appendTo('#select2');
+        });
+    
+        $('#add1').click(function () {
+          return !$('#select3 option:selected').remove().appendTo('#select4');
+        });
+    
+        $('#remove').click(function () {
+          return !$('#select2 option:selected').remove().appendTo('#select1');
+        });
+    
+        $('#remove1').click(function () {
+          return !$('#select4 option:selected').remove().appendTo('#select3');
+        });
+      });
+    
+      function showError(message) {
+        // Create an error message element or use an existing one
+        let errorDiv = document.getElementById('error-message');
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.id = 'error-message';
+          errorDiv.style.color = 'red';
+          document.body.appendChild(errorDiv);
+        }
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    
+        // Hide the error message after 5 seconds
+        setTimeout(() => {
+          errorDiv.style.display = 'none';
+        }, 5000);
+      }
+    
+      function validateForm() {
+        let x = document.forms[0]["user_full_name"].value;
+        if (x == "") {
+          showError("Please Enter Name");
+          return false;
+        }
+        x = document.forms[0]["mobile"].value;
+        if (x.length != 10) {
+          showError("Please Enter 10 Digit Mobile No");
+          return false;
+        }
+        x = document.forms[0]["whatsappno"].value;
+        if (x.length != 10 && x.length != 1 ) {
+          showError("Please Enter 10 Digit WhatsApp No.");
+          return false;
+        }
+        x = document.forms[0]["whatsappno"].value;
+          if (x.length != 10) {
+            showError("Please Enter 10 Digit WhatsApp No");
+            return false;
+          }
+      }
+    </script>
+</head>
+<div>
+    <style>
+    ul.breadcrumb li+li:before {
+      content: '\f061';
+    display: inline-block;
+    font-family: 'fontAwesome';
+    padding: 0 10px;
+    }
+    </style>
+    <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li>
+                <a href="{% url 'learner-dashboard'%}">Dashboard</a>
+            </li>
+            <li aria-current="page">Edit Details</li>
+        </ul>
+    </nav>
+</div>
+<div class="container">
+    <div class="panel panel-primary">
+        <h1>Edit User {{ user.username }}</h1>
+        <form
+            onsubmit="return validateForm()"
+            method="POST"
+            autocomplete="off"
+            enctype="multipart/form-data"
+        >
+            {%csrf_token%}
+            <div class="form-group">
+                <label for="{{ form.user_full_name.id_for_label }}">Full Name</label>
+                {{ form.user_full_name }}
+            {% if form.user_full_name.errors %}
+                <div class="text-danger">{{ form.user_full_name.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.mobile.id_for_label }}">Mobile No.</label>
+                {{ form.mobile }}
+            {% if form.mobile.errors %}
+                <div class="text-danger">{{ form.mobile.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.whatsappno.id_for_label }}">WhatsApp No.</label>
+                {{ form.whatsappno }}
+            {% if form.whatsappno.errors %}
+                <div class="text-danger">{{ form.whatsappno.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <div>
+                    {% if user.profile_pic %}
+                    <img
+                        src="{{ user.profile_pic.url }}"
+                        alt="Profile Picture"
+                        width="200"
+                        height="200"
+                    >
+                    {% else %}
+                    <img
+                        src="path/to/default/image.jpg"
+                        alt="Default Profile Picture"
+                        width="200"
+                        height="200"
+                    >
+                    {% endif %}
+                </div>
+                <div class="custom-file">
+                    {{ form.profile_pic }}
+                    <label for="{{ form.profile_pic.id_for_label }}">Choose file</label>
+                </div>
+                {% if form.profile_pic.errors %}
+                <div class="text-danger">{{ form.profile_pic.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="d-grid">
+                <button class="btn btn-primary btn-start" type="submit">Save Details</button>
+            </div>
+            <div id="error-message" style="color: red; display: none;"></div>
+        </form>
+    </div>
+</div>
+<style>
+  .form-group {
+      display: flex;
+      align-items: center;
+  }
+  .form-group img {
+      border-radius: .25rem; /* Optional: adds rounded corners */
+      border: 1px solid #ddd; /* Optional: adds a border around the image */
+  }
+  .form-group .custom-file {
+      margin-left: 20px; /* Space between the image and file input */
+  }
+  .custom-file-input {
+      display: block; /* Ensures file input is not inline */
+  }
+  .custom-file-label {
+      display: block; /* Ensures the label is not inline */
+  }
+</style>
+<a href="{% url 'learner-edit-Learner-details' user.id %}">Cancel</a>
+</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock content %}
