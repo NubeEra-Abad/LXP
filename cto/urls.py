@@ -2,9 +2,8 @@ from django.urls import path
 from cto import views
 from django.contrib.auth.views import LoginView
 urlpatterns = [
-
     path('cto-dashboard', views.cto_dashboard_view,name='cto-dashboard'),
-
+    
     path('cto-passionateskill', views.cto_passionateskill_view,name='cto-passionateskill'),
     path('cto-add-passionateskill', views.cto_add_passionateskill_view,name='cto-add-passionateskill'),
     path('cto-update-passionateskill/<int:pk>', views.cto_update_passionateskill_view,name='cto-update-passionateskill'),
@@ -91,4 +90,7 @@ urlpatterns = [
     
     path('cto-view-video-list', views.cto_view_video_list_view,name='cto-view-video-list'),
     path('cto-delete-video/<int:pk>/<int:pl_id>/<int:vid_id>', views.cto_delete_video_view,name='cto-delete-video'),
+    path('sync_playlists_and_videos', views.sync_playlists_and_videos,name='sync_playlists_and_videos'),
+
+     path('cto/sync-youtube/', views.cto_sync_youtube_start_view, name='cto_sync_youtube_start'),
 ]

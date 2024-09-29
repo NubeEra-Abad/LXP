@@ -1820,3 +1820,127 @@ def cto_delete_video_view(request,pk,pl_id,vid_id):
         return render(request,'cto/youtube/cto_view_video_list.html',{'videos':c_list})
     #except:
         return render(request,'lxpapp/404page.html')
+
+from datetime import datetime
+API_KEY = 'AIzaSyDBSnyGaMAoCEpFyh_WPj7E3pQV7GJivJA'  # Replace with your API Key
+CHANNEL_ID = 'UCxdhwzsgcGldYghv6u3nrXw'  # Replace with your Channel ID
+
+youtube = build('youtube', 'v3', developerKey=API_KEY)
+
+def sync_playlists_and_videos():
+    # Fetch playlists from the channel
+    request = youtube.playlists().list(
+        part='snippet,contentDetails',
+        channelId=CHANNEL_ID,
+        maxResults=50
+    )
+    response = request.execute()
+
+    for playlist_data in response['items']:
+        playlist, created = LXPModel.Playlist.objects.get_or_create(
+            playlist_id=playlist_data['id'],
+            defaults={
+                'title': playlist_data['snippet']['title'],
+                'description': playlist_data['snippet'].get('description', ''),
+                'published_at': datetime.strptime(
+                    playlist_data['snippet']['publishedAt'], '%Y-%m-%dT%H:%M:%S.%fZ'
+                )
+            }
+        )
+
+        # Fetch videos in the playlist
+        sync_videos(playlist)
+
+def sync_videos(playlist):
+    request = youtube.playlistItems().list(
+        part='snippet,contentDetails',
+        playlistId=playlist.playlist_id,
+        maxResults=50
+    )
+    response = request.execute()
+
+    for video_data in response['items']:
+        LXPModel.Video.objects.get_or_create(
+            video_id=video_data['contentDetails']['videoId'],
+            defaults={
+                'playlist': playlist,
+                'title': video_data['snippet']['title'],
+                'description': video_data['snippet'].get('description', ''),
+                'published_at': datetime.strptime(
+                    video_data['snippet']['publishedAt'], '%Y-%m-%dT%H:%M:%S.%fZ'
+                )
+            }
+        )
+
+
+@login_required
+def cto_add_zaid_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            form = LXPFORM.ZaidForm(request.POST or None)
+            context = {
+                'form': form,
+                'page_title': 'Add Zaid'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('zaid_name')
+                    zaid = LXPModel.Zaid.objects.all().filter(zaid_name__iexact = name)
+                    if zaid:
+                        messages.info(request, 'Zaid Name Already Exist')
+                        return redirect(reverse('cto-add-zaid'))
+                    try:
+                        zaid = LXPModel.Zaid.objects.create(
+                                                    zaid_name = name)
+                        zaid.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-add-zaid'))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/zaid/add_edit_zaid.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+@login_required
+def cto_update_zaid_view(request, pk):
+    try:
+        if str(request.session['utype']) == 'cto':
+            instance = get_object_or_404(LXPModel.Zaid, id=pk)
+            form = LXPFORM.ZaidForm(request.POST or None, instance=instance)
+            context = {
+                'form': form,
+                'zaid_id': pk,
+                'page_title': 'Edit Zaid'
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    name = form.cleaned_data.get('zaid_name')
+                    zaid = LXPModel.Zaid.objects.all().filter(zaid_name__iexact = name).exclude(id=pk)
+                    if zaid:
+                        messages.info(request, 'Zaid Name Already Exist')
+                        return redirect(reverse('cto-update-zaid', args=[pk]))
+                    try:
+                        zaid = LXPModel.Zaid.objects.get(id=pk)
+                        zaid.zaid_name = name
+                        zaid.save()
+                        messages.success(request, "Successfully Updated")
+                        return redirect(reverse('cto-update-zaid', args=[pk]))
+                    except Exception as e:
+                        messages.error(request, "Could Not Add " + str(e))
+                else:
+                    messages.error(request, "Fill Form Properly")
+            return render(request, 'cto/zaid/add_edit_zaid.html', context)
+    except:
+        return render(request,'lxpapp/404page.html')
+
+
+@login_required
+def cto_view_zaid_view(request):
+    try:
+        if str(request.session['utype']) == 'cto':
+            zaids = LXPModel.Zaid.objects.all()
+            return render(request,'cto/zaid/cto_view_zaid.html',{'zaids':zaids})
+    except:
+        return render(request,'lxpapp/404page.html')

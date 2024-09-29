@@ -143,6 +143,8 @@ def afterlogin_view(request):
                 
             elif xx.utype == 2  or xx.utype == 0 :
                 if xx.status:
+                    request.session['utype'] = 'learner'
+                    return render(request,'learner/learner_dashboard.html')
                     request.session.set_expiry(2400)
                     learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
                     if learnerdetails:

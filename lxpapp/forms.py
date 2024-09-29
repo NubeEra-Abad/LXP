@@ -97,9 +97,6 @@ class LearnerDetailsForm(forms.ModelForm):
     whatsappno = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
-    profile_pic = forms.ImageField(
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control'})
-    )
 
     class Meta:
         model = models.LearnerDetails

@@ -101,7 +101,7 @@
                                     {% endif %}
                                     {{t.topic}}
                                     {% if t.srno == 1 %}
-                                    {% if t.flag == 'yes'%}
+                                    {% if t.flag == 'yes' or t.srno != -1 %}
                                 <div>
                                     <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id module_id %}">Let's
                                         Start</a>

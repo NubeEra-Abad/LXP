@@ -48,16 +48,17 @@
                     <ul>
                         {% for t in list %}
                         <li>
-                            {% if forloop.counter == 1 or t.matcount > 0 %}
+                            {% if forloop.counter > 0 or t.matcount > 0 %}
 
                             <p class="play-intro">
                                 {% if t.mtype == "PDF" %}
                                 <a href='https://nbviewer.org/github{{t.urlvalue|cut:"https://github.com"}}'
                                     class="link" data-id="{{ t.id }}">{{t.topic}}</a>
-                                {% elif t.mtype == "Video" %}
-                                <a href='{{t.urlvalue}}' class="link" data-id="{{ t.id }}">{{t.topic}}</a>
+                                    {% elif t.mtype == "Video" %}
+                                    <a href="{% if 'youtube.com/watch' in t.urlvalue %}{{ t.urlvalue|slice:"https://www.youtube.com/watch?v=" }}{% else %}{{ t.urlvalue }}{% endif %}" class="link" data-id="{{ t.id }}">{{ t.topic }} </a>
+                                
                                 {% elif t.mtype == "URL" %}
-                                <a href="javascript:void(0)" onclick="loadIframe('{{t.urlvalue}}')">{{t.topic}}</a>
+                                <a href="javascript:void(0)" onclick="loadIframe('{{t.urlvalue}}')">{{t.topic}}/// {{t.urlvalue}}</a>
                                 {% elif t.mtype == "HTML" %}
                                 <a href='https://htmlpreview.github.io/?{{t.urlvalue}}' class="link"
                                     data-id="{{ t.id }}">{{t.topic}}</a>
@@ -120,62 +121,63 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $("#mydiv").css("height", ($(document).height() - 50) + "px");
+    $(document).ready(function() {
+        $("#mydiv").css("height", ($(document).height() - 50) + "px");
 
-    const links = $('.link');
-    const myIframe = $('#myIframe');
-    const iframeHeading = $('#iframeHeading');
+        const links = $('.link');
+        const myIframe = $('#myIframe');
+        const iframeHeading = $('#iframeHeading');
 
-    links.on('click', function (event) {
-        event.preventDefault();
-        var myDiv = document.getElementById("instruction");
-        myDiv.style.display = "none";
-        const selectedLink = $(this);
-        const selectedValue = selectedLink.data('id');
-        const selectedText = selectedLink.text();
-        const selectedHref = selectedLink.attr('href');
+        links.on('click', function(event) {
+            event.preventDefault();
+            $("#instruction").hide();
+            const selectedLink = $(this);
+            const selectedValue = selectedLink.data('id');
+            const selectedHref = selectedLink.attr('href');
 
-        // Check if the link is a YouTube link
-        const youtubePattern = /^https?:\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/[\w-]+/;
-        const isYoutube = youtubePattern.test(selectedHref);
+            // Check if the link is a YouTube link
+            const youtubePattern = /^https?:\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/watch\?v=([a-zA-Z0-9_-]{11})/;
+            const match = selectedHref.match(youtubePattern);
+            const isYoutube = match !== null;
 
-        // Update the iframe source and heading
-        myIframe.attr('src', selectedLink.attr('href') + '?id=' + selectedValue);
-        // Add the allowfullscreen attribute if the link is a YouTube video
-        if (selectedLink.attr('href').includes('youtube')) {
-            myIframe.attr('allowfullscreen', true);
-        } else {
-            myIframe.removeAttr('allowfullscreen');
-        }
-        // Make AJAX request to update model with selected ID
-        $.ajax({
-            url: "{% url 'ajax_save_topic' %}",
-            method: 'POST',
-            contentType: 'application/json',
-            data: {
-                id: selectedValue,
-                module_id: '{{module_id}}',
-                chapter_id: '{{chapter_id}}'
-            },
-            success: function (response) {
-                console.log('Updated model successfully');
-            },
-            error: function (error) {
-                console.log('Error updating model: ', error);
+            // Update the iframe source and heading
+            if (isYoutube) {
+                const videoId = match[1];
+                myIframe.attr('src', `https://www.youtube.com/embed/${videoId}`);
+                myIframe.prop('allowfullscreen', true);
+            } else {
+                myIframe.attr('src', selectedHref + '?id=' + selectedValue);
+                myIframe.prop('allowfullscreen', false);
             }
+
+            // Make AJAX request to update model with selected ID
+            $.ajax({
+                
+                url: "{% url 'ajax_save_topic' %}",
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id: selectedValue,
+                    module_id: '{{ module_id }}',
+                    chapter_id: '{{ chapter_id }}'
+                }),
+                success: function(response) {
+                    console.log('Updated model successfully');
+                },
+                error: function(error) {
+                    console.log('Error updating model: ', error);
+                }
+            });
         });
+
+        // Toggle visibility function
+        window.toggleVisibility = function() {
+            const elem = document.getElementById("hide-show");
+            elem.style.display = (elem.style.display === "none") ? "block" : "none";
+        }
     });
 </script>
 
-<script>
-    function toggleVisibility() {
-        var elem = document.getElementById("hide-show");
-        if (elem.style.display === "none") {
-            elem.style.display = "block";
-        } else {
-            elem.style.display = "none";
-        }
-    }
-</script>
+
 
 {% endblock content %}
