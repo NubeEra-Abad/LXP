@@ -143,9 +143,9 @@ def afterlogin_view(request):
                 
             elif xx.utype == 2  or xx.utype == 0 :
                 if xx.status:
-                    request.session['utype'] = 'learner'
-                    return render(request,'learner/learner_dashboard.html')
                     request.session.set_expiry(2400)
+                    request.session['utype'] = 'learner'
+                    # return render(request,'learner/learner_dashboard.html')
                     learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
                     if learnerdetails:
                         request.session['utype'] = 'learner'
@@ -163,7 +163,8 @@ def afterlogin_view(request):
                                                                                     mobile=mobile,
                                                                                     whatsappno=whatsappno,profile_pic=profile_pic)
                                 learnerdetails.save()
-                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
+                                return render(request,'learner/learner_dashboard.html')
+#                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                             else:
                                 print(learnerdetailsForm.errors)
                                 print("form is invalid")
