@@ -1,6 +1,6 @@
-/*
+                    /*
 Author       : Dreamguys
-Template Name: Dreams LMS - Bootstrap Template
+Template Name: Dreams   - Bootstrap Template
 Version      : 1.0
 */
 
