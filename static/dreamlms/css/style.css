@@ -2959,7 +2959,9 @@ html.menu-opened body {
 	max-width: 100%;
 	width: 100%;
 	font-weight: 600;
-	padding: 100px;
+	padding-top: 100px;
+	padding-left: 100px;
+	padding-right: 100px;
 }
 .login-wrapper .loginbox .img-logo {
 	margin-bottom: 54px;
@@ -3017,9 +3019,8 @@ html.menu-opened body {
     position: relative;
 }
 .google-bg {
-	background: ;
-	padding: 50px;
 	width: 100%;
+	padding: 50px;
 }
 .sign-google ul {
 	padding: 0;

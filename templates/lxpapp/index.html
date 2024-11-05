@@ -27,7 +27,6 @@
 
   <link rel="stylesheet" href="/static/dreamlms/css/style.css">
   <link rel="stylesheet" type="text/css" href="/static/dreamlms/fonts/style.css" />
-  <link rel="stylesheet" type="text/css" href="/static/dreamlms/fonts/style.css" />
 
 </head>
 
@@ -88,16 +87,16 @@
             </div>
             <ul class="nav header-navbar-rht">
               <li class="nav-item">
-                <a class="nav-link header-sign" href="../../../../adminclick">Signin</a>
+                <a class="nav-link header-sign" href="{% url 'adminclick' %}">Signin</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link header-sign" href="{% url 'social:begin' 'google-oauth2' %}">Login
                     with <img src="/static/dreamlms/img/net-icon-01.png"
                         style="height: 25px; width: 25px;" class="img-fluid" alt="Logo">oogle</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link header-sign" href="../../../../signup">Signup</a>
-            </li>
+            </li> -->
               <!-- <li class="nav-item">
                 <a class="nav-link header-sign" href="login.html"> LXP</a>
               </li> -->
@@ -117,7 +116,7 @@
           <div class=" col-lg-5 col-md-6">
             <div class="home-slide-face aos" data-aos="fade-up">
               <div class="home-slide-text ">
-                <h5>The Leader in Online Learning</h5>
+                <h3>The Leader in Online Learning</h3>
                 <h1>Engaging & Accessible Online Courses For All</h1>
                 <!-- <p>Own your future learning new skills online</p> -->
               </div>
@@ -572,7 +571,7 @@
                     <p>11hr 30min</p>
                   </div>
                 </div>
-                <div class="rating">
+                <!-- <div class="rating">
                   <i class="fas fa-star filled"></i>
                   <i class="fas fa-star filled"></i>
                   <i class="fas fa-star filled"></i>
@@ -582,7 +581,7 @@
                 </div>
                 <div class="all-btn all-category d-flex align-items-center">
                   <a href="#" class="btn btn-primary">BUY NOW</a>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
