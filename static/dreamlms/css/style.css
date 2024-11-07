@@ -2959,7 +2959,14 @@ html.menu-opened body {
 	max-width: 100%;
 	width: 100%;
 	font-weight: 600;
-	padding-top: 100px;
+	padding-top: 50px;
+	padding-left: 100px;
+	padding-right: 100px;
+}
+.login-wrapperr .signup {
+	max-width: 100%;
+	width: 100%;
+	padding-top: 50px;
 	padding-left: 100px;
 	padding-right: 100px;
 }
@@ -3009,18 +3016,18 @@ html.menu-opened body {
 	cursor: pointer;
 }
 .remember-me .form-check-input {
-	border: 1px solid #FFDEDA;
+	border: 1px solid #dcd9d9;
 	border-radius: 0;
 }
 .remember-me a {
-	color: #F66962;
+	color: #0d6efd;
 }
 .pass-group {
     position: relative;
 }
 .google-bg {
 	width: 100%;
-	padding: 50px;
+	/* padding: 50px; */
 }
 .sign-google ul {
 	padding: 0;
@@ -3043,7 +3050,7 @@ html.menu-opened body {
 	font-size: 14px;
 }
 .google-bg p a {
-	color: #F66962;
+	color: #000000;
 }
 .sign-google ul li a img {
 	margin-right: 10px;
@@ -3056,15 +3063,15 @@ html.menu-opened body {
 	font-weight: 400;
 }
 .sign-google {
-	margin: 32px 0px;
+	margin: 25px 0px;
 }
 .loginbox .form-control {
-	border-color:rgba(255, 222, 218, 0.71);
+	border-color: #22100D !important;
 	border-radius: 5px;
 	min-height: 50px;
 }
 .loginbox .form-control:focus {
-	border: 1px solid #EB9481;
+	border: 1px solid #22100D;
 }
 .loginbox .form-control::placeholder {
 	color: #a2a2a2;
@@ -3108,7 +3115,7 @@ html.menu-opened body {
 	color: #FFF;
 }
 .btn-start:hover {
-	background: #f57b4d;
+	background: #0d6efd;
 	color: #FFF;
 }
 .login-wrapper .loginbox .dont-have {
@@ -3117,7 +3124,7 @@ html.menu-opened body {
 	font-size: 20px;
 }
 .login-wrapper .loginbox .dont-have a {
-	color: #FF6575;
+	color: #0d6efd;
 }
 .login-wrapper .loginbox .dont-have a:hover {
 	text-decoration: underline;
@@ -3134,7 +3141,7 @@ html.menu-opened body {
 	justify-content: unset;
 }
 .log-wrap .google-bg {
-	margin-top: auto;
+	/* margin-top: auto; */
 }
 .custom_check {
     color: #685F78 !important;
@@ -3288,12 +3295,12 @@ html.menu-opened body {
 	padding: 12px 15px;
 }
 .form-check-input:checked {
-    background-color: #FF5364;
-    border-color: #FF5364;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
 }
 .form-check-input:focus {
 	box-shadow: none;
-	border-color: #FF5364;
+	border-color: #0d6efd;
 }
 .form-switch .form-check-input:checked {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
@@ -10089,7 +10096,7 @@ input[type=password]::-ms-clear
 		width: 130px;
 	}
 	.google-bg {
-		padding: 25px;
+		/* padding: 25px; */
 	}
 	.sign-google ul li a {
 		padding: 0px 10px;
