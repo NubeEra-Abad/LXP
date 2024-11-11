@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -24,7 +25,24 @@
 
 <body>
   <script type="text/javascript">
-
+    $().ready(function () {
+      $('#add').click(function () {
+        return !$('#select1 option:selected').remove().appendTo('#select2');
+      });
+  
+      $('#add1').click(function () {
+        return !$('#select3 option:selected').remove().appendTo('#select4');
+      });
+  
+      $('#remove').click(function () {
+        return !$('#select2 option:selected').remove().appendTo('#select1');
+      });
+  
+      $('#remove1').click(function () {
+        return !$('#select4 option:selected').remove().appendTo('#select3');
+      });
+    });
+  
     function showError(message) {
       // Create an error message element or use an existing one
       let errorDiv = document.getElementById('error-message');
@@ -36,14 +54,15 @@
       }
       errorDiv.textContent = message;
       errorDiv.style.display = 'block';
-
+  
       // Hide the error message after 5 seconds
       setTimeout(() => {
         errorDiv.style.display = 'none';
       }, 5000);
     }
-
+  
     function validateForm() {
+      return true;
       let x = document.forms[0]["user_full_name"].value;
       if (x == "") {
         showError("Please Enter Name");
@@ -55,11 +74,15 @@
         return false;
       }
       x = document.forms[0]["whatsappno"].value;
-      if (x.length != 10 && x.length != 1) {
+      if (x.length != 10 && x.length != 1 ) {
         showError("Please Enter 10 Digit WhatsApp No.");
         return false;
       }
-      return true;
+      x = document.forms[0]["whatsappno"].value;
+        if (x.length != 10) {
+          showError("Please Enter 10 Digit WhatsApp No");
+          return false;
+        }
     }
   </script>
 
@@ -79,40 +102,31 @@
               </div>
             </div>
             <form onsubmit="return validateForm()" method="POST" autocomplete="off" enctype="multipart/form-data">
-              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
+              {%csrf_token%}
               <div class="form-group">
                 <label class="form-control-label">Full Name</label>
-                <input type="text" name="user_full_name" class="form-control" value="{{ username }}" required>
+                {% render_field learnerdetailsForm.user_full_name class="form-control" value=username%}
               </div>
-
               <div class="form-group">
                 <label class="form-control-label">Mobile No.</label>
-                <input type="text" name="mobile" class="form-control" required>
+                {% render_field learnerdetailsForm.mobile class="form-control"%}
               </div>
-
+              
               <div class="form-group">
                 <label class="form-control-label">If above No. is not a WhatsApp No., please provide WhatsApp No.</label>
-                <input type="text" name="whatsappno" class="form-control" value=" ">
+                {% render_field learnerdetailsForm.whatsappno class="form-control" value=" "%}
               </div>
-
               <div class="form-group">
                 <label class="form-control-label">Profile Picture</label>
-                <input type="file" name="profile_pic" class="form-control">
-                <div class="text-danger">
-                  <!-- Example of displaying errors (based on Django form validation, if any) -->
-                  {% if errors.profile_pic %}
-                    <p>{{ errors.profile_pic }}</p>
-                  {% endif %}
-                </div>
-              </div>
-
+                {% render_field learnerdetailsForm.profile_pic class="form-control" %}
+                {% if learnerdetailsForm.profile_pic.errors %}
+                    <div class="text-danger">{{ learnerdetailsForm.profile_pic.errors }}</div>
+                {% endif %}
+            </div>
               <div class="d-grid">
                 <button class="btn btn-primary btn-start" type="submit">Save Details</button>
               </div>
-
               <div id="error-message" style="color: red; display: none;"></div>
-
             </form>
           </div>
         </div>
@@ -120,6 +134,7 @@
       </div>
     </div>
   </div>
+
 
   <script src="/static/dreamlms/js/jquery-3.6.0.min.js"></script>
 
@@ -130,7 +145,3 @@
   <script src="/static/dreamlms/js/passwordvalidation.js"></script>
 
   <script src="/static/dreamlms/js/script.js"></script>
-
-</body>
-
-</html>

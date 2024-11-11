@@ -89,13 +89,20 @@ class TopicForm(forms.ModelForm):
 class LearnerDetailsForm(forms.ModelForm):
     user_full_name = forms.CharField(
         max_length=90000,
-        widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'})
+        widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}),
+        required=True  # Explicitly required
     )
     mobile = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True  # Explicitly required
     )
     whatsappno = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True  # Explicitly required
+    )
+    profile_pic = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        required=True  # Explicitly required (to ensure file is uploaded)
     )
 
     class Meta:

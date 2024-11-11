@@ -140,7 +140,7 @@ def afterlogin_view(request):
                 else:
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                     return render(request,'loginrelated/wait_for_approval.html')
-                
+                 
             elif xx.utype == 2  or xx.utype == 0 :
                 if xx.status:
                     request.session.set_expiry(2400)
@@ -152,30 +152,24 @@ def afterlogin_view(request):
                         return render(request,'learner/learner_dashboard.html')
                     else:
                         if request.method=='POST':
-                            learnerdetailsForm=forms.LearnerDetailsForm(request.POST)
-                            if learnerdetailsForm.is_valid():
-                                profile_pic = request.FILES.get('profile_pic')
-                                user_full_name = learnerdetailsForm.cleaned_data["user_full_name"]
-                                mobile = learnerdetailsForm.cleaned_data["mobile"]
-                                whatsappno = learnerdetailsForm.cleaned_data["whatsappno"]
-                                learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
-                                                                                    user_full_name= user_full_name,
-                                                                                    mobile=mobile,
-                                                                                    whatsappno=whatsappno,profile_pic=profile_pic)
-                                learnerdetails.save()
-                                return render(request,'learner/learner_dashboard.html')
+                            profile_pic = request.FILES.get('profile_pic')
+                            user_full_name = request.POST["user_full_name"]
+                            mobile = request.POST["mobile"]
+                            whatsappno = request.POST["whatsappno"]
+                            learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
+                                                                                user_full_name= user_full_name,
+                                                                                mobile=mobile,
+                                                                                whatsappno=whatsappno,profile_pic=profile_pic)
+                            learnerdetails.save()
+                            logout(request)
+                            return HttpResponseRedirect('indexpage')  
 #                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                            else:
-                                print(learnerdetailsForm.errors)
-                                print("form is invalid")
-                                return render(request,'lxpapp/404page.html')
-                            return render(request,'loginrelated/wait_for_approval.html')
-                        learnerdetailsForm=forms.LearnerDetailsForm()
+                            
                         user =  User.objects.all().filter(id = request.user.id)
                         username=''
                         for u in user:
                             username = u.first_name + ' ' + u.last_name
-                        return render(request,'loginrelated/add_learnerdetails.html',{'learnerdetailsForm':learnerdetailsForm,'username':username})
+                        return render(request,'loginrelated/add_learnerdetails.html',{'username':username})
                 else:
                     return render(request,'loginrelated/wait_for_approval.html')
             elif xx.utype == 3:
