@@ -32,7 +32,7 @@
               </div>
               <div class="product-content">
                 <div class="head-course-title">
-                  <h3 class="title"><a href="{% url 'learner-video-list' t.id %}">{{t.name}}</a></h3>
+                  <h3 class="title"><a class="srv_title" data-value="{{t.name}}" href="{% url 'learner-video-list' t.id %}">{{t.name}}</a></h3>
                 </div>
                 <div class="course-info border-bottom-0 pb-0 d-flex align-items-center">
                   <div class="rating-img d-flex align-items-center">
@@ -136,5 +136,19 @@
       }
     }
   });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+  $(function() {
+
+    $(".srv_title").on('click', function(){
+      let srv_title = $(this).attr("data-value");
+
+      localStorage.setItem("srv_title", srv_title);
+    }) 
+  })
+
+  
 </script>
 {% endblock content %}

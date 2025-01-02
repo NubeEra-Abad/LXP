@@ -9,5 +9,6 @@
             "group": "d",
             "database": "${workspaceFolder:LXP}/LXP.sqlite3"
         }
-    ]
+    ],
+    "docwriter.style": "Auto-detect"
 }

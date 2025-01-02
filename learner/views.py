@@ -1,4 +1,14 @@
 from django.contrib.auth.decorators import login_required
+"""
+    The `learner_edit_Learner_details_view` function allows a learner to edit their details and saves
+    the changes if the form is valid.
+    
+    :param request: The `request` parameter is an HttpRequest object that represents the current request
+    from the user's browser. It contains information about the request, such as the user's session,
+    method (GET or POST), and any data sent with the request
+    :return: The view is returning a rendered HTML template with the form for editing learner details
+    and the learner's current details.
+"""
 from django.shortcuts import render, get_object_or_404, redirect
 from lxpapp import models as LXPModel
 from lxpapp import forms as LXPFORM
