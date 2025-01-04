@@ -56,6 +56,14 @@ urlpatterns = [
 
     path('nubeera-docs', TemplateView.as_view(template_name='docs/docsindex.html'),name='nubeera-docs'),
 
+    path('course-list', TemplateView.as_view(template_name='lxpapp/course-list.html'),name='course-list'),
+
+    path('careers', TemplateView.as_view(template_name='lxpapp/careers.html'),name='careers'),
+
+    path('become-trainer', TemplateView.as_view(template_name='lxpapp/become-trainer.html'),name='become-trainer'),
+    path('blogs', TemplateView.as_view(template_name='lxpapp/blogs.html'),name='blogs'),
+    path('about-us', TemplateView.as_view(template_name='lxpapp/aboutus.html'),name='about-us'),
+
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

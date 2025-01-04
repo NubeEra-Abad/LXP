@@ -21,6 +21,54 @@
     <link rel="stylesheet" href="/static/dreamlms/plugins/feather/feather.css">
 
     <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('/static/dreamlms/img/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .login-wrapper {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .loginbox h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            transition: background 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #00bfff, #1e90ff);
+        }
+        .toggle-password {
+            cursor: pointer;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: #1e90ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
     
 </head>
 
@@ -66,7 +114,7 @@
 
             <div class="col-md-6 login-wrap-bg">
                 <div class="login-wrapper">
-                    <div class="loginbox">
+                    <div class="loginbox mt-5">
                         <div class="w-100">
                             <!-- <div class="img-logo">
                                 <img src="/static/dreamlms/img/logo.png" class="img-fluid" alt="Logo">
@@ -98,20 +146,24 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    <div class="google-bg text-center">
-                        <span><a href="#">Or sign in with</a></span>
-                        <div class="sign-google">
-                            <ul>
-                                <li><a href="{% url 'social:begin' 'google-oauth2' %}"><img
-                                            src="/static/dreamlms/img/net-icon-01.png" class="img-fluid" alt="Logo"> Sign
-                                        In using Google
-                                    </a>
-                                </li>
-                            </ul>
+
+                        <div class="social-login">
+                            <a href="{% url 'social:begin' 'google-oauth2' %}">
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-start mt-3">
+                                        <img src="/static/dreamlms/img/net-icon-01.png" class="img-fluid" alt="Google Logo"> Sign In using Google
+                                    </button>
+                                </div>
+                                
+                            </a>
                         </div>
-                        <p class="mb-0">New User ? <a href="register">Create an Account</a></p>
+
+                        <div class="register-link">
+                            <p class="mb-0">New User? <a href="register">Create an Account</a></p>
+                        </div>
                     </div>
+                    
+                    
                 </div>
 
             </div>
@@ -120,12 +172,21 @@
 
 
     <script src="/static/dreamlms/js/jquery-3.6.0.min.js"></script>
-
     <script src="/static/dreamlms/js/bootstrap.bundle.min.js"></script>
-
     <script src="/static/dreamlms/js/owl.carousel.min.js"></script>
-
     <script src="/static/dreamlms/js/script.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.toggle-password').click(function() {
+                let input = $(this).siblings('input');
+                let type = input.attr('type') === 'password' ? 'text' : 'password';
+                input.attr('type', type);
+                $(this).toggleClass('feather-eye');
+            });
+        });
+    </script>
+
 </body>
 
 </html>

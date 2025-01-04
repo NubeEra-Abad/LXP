@@ -1,3 +1,6 @@
+
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -61,25 +64,19 @@
               </div>
               <ul class="main-nav">
                 <li class="active">
-                  <a href="lxp-index.html">Home</a>
+                  <a href="/">Home</a>
                 </li>
                 <li class="">
-                  <a href="course-list.html">Courses </a>
-
-                </li>
-                <li class="action">
-                  <a href="traning.html">Corporate Training </a>
+                  <a href="{% url 'course-list' %}">Courses </a>
 
                 </li>
                 <li class="has-submenu">
                   <a href="#">More</a>
                   <ul class="submenu">
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="become-trainer.html">Become Trainer</a></li>
-                    <li><a href="blog-list.html">Blogs</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="{% url 'careers' %}">Careers</a></li>
+                    <li><a href="{% url 'become-trainer' %}">Become Trainer</a></li>
+                    <li><a href="{% url 'blogs' %}">Blogs</a></li>
+                    <li><a href="{% url 'about-us' %}">About Us</a></li>
 
                   </ul>
                 </li>
@@ -89,20 +86,6 @@
               <li class="nav-item">
                 <a class="nav-link header-sign" href="{% url 'adminclick' %}">Signin</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link header-sign" href="{% url 'social:begin' 'google-oauth2' %}">Login
-                    with <img src="/static/dreamlms/img/net-icon-01.png"
-                        style="height: 25px; width: 25px;" class="img-fluid" alt="Logo">oogle</a>
-            </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link header-sign" href="../../../../signup">Signup</a>
-            </li> -->
-              <!-- <li class="nav-item">
-                <a class="nav-link header-sign" href="login.html"> LXP</a>
-              </li> -->
-              <!-- <li class="nav-item">
-<a class="nav-link header-login" href="register.html">Sign up</a>
-</li> -->
             </ul>
           </div>
         </nav>
@@ -111,7 +94,7 @@
 
 
     <section class="section home-slide d-flex align-items-center">
-      <div class="">
+      <div class="container">
         <div class="row ">
           <div class=" col-lg-5 col-md-6">
             <div class="home-slide-face aos" data-aos="fade-up">
@@ -120,27 +103,6 @@
                 <h1>Engaging & Accessible Online Courses For All</h1>
                 <!-- <p>Own your future learning new skills online</p> -->
               </div>
-              <!-- <div class="banner-content">
-                <form class="form" action="#">
-                  <div class="form-inner">
-                    <div class="input-group">
-                      <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                      <input type="text" class="form-control"
-                        placeholder="Search School, Online eductional centers, etc">
-                      <span class="drop-detail">
-                        <select class="form-select select">
-                          <option>Category</option>
-                          <option>AI</option>
-                          <option>Cloud</option>
-                          <option>Big Data</option>
-                          <option>DevOps</option>
-                        </select>
-                      </span>
-                      <button class="btn btn-primary sub-btn" type="submit"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                  </div>
-                </form>
-              </div> -->
               <div class="trust-user">
                 <p>Trusted by over 15K Users <br>worldwide since 2022</p>
                 <div class="trust-rating d-flex align-items-center">
