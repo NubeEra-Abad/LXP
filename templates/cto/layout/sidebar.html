@@ -2,12 +2,25 @@
             Sidebar start
         ***********************************-->
 <div class="dlabnav" style="overflow:auto;">
-    <div class="text-center">
-        <!-- <img src="{{request.user.profile_pic}}" width="100" class="img-fluid rounded-circle" alt=""> -->
-        <h4>
-            <a href="instructor-profile.html">{{request.user.first_name}} {{request.user.last_name}}</a>
-        </h4>
-        <h6>CTO</h6>
+    <div class="settings-widget dash-profile">
+        <div class="settings-menu p-0">
+            <div class="profile-bg">
+                <img src="/static/dreamlms/img/instructor-profile-bg.jpg" alt="">
+                <div class="profile-img">
+                    {% if userdetails.userprofile_set.first.profile_img %}
+                    <a href="{% url 'user-profile' %}"><img src="{{ request.user.userprofile_set.first.profile_img.url }}" alt=""></a>
+                    {% endif %}
+                </div>
+            </div> 
+            <div class="profile-group">
+                <div class="profile-name text-center">
+                    <a href={% url 'user-profile' %}>{{request.user.first_name}} {{request.user.last_name}}</a>
+                    <h6><a href={% url 'user-profile' %}>({{request.user.username}})</a></h6>
+                    <h6>CTO</h6>
+                    
+                </div>
+            </div>
+        </div>
     </div>
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
@@ -155,6 +168,11 @@
                             <a href="{% url 'cto-view-knownskill' %}">View Known Skill</a>
                         </li>
                     </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'user-profile-update'%}" class="nav-link">
+                        <i class="feather-power"></i> Update Profile
+                    </a>
                 </li>
                 <li>
                     <a href="{% url 'logout' %}" class="" aria-expanded="false">
