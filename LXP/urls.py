@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from lxpapp import activate
+from lxpapp.views import CustomLoginView
 
 urlpatterns = [
      
@@ -17,7 +18,7 @@ urlpatterns = [
     path('switch-user', views.switch_user_view,name='switch-user'),
 
     path('social-auth/', include('social_django.urls', namespace='social')),
-    path("", views.home, name='home'),
+    path("", CustomLoginView.as_view(),name='userlogin'),
     path('cto/',include('cto.urls')),
     path('cfo/',include('cfo.urls')),
     path('learner/',include('learner.urls')),
@@ -29,7 +30,7 @@ urlpatterns = [
     path('user-session-expired', views.session_expire_view,name='user-session-expired'),   
 
     path('adminclick', views.adminclick_view,name='adminclick'),
-    path('userlogin', LoginView.as_view(template_name='loginrelated/userlogin.html'),name='userlogin'),
+    path('userlogin', CustomLoginView.as_view(),name='userlogin'),
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
     path('admin-view-user-log-details/<int:user_id>', views.admin_view_user_log_details_view,name='admin-view-user-log-details'),
     path('admin-view-user-activity-details/<int:user_id>', views.admin_view_user_activity_details_view,name='admin-view-user-activity-details'),

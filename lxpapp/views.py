@@ -19,6 +19,16 @@ from django.urls import reverse
 from lxpapp.models import UserProfile
 from django.contrib import messages
 from django.core.files.storage import default_storage
+from django.contrib.auth.views import LoginView
+
+class CustomLoginView(LoginView):
+    template_name = 'loginrelated/userlogin.html'  # Your login template path
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('indexpage')  # Replace 'indexpage' with your indexpage URL name
+        return super().get(request, *args, **kwargs)
+    
+    
 @login_required
 def switch_user_view(request):
     logout(request)
