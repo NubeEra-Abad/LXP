@@ -698,3 +698,22 @@ class K8STerminal(models.Model):
 class K8STerminalLearnerCount(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     usedvalue=models.PositiveIntegerField(default=0)
+    
+
+class Scheduler(models.Model): 
+    trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+    start = models.DateTimeField()
+    end = models.DateTimeField(null=True, blank=True)
+    
+    def __str__(self):
+        # Return a formatted string instead of a datetime object
+        return f"Schedule on {self.start.strftime('%Y-%m-%d %H:%M:%S')}"
+
+class SchedulerStatus(models.Model): 
+    date = models.DateField()
+    scheduler=models.ForeignKey(Scheduler,on_delete=models.SET_NULL, null=True)
+    trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    status=models.PositiveIntegerField(default=0)

@@ -10,7 +10,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 import json
-
+from django.db.models import Exists, OuterRef,Case, When, Value, IntegerField,F, Value, Q, Sum, Max
+from django.db.models.functions import Coalesce
 @login_required    
 def cfo_dashboard_view(request):
     try:
@@ -282,3 +283,112 @@ def cfo_delete_batch_view(request,pk):
         return render(request,'cfo/batch/cfo_view_batch.html',{'batchs':batchs})
     except:
         return render(request,'lxpapp/404page.html')
+
+# Create Scheduler
+@login_required
+def cfo_create_scheduler(request):
+    if request.method == 'POST':
+        school_id = request.POST.get('school')
+        teacher_id = request.POST.get('teacher')
+        grade_id = request.POST.get('grade')
+        division_id = request.POST.get('division')
+        module_id = request.POST.get('module')
+        lesson_id = request.POST.get('lesson')
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        all_day = request.POST.get('all_day') == 'on'
+
+        scheduler = LXPModel.Scheduler(
+            school=LXPModel.School.objects.get(id=school_id),
+            teacher=LXPModel.User.objects.get(id=teacher_id),
+            grade=LXPModel.Grade.objects.get(id=grade_id),
+            division=LXPModel.Division.objects.get(id=division_id),
+            module=LXPModel.Module.objects.get(id=module_id),
+            lesson=LXPModel.Lesson.objects.get(id=lesson_id),
+            start=start,
+            end=end,
+            all_day=all_day
+        )
+        scheduler.save()
+        return redirect('scheduler_list')
+    
+    schools = LXPModel.School.objects.all()
+    grades = LXPModel.Grade.objects.all()
+    return render(request, 'staff/scheduler/create_scheduler.html', {'schools': schools,'grades': grades})
+
+
+@login_required
+def cfo_update_scheduler(request, scheduler_id):
+    # Get the Scheduler object to be updated
+    scheduler = get_object_or_404(LXPModel.Scheduler, id=scheduler_id)
+    
+    if request.method == "POST":
+        # Process the form data
+        school_id = request.POST.get('school')
+        teacher_id = request.POST.get('teacher')
+        grade_id = request.POST.get('grade')
+        division_id = request.POST.get('division')
+        title = request.POST.get('title')
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        all_day = 'all_day' in request.POST
+        
+        # Update the scheduler instance
+        scheduler.school = LXPModel.School.objects.get(id=school_id)
+        scheduler.teacher = LXPModel.User.objects.get(id=teacher_id)
+        scheduler.grade = LXPModel.Grade.objects.get(id=grade_id)
+        scheduler.division = LXPModel.Division.objects.get(id=division_id)
+        scheduler.title = title
+        scheduler.start = start
+        scheduler.end = end if end else None
+        scheduler.all_day = all_day
+        
+        scheduler.save()
+        
+        messages.success(request, 'Scheduler updated successfully!')
+        return redirect('scheduler_list')  # Redirect to the scheduler list or another page as needed
+
+    else:
+        # GET request: Fetch data for the form
+        schools = LXPModel.School.objects.all()
+        teachers = LXPModel.User.objects.filter(school=scheduler.school)  # Assuming a user (teacher) is linked to a school
+        grades = LXPModel.Grade.objects.all()
+        divisions = LXPModel.Division.objects.all()
+
+        # Return the form with current scheduler data
+        context = {
+            'scheduler': scheduler,
+            'schools': schools,
+            'teachers': teachers,
+            'grades': grades,
+            'divisions': divisions,
+        }
+        return render(request, 'staff/scheduler/update_scheduler.html', context)
+    
+# List all Schedulers
+@login_required
+def cfo_scheduler_list(request):
+    schedulers = LXPModel.Scheduler.objects.all()
+    return render(request, 'staff/scheduler/scheduler_list.html', {'schedulers': schedulers})
+
+
+# List scheduler_calender
+@login_required
+def cfo_scheduler_calender(request):
+    # Get schedulers for the logged-in teacher and use Coalesce to replace None with 0 for status_sum
+    schedulers = LXPModel.Scheduler.objects.annotate(
+        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
+        completion_date=Case(
+            When(status_sum__gte=100, then=Max('schedulerstatus__date')),
+            default=Value(None),
+        )
+    )
+    return render(request, 'staff/scheduler/scheduler_calender.html', {'schedulers': schedulers})
+
+
+# Delete Scheduler
+@login_required
+def cfo_delete_scheduler(request, scheduler_id):
+    scheduler = get_object_or_404(LXPModel.Scheduler, id=scheduler_id)
+    scheduler.delete()
+    return redirect('scheduler_list')    
