@@ -16,9 +16,7 @@ logout_time  = datetime.now()
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.urls import reverse
-from lxpapp.models import UserProfile
-from django.contrib import messages
-from django.core.files.storage import default_storage
+
 @login_required
 def switch_user_view(request):
     logout(request)
@@ -154,14 +152,14 @@ def afterlogin_view(request):
                         return render(request,'learner/learner_dashboard.html')
                     else:
                         if request.method=='POST':
-                            profile_img = request.FILES.get('profile_img')
+                            profile_pic = request.FILES.get('profile_pic')
                             user_full_name = request.POST["user_full_name"]
                             mobile = request.POST["mobile"]
                             whatsappno = request.POST["whatsappno"]
                             learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
                                                                                 user_full_name= user_full_name,
                                                                                 mobile=mobile,
-                                                                                whatsappno=whatsappno,profile_img=profile_img)
+                                                                                whatsappno=whatsappno,profile_pic=profile_pic)
                             learnerdetails.save()
                             logout(request)
                             return HttpResponseRedirect('indexpage')  
@@ -363,68 +361,7 @@ def delete_user_view(request,userid,pk):
     except:
         return render(request,'lxpapp/404page.html')
     
-@login_required
-def user_profile_view(request):
-    userdetails = User.objects.prefetch_related(
-                        'social_auth',  
-                        'userprofile_set'   
-                    ).all().filter(id = request.user.id).first()
-    
-    base_template = 'base.html'  # Default base template
-    if userdetails:
-        if userdetails.social_auth.first().utype == 1:
-            base_template = 'trainer/trainerbase.html'
-        elif userdetails.social_auth.first().utype == 3:
-            base_template = 'cto/ctobase.html'
-        elif userdetails.social_auth.first().utype == 4:
-            base_template = 'cfo/cfobase.html'
-    return render(request,'lxpapp/users/user_profile.html',{'userdetails':userdetails,'base_template': base_template})
 
-@login_required
-def user_profile_update_view(request):
-    if request.method == 'POST':
-        userdetails = models.UserProfile.objects.all().filter(user_id = request.user.id).first()
-        if not userdetails:
-            userdetails = models.UserProfile.objects.create(user_id=request.user.id)
-        userdetails.regdate = request.POST['regdate']
-        userdetails.contactno = request.POST['contactno']
-        userdetails.skills = request.POST['skills']
-        userdetails.bio = request.POST['bio']
-        userdetails.save()
-        profile_img = request.FILES.get('profile_img')
-        
-        # If a profile picture was uploaded
-        if profile_img:
-            # Generate the custom file name: username_userid.extension
-            file_extension = os.path.splitext(profile_img.name)[1]  # Get the file extension
-            new_file_name = f"{userdetails.user.first_name}_{userdetails.user.id}{file_extension}"
-            
-            # Define the path where the file will be saved
-            file_path = userdetails.profile_img.storage.path(new_file_name)
-            
-            # Check if a file with the same name exists and delete it
-            if default_storage.exists(new_file_name):
-                default_storage.delete(new_file_name)
-
-            # Save the new profile pic with the new file name
-            userdetails.profile_img.save(new_file_name, profile_img)
-        userdetails.save
-        messages.info(request, 'Record Updated Successfully')
-        return HttpResponseRedirect('user-profile')
-    userdetails = User.objects.prefetch_related(
-                        'social_auth',  
-                        'userprofile_set'   
-                    ).all().filter(id = request.user.id).first()
-    
-    base_template = 'base.html'  # Default base template
-    if userdetails:
-        if userdetails.social_auth.first().utype == 1:
-            base_template = 'trainer/trainerbase.html'
-        elif userdetails.social_auth.first().utype == 3:
-            base_template = 'cto/ctobase.html'
-        elif userdetails.social_auth.first().utype == 4:
-            base_template = 'cfo/cfobase.html'
-    return render(request,'lxpapp/users/user_profile_update.html',{'userdetails':userdetails,'base_template': base_template})
 from googleapiclient.discovery import build
 from django.conf import settings
 

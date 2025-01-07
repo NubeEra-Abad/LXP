@@ -4,17 +4,15 @@
                 <div class="profile-bg">
                     <img src="/static/dreamlms/img/instructor-profile-bg.jpg" alt="">
                     <div class="profile-img">
-                        {% if userdetails.userprofile_set.first.profile_img %}
-                    <a href="{% url 'user-profile' %}"><img src="{{ request.user.userprofile_set.first.profile_img.url }}" alt=""></a>
-                    {% endif %}
+                        <!-- <a href="instructor-profile.html"><img src="{{request.user.profile_pic}}" alt=""></a> -->
                     </div>
                 </div>
                 <div class="profile-group">
                     <div class="profile-name text-center">
-                        <a href={% url 'user-profile' %}>{{request.user.first_name}} {{request.user.last_name}}</a>
-                        <h6><a href={% url 'user-profile' %}>({{request.user.username}})</a></h6>
+                        <h4><a href="instructor-profile.html">{{request.user.first_name}} {{request.user.last_name}}</a></h4>
+                        <h6><a href="instructor-profile.html">({{request.user.username}})</a></h6>
                         <h6>CFO</h6>
-                        
+                        <!-- <img src="request.user.social_auth.model.pic" alt=""> -->
                     </div>
                 </div>
             </div>
@@ -24,17 +22,17 @@
                 <h3>DASHBOARD</h3>
                 <ul>
                     <li class="nav-item active">
-                        <a href="{% url 'cfo-dashboard'%}" class="nav-link">
+                        <a href="../../../../cfo/cfo-dashboard" class="nav-link">
                             <i class="feather-home"></i> My Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'cfo-view-coursetype'%}" class="nav-link">
+                        <a href="../../../../cfo/cfo-view-coursetype" class="nav-link">
                             <i class="feather-book"></i> Course Type
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'cfo-view-batch'%}" class="nav-link">
+                        <a href="../../../../cfo/cfo-view-batch" class="nav-link">
                             <i class="feather-star"></i> Batch
                         </a>
                     </li>
@@ -79,12 +77,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'user-profile-update'%}" class="nav-link">
-                            <i class="feather-power"></i> Update Profile
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'logout'%}logout" class="nav-link">
+                        <a href="../../../../logout" class="nav-link">
                             <i class="feather-power"></i> Sign Out
                         </a>
                     </li>

@@ -12,14 +12,6 @@ class UserLog(models.Model):
     logout = models.DateTimeField(default=datetime.datetime.now)
     dur = models.CharField(default='',max_length=200)
     session_id = models.CharField(default='',max_length=200)
-    
-class UserProfile(models.Model):
-    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    regdate =  models.DateTimeField(default=datetime.datetime.now)
-    contactno = models.CharField(default='',max_length=200)
-    skills = models.CharField(default='',max_length=200)
-    bio = models.CharField(default='',max_length=2000)
-    profile_img = models.ImageField(upload_to='profile_img/', blank=True, null=True)
 
 class UserPics(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
