@@ -42,7 +42,8 @@ urlpatterns = [
     path('delete-user/<userid>/<int:pk>', views.delete_user_view,name='delete-user'),
     
     path('activate/<str:uidb64>/<str:token>/', activate.activate, name='activate'),
-    
+    path('user-profile', views.user_profile_view,name='user-profile'),
+    path('user-profile-update', views.user_profile_update_view,name='user-profile-update'),
     # path('userlogin', LoginView.as_view(template_name='lxpapp/users/login.html'),name='userlogin'),
     path('register', LoginView.as_view(template_name='loginrelated/register.html'),name='register'),
     path('user-change-password', views.user_change_password_view,name='user-change-password'),
