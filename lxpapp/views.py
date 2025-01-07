@@ -16,6 +16,17 @@ logout_time  = datetime.now()
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.urls import reverse
+from django.contrib.auth.views import LoginView
+
+
+
+class CustomLoginView(LoginView):
+    template_name = 'loginrelated/userlogin.html'  # Your login template path
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('indexpage')  # Replace 'indexpage' with your indexpage URL name
+        return super().get(request, *args, **kwargs)
 
 @login_required
 def switch_user_view(request):
