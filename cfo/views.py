@@ -9,9 +9,11 @@ from django.shortcuts import (HttpResponse, HttpResponseRedirect,
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
+from social_django.models import UserSocialAuth
 import json
 from django.db.models import Exists, OuterRef,Case, When, Value, IntegerField,F, Value, Q, Sum, Max
 from django.db.models.functions import Coalesce
+from django.http import JsonResponse
 @login_required    
 def cfo_dashboard_view(request):
     try:
@@ -287,34 +289,37 @@ def cfo_delete_batch_view(request,pk):
 # Create Scheduler
 @login_required
 def cfo_create_scheduler(request):
+    if str(request.session['utype']) != 'cfo':
+        return render(request,'lxpapp/404page.html')
     if request.method == 'POST':
-        school_id = request.POST.get('school')
-        teacher_id = request.POST.get('teacher')
-        grade_id = request.POST.get('grade')
-        division_id = request.POST.get('division')
-        module_id = request.POST.get('module')
-        lesson_id = request.POST.get('lesson')
+        trainer = request.POST.get('trainer')
+        subject = request.POST.get('subject')
+        chapter = request.POST.get('chapter')
+        topic = request.POST.get('topic')
         start = request.POST.get('start')
         end = request.POST.get('end')
-        all_day = request.POST.get('all_day') == 'on'
 
         scheduler = LXPModel.Scheduler(
-            school=LXPModel.School.objects.get(id=school_id),
-            teacher=LXPModel.User.objects.get(id=teacher_id),
-            grade=LXPModel.Grade.objects.get(id=grade_id),
-            division=LXPModel.Division.objects.get(id=division_id),
-            module=LXPModel.Module.objects.get(id=module_id),
-            lesson=LXPModel.Lesson.objects.get(id=lesson_id),
+            subject=LXPModel.Subject.objects.get(id=subject),
+            trainer=LXPModel.User.objects.get(id=trainer),
+            chapter=LXPModel.Chapter.objects.get(id=chapter),
+            topic=LXPModel.Topic.objects.get(id=topic),
             start=start,
-            end=end,
-            all_day=all_day
+            end=end
         )
         scheduler.save()
-        return redirect('scheduler_list')
+        return redirect('cfo-scheduler-list')
     
-    schools = LXPModel.School.objects.all()
-    grades = LXPModel.Grade.objects.all()
-    return render(request, 'staff/scheduler/create_scheduler.html', {'schools': schools,'grades': grades})
+    subjects = LXPModel.Subject.objects.all()
+    trainers = UserSocialAuth.objects.select_related('user').order_by('user__first_name', 'user__last_name').values(
+                    'id', 
+                    'user_id', 
+                    'user__first_name', 
+                    'user__last_name', 
+                    'utype'
+                ).filter(utype=1)
+    
+    return render(request, 'cfo/scheduler/create_scheduler.html', {'trainers': trainers,'subjects': subjects})
 
 
 @login_required
@@ -324,58 +329,65 @@ def cfo_update_scheduler(request, scheduler_id):
     
     if request.method == "POST":
         # Process the form data
-        school_id = request.POST.get('school')
-        teacher_id = request.POST.get('teacher')
-        grade_id = request.POST.get('grade')
-        division_id = request.POST.get('division')
-        title = request.POST.get('title')
+        trainer = request.POST.get('trainer')
+        subject = request.POST.get('subject')
+        chapter = request.POST.get('chapter')
+        topic = request.POST.get('topic')
         start = request.POST.get('start')
         end = request.POST.get('end')
-        all_day = 'all_day' in request.POST
         
         # Update the scheduler instance
-        scheduler.school = LXPModel.School.objects.get(id=school_id)
-        scheduler.teacher = LXPModel.User.objects.get(id=teacher_id)
-        scheduler.grade = LXPModel.Grade.objects.get(id=grade_id)
-        scheduler.division = LXPModel.Division.objects.get(id=division_id)
-        scheduler.title = title
+        scheduler.subject = LXPModel.Subject.objects.get(id=subject)
+        scheduler.trainer = LXPModel.User.objects.get(id=trainer)
+        scheduler.chapter = LXPModel.Chapter.objects.get(id=chapter)
+        scheduler.topic = LXPModel.Topic.objects.get(id=topic)
         scheduler.start = start
         scheduler.end = end if end else None
-        scheduler.all_day = all_day
         
         scheduler.save()
         
         messages.success(request, 'Scheduler updated successfully!')
-        return redirect('scheduler_list')  # Redirect to the scheduler list or another page as needed
+        return redirect('cfo-scheduler-list')  # Redirect to the scheduler list or another page as needed
 
     else:
-        # GET request: Fetch data for the form
-        schools = LXPModel.School.objects.all()
-        teachers = LXPModel.User.objects.filter(school=scheduler.school)  # Assuming a user (teacher) is linked to a school
-        grades = LXPModel.Grade.objects.all()
-        divisions = LXPModel.Division.objects.all()
-
+        subjects = LXPModel.Subject.objects.all()
+        trainers = UserSocialAuth.objects.select_related('user').order_by('user__first_name', 'user__last_name').values(
+                    'id', 
+                    'user_id', 
+                    'user__first_name', 
+                    'user__last_name', 
+                    'utype'
+                ).filter(utype=1)
+        topics = LXPModel.Scheduler.objects.select_related('topic').values(
+                    'id', 
+                    'topic__id', 
+                    'topic__topic_name'
+                ).filter(id=scheduler_id)
+        chapters = LXPModel.Scheduler.objects.select_related('chapter').values(
+                    'id', 
+                    'chapter__id', 
+                    'chapter__chapter_name'
+                ).filter(id=scheduler_id)
         # Return the form with current scheduler data
         context = {
             'scheduler': scheduler,
-            'schools': schools,
-            'teachers': teachers,
-            'grades': grades,
-            'divisions': divisions,
+            'subjects': subjects,
+            'chapters': chapters,
+            'topics': topics,
+            'trainers': trainers
         }
-        return render(request, 'staff/scheduler/update_scheduler.html', context)
+        return render(request, 'cfo/scheduler/update_scheduler.html', context)
     
 # List all Schedulers
 @login_required
 def cfo_scheduler_list(request):
     schedulers = LXPModel.Scheduler.objects.all()
-    return render(request, 'staff/scheduler/scheduler_list.html', {'schedulers': schedulers})
+    return render(request, 'cfo/scheduler/scheduler_list.html', {'schedulers': schedulers})
 
 
 # List scheduler_calender
 @login_required
 def cfo_scheduler_calender(request):
-    # Get schedulers for the logged-in teacher and use Coalesce to replace None with 0 for status_sum
     schedulers = LXPModel.Scheduler.objects.annotate(
         status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
         completion_date=Case(
@@ -383,8 +395,7 @@ def cfo_scheduler_calender(request):
             default=Value(None),
         )
     )
-    return render(request, 'staff/scheduler/scheduler_calender.html', {'schedulers': schedulers})
-
+    return render(request, 'cfo/scheduler/scheduler_calender.html', {'schedulers': schedulers})
 
 # Delete Scheduler
 @login_required
@@ -392,3 +403,15 @@ def cfo_delete_scheduler(request, scheduler_id):
     scheduler = get_object_or_404(LXPModel.Scheduler, id=scheduler_id)
     scheduler.delete()
     return redirect('scheduler_list')    
+
+
+@login_required
+def get_chapters(request, subject_id):
+    chapters = LXPModel.Chapter.objects.all().filter(subject_id = subject_id)  # Adjust logic if needed
+    return JsonResponse([{'id': chapter.id, 'name': chapter.chapter_name} for chapter in chapters], safe=False)
+
+@login_required
+def get_topics(request, chapter_id):
+    topics = LXPModel.Topic.objects.all().filter(chapter_id = chapter_id)
+    return JsonResponse([{'id': topic.id, 'name': topic.topic_name} for topic in topics], safe=False)
+

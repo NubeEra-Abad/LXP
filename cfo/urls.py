@@ -17,9 +17,11 @@ urlpatterns = [
     path('cfo-delete-batch/<int:pk>', views.cfo_delete_batch_view,name='cfo-delete-batch'),
     path('cfo-view-batch-details/<batchname>/<int:pk>', views.cfo_view_batch_details_view,name='cfo-view-batch-details'),
     
-     path('cfo-schedule-create/', views.cfo_create_scheduler, name='cfo-create-scheduler'),
+     path('cfo-scheduler-create/', views.cfo_create_scheduler, name='cfo-scheduler-create'),
     path('cfo-scheduler-update/<int:scheduler_id>/', views.cfo_update_scheduler, name='cfo-update-scheduler'),
     path('cfo-scheduler-list/', views.cfo_scheduler_list, name='cfo-scheduler-list'),
     path('cfo-scheduler-calender/', views.cfo_scheduler_calender, name='cfo-scheduler-calender'),
     path('cfo-scheduler-delete/<int:scheduler_id>/', views.cfo_delete_scheduler, name='cfo-delete-scheduler'),
+    path('get_chapters/<int:subject_id>/', views.get_chapters, name='get_chapters'),
+    path('get_topics/<int:chapter_id>/', views.get_topics, name='get_topics'),
 ]

@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 from django.db.models import Sum,Count,Q
 from django.urls import reverse
 from social_django.models import UserSocialAuth
-
+from django.db.models import Exists, OuterRef,Case, When, Value, IntegerField,F, Value, Q, Sum, Max
+from django.db.models.functions import Coalesce
 @login_required    
 def trainer_dashboard_view(request):
     #try:
@@ -1242,3 +1243,14 @@ def trainer_cloudshell_terminal_view(request):
             return render(request,'trainer/labs/cloudshell/trainer_cloudshell_terminal.html')
     except:
         return render(request,'lxpapp/404page.html')
+
+@login_required
+def trainer_scheduler_calender(request):
+    schedulers = LXPModel.Scheduler.objects.annotate(
+        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
+        completion_date=Case(
+            When(status_sum__gte=100, then=Max('schedulerstatus__date')),
+            default=Value(None),
+        )
+    ).filter(trainer_id = request.user.id)
+    return render(request, 'trainer/calender/trainer_calender.html', {'schedulers': schedulers})
