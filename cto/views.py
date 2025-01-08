@@ -258,7 +258,7 @@ def cto_delete_mainhead_view(request,pk):
         if str(request.session['utype']) == 'cto':  
             mainhead=LXPModel.MainHead.objects.get(id=pk)
             mainhead.delete()
-            return HttpResponseRedirect('/cto/mainhead/cto-view-mainhead')
+            return HttpResponseRedirect('/cto/cto-view-mainhead')
         mainheads = LXPModel.MainHead.objects.all()
         return render(request,'cto/mainhead/cto_view_mainhead.html',{'mainheads':mainheads})
     except:
@@ -429,7 +429,7 @@ def cto_delete_subject_view(request,pk):
         if str(request.session['utype']) == 'cto':  
             subject=LXPModel.Subject.objects.get(id=pk)
             subject.delete()
-            return HttpResponseRedirect('/cto/subject/cto-view-subject')
+            return HttpResponseRedirect('/cto/cto-view-subject')
         subjects = LXPModel.Subject.objects.all()
         return render(request,'cto/subject/cto_view_subject.html',{'subjects':subjects})
     except:
@@ -862,7 +862,7 @@ def cto_delete_topic_view(request,pk):
         if str(request.session['utype']) == 'cto':  
             topic=LXPModel.Topic.objects.get(id=pk)
             topic.delete()
-            return HttpResponseRedirect('/cto/topic/cto-view-topic')
+            return HttpResponseRedirect('/cto/cto-view-topic')
         topics = LXPModel.Topic.objects.all()
         return render(request,'cto/topic/cto_view_topic.html',{'topics':topics})
     except:
