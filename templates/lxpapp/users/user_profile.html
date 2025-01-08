@@ -66,10 +66,10 @@
                     </div>
                   </div>
                   <label class="form-control-label">Profile Picture</label>
-                  {% if userdetails.userprofile_set.first.profile_img %}
+                  {% if userdetails.userprofile_set.first.profile_pic %}
 
                   <div class="live-img position-relative">
-                    <img class="img-fluid" src="{{ userdetails.userprofile_set.first.profile_img.url }}" alt="images">
+                    <img class="img-fluid" src="{{ userdetails.userprofile_set.first.profile_pic.url }}" alt="images">
                     
                   </div>
                       {% endif %}

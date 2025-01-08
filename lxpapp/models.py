@@ -19,7 +19,7 @@ class UserProfile(models.Model):
     contactno = models.CharField(default='',max_length=200)
     skills = models.CharField(default='',max_length=200)
     bio = models.CharField(default='',max_length=2000)
-    profile_img = models.ImageField(upload_to='profile_img/', blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='profile_pic/', blank=True, null=True)
 
 class UserPics(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
