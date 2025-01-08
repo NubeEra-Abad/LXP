@@ -700,13 +700,17 @@ class K8STerminalLearnerCount(models.Model):
     usedvalue=models.PositiveIntegerField(default=0)
     
 
-class Scheduler(models.Model): 
+class Scheduler(models.Model):
+    
     trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    cat=(('1','Lecture'),('2','Event'))
+    type=models.CharField(max_length=200,choices=cat,null=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
+    eventdetails=models.CharField(max_length=200,null=True)
     
     def __str__(self):
         # Return a formatted string instead of a datetime object

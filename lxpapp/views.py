@@ -164,14 +164,14 @@ def afterlogin_view(request):
                         return render(request,'learner/learner_dashboard.html')
                     else:
                         if request.method=='POST':
-                            profile_img = request.FILES.get('profile_img')
+                            profile_pic = request.FILES.get('profile_pic')
                             user_full_name = request.POST["user_full_name"]
                             mobile = request.POST["mobile"]
                             whatsappno = request.POST["whatsappno"]
                             learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
                                                                                 user_full_name= user_full_name,
                                                                                 mobile=mobile,
-                                                                                whatsappno=whatsappno,profile_img=profile_img)
+                                                                                whatsappno=whatsappno,profile_pic=profile_pic)
                             learnerdetails.save()
                             logout(request)
                             return HttpResponseRedirect('indexpage')  

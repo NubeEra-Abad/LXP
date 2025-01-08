@@ -293,19 +293,32 @@ def cfo_create_scheduler(request):
         return render(request,'lxpapp/404page.html')
     if request.method == 'POST':
         trainer = request.POST.get('trainer')
+        type = request.POST.get('type')
         subject = request.POST.get('subject')
         chapter = request.POST.get('chapter')
         topic = request.POST.get('topic')
         start = request.POST.get('start')
         end = request.POST.get('end')
-
+        eventdetails = request.POST.get('eventdetails')
+        trainer=LXPModel.User.objects.get(id=trainer)
+        if  type == '1':
+            subject=LXPModel.Subject.objects.get(id=subject)
+            chapter=LXPModel.Chapter.objects.get(id=chapter)
+            topic=LXPModel.Topic.objects.get(id=topic)    
+            eventdetails = None
+        else:
+            subject=None
+            chapter=None
+            topic=None
+            
         scheduler = LXPModel.Scheduler(
-            subject=LXPModel.Subject.objects.get(id=subject),
-            trainer=LXPModel.User.objects.get(id=trainer),
-            chapter=LXPModel.Chapter.objects.get(id=chapter),
-            topic=LXPModel.Topic.objects.get(id=topic),
+            subject=subject,
+            trainer=trainer,
+            chapter=chapter,
+            topic=topic,
             start=start,
-            end=end
+            end=end,
+            eventdetails=eventdetails
         )
         scheduler.save()
         return redirect('cfo-scheduler-list')
@@ -328,22 +341,34 @@ def cfo_update_scheduler(request, scheduler_id):
     scheduler = get_object_or_404(LXPModel.Scheduler, id=scheduler_id)
     
     if request.method == "POST":
-        # Process the form data
         trainer = request.POST.get('trainer')
+        type = request.POST.get('type')
         subject = request.POST.get('subject')
         chapter = request.POST.get('chapter')
         topic = request.POST.get('topic')
         start = request.POST.get('start')
         end = request.POST.get('end')
+        eventdetails = request.POST.get('eventdetails')
+        trainer=LXPModel.User.objects.get(id=trainer)
+        if  type == '1':
+            subject=LXPModel.Subject.objects.get(id=subject)
+            chapter=LXPModel.Chapter.objects.get(id=chapter)
+            topic=LXPModel.Topic.objects.get(id=topic)    
+            eventdetails = None
+        else:
+            subject=None
+            chapter=None
+            topic=None
         
         # Update the scheduler instance
-        scheduler.subject = LXPModel.Subject.objects.get(id=subject)
-        scheduler.trainer = LXPModel.User.objects.get(id=trainer)
-        scheduler.chapter = LXPModel.Chapter.objects.get(id=chapter)
-        scheduler.topic = LXPModel.Topic.objects.get(id=topic)
+        scheduler.type = type
+        scheduler.subject = subject
+        scheduler.trainer = trainer
+        scheduler.chapter = chapter
+        scheduler.topic = topic
         scheduler.start = start
         scheduler.end = end if end else None
-        
+        scheduler.eventdetails = eventdetails
         scheduler.save()
         
         messages.success(request, 'Scheduler updated successfully!')
