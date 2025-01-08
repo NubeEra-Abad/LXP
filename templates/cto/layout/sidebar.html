@@ -7,8 +7,8 @@
             <div class="profile-bg">
                 <img src="/static/dreamlms/img/instructor-profile-bg.jpg" alt="">
                 <div class="profile-img">
-                    {% if userdetails.userprofile_set.first.profile_pic %}
-                    <a href="{% url 'user-profile' %}"><img src="{{ request.user.userprofile_set.first.profile_pic.url }}" alt=""></a>
+                    {% if userdetails.userprofile_set.first.profile_img %}
+                    <a href="{% url 'user-profile' %}"><img src="{{ request.user.userprofile_set.first.profile_img.url }}" alt=""></a>
                     {% endif %}
                 </div>
             </div> 

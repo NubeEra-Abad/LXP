@@ -50,10 +50,10 @@
                   <div class="row">
                     <div class="mb-3 col-md-2">
                       <label class="form-control-label">Profile Picture</label>
-                      {% if userdetails.userprofile_set.first.profile_pic %}
-                          <img class="img-fluid" src="{{ userdetails.userprofile_set.first.profile_pic.url }}" alt="Profile Picture" style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
+                      {% if userdetails.userprofile_set.first.profile_img %}
+                          <img class="img-fluid" src="{{ userdetails.userprofile_set.first.profile_img.url }}" alt="Profile Picture" style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
                       {% endif %}
-                      <input type="file" id="profile_pic" name="profile_pic" class="form-control" {% if not userdetails.userprofile_set.first.profile_pic %} required {% endif %}>
+                      <input type="file" id="profile_img" name="profile_img" class="form-control" {% if not userdetails.userprofile_set.first.profile_img %} required {% endif %}>
                   </div>
                   </div>
                   <button class="btn btn-primary" type="submit">update</button>

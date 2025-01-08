@@ -401,23 +401,23 @@ def user_profile_update_view(request):
         userdetails.skills = request.POST['skills']
         userdetails.bio = request.POST['bio']
         userdetails.save()
-        profile_pic = request.FILES.get('profile_pic')
+        profile_img = request.FILES.get('profile_img')
         
         # If a profile picture was uploaded
-        if profile_pic:
+        if profile_img:
             # Generate the custom file name: username_userid.extension
-            file_extension = os.path.splitext(profile_pic.name)[1]  # Get the file extension
+            file_extension = os.path.splitext(profile_img.name)[1]  # Get the file extension
             new_file_name = f"{userdetails.user.first_name}_{userdetails.user.id}{file_extension}"
             
             # Define the path where the file will be saved
-            file_path = userdetails.profile_pic.storage.path(new_file_name)
+            file_path = userdetails.profile_img.storage.path(new_file_name)
             
             # Check if a file with the same name exists and delete it
             if default_storage.exists(new_file_name):
                 default_storage.delete(new_file_name)
 
             # Save the new profile pic with the new file name
-            userdetails.profile_pic.save(new_file_name, profile_pic)
+            userdetails.profile_img.save(new_file_name, profile_img)
         userdetails.save
         messages.info(request, 'Record Updated Successfully')
         return HttpResponseRedirect('user-profile')
