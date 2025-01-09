@@ -299,7 +299,7 @@ def cfo_create_scheduler(request):
         topic = request.POST.get('topic')
         start = request.POST.get('start')
         end = request.POST.get('end')
-        eventdetails = request.POST.get('eventdetails')
+        eventdetails = request.POST.get('eventdetail')
         trainer=LXPModel.User.objects.get(id=trainer)
         if  type == '1':
             subject=LXPModel.Subject.objects.get(id=subject)

@@ -1,14 +1,13 @@
 {% extends 'cfo/cfobase.html' %}
-{% block content %}
+{% block content %} 
 {% load static %}
-
-<link rel="stylesheet" href="/static/get/css/style.css">
+<link rel="stylesheet" href="/static/get/css/style.css" />
 
 <style>
-  ol.breadcrumb li+li:before {
-    content: '\f061';
+  ol.breadcrumb li + li:before {
+    content: "\f061";
     display: inline-block;
-    font-family: 'fontAwesome';
+    font-family: "fontAwesome";
     padding: 0 10px;
   }
 </style>
@@ -16,9 +15,10 @@
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li><a href="{% url 'cfo-dashboard' %}">Dashboard</a></li>
-        <li><a href="{% url 'scheduler_list' %}">Scheduler List</a></li>
-        <li aria-current="page">Update Scheduler</li>
+      <li><a href="{% url 'cfo-dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'cfo-scheduler-list' %}">Scheduler List</a></li>
+      <li><a href="{% url 'cfo-scheduler-create' %}">Create Scheduler</a></li>
+      <li aria-current="page">Update Scheduler</li>
     </ol>
   </nav>
 </div>
@@ -30,7 +30,7 @@
             <div class="modal-dialog modal-dialog-centered"> <!-- Added modal-dialog-centered class -->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">STEAM Education</h5>
+                        <h5 class="modal-title" id="successModalLabel">NubeEra LXP</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -63,148 +63,167 @@
 </script>
 
 <form method="POST" action="">
-    {% csrf_token %}
-    <div class="row">
-        <div class="col-xl-6 col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Update Scheduler</h4>
-                </div>
-                <div class="card-body">
-                    <div class="basic-form">
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">School</label>
-                            <div class="col-sm-9">
-                                <select name="school" id="school" class="form-control" onchange="fetchTeachers()" required>
-                                    <option value="">Select School</option>
-                                    {% for school in schools %}
-                                        <option value="{{ school.id }}" {% if school.id == scheduler.school.id %} selected {% endif %}>{{ school.school_name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Teacher</label>
-                            <div class="col-sm-9">
-                                <select name="teacher" id="teacher" class="form-control" onchange="fetchGrades()" required>
-                                    <option value="">Select Teacher</option>
-                                    {% for teacher in teachers %}
-                                        <option value="{{ teacher.id }}" {% if teacher.id == scheduler.teacher.id %} selected {% endif %}>{{ teacher.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Grade</label>
-                            <div class="col-sm-9">
-                                <select name="grade" id="grade" class="form-control" onchange="fetchDivisions()" required>
-                                    <option value="">Select Grade</option>
-                                    {% for grade in grades %}
-                                        <option value="{{ grade.id }}" {% if grade.id == scheduler.grade.id %} selected {% endif %}>{{ grade.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Division</label>
-                            <div class="col-sm-9">
-                                <select name="division" id="division" class="form-control" required>
-                                    <option value="">Select Division</option>
-                                    {% for division in divisions %}
-                                        <option value="{{ division.id }}" {% if division.id == scheduler.division.id %} selected {% endif %}>{{ division.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Title</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="title" class="form-control" placeholder="Enter Title" value="{{ scheduler.title }}" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Start Date</label>
-                            <div class="col-sm-9">
-                                <input type="datetime-local" class="form-control" name="start" value="{{ scheduler.start|date:'Y-m-d\TH:i' }}" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">End Date</label>
-                            <div class="col-sm-9">
-                                <input type="datetime-local" class="form-control" name="end" value="{{ scheduler.end|date:'Y-m-d\TH:i' }}">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">All Day</label>
-                            <div class="col-sm-9">
-                                <input type="checkbox" name="all_day" {% if scheduler.all_day %} checked {% endif %}>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Update Scheduler</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-xl-12 col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Update Scheduler</h4>
         </div>
+        <div class="card-body">
+          <div class="basic-form">
+            <div class="mb-3 row">
+              <label class="col-sm-3 col-form-label">Trainers</label>
+              <div class="col-sm-9">
+                <select
+                  name="trainer"
+                  id="trainer"
+                  class="form-control"
+                  required
+                >
+                  <option value="">Select Trainer</option>
+                  {% for trainer in trainers %}
+                    <option value="{{ trainer.user_id }}" {% if trainer.user_id == scheduler.trainer_id %} selected {% endif %}>{{ trainer.user__first_name }} {{ trainer.user__last_name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label class="col-sm-3 col-form-label">Subject</label>
+              <div class="col-sm-9">
+                <select
+                  name="subject"
+                  id="subject"
+                  class="form-control"
+                  onchange="fetchChapters()"
+                  required
+                >
+                  <option value="">Select Subject</option>
+                  {% for subject in subjects %}
+                  <option value="{{ subject.id }}" {% if subject.id == scheduler.subject.id %} selected {% endif %}>{{ subject.subject_name }} 
+
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label class="col-sm-3 col-form-label">Chapter</label>
+              <div class="col-sm-9">
+                <select
+                  name="chapter"
+                  id="chapter"
+                  class="form-control"
+                  onchange="fetchTopics()"
+                  required
+                >
+                  <option value="">Select Chapter</option>
+                  {% for chapter in chapters %}
+                  <option value="{{ chapter.chapter__id }}" {% if chapter.chapter__id == scheduler.chapter_id %} selected {% endif %}>{{ chapter.chapter__chapter_name }} 
+
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label class="col-sm-3 col-form-label">Topic</label>
+              <div class="col-sm-9">
+                <select
+                  name="topic"
+                  id="topic"
+                  class="form-control"
+                  required
+                >
+                  <option value="">Select Topic</option>
+                  {% for topic in topics %}
+                  <option value="{{ topic.topic__id }}" {% if topic.topic__id == scheduler.topic_id %} selected {% endif %}>{{ topic.topic__topic_name }} 
+
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+             <div class="mb-3 row">
+              <label class="col-sm-3 col-form-label">Start Date</label>
+              <div class="col-sm-9">
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  name="start"
+                  id="start"
+                  placeholder="Select Start Date"
+                  value="{{ scheduler.start|date:'Y-m-d\TH:i' }}"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label class="col-sm-3 col-form-label">End Date</label>
+              <div class="col-sm-9">
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  name="end"
+                  id="end"
+                  placeholder="Select End Date"
+                  value="{{ scheduler.end|date:'Y-m-d\TH:i' }}"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">
+                  Update Scheduler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </form>
-
 <script>
-    function fetchTeachers() {
-        var schoolId = document.getElementById('school').value;
-        if (schoolId) {
-            fetch("{% url 'get_teachers' school_id=0 %}".replace('0', schoolId))
-                .then(response => response.json())
-                .then(data => {
-                    let teacherSelect = document.getElementById('teacher');
-                    teacherSelect.innerHTML = "<option value=''>Select Teacher</option>";
-                    data.forEach(teacher => {
-                        teacherSelect.innerHTML += `<option value="${teacher.id}">${teacher.name}</option>`;
-                    });
-                });
-        }
+  function fetchChapters() {
+    var subjectId = document.getElementById("subject").value;
+    if (subjectId) {
+      fetch("{% url 'get_chapters' subject_id=0 %}".replace("0", subjectId)) // Replace '0' with the actual subjectId
+        .then((response) => response.json())
+        .then((data) => {
+          let chapterSelect = document.getElementById("chapter");
+          chapterSelect.innerHTML = "<option value=''>Select Chapter</option>";
+          data.forEach((chapter) => {
+            chapterSelect.innerHTML += `<option value="${chapter.id}">${chapter.name}</option>`;
+          });
+        });
     }
+  }
 
-    function fetchGrades() {
-        var teacherId = document.getElementById('teacher').value;
-        if (teacherId) {
-            fetch("{% url 'get_grades' teacher_id=0 %}".replace('0', teacherId))
-                .then(response => response.json())
-                .then(data => {
-                    let gradeSelect = document.getElementById('grade');
-                    gradeSelect.innerHTML = "<option value=''>Select Grade</option>";
-                    data.forEach(grade => {
-                        gradeSelect.innerHTML += `<option value="${grade.id}">${grade.name}</option>`;
-                    });
-                });
-        }
+  function fetchTopics() {
+    var chapterId = document.getElementById("chapter").value;
+    if (chapterId) {
+      fetch("{% url 'get_topics' chapter_id=0 %}".replace("0", chapterId)) // Replace '0' with the actual chapterId
+        .then((response) => response.json())
+        .then((data) => {
+          let topicSelect = document.getElementById("topic");
+          topicSelect.innerHTML = "<option value=''>Select Topic</option>";
+          data.forEach((topic) => {
+            topicSelect.innerHTML += `<option value="${topic.id}">${topic.name}</option>`;
+          });
+        });
     }
+  }
 
-    function fetchDivisions() {
-        var gradeId = document.getElementById('grade').value;
-        if (gradeId) {
-            fetch("{% url 'get_divisions' grade_id=0 %}".replace('0', gradeId))
-                .then(response => response.json())
-                .then(data => {
-                    let divisionSelect = document.getElementById('division');
-                    divisionSelect.innerHTML = "<option value=''>Select Division</option>";
-                    data.forEach(division => {
-                        divisionSelect.innerHTML += `<option value="${division.id}">${division.name}</option>`;
-                    });
-                });
-        }
-    }
+  
 </script>
 
-{% endblock %}
+{% endblock content %}

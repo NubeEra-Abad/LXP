@@ -1,10 +1,10 @@
 {% extends 'cfo/cfobase.html' %}
-{% block content %} 
+{% block content %}
 {% load static %}
 <link rel="stylesheet" href="/static/get/css/style.css" />
 
 <style>
-  ol.breadcrumb li + li:before {
+  ol.breadcrumb li+li:before {
     content: "\f061";
     display: inline-block;
     font-family: "fontAwesome";
@@ -23,45 +23,45 @@
 </div>
 
 {% if messages %}
-    {% for message in messages %}
-        <!-- Bootstrap Modal -->
-        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered"> <!-- Added modal-dialog-centered class -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">NubeEra LXP</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        {{ message }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+{% for message in messages %}
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <!-- Added modal-dialog-centered class -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="successModalLabel">NubeEra LXP</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{ message }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
 {% endif %}
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Show the modal when the DOM is ready
-        var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-            keyboard: false
-        });
-
-        // Show the modal
-        successModal.show();
-
-        // Hide the modal after 5 seconds
-        setTimeout(function() {
-            successModal.hide();
-        }, 3000);
+  document.addEventListener("DOMContentLoaded", function () {
+    // Show the modal when the DOM is ready
+    var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+      keyboard: false
     });
+
+    // Show the modal
+    successModal.show();
+
+    // Hide the modal after 5 seconds
+    setTimeout(function () {
+      successModal.hide();
+    }, 3000);
+  });
 </script>
 
-<form method="POST" action="">
+<form method="POST" action="{% url 'cfo-scheduler-create' %}">
   {% csrf_token %}
   <div class="row">
     <div class="col-xl-12 col-lg-12">
@@ -74,47 +74,31 @@
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Scheduler Type</label>
               <div class="col-sm-9">
-                <select
-                  name="type"
-                  id="type"
-                  class="form-control"
-                  required
-                >
+                <select name="type" id="type" class="form-control" required>
                   <option value="">Select Scheduler Type</option>
                   <option value="1">Lecture</option>
                   <option value="2">Event</option>
-                </select> 
+                </select>
               </div>
             </div>
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Trainers</label>
               <div class="col-sm-9">
-                <select
-                  name="trainer"
-                  id="trainer"
-                  class="form-control"
-                  required
-                >
+                <select name="trainer" id="trainer" class="form-control" required>
                   <option value="">Select Trainer</option>
                   {% for trainer in trainers %}
                   <option value="{{ trainer.user_id }}">
                     {{ trainer.user__first_name }} {{ trainer.user__last_name }}
                   </option>
                   {% endfor %}
-                </select> 
+                </select>
               </div>
             </div>
 
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Subject</label>
               <div class="col-sm-9">
-                <select
-                  name="subject"
-                  id="subject"
-                  class="form-control"
-                  onchange="fetchChapters()"
-                  required
-                >
+                <select name="subject" id="subject" class="form-control" onchange="fetchChapters()" required>
                   <option value="">Select Subject</option>
                   {% for subject in subjects %}
                   <option value="{{ subject.id }}">
@@ -128,13 +112,7 @@
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Chapter</label>
               <div class="col-sm-9">
-                <select
-                  name="chapter"
-                  id="chapter"
-                  class="form-control"
-                  onchange="fetchTopics()"
-                  required
-                >
+                <select name="chapter" id="chapter" class="form-control" onchange="fetchTopics()" required>
                   <option value="">Select Chapter</option>
                 </select>
               </div>
@@ -143,68 +121,45 @@
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Topic</label>
               <div class="col-sm-9">
-                <select
-                  name="topic"
-                  id="topic"
-                  class="form-control"
-                  required
-                >
+                <select name="topic" id="topic" class="form-control" required>
                   <option value="">Select Topic</option>
-                  
+
                 </select>
               </div>
             </div>
 
-             <div class="mb-3 row">
+            <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Start Date</label>
               <div class="col-sm-9">
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  name="start"
-                  id="start"
-                  placeholder="Select Start Date"
-                  required
-                />
+                <input type="datetime-local" class="form-control" name="start" id="start"
+                  placeholder="Select Start Date" required />
               </div>
             </div>
 
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">End Date</label>
               <div class="col-sm-9">
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  name="end"
-                  id="end"
-                  placeholder="Select End Date"
-                />
+                <input type="datetime-local" class="form-control" name="end" id="end" placeholder="Select End Date" />
               </div>
             </div>
 
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Event Details</label>
               <div class="col-sm-9">
-                <textarea
-                  class="form-control"
-                  name="eventdetails"
-                  id="eventdetails"
-                  placeholder="Enter Event Details"
-                  required
-                ></textarea>
+                <textarea id="eventdetail" name="eventdetail" rows="4" cols="50"></textarea>
               </div>
+            </div>
+            
             <div class="mb-3 row">
               <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">
-                  Create Scheduler
-                </button>
+                <button type="submit" class="btn btn-primary">Create Scheduler</button>
               </div>
+            </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </form>
 <script>
   function fetchChapters() {
@@ -237,7 +192,7 @@
     }
   }
 
-  
+
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -245,7 +200,7 @@
     const subjectRow = document.querySelector(".row select#subject").closest(".row");
     const chapterRow = document.querySelector(".row select#chapter").closest(".row");
     const topicRow = document.querySelector(".row select#topic").closest(".row");
-    const eventDetailsRow = document.querySelector(".row textarea#eventdetails").closest(".row");
+    const eventDetailsRow = document.querySelector(".row textarea#eventdetail").closest(".row");
 
     function toggleFields() {
       if (schedulerTypeSelect.value === "1") {

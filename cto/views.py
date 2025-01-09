@@ -437,7 +437,7 @@ def cto_delete_subject_view(request,pk):
 
 @login_required
 def cto_upload_subject_details_csv_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             if request.method=='POST':
                     file=request.FILES["select_file"]
@@ -448,6 +448,8 @@ def cto_upload_subject_details_csv_view(request):
                     oldchap=''
                     subid =0
                     chapid=0
+                    oldtp=''
+                    tpid =0
                     no = 0
                     for line in lines:						
                         no = no + 1
@@ -469,8 +471,18 @@ def cto_upload_subject_details_csv_view(request):
                                 if not chap:
                                     chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
                                     chap.save()
+                                    chapid=chap.id 
+                                else:
+                                    for x in chap:
+                                        chapid=x.id 
+                            if fields[2] != oldtp:
+                                oldtp = fields[2] 
+                                tp = LXPModel.Topic.objects.all().filter(topic_name__exact = oldtp,chapter_id=chapid)
+                                if not tp:
+                                    tp = LXPModel.Topic.objects.create(topic_name = oldtp,chapter_id=chapid)
+                                    tp.save()
             return render(request,'cto/subject/cto_upload_subject_details_csv.html')
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
