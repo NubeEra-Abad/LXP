@@ -10,6 +10,8 @@ from django.urls import reverse
 from social_django.models import UserSocialAuth
 from django.db.models import Exists, OuterRef,Case, When, Value, IntegerField,F, Value, Q, Sum, Max
 from django.db.models.functions import Coalesce
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 @login_required    
 def trainer_dashboard_view(request):
     #try:
@@ -19,8 +21,15 @@ def trainer_dashboard_view(request):
             short = LXPModel.Exam.objects.filter(questiontpye='ShortAnswer').count()
             mcqques= LXPModel.McqQuestion.objects.all().count()
             sques= LXPModel.ShortQuestion.objects.all().count()
+            schedulers = LXPModel.Scheduler.objects.annotate(
+                status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
+                completion_date=Case(
+                    When(status_sum__gte=100, then=Max('schedulerstatus__date')),
+                    default=Value(None),
+                )).filter(trainer_id = request.user.id, status_sum__lte=99)
             dict={
             'total_course':0,
+            schedulers:schedulers,
             'total_exam':0,
             'total_shortExam':0, 
             'total_question':0,
@@ -28,7 +37,7 @@ def trainer_dashboard_view(request):
             'total_learner':0,
             'notifications':notification,
             }
-            return render(request,'trainer/trainer_dashboard.html',context=dict)
+            return render(request,'trainer/trainer_dashboard.html',{'schedulers':schedulers,'mcqques':mcqques,'sques':sques,'mco':mco,'short':short,'dict':dict})
         else:
             return render(request,'loginrelated/diffrentuser.html')
     #except:
@@ -1254,3 +1263,126 @@ def trainer_scheduler_calender(request):
         )
     ).filter(trainer_id = request.user.id)
     return render(request, 'trainer/calender/trainer_calender.html', {'schedulers': schedulers})
+
+
+@login_required
+def trainer_calender(request):
+    # Get schedulers for the logged-in trainer and use Coalesce to replace None with 0 for status_sum
+    schedulers = LXPModel.Scheduler.objects.filter(
+        trainer_id=request.user.id
+    ).annotate(
+        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0))
+    )
+    return render(request, 'trainer/scheduler/trainer_calender.html', {'schedulers': schedulers})
+
+# Display list of schedulerstatus
+@login_required
+def trainer_schedulerstatus_list(request):
+    if str(request.session['utype']) == 'trainer':
+        schedulerstatus = LXPModel.SchedulerStatus.objects.all()
+        return render(request, 'trainer/schedulerstatus/trainer_schedulerstatus_list.html', {'schedulerstatus': schedulerstatus})
+    else:
+        return render(request,'loginrelated/diffrentuser.html')
+
+# Create a new schedulerstatus
+@login_required
+def schedulerstatus_create(request):
+    if str(request.session['utype']) == 'trainer':
+        if request.method == 'POST':
+            scheduler = request.POST.get('scheduler')
+            status = request.POST.get('status')
+            tdate_str = request.POST.get('tdate')
+            status_sum = LXPModel.SchedulerStatus.objects.filter(scheduler_id = scheduler).aggregate(Sum('status'))['status__sum']
+            value = status
+            if status_sum:
+                if (float(status) < float(status_sum)) :
+                    messages.warning(request, 'Scheduler Status count should be greater then Previous, total is ' + str(status_sum))
+                    return redirect('trainer-schedulerstatus-create')
+                value = float(status) - float(status_sum)
+                if value > 100:
+                    messages.warning(request, 'Scheduler Status count getting more then 100. Previous total is ' + str(status_sum))
+                    return redirect('trainer-schedulerstatus-create') 
+                if value == 0:
+                    messages.warning(request, 'Scheduler Status count already marked as completed.' )
+                    return redirect('trainer-schedulerstatus-create') 
+            try:
+                tdate = datetime.strptime(tdate_str, '%d-%m-%Y').date()
+            except ValueError:
+                return JsonResponse({"error": "Invalid date format"}, status=400)
+           
+            mode = LXPModel.SchedulerStatus.objects.create(scheduler_id=scheduler,
+                                                           trainer_id = request.user.id,
+                                                  status=value,
+                                                  date = tdate
+                                                  )
+            mode.save()
+            messages.success(request, 'Scheduler Status created successfully!')
+            return redirect('trainer-schedulerstatus-create')
+        schedulers = LXPModel.Scheduler.objects.filter(trainer_id = request.user.id)
+        
+        return render(request, 'trainer/schedulerstatus/trainer_schedulerstatus_create.html',{'schedulers':schedulers})
+    else:
+        return render(request,'loginrelated/diffrentuser.html')
+
+@login_required
+def get_scheduler_status_sum(request):
+    # Check if the request is AJAX using the appropriate header
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        scheduler_id = request.GET.get("scheduler_id")
+        
+        # Get the sum of 'status' values for the given scheduler
+        status_sum = LXPModel.SchedulerStatus.objects.filter(scheduler_id=scheduler_id).aggregate(Sum('status'))['status__sum']
+        
+        # If no statuses exist, set sum to 0
+        if status_sum is None:
+            status_sum = 0
+
+        # Log the status_sum for debugging (you can remove this in production)
+        print(f"Scheduler ID: {scheduler_id}, Status Sum: {status_sum}")  # Add print statement to check
+        
+        return JsonResponse({"status_sum": status_sum})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+# Delete a schedulerstatus
+@login_required
+def schedulerstatus_delete(request, id):
+    if str(request.session['utype']) == 'trainer':
+        schedulerstatus = get_object_or_404(LXPModel.SchedulerStatus, id=id)
+        # Now delete the schedulerstatus instance
+        schedulerstatus.delete()
+        
+        return redirect('trainer-schedulerstatus-list')
+    else:
+        return render(request,'loginrelated/diffrentuser.html')
+
+import json
+@login_required
+@csrf_exempt
+def trainer_schedulerstatus_mark_done(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            status_id = int(data.get('id'))  # Convert ID to integer
+            scheduler_status = LXPModel.SchedulerStatus.objects.filter(pk=status_id).first()  # Alternative to get_object_or_404
+
+            if not scheduler_status:
+                return JsonResponse({'success': False, 'message': 'SchedulerStatus not found.'})
+
+            # Get sum of all status values for this scheduler
+            total_status = LXPModel.SchedulerStatus.objects.filter(scheduler=scheduler_status.scheduler).aggregate(
+                total=Sum('status')
+            )['total'] or 0
+
+            if total_status < 100:
+                scheduler_status.status = 100
+                scheduler_status.save()
+                return JsonResponse({'success': True, 'message': 'Status marked as done.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Status is already completed.'})
+        
+        except ValueError:
+            return JsonResponse({'success': False, 'message': 'Invalid ID format.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})

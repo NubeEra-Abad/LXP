@@ -29,6 +29,19 @@
                         <i class="feather-home"></i> My Dashboard
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'trainer-schedulerstatus-list' %}" class="nav-link">
+                        <i class="feather-home"></i> Scheduler Status List
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'trainer-schedulerstatus-create' %}" class="nav-link">
+                        <i class="feather-home"></i> Create Scheduler
+                    </a>
+                </li>
+                
                 <li class="nav-item ">
                     <a href="{% url 'trainer-view-material' %}" class="nav-link">
                         <i class="feather-book"></i> Study Material
@@ -94,6 +107,8 @@
                         <i class="feather-star"></i> Learner Videos
                     </a>
                 </li>
+
+               
             </ul>
             <div class="instructor-title">
                 <h3>ACCOUNT SETTINGS</h3>

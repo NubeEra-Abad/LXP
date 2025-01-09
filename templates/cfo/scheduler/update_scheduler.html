@@ -76,8 +76,8 @@
               <div class="col-sm-9">
                 <select name="type" id="type" class="form-control" required>
                   <option value="">Select Scheduler Type</option>
-                  <option value="1">Lecture</option>
-                  <option value="2">Event</option>
+                  <option value="1" {% if scheduler.type == '1' %} selected {% endif %}>Lecture</option>
+                  <option value="2" {% if scheduler.type == '2' %} selected {% endif %}>Event</option>
                 </select>
               </div>
             </div>
@@ -87,8 +87,7 @@
                 <select name="trainer" id="trainer" class="form-control" required>
                   <option value="">Select Trainer</option>
                   {% for trainer in trainers %}
-                  <option value="{{ trainer.user_id }}">
-                    {{ trainer.user__first_name }} {{ trainer.user__last_name }}
+                    <option value="{{ trainer.user_id }}" {% if trainer.user_id == scheduler.trainer_id %} selected {% endif %}>{{ trainer.user__first_name }} {{ trainer.user__last_name }}
                   </option>
                   {% endfor %}
                 </select>
@@ -101,8 +100,8 @@
                 <select name="subject" id="subject" class="form-control" onchange="fetchChapters()" required>
                   <option value="">Select Subject</option>
                   {% for subject in subjects %}
-                  <option value="{{ subject.id }}">
-                    {{ subject.subject_name }}
+                  <option value="{{ subject.id }}" {% if subject.id == scheduler.subject.id %} selected {% endif %}>{{ subject.subject_name }} 
+
                   </option>
                   {% endfor %}
                 </select>
@@ -112,8 +111,19 @@
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Chapter</label>
               <div class="col-sm-9">
-                <select name="chapter" id="chapter" class="form-control" onchange="fetchTopics()" required>
+                <select
+                  name="chapter"
+                  id="chapter"
+                  class="form-control"
+                  onchange="fetchTopics()"
+                  required
+                >
                   <option value="">Select Chapter</option>
+                  {% for chapter in chapters %}
+                  <option value="{{ chapter.chapter__id }}" {% if chapter.chapter__id == scheduler.chapter_id %} selected {% endif %}>{{ chapter.chapter__chapter_name }} 
+
+                  </option>
+                  {% endfor %}
                 </select>
               </div>
             </div>
@@ -121,9 +131,18 @@
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Topic</label>
               <div class="col-sm-9">
-                <select name="topic" id="topic" class="form-control" required>
+                <select
+                  name="topic"
+                  id="topic"
+                  class="form-control"
+                  required
+                >
                   <option value="">Select Topic</option>
+                  {% for topic in topics %}
+                  <option value="{{ topic.topic__id }}" {% if topic.topic__id == scheduler.topic_id %} selected {% endif %}>{{ topic.topic__topic_name }} 
 
+                  </option>
+                  {% endfor %}
                 </select>
               </div>
             </div>
@@ -131,28 +150,43 @@
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Start Date</label>
               <div class="col-sm-9">
-                <input type="datetime-local" class="form-control" name="start" id="start"
-                  placeholder="Select Start Date" required />
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  name="start"
+                  id="start"
+                  placeholder="Select Start Date"
+                  value="{{ scheduler.start|date:'Y-m-d\TH:i' }}"
+                  required
+                />
               </div>
             </div>
 
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">End Date</label>
               <div class="col-sm-9">
-                <input type="datetime-local" class="form-control" name="end" id="end" placeholder="Select End Date" />
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  name="end"
+                  id="end"
+                  placeholder="Select End Date"
+                  value="{{ scheduler.end|date:'Y-m-d\TH:i' }}"
+                  required
+                />
               </div>
             </div>
 
             <div class="mb-3 row">
               <label class="col-sm-3 col-form-label">Event Details</label>
               <div class="col-sm-9">
-                <textarea id="eventdetail" name="eventdetail" rows="4" cols="50"></textarea>
+                <textarea id="eventdetail" name="eventdetail" rows="4" cols="50"  value="{{ scheduler.eventdetail }}"></textarea>
               </div>
             </div>
             
             <div class="mb-3 row">
               <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Create Scheduler</button>
+                <button type="submit" class="btn btn-primary">Update Scheduler</button>
               </div>
             </div>
             </div>

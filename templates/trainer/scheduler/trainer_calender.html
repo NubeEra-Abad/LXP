@@ -1,24 +1,23 @@
-{% extends 'cfo/cfobase.html' %} {% load widget_tweaks %}
+{% extends 'teacher/teacherbase.html' %} {% load widget_tweaks %}
 {% block content %}
 <style>
   .modal-content {
-    text-align: center; /* Center text inside the modal */
+    text-align: center;
+    /* Center text inside the modal */
   }
 </style>
-
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-<link href="/static/dreamlms/vendor/fullcalendar/css/main.min.css" rel="stylesheet" />
-
+<link href="/static/get/vendor/fullcalendar/css/main.min.css" rel="stylesheet" />
 <div class="card">
   <div class="card-body">
     <div id="calendar" class="app-fullcalendar fc fc-media-screen fc-direction-ltr fc-theme-standard"></div>
-
     <!-- Event Details Modal -->
-    <div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="eventDetailsModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -41,20 +40,20 @@
                 <td id="eventEndDetails" style="text-align: left;"></td>
               </tr>
               <tr>
-                <td style="text-align: left; width: 30%;"><strong>Trainer:</strong></td>
-                <td id="eventTrainer" style="text-align: left;"></td>
+                <td style="text-align: left; width: 30%;"><strong>Grade:</strong></td>
+                <td id="eventGrade" style="text-align: left;"></td>
               </tr>
               <tr>
-                <td style="text-align: left; width: 30%;"><strong>Subject:</strong></td>
-                <td id="eventSubject" style="text-align: left;"></td>
+                <td style="text-align: left; width: 30%;"><strong>Division:</strong></td>
+                <td id="eventDivision" style="text-align: left;"></td>
               </tr>
               <tr>
-                <td style="text-align: left; width: 30%;"><strong>Chapter:</strong></td>
-                <td id="eventChapter" style="text-align: left;"></td>
+                <td style="text-align: left; width: 30%;"><strong>Module:</strong></td>
+                <td id="eventModule" style="text-align: left;"></td>
               </tr>
               <tr>
-                <td style="text-align: left; width: 30%;"><strong>Topic:</strong></td>
-                <td id="eventTopic" style="text-align: left;"></td>
+                <td style="text-align: left; width: 30%;"><strong>Lesson:</strong></td>
+                <td id="eventLesson" style="text-align: left;"></td>
               </tr>
               <tr>
                 <td style="text-align: left; width: 30%;"><strong>Complete:</strong></td>
@@ -70,36 +69,28 @@
     </div>
 
     <!-- Required vendors -->
-    <script src="/static/dreamlms/vendor/global/global.min.js"></script>
-    <script src="/static/dreamlms/vendor/moment/moment.min.js"></script>
-    <script src="/static/dreamlms/vendor/fullcalendar/js/main.min.js"></script>
+    <script src="/static/get/vendor/global/global.min.js"></script>
+    <script src="/static/get/vendor/moment/moment.min.js"></script>
 
+    <script src="/static/get/vendor/fullcalendar/js/main.min.js"></script>
     <script>
       "use strict";
 
       function fullCalender() {
-        const typeMap = {
-          "1": "Lecture",
-          "2": "Event"
-        };
-        const schedulerEvents = [
-  {% for scheduler in schedulers %}
-  {
-    title: typeMap["{{ scheduler.type|escapejs }}"],
-    start: "{{ scheduler.start|date:'Y-m-d\\TH:i:s'|escapejs }}",
-    end: "{{ scheduler.end|date:'Y-m-d\\TH:i:s'|escapejs }}",
-    extendedProps: {
-      Subject: "{{ scheduler.subject.subject_name|escapejs }}",
-      Chapter: "{{ scheduler.chapter.chapter_name|escapejs }}",
-      Topic: "{{ scheduler.topic.topic_name|escapejs }}",
-      Trainer: "{{ scheduler.trainer.first_name|escapejs }} {{ scheduler.trainer.last_name|escapejs }}",
-      StatusSum: "{{ scheduler.status_sum|default:0|escapejs }} %"
-    }
-  },
-  {% endfor %}
-];
-
-
+        const schedulerEvents = [{% for scheduler in schedulers %} {
+            title: "{{ scheduler.lesson.heading }}",
+            start: "{{ scheduler.start|date:'Y-m-d\\TH:i:s' }}",
+            end: "{{ scheduler.end|date:'Y-m-d\\TH:i:s' }}",
+            extendedProps: {
+              Grade: "{{ scheduler.grade.grade_name }}",
+              Division: "{{ scheduler.division.division_name }}",
+              Module: "{{ scheduler.module.module_name }}",
+              Lesson: "{{ scheduler.lesson.heading }}",
+              StatusSum: "{{ scheduler.status_sum|default:0 }} %"
+            }
+          },
+          {% endfor %}
+        ];
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
           headerToolbar: {
@@ -112,24 +103,29 @@
           initialDate: new Date().toISOString().slice(0, 10),
           events: schedulerEvents,
           eventClick: function(info) {
+            // Populate modal with event details
             $('#eventTitleDetails').text(info.event.title);
             $('#eventStartDetails').text(info.event.start.toLocaleString());
             $('#eventEndDetails').text(info.event.end ? info.event.end.toLocaleString() : 'N/A');
-            $('#eventSubject').text(info.event.extendedProps.Subject);
-            $('#eventChapter').text(info.event.extendedProps.Chapter);
-            $('#eventTrainer').text(info.event.extendedProps.Trainer);
-            $('#eventTopic').text(info.event.extendedProps.Topic);
+            $('#eventGrade').text(info.event.extendedProps.Grade);
+            $('#eventDivision').text(info.event.extendedProps.Division);
+            $('#eventModule').text(info.event.extendedProps.Module);
+            $('#eventTeacher').text(info.event.extendedProps.Teacher);
+            $('#eventLesson').text(info.event.extendedProps.Lesson);
             $('#eventStatusSum').text(info.event.extendedProps.StatusSum);
+            // Show the modal
             $('#eventDetailsModal').modal('show');
           }
         });
-
         calendar.render();
-        calendar.updateSize(); // Ensure calendar resizes properly
       }
-
-      jQuery(window).on('load', fullCalender);
+      jQuery(window).on('load', function() {
+        setTimeout(function() {
+          fullCalender();
+        }, 1000);
+      });
     </script>
+
+    {% endblock content %}
   </div>
 </div>
-{% endblock content %}

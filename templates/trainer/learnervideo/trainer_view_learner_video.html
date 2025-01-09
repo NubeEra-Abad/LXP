@@ -1,4 +1,5 @@
 {% extends 'trainer/trainerbase.html' %}
+{% load lxpapp_filters %}
 {% block content %}
 {%load static%}
 <link rel="stylesheet" href="/static/dreamlms/css/style.css">
@@ -63,7 +64,11 @@
                           Learner
                         </h6>
                         <h5>
-                          {{t.courseset_name}}
+                          <ul>
+                            {% for name in t.courseset_name|split_by:',' %}
+                            <li>{{ name }}</li>
+                            {% endfor %}
+                          </ul>
                         </h5>
                         <div class="student-info">
                           <div class="loc-blk d-flex justify-content-center">

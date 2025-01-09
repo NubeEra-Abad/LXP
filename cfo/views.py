@@ -318,6 +318,7 @@ def cfo_create_scheduler(request):
             topic=topic,
             start=start,
             end=end,
+            type=type,
             eventdetails=eventdetails
         )
         scheduler.save()
@@ -337,6 +338,8 @@ def cfo_create_scheduler(request):
 
 @login_required
 def cfo_update_scheduler(request, scheduler_id):
+    if str(request.session['utype']) != 'cfo':
+        return render(request,'lxpapp/404page.html')
     # Get the Scheduler object to be updated
     scheduler = get_object_or_404(LXPModel.Scheduler, id=scheduler_id)
     
@@ -406,6 +409,8 @@ def cfo_update_scheduler(request, scheduler_id):
 # List all Schedulers
 @login_required
 def cfo_scheduler_list(request):
+    if str(request.session['utype']) != 'cfo':
+        return render(request,'lxpapp/404page.html')
     schedulers = LXPModel.Scheduler.objects.all()
     return render(request, 'cfo/scheduler/scheduler_list.html', {'schedulers': schedulers})
 
@@ -413,6 +418,8 @@ def cfo_scheduler_list(request):
 # List scheduler_calender
 @login_required
 def cfo_scheduler_calender(request):
+    if str(request.session['utype']) != 'cfo':
+        return render(request,'lxpapp/404page.html')
     schedulers = LXPModel.Scheduler.objects.annotate(
         status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
         completion_date=Case(
@@ -425,6 +432,8 @@ def cfo_scheduler_calender(request):
 # Delete Scheduler
 @login_required
 def cfo_delete_scheduler(request, scheduler_id):
+    if str(request.session['utype']) != 'cfo':
+        return render(request,'lxpapp/404page.html')
     scheduler = get_object_or_404(LXPModel.Scheduler, id=scheduler_id)
     scheduler.delete()
     return redirect('scheduler_list')    

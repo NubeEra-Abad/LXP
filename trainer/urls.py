@@ -81,6 +81,14 @@ urlpatterns = [
     path('trainer-pyton-terminal', views.trainer_python_terminal_view,name='trainer-pyton-terminal'),
     path('trainer-linux-terminal', views.trainer_linux_terminal_view,name='trainer-linux-terminal'),
     path('trainer-cloudshell-terminal', views.trainer_cloudshell_terminal_view,name='trainer-cloudshell-terminal'),
+    
+    path('trainer-schedulerstatus-list/', views.trainer_schedulerstatus_list, name='trainer-schedulerstatus-list'),
+    path('trainer-schedulerstatus-create/', views.schedulerstatus_create, name='trainer-schedulerstatus-create'),
+    path('trainer-schedulerstatus-delete/<int:id>/', views.schedulerstatus_delete, name='trainer-schedulerstatus-delete'),
+    path('get-scheduler-status-sum/', views.get_scheduler_status_sum, name='get-scheduler-status-sum'),
+    path('trainer-schedulerstatus-mark-done/', views.trainer_schedulerstatus_mark_done, name='trainer-schedulerstatus-mark-done'),
+    
+    
 
     
 ]

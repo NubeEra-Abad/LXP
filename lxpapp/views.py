@@ -20,6 +20,8 @@ from lxpapp.models import UserProfile
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.contrib.auth.views import LoginView
+from django.db.models import Exists, OuterRef,Case, When, Value, IntegerField,F, Value, Q, Sum, Max
+from django.db.models.functions import Coalesce
 
 class CustomLoginView(LoginView):
     template_name = 'loginrelated/userlogin.html'  # Your login template path
@@ -139,8 +141,15 @@ def afterlogin_view(request):
                     short = models.Exam.objects.filter(questiontpye='ShortAnswer').count()
                     mcqques= models.McqQuestion.objects.all().count()
                     sques= models.ShortQuestion.objects.all().count()
+                    schedulers = models.Scheduler.objects.annotate(
+                        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
+                        completion_date=Case(
+                            When(status_sum__gte=100, then=Max('schedulerstatus__date')),
+                            default=Value(None),
+                        )).filter(trainer_id = request.user.id)
                     dict={
                     'total_course':0,
+                    schedulers:schedulers,
                     'total_exam':0,
                     'total_shortExam':0, 
                     'total_question':0,
@@ -148,7 +157,7 @@ def afterlogin_view(request):
                     'total_learner':0,
                     'notifications':notification,
                     }
-                    return render(request,'trainer/trainer_dashboard.html',context=dict)
+                    return render(request,'trainer/trainer_dashboard.html',{'schedulers':schedulers,'mcqques':mcqques,'sques':sques,'mco':mco,'short':short,'dict':dict})
                 else:
                     send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                     return render(request,'loginrelated/wait_for_approval.html')
