@@ -1,7 +1,7 @@
 {% extends 'trainer/trainerbase.html' %}
 {% block content %}
 {%load static%}
-<link rel="stylesheet" href="/static/dreamlms/css/style.css">
+<link rel="stylesheet" href="/static/getskills/css/style.css">
 <div class="main-wrapper">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -52,7 +52,7 @@
         </div>
         <a class="btn btn-primary" href="{% url 'trainer-learner-approveall-video' user_id subject_id %}">Approve All</a>
       </div>
-      <link rel="stylesheet" href="/static/dreamlms/css/style.css">
+      <link rel="stylesheet" href="/static/getskills/css/style.css">
       
       {% for t in list %}
       <div class="row">
