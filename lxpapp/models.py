@@ -703,7 +703,7 @@ class K8STerminalLearnerCount(models.Model):
 class Scheduler(models.Model):
     
     trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    cat=(('1','Lecture'),('2','Event'))
+    cat=(('1','Session'),('2','Interview'),('3','Client Requirment'),('4','Lab Call'),('5','Meeting'),('6','Others'))
     type=models.CharField(max_length=200,choices=cat,null=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)

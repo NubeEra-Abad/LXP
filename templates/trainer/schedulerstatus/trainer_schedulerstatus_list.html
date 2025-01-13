@@ -79,13 +79,26 @@
     <tbody >
         {% for t in schedulerstatus %}
         {% if t.scheduler.type == '1'%}
-        <td>Lecture</td>
+        <td>Session</td>
         <td>{{ t.scheduler.subject.subject_name }}</td>
         <td>{{ t.scheduler.chapter.chapter_name }}</td>
         <td>{{ t.scheduler.topic.topic_name }}</td>
         {% elif t.scheduler.type == '2'%}
-        <td>Event</td>
+        <td>Interview</td>
         <td colspan="3">{{ t.scheduler.eventdetails }}</td>
+        {% elif t.scheduler.type == '3'%}
+        <td>Client Requirment</td>
+        <td colspan="3">{{ t.scheduler.eventdetails }}</td>
+        {% elif t.scheduler.type == '4'%}
+        <td>Lab Call</td>
+        <td colspan="3">{{ t.scheduler.eventdetails }}</td>
+        {% elif t.scheduler.type == '5'%}
+        <td>Meeting</td>
+        <td colspan="3">{{ t.scheduler.eventdetails }}</td>
+        {% elif t.scheduler.type == '6'%}
+        <td>Others</td>
+        <td colspan="3">{{ t.scheduler.eventdetails }}</td>
+        
         {% endif %}
         
         <td>{{ t.date }}</td>

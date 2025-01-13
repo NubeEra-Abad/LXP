@@ -20,13 +20,28 @@
                     {% for t in schedulers %}
                     <tr>
                         <td>
-                            {{t.id}}
                             <div class="table-course-detail">
                                 {% if t.type == '1' %}
                                 <span><img src="/static/image/lecture.png" height="30px" width="30px" alt="Img"></span>
                                 <p>{{ t.start|date:"d-m-Y g:i A" }} to {{ t.end|date:"d-m-Y g:i A" }}</p>
                                 <p>{{t.subject}}<i class="fa fa-arrow-right" aria-hidden="true"></i>{{t.chapter}}<i class="fa fa-arrow-right" aria-hidden="true"></i>{{t.topic}}</p>
                                 {% elif t.type == '2' %}
+                                <span><img src="/static/image/event.png" height="30px" width="30px" alt="Img"></span>
+                                <p>{{ t.start|date:"d-m-Y g:i A" }} to {{ t.end|date:"d-m-Y g:i A" }}</p>
+                                <p>{{t.eventdetails}}</p>
+                                {% elif t.type == '3' %}
+                                <span><img src="/static/image/event.png" height="30px" width="30px" alt="Img"></span>
+                                <p>{{ t.start|date:"d-m-Y g:i A" }} to {{ t.end|date:"d-m-Y g:i A" }}</p>
+                                <p>{{t.eventdetails}}</p>
+                                {% elif t.type == '4' %}
+                                <span><img src="/static/image/event.png" height="30px" width="30px" alt="Img"></span>
+                                <p>{{ t.start|date:"d-m-Y g:i A" }} to {{ t.end|date:"d-m-Y g:i A" }}</p>
+                                <p>{{t.eventdetails}}</p>
+                                {% elif t.type == '5' %}
+                                <span><img src="/static/image/event.png" height="30px" width="30px" alt="Img"></span>
+                                <p>{{ t.start|date:"d-m-Y g:i A" }} to {{ t.end|date:"d-m-Y g:i A" }}</p>
+                                <p>{{t.eventdetails}}</p>
+                                {% elif t.type == '6' %}
                                 <span><img src="/static/image/event.png" height="30px" width="30px" alt="Img"></span>
                                 <p>{{ t.start|date:"d-m-Y g:i A" }} to {{ t.end|date:"d-m-Y g:i A" }}</p>
                                 <p>{{t.eventdetails}}</p>

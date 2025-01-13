@@ -1363,19 +1363,22 @@ def trainer_schedulerstatus_mark_done(request):
         try:
             data = json.loads(request.body)
             status_id = int(data.get('id'))  # Convert ID to integer
-            scheduler_status = LXPModel.SchedulerStatus.objects.filter(pk=status_id).first()  # Alternative to get_object_or_404
-
-            if not scheduler_status:
-                return JsonResponse({'success': False, 'message': 'SchedulerStatus not found.'})
 
             # Get sum of all status values for this scheduler
-            total_status = LXPModel.SchedulerStatus.objects.filter(scheduler=scheduler_status.scheduler).aggregate(
+            total_status = LXPModel.SchedulerStatus.objects.filter(scheduler_id=status_id).aggregate(
                 total=Sum('status')
             )['total'] or 0
 
             if total_status < 100:
-                scheduler_status.status = 100
-                scheduler_status.save()
+                dif = 100 - total_status
+                sch = LXPModel.SchedulerStatus.objects.create(
+                    scheduler_id=status_id,
+                    trainer_id=request.user.id,
+                    status=dif,
+                    date=datetime.now().date()
+                )
+                sch.save()
+                
                 return JsonResponse({'success': True, 'message': 'Status marked as done.'})
             else:
                 return JsonResponse({'success': False, 'message': 'Status is already completed.'})

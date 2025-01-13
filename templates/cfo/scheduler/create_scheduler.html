@@ -76,8 +76,12 @@
               <div class="col-sm-9">
                 <select name="type" id="type" class="form-control" required>
                   <option value="">Select Scheduler Type</option>
-                  <option value="1">Lecture</option>
-                  <option value="2">Event</option>
+                  <option value="1">Session</option>
+                  <option value="2">Interview</option>
+                  <option value="3">Client Requirment</option>
+                  <option value="4">Lab Call</option>
+                  <option value="5">Meeting</option>
+                  <option value="6">Others</option>
                 </select>
               </div>
             </div>
@@ -203,22 +207,30 @@
     const eventDetailsRow = document.querySelector(".row textarea#eventdetail").closest(".row");
 
     function toggleFields() {
+      // Check if the selected value is "1"
       if (schedulerTypeSelect.value === "1") {
+        // Show relevant fields and set them as required
         subjectRow.style.display = "flex";
         chapterRow.style.display = "flex";
         topicRow.style.display = "flex";
         eventDetailsRow.style.display = "none";
-      } else if (schedulerTypeSelect.value === "2") {
-        subjectRow.style.display = "none";
-        chapterRow.style.display = "none";
-        topicRow.style.display = "none";
-        eventDetailsRow.style.display = "flex";
+    
+        // Add 'required' to subject, chapter, and topic fields
+        subjectRow.setAttribute('required', 'required');
+        chapterRow.setAttribute('required', 'required');
+        topicRow.setAttribute('required', 'required');
+        
       } else {
         // Default state if no valid option is selected
         subjectRow.style.display = "none";
         chapterRow.style.display = "none";
         topicRow.style.display = "none";
-        eventDetailsRow.style.display = "none";
+        eventDetailsRow.style.display = "flex";
+    
+        // Remove 'required' from subject, chapter, and topic fields
+        subjectRow.removeAttribute('required');
+        chapterRow.removeAttribute('required');
+        topicRow.removeAttribute('required');
       }
     }
 

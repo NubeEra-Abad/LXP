@@ -79,6 +79,7 @@
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
       <thead>
         <tr>
+          <th>Type</th>
           <th>Trainer</th>
           <th>Subject</th>
           <th>Chapter</th>
@@ -92,10 +93,28 @@
       <tbody>
         {% for scheduler in schedulers %}
         <tr>
+          <td>{% if scheduler.type == '1' %}
+            Session
+            {% elif scheduler.type == '2' %}
+            Interview
+            {% elif scheduler.type == '3' %}
+            Client Requirment
+            {% elif scheduler.type == '4' %}
+            Lab Call
+            {% elif scheduler.type == '5' %}
+            Meeting
+            {% elif scheduler.type == '6' %}
+            Others
+            {% endif %}
+          </td>
           <td>{{ scheduler.trainer.first_name }} {{ scheduler.trainer.last_name }} </td>
+          {% if scheduler.type == '1' %}
           <td>{{ scheduler.subject.subject_name }}</td>
           <td>{{ scheduler.chapter.chapter_name }}</td>
           <td>{{ scheduler.topic.topic_name }}</td>
+          {% else %}
+          <td colspan="3"> {{ scheduler.eventdetails }}</td>
+          {% endif %}
           <td>{{ scheduler.start }}</td>
           <td>{{ scheduler.end }}</td>
           <td><a class="btn btn-primary btn-xs" href="{% url 'cfo-update-scheduler' scheduler.id %}"><span class="far fa-edit"></span></a></td>

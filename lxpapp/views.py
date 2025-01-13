@@ -146,7 +146,7 @@ def afterlogin_view(request):
                         completion_date=Case(
                             When(status_sum__gte=100, then=Max('schedulerstatus__date')),
                             default=Value(None),
-                        )).filter(trainer_id = request.user.id)
+                        )).filter(trainer_id = request.user.id, status_sum__lte=99)
                     dict={
                     'total_course':0,
                     schedulers:schedulers,
