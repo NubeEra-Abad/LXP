@@ -1,13 +1,16 @@
-
-<div class="col-xl-3 col-lg-4 col-md-12 theiaStickySidebar">
+<!--**********************************
+            Sidebar start
+        ***********************************-->
+<div class="dlabnav" style="overflow:auto;">
     <div class="settings-widget dash-profile">
         <div class="settings-menu p-0">
             <div class="profile-bg">
                 <img src="/static/dreamlms/img/instructor-profile-bg.jpg" alt="">
                 <div class="profile-img">
                     {% if userdetails.userprofile_set.first.profile_img %}
-                <a href="{% url 'user-profile' %}"><img src="{{ request.user.userprofile_set.first.profile_img.url }}" alt=""></a>
-                {% endif %}
+                    <a href="{% url 'user-profile' %}"><img
+                            src="{{ request.user.userprofile_set.first.profile_img.url }}" alt=""></a>
+                    {% endif %}
                 </div>
             </div>
             <div class="profile-group">
@@ -15,133 +18,181 @@
                     <a href={% url 'user-profile' %}>{{request.user.first_name}} {{request.user.last_name}}</a>
                     <h6><a href={% url 'user-profile' %}>({{request.user.username}})</a></h6>
                     <h6>Trainer</h6>
-                    
+
                 </div>
             </div>
         </div>
     </div>
-    <div class="settings-widget account-settings">
-        <div class="settings-menu">
-            <h3>DASHBOARD</h3>
-            <ul>
-                <li class="nav-item active">
-                    <a href="{% url 'trainer-dashboard' %}" class="nav-link">
-                        <i class="feather-home"></i> My Dashboard
-                    </a>
-                </li>
+    <div class="dlabnav-scroll">
+        <ul class="metismenu" id="menu">
+            <li>
+                <a href="{% url 'trainer-dashboard' %}" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
 
-                <li class="nav-item">
-                    <a href="{% url 'trainer-schedulerstatus-list' %}" class="nav-link">
-                        <i class="feather-home"></i> Scheduler Status List
-                    </a>
-                </li>
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-schedulerstatus-list' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">Scheduler</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-schedulerstatus-create' %}">Add Scheduler Status</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-schedulerstatus-list' %}">View Scheduler Status</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-material' %}" aria-expanded="false">
+                    <i class="bi bi-people"></i>
+                    <span class="nav-text">Study Material</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-material' %}">Add Study Material</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-material' %}">View Study Material</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-sessionmaterial' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">Session Material</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-sessionmaterial' %}">Add Session Material</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-sessionmaterial' %}">View Session Material</a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a href="{% url 'trainer-schedulerstatus-create' %}" class="nav-link">
-                        <i class="feather-home"></i> Create Scheduler
-                    </a>
-                </li>
-                
-                <li class="nav-item ">
-                    <a href="{% url 'trainer-view-material' %}" class="nav-link">
-                        <i class="feather-book"></i> Study Material
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-sessionmaterial' %}" class="nav-link">
-                        <i class="feather-book"></i> Session Material
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-k8sterminal' %}" class="nav-link">
-                        <i class="feather-book"></i> Lab (K8S)
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-pyton-terminal' %}" class="nav-link">
-                        <i class="feather-book"></i> Lab Pyton
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-linux-terminal' %}" class="nav-link">
-                        <i class="feather-book"></i> Lab linux
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://shell.cloud.google.com/?show=terminal" target="_blank" class="nav-link">
-                        <i class="feather-book"></i> Lab Cloud Shell
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-chapterquestion' %}" class="nav-link">
-                        <i class="feather-star"></i> Chapter Wise MCQ
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-exam' %}" class="nav-link">
-                        <i class="feather-star"></i> Exam
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-mcqquestion-exams' %}" class="nav-link">
-                        <i class="feather-star"></i> MCQ Question
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-shortquestion' %}" class="nav-link">
-                        <i class="feather-star"></i> shortquestion
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-pending-short-exam-reuslt' %}" class="nav-link">
-                        <i class="feather-star"></i> Pending Exams
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-ytexamquestion' %}" class="nav-link">
-                        <i class="feather-star"></i> Session Video Question
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'trainer-view-learner-video' %}" class="nav-link">
-                        <i class="feather-star"></i> Learner Videos
-                    </a>
-                </li>
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-k8sterminal' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">Lab (K8S)</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-k8sterminal' %}">Add Lab (K8S)</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-k8sterminal' %}">View Lab (K8S)</a>
+                    </li>
+                </ul>
+            </li>
 
-               
-            </ul>
+            <li class="nav-item">
+                <a href="{% url 'trainer-pyton-terminal'%}" class="nav-link">
+                    <i class="feather-power"></i> Lab Pyton
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'trainer-linux-terminal'%}" class="nav-link">
+                    <i class="feather-power"></i> Lab linux
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="https://shell.cloud.google.com/?show=terminal" class="nav-link">
+                    <i class="feather-book"></i> Lab Cloud Shell
+                </a>
+            </li>
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-chapterquestion' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">Chapter Wise MCQ</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-chapterquestion' %}">Add Chapter Wise MCQ</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-chapterquestion' %}">View Chapter Wise MCQ</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-mcqquestion-exams' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">MCQ Question</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-mcqquestion' %}">Add MCQ Question</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-mcqquestion-exams' %}">View MCQ Question</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-shortquestion' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">Short Question</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-shortquestion' %}">Add Short Question</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-shortquestion' %}">View Short Question</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'trainer-pending-short-exam-reuslt'%}" class="nav-link">
+                    <i class="feather-power"></i> Pending Exams
+                </a>
+            </li>
+
+            <li>
+                <a class="has-arrow " href="{% url 'trainer-view-ytexamquestion' %}" aria-expanded="false">
+                    <i class="bi bi-book"></i>
+                    <span class="nav-text">Short Question</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'trainer-add-ytexamquestion' %}">Add Session Video Question</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trainer-view-ytexamquestion' %}">View Session Video Question</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'trainer-view-learner-video'%}" class="nav-link">
+                    <i class="feather-power"></i> Learner Videos
+                </a>
+            </li>
             <div class="instructor-title">
-                <h3>ACCOUNT SETTINGS</h3>
+                <h4>ACCOUNT SETTINGS</h4>
             </div>
-            <ul>
-                <li class="nav-item">
-                    <a href="{% url 'user-profile-update'%}" class="nav-link">
-                        <i class="feather-power"></i> Update Profile
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'logout'%}" class="nav-link">
-                        <i class="feather-power"></i> Sign Out
-                    </a>
-                </li>
-            </ul>
-        </div>
+            <li class="nav-item">
+                <a href="{% url 'user-profile-update'%}" class="nav-link">
+                    <i class="feather-power"></i> Update Profile
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}" class="" aria-expanded="false">
+                    <i class="bi bi-door-closed"></i>
+                    <span class="nav-text">Sign Out</span>
+                </a>
+            <li>
+        </ul>
     </div>
 </div>
-<script>
-    // Get all navigation links
-    const navLinks = document.querySelectorAll('.nav-link');
-  
-    // Add click event listener to each navigation link
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        console.log('Clicked on a link');
-        // Remove "active" class from all navigation links
-        navLinks.forEach(link => {
-          link.parentElement.classList.remove('active');
-        });
-        // Add "active" class to the clicked link
-        link.parentElement.classList.add('active');
-      });
-    });
-  </script>  
+<!--**********************************
+            Sidebar end
+        ***********************************-->
