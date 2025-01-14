@@ -9,166 +9,75 @@
     <title>NubeEra (LXP)</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="/static/dreamlms/img/favicon.svg">
-
-    <link rel="stylesheet" href="/static/dreamlms/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/all.min.css">
-
-    <link rel="stylesheet" href="/static/dreamlms/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/static/dreamlms/css/owl.theme.default.min.css">
-
-    <link rel="stylesheet" href="/static/dreamlms/plugins/feather/feather.css">
-
     <link rel="stylesheet" href="/static/getskills/css/style.css">
-
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: url('/static/dreamlms/img/background.jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
-        .login-wrapper {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .form-control {
-            border-radius: 5px;
-        }
-        .loginbox h1 {
-            font-family: 'Roboto', sans-serif;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .btn-primary {
-            background: linear-gradient(45deg, #1e90ff, #00bfff);
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            transition: background 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #00bfff, #1e90ff);
-        }
-        .toggle-password {
-            cursor: pointer;
-        }
-        
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .register-link a {
-            color: #1e90ff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
     
 </head>
 
-<body>
-
-    <div class="main-wrapper log-wrap">
-        <div class="row">
-
-            <div class="col-md-6 login-bg">
-                <div class="owl-carousel login-slide owl-theme">
-                    <div class="welcome-login">
-                        <div class="login-banner">
-                            <img src="/static/dreamlms/img/login-img.png" class="img-fluid" alt="Logo">
-                        </div>
-                        <div class="mentor-course text-center">
-                            <h2>Welcome to <br>NubeEra LXP Courses.</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                        </div>
-                    </div>
-                    <div class="welcome-login">
-                        <div class="login-banner">
-                            <img src="/static/dreamlms/img/login-img.png" class="img-fluid" alt="Logo">
-                        </div>
-                        <div class="mentor-course text-center">
-                            <h2>Welcome to <br>NubeEra LXP Courses.</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                        </div>
-                    </div>
-                    <div class="welcome-login">
-                        <div class="login-banner">
-                            <img src="/static/dreamlms/img/login-img.png" class="img-fluid" alt="Logo">
-                        </div>
-                        <div class="mentor-course text-center">
-                            <h2>Welcome to <br>NubeEra LXP Courses.</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 login-wrap-bg">
-                <div class="login-wrapper">
-                    <div class="loginbox mt-5">
-                        <div class="w-100">
-                            <!-- <div class="img-logo">
-                                <img src="/static/dreamlms/img/logo.png" class="img-fluid" alt="Logo">
-                                <div class="back-home">
-                                    <a href="indexpage">Back to Home</a>
-                                </div>
-                            </div> -->
-                            <h1>Log into Your Account</h1>
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label class="form-control-label">User Name</label>
-                                    {% render_field form.username class="form-control" placeholder="Enter your user name" %}
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label">Password</label>
-                                    <div class="pass-group">
-                                        {% render_field form.password class="form-control" placeholder="Enter your password" %}
-                                        <span class="feather-eye toggle-password"></span>
-                                    </div>
-                                </div>
-                                <div class="forgot">
-                                    <span><a class="forgot-link" href="forgot-password.html">Forgot Password
-                                            ?</a></span>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button class="btn btn-primary btn-start" type="submit">Log In</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="social-login">
-                            <a href="{% url 'social:begin' 'google-oauth2' %}">
-                                <div class="d-grid">
-                                    <button class="btn btn-primary btn-start mt-3">
-                                        <img src="/static/dreamlms/img/net-icon-01.png" class="img-fluid" alt="Google Logo"> Sign In using Google
-                                    </button>
-                                </div>
-                                
-                            </a>
-                        </div>
-
-                        <div class="register-link">
-                            <p class="mb-0">New User? <a href="register">Create an Account</a></p>
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-
-            </div>
-        </div>
+<body class="body  h-100" style="background-image: url('/static/getskills/images/bg-1.jpg'); background-size:cover;">
+        <div class="container" style="height: 100vh;">
+           <div class="row h-100 align-items-center justify-content-center">
+               <div class="col-xl-12 mt-3 align-self-center">
+                   <div class="card">
+                       <div class="card-body p-0">
+                           <div class="row m-0">
+                               <div class="col-xl-6 col-md-6 sign text-center">
+                                   <div>
+                                       <div class="text-center my-5">
+                                           <a href="index.html"><img width="200" src="/static/getskills/images/logo-full.png" alt=""></a>
+                                       </div>
+                                       <img src="/static/getskills/images/log.png" class="education-img"></img>
+                                   </div>	
+                               </div>
+                               <div class="col-xl-6 col-md-6">
+                                   <div class="sign-in-your">
+                                       <h4 class="fs-20 font-w800 text-black">log in your account</h4>
+                                       <span>Welcome back! Login with your data that you entered<br> during registration</span>
+                                       <div class="login-social">
+                                           <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn font-w800 d-block my-4"><i class="fab fa-google me-2 text-primary"></i>Login with Google</a>
+                                       </div>
+                                       <form method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                       <label class="form-control-label">User Name</label>
+                                       {% render_field form.username class="form-control" placeholder="Enter your user name" %}
+                                   </div>
+                                   <div class="form-group">
+                                       <label class="form-control-label">Password</label>
+                                       <div class="pass-group">
+                                           {% render_field form.password class="form-control" placeholder="Enter your password" %}
+                                           <!-- <span class="feather-eye toggle-password"></span> -->
+                                       </div>
+                                   </div>
+                                           <div class="row d-flex justify-content-between mt-4 mb-2">
+                                               <!-- <div class="mb-3">
+                                                  <div class="form-check custom-checkbox ms-1">
+                                                       <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+                                                       <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+                                                   </div>
+                                               </div> -->
+                                               <div class="mb-3">
+                                                   <a href="page-forgot-password.html">Forgot Password?</a>
+                                               </div>
+                                           </div>
+                                           <div class="text-center">
+                                               <button type="submit" class="btn btn-primary btn-block">Log Me In</button>
+                                           </div>
+                                           
+                                       </form>
+                                         <div class="">
+                                            <p class="mb-0">New User? <a href="register">Create an Account</a></p>
+                                        </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       </div>
     </div>
+
 
 
     <script src="/static/dreamlms/js/jquery-3.6.0.min.js"></script>

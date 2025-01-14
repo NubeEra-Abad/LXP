@@ -33984,9 +33984,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   left: inherit;
 }
 
-.form-check {
-  line-height: normal;
-}
+
 
 .toggle-switch {
   padding-left: 3.125rem;
