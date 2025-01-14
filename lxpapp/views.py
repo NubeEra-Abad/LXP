@@ -216,7 +216,7 @@ def adminclick_view(request):
 
 @login_required
 def admin_dashboard_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'admin':
             dict={
             'total_learner':0,
@@ -225,7 +225,7 @@ def admin_dashboard_view(request):
             'total_question':0,
             }
             return render(request,'lxpapp/admin_dashboard.html',context=dict)
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 def aboutus_view(request):
     return render(request,'lxpapp/aboutus.html')
