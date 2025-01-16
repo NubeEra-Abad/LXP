@@ -292,9 +292,19 @@ def cfo_delete_batch_view(request,pk):
 # Create Scheduler
 @login_required
 def generate_meeting_link(request,meeting_type):
+    type ={'1':'Session',
+           '2':'Interview',
+           '3':'Client Requirment',
+           '4':'Lab Call',
+           '5':'Meeting',
+           '6':'Others'}
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%Y%m%d%H%M%S") + f"{now.microsecond // 1000:03d}"
     base_url = "https://3.95.231.203/"  # Replace with your actual meeting service URL
-    token = get_random_string(12)  # Generate a unique token for meeting
-    return f"{base_url}{get_random_string(6)}&token={quote_plus(token)}"
+    meeting_type = type[meeting_type]
+    base_url = f"{base_url}{quote_plus(meeting_type)}-{timestamp}"
+    print(base_url)
+    return f"{base_url}"
 
 def cfo_create_scheduler(request):
     if str(request.session['utype']) != 'cfo':
