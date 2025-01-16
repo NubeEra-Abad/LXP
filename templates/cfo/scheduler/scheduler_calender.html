@@ -6,28 +6,9 @@
     text-align: center; /* Center text inside the modal */
   }
 
-  /* Container for checkbox and calendar layout */
-  .calendar-container {
-    display: flex;
-    align-items: flex-start; /* Align items at the top */
-    gap: 30px; /* Space between the checkboxes and calendar */
-  }
-
-  /* Style for the checkbox container */
-  .checkbox-container {
-    width: 250px; /* Set a fixed width for checkboxes container */
-    display: flex;
-    flex-direction: column; /* Align checkboxes vertically */
-    gap: 15px; /* Space between checkboxes */
-  }
-
-  .checkbox-container label {
-    margin-left: 10px; /* Add some margin between the checkbox and label */
-  }
-
-  /* Ensure calendar takes the remaining space */
+  /* Ensure calendar takes the full width */
   .calendar-wrapper {
-    flex-grow: 1;
+    width: 100%;
   }
 </style>
 
@@ -40,40 +21,10 @@
 
 <div class="card">
   <div class="card-body">
-    <!-- Flexbox container for checkboxes and calendar -->
-    <div class="calendar-container mb-3">
-      <!-- Left side: Checkbox container -->
-      <div class="checkbox-container">
-        <div>
-          <input type="checkbox" id="showSessionEvents" checked />
-          <label for="showSessionEvents">Show Sessions Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showInterviewEvents" checked />
-          <label for="showInterviewEvents">Show Interviews Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showClientRequirementEvents" checked />
-          <label for="showClientRequirementEvents">Show Client Requirements Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showLabCallEvents" checked />
-          <label for="showLabCallEvents">Show Lab Calls Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showMeetingEvents" checked />
-          <label for="showMeetingEvents">Show Meetings Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showOtherEvents" checked />
-          <label for="showOtherEvents">Show Other Events Only</label>
-        </div>
-      </div>
-
+    <!-- Flexbox container for calendar -->
+    <div class="calendar-wrapper mb-3">
       <!-- Right side: Calendar -->
-      <div class="calendar-wrapper">
-        <div id="calendar" class="app-fullcalendar fc fc-media-screen fc-direction-ltr fc-theme-standard"></div>
-      </div>
+      <div id="calendar" class="app-fullcalendar fc fc-media-screen fc-direction-ltr fc-theme-standard"></div>
     </div>
 
     <!-- Event Details Modal -->
@@ -228,22 +179,6 @@
 
         calendar.render();
         calendar.updateSize();
-      }
-
-      function filterEvents(calendar) {
-        const filteredEvents = schedulerEvents.filter(function(event) {
-          let showSession = $('#showSessionEvents').is(':checked') && event.extendedProps.Type === "Session";
-          let showInterview = $('#showInterviewEvents').is(':checked') && event.extendedProps.Type === "Interview";
-          let showClientRequirement = $('#showClientRequirementEvents').is(':checked') && event.extendedProps.Type === "Client Requirement";
-          let showLabCall = $('#showLabCallEvents').is(':checked') && event.extendedProps.Type === "Lab Call";
-          let showMeeting = $('#showMeetingEvents').is(':checked') && event.extendedProps.Type === "Meeting";
-          let showOther = $('#showOtherEvents').is(':checked') && event.extendedProps.Type === "Others";
-
-          return showSession || showInterview || showClientRequirement || showLabCall || showMeeting || showOther;
-        });
-
-        calendar.removeAllEvents();
-        calendar.addEventSource(filteredEvents);
       }
 
       jQuery(window).on('load', fullCalender);

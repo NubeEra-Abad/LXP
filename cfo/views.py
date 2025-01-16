@@ -291,7 +291,7 @@ def cfo_delete_batch_view(request,pk):
 
 # Create Scheduler
 @login_required
-def generate_meeting_link(request):
+def generate_meeting_link(request,meeting_type):
     base_url = "https://3.95.231.203/"  # Replace with your actual meeting service URL
     token = get_random_string(12)  # Generate a unique token for meeting
     return f"{base_url}{get_random_string(6)}&token={quote_plus(token)}"
@@ -328,7 +328,7 @@ def cfo_create_scheduler(request):
         scheduler.save()
 
         # Automatically generate a meeting link using scheduler id
-        scheduler.meeting_link = generate_meeting_link(request)
+        scheduler.meeting_link = generate_meeting_link(request,type)
         scheduler.save()
 
         return redirect('cfo-scheduler-list')
@@ -497,20 +497,3 @@ def generate_jitsi_token(username, meeting_id, is_host):
     }
     token = jwt.encode(payload, JITSI_SECRET, algorithm='HS256')
     return token
-
-@login_required
-def create_meeting(request):
-    meeting_id = str(uuid.uuid4())
-    return JsonResponse({"meeting_id": meeting_id, "meeting_link": f"{JITSI_SERVER}{meeting_id}/"})
-
-@login_required
-def join_meeting(request):
-    username = request.user.username
-    is_host = request.GET.get('host') == 'true'
-    meeting_id = str(uuid.uuid4())
-    token = generate_jitsi_token(username, meeting_id, is_host)
-    return render(request, "join_meeting.html", {
-        "meeting_id": meeting_id,
-        "token": token,
-        "jitsi_server": JITSI_SERVER
-    })

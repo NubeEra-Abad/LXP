@@ -25,6 +25,4 @@ urlpatterns = [
     path('cfo-scheduler-delete/<int:scheduler_id>/', views.cfo_delete_scheduler, name='cfo-delete-scheduler'),
     path('get_chapters/<int:subject_id>/', views.get_chapters, name='get_chapters'),
     path('get_topics/<int:chapter_id>/', views.get_topics, name='get_topics'),
-    path('create-meeting/', views.create_meeting, name='create_meeting'),
-    path('join-meeting/', views.join_meeting, name='join_meeting'),
 ]
