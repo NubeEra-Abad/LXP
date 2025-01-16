@@ -1,0 +1,37 @@
+name: Django Application CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to match your branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install Dependencies
+      run: |
+        python -m venv .env
+        source .env/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Migrations
+      run: |
+        source .env/bin/activate
+        python manage.py makemigrations
+        python manage.py migrate
+
+    - name: Run Django Server
+      run: |
+        source .env/bin/activate
+        sudo .env/bin/python3 manage.py runserver 0.0.0.0:7000
