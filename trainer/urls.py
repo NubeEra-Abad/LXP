@@ -87,6 +87,7 @@ urlpatterns = [
     path('trainer-schedulerstatus-delete/<int:id>/', views.schedulerstatus_delete, name='trainer-schedulerstatus-delete'),
     path('get-scheduler-status-sum/', views.get_scheduler_status_sum, name='get-scheduler-status-sum'),
     path('trainer-schedulerstatus-mark-done/', views.trainer_schedulerstatus_mark_done, name='trainer-schedulerstatus-mark-done'),
+    path('trainer-scheduler-calender/', views.trainer_scheduler_calender, name='trainer-scheduler-calender'),
     
     
 
