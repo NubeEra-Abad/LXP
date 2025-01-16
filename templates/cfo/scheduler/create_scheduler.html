@@ -206,6 +206,10 @@
     const topicRow = document.querySelector(".row select#topic").closest(".row");
     const eventDetailsRow = document.querySelector(".row textarea#eventdetail").closest(".row");
 
+    const subjectSelect = document.getElementById("subject");
+    const chapterSelect = document.getElementById("chapter");
+    const topicSelect = document.getElementById("topic");
+
     function toggleFields() {
       // Check if the selected value is "1"
       if (schedulerTypeSelect.value === "1") {
@@ -216,9 +220,9 @@
         eventDetailsRow.style.display = "none";
     
         // Add 'required' to subject, chapter, and topic fields
-        subjectRow.setAttribute('required', 'required');
-        chapterRow.setAttribute('required', 'required');
-        topicRow.setAttribute('required', 'required');
+        subjectSelect.setAttribute('required', 'required');
+        chapterSelect.setAttribute('required', 'required');
+        topicSelect.setAttribute('required', 'required');
         
       } else {
         // Default state if no valid option is selected
@@ -228,9 +232,9 @@
         eventDetailsRow.style.display = "flex";
     
         // Remove 'required' from subject, chapter, and topic fields
-        subjectRow.removeAttribute('required');
-        chapterRow.removeAttribute('required');
-        topicRow.removeAttribute('required');
+        subjectSelect.removeAttribute('required');
+        chapterSelect.removeAttribute('required');
+        topicSelect.removeAttribute('required');
       }
     }
 

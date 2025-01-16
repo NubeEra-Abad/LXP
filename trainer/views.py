@@ -86,6 +86,8 @@ def trainer_update_material_view(request,pk):
                 material.save()
                 materials = LXPModel.Material.objects.all()
                 return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
+            material_instance = get_object_or_404(LXPModel.Material, id=pk)
+            materialForm = LXPFORM.MaterialForm(instance=material_instance)
             return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm})
     except:
         return render(request,'lxpapp/404page.html')
@@ -404,6 +406,8 @@ def trainer_update_sessionmaterial_view(request,pk):
                 sessionmaterial.save()
                 sessionmaterials = LXPModel.SessionMaterial.objects.all()
                 return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
+            sessionmaterial_instance = get_object_or_404(LXPModel.SessionMaterial, id=pk)
+            sessionmaterialForm = LXPFORM.SessionMaterialForm(instance=sessionmaterial_instance)
             return render(request,'trainer/sessionmaterial/trainer_update_sessionmaterial.html',{'sessionmaterialForm':sessionmaterialForm})
     except:
         return render(request,'lxpapp/404page.html')
@@ -721,6 +725,8 @@ def trainer_update_mcqquestion_view(request,pk):
                         mcqquestionForm.save()
                         mcqquestions = LXPModel.McqQuestion.objects.all()
                         return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
+            mcqquestion_instance = get_object_or_404(LXPModel.McqQuestion, id=pk)
+            mcqquestionForm = LXPFORM.McqQuestionForm(instance=mcqquestion_instance)
             return render(request,'trainer/mcqquestion/trainer_update_mcqquestion.html',{'mcqquestionForm':mcqquestionForm,'ex':mcqquestion.mcqquestion_name,'sub':mcqquestion.questiontpye})
     except:
         return render(request,'lxpapp/404page.html')
@@ -797,13 +803,14 @@ def trainer_update_shortquestion_view(request,pk):
                     shortquestion = LXPModel.ShortQuestion.objects.all().filter(question__iexact = shortquestiontext).exclude(id=pk)
                     if shortquestion:
                         messages.info(request, 'ShortQuestion Name Already Exist')
-                        return render(request,'trainer/shortquestion/trainer_update_shortquestion.html',{'shortquestionForm':shortquestionForm})
                     else:
                         examid = LXPModel.Exam.objects.all().filter(id=request.POST['examID'])
                         shortquestionForm.examID=examid
                         shortquestionForm.save()
                         shortquestions = LXPModel.ShortQuestion.objects.all()
                         return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
+            shortquestion_instance = get_object_or_404(LXPModel.ShortQuestion, id=pk)
+            shortquestionForm = LXPFORM.ShortQuestionForm(instance=shortquestion_instance)
             return render(request,'trainer/shortquestion/trainer_update_shortquestion.html',{'shortquestionForm':shortquestionForm,'ex':shortquestion.question})
     except:
         return render(request,'lxpapp/404page.html')
@@ -843,6 +850,7 @@ def trainer_update_short_question_result_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':
             resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = pk)
+            
             return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
     except:
         return render(request,'lxpapp/404page.html')
@@ -934,11 +942,12 @@ def trainer_update_ytexamquestion_view(request,pk):
                     ytexamquestion = LXPModel.YTExamQuestion.objects.all().filter(ytexamquestion_name__iexact = ytexamquestiontext).exclude(id=pk)
                     if ytexamquestion:
                         messages.info(request, 'Question Already Exist')
-                        return render(request,'trainer/ytexamquestion/trainer_update_ytexamquestion.html',{'ytexamquestionForm':ytexamquestionForm})
                     else:
                         ytexamquestionForm.save()
                         ytexamquestions = LXPModel.YTExamQuestion.objects.all()
                         return render(request,'trainer/ytexamquestion/trainer_view_ytexamquestion.html',{'ytexamquestions':ytexamquestions})
+            ytexamquestion_instance = get_object_or_404(LXPModel.YTExamQuestion, id=pk)
+            ytexamquestionForm = LXPFORM.YTExamQuestionForm(instance=ytexamquestion_instance)
             return render(request,'trainer/ytexamquestion/trainer_update_ytexamquestion.html',{'ytexamquestionForm':ytexamquestionForm,'ex':ytexamquestion.ytexamquestion_name,'sub':ytexamquestion.questiontpye})
     except:
         return render(request,'lxpapp/404page.html')
@@ -1095,11 +1104,12 @@ def trainer_update_chapterquestion_view(request,pk):
                     chapterquestion = LXPModel.ChapterQuestion.objects.all().filter(chapterquestion_name__iexact = chapterquestiontext).exclude(id=pk)
                     if chapterquestion:
                         messages.info(request, 'ChapterQuestion Name Already Exist')
-                        return render(request,'trainer/chapterquestion/trainer_update_chapterquestion.html',{'chapterquestionForm':chapterquestionForm})
                     else:
                         chapterquestionForm.save()
                         chapterquestions = LXPModel.ChapterQuestion.objects.all()
                         return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
+            chapterquestion_instance = get_object_or_404(LXPModel.ChapterQuestion, id=pk)
+            chapterquestionForm = LXPFORM.ChapterQuestionForm(instance=chapterquestion_instance)
             return render(request,'trainer/chapterquestion/trainer_update_chapterquestion.html',{'chapterquestionForm':chapterquestionForm,'ex':chapterquestion.chapterquestion_name,'sub':chapterquestion.questiontpye})
     except:
         return render(request,'lxpapp/404page.html')
@@ -1184,7 +1194,6 @@ def trainer_update_k8sterminal_view(request,pk):
                     k8sterminal = LXPModel.K8STerminal.objects.all().filter(k8sterminal_name__iexact = k8sterminaltext).exclude(id=pk)
                     if k8sterminal:
                         messages.info(request, 'K8STerminal Name Already Exist')
-                        return render(request,'trainer/labs/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm})
                     else:
                         chapter = LXPModel.Video.objects.get(chapter_name=chaptertext)
                         subject = LXPModel.Playlist.objects.get(subject_name=subjecttext)
@@ -1195,6 +1204,8 @@ def trainer_update_k8sterminal_view(request,pk):
                         k8sterminal.save()
                         c_list = LXPModel.K8STerminal.objects.filter(chapter_id__in=LXPModel.Video.objects.all())
                         return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':c_list})
+            k8sterminal_instance = get_object_or_404(LXPModel.K8STerminal, id=pk)
+            k8sterminalForm = LXPFORM.K8STerminalForm(instance=k8sterminal_instance)
             return render(request,'trainer/labs/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm,'sub':k8sterminal.k8sterminal_name})
     except:
         return render(request,'lxpapp/404page.html')

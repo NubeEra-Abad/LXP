@@ -3,19 +3,6 @@ from cto import views
 from django.contrib.auth.views import LoginView
 urlpatterns = [
     path('cto-dashboard', views.cto_dashboard_view,name='cto-dashboard'),
-    
-    path('cto-passionateskill', views.cto_passionateskill_view,name='cto-passionateskill'),
-    path('cto-add-passionateskill', views.cto_add_passionateskill_view,name='cto-add-passionateskill'),
-    path('cto-update-passionateskill/<int:pk>', views.cto_update_passionateskill_view,name='cto-update-passionateskill'),
-    path('cto-view-passionateskill', views.cto_view_passionateskill_view,name='cto-view-passionateskill'),
-    path('cto-delete-passionateskill/<int:pk>', views.cto_delete_passionateskill_view,name='cto-delete-passionateskill'),
-
-    path('cto-knownskill', views.cto_knownskill_view,name='cto-knownskill'),
-    path('cto-add-knownskill', views.cto_add_knownskill_view,name='cto-add-knownskill'),
-    path('cto-update-knownskill/<int:pk>', views.cto_update_knownskill_view,name='cto-update-knownskill'),
-    path('cto-view-knownskill', views.cto_view_knownskill_view,name='cto-view-knownskill'),
-    path('cto-delete-knownskill/<int:pk>', views.cto_delete_knownskill_view,name='cto-delete-knownskill'),
-
     path('cto-add-subject', views.cto_add_subject_view,name='cto-add-subject'),
     path('cto-update-subject/<int:pk>', views.cto_update_subject_view,name='cto-update-subject'),
     path('cto-view-subject', views.cto_view_subject_view,name='cto-view-subject'),
