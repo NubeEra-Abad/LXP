@@ -43,3 +43,4 @@ pytube
 oauth2client
 django-ckeditor
 PyGithub
+PyJWT
