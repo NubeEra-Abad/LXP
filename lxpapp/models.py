@@ -711,6 +711,7 @@ class Scheduler(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
     eventdetails=models.CharField(max_length=200,null=True)
+    meeting_link = models.URLField(max_length=500, null=True, blank=True)
     
     def __str__(self):
         # Return a formatted string instead of a datetime object
@@ -721,3 +722,4 @@ class SchedulerStatus(models.Model):
     scheduler=models.ForeignKey(Scheduler,on_delete=models.SET_NULL, null=True)
     trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     status=models.PositiveIntegerField(default=0)
+

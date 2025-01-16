@@ -14,6 +14,9 @@ import json
 from django.db.models import Exists, OuterRef,Case, When, Value, IntegerField,F, Value, Q, Sum, Max
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
+from django.utils.crypto import get_random_string
+from urllib.parse import quote_plus
+
 @login_required    
 def cfo_dashboard_view(request):
     try:
@@ -288,9 +291,15 @@ def cfo_delete_batch_view(request,pk):
 
 # Create Scheduler
 @login_required
+def generate_meeting_link(request,meeting_type):
+    base_url = "https://3.95.231.203/"  # Replace with your actual meeting service URL
+    token = get_random_string(12)  # Generate a unique token for meeting
+    return f"{base_url}{get_random_string(6)}&token={quote_plus(token)}"
+
 def cfo_create_scheduler(request):
     if str(request.session['utype']) != 'cfo':
-        return render(request,'lxpapp/404page.html')
+        return render(request, 'lxpapp/404page.html')
+    
     if request.method == 'POST':
         trainer = request.POST.get('trainer')
         type = request.POST.get('type')
@@ -300,17 +309,12 @@ def cfo_create_scheduler(request):
         start = request.POST.get('start')
         end = request.POST.get('end')
         eventdetails = request.POST.get('eventdetail')
-        trainer=LXPModel.User.objects.get(id=trainer)
-        if  type == '1':
-            subject=LXPModel.Subject.objects.get(id=subject)
-            chapter=LXPModel.Chapter.objects.get(id=chapter)
-            topic=LXPModel.Topic.objects.get(id=topic)    
-            eventdetails = None
-        else:
-            subject=None
-            chapter=None
-            topic=None
-            
+
+        trainer = LXPModel.User.objects.get(id=trainer)
+        subject = LXPModel.Subject.objects.get(id=subject) if type == '1' else None
+        chapter = LXPModel.Chapter.objects.get(id=chapter) if type == '1' else None
+        topic = LXPModel.Topic.objects.get(id=topic) if type == '1' else None
+
         scheduler = LXPModel.Scheduler(
             subject=subject,
             trainer=trainer,
@@ -319,22 +323,26 @@ def cfo_create_scheduler(request):
             start=start,
             end=end,
             type=type,
-            eventdetails=eventdetails
+            eventdetails=eventdetails,
         )
         scheduler.save()
+
+        # Automatically generate a meeting link using scheduler id
+        scheduler.meeting_link = generate_meeting_link(request,type)
+        scheduler.save()
+
         return redirect('cfo-scheduler-list')
-    
+
     subjects = LXPModel.Subject.objects.all()
     trainers = UserSocialAuth.objects.select_related('user').order_by('user__first_name', 'user__last_name').values(
-                    'id', 
-                    'user_id', 
-                    'user__first_name', 
-                    'user__last_name', 
-                    'utype'
-                ).filter(utype=1)
+        'id', 
+        'user_id', 
+        'user__first_name', 
+        'user__last_name', 
+        'utype'
+    ).filter(utype=1)
     
-    return render(request, 'cfo/scheduler/create_scheduler.html', {'trainers': trainers,'subjects': subjects})
-
+    return render(request, 'cfo/scheduler/create_scheduler.html', {'trainers': trainers, 'subjects': subjects})
 
 @login_required
 def cfo_update_scheduler(request, scheduler_id):
@@ -429,6 +437,18 @@ def cfo_scheduler_calender(request):
     )
     return render(request, 'cfo/scheduler/scheduler_calender.html', {'schedulers': schedulers})
 
+def get_meetings(request):
+    meetings = LXPModel.Scheduler.objects.all()
+    events = [
+        {
+            "title": f"{meeting.subject.name if meeting.subject else meeting.eventdetails}",
+            "start": meeting.start.isoformat(),
+            "end": meeting.end.isoformat(),
+            "meeting_link": meeting.meeting_link,  # Include meeting link
+        }
+        for meeting in meetings
+    ]
+    return JsonResponse(events, safe=False)
 # Delete Scheduler
 @login_required
 def cfo_delete_scheduler(request, scheduler_id):
@@ -449,3 +469,31 @@ def get_topics(request, chapter_id):
     topics = LXPModel.Topic.objects.all().filter(chapter_id = chapter_id)
     return JsonResponse([{'id': topic.id, 'name': topic.topic_name} for topic in topics], safe=False)
 
+
+import jwt
+import datetime
+import uuid
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
+JITSI_SECRET = "a5f9c73e4d85e0c9f25b2d4394b6d24d5c00f27aaebef34f97f13a9f6f1c9ec7"
+JITSI_SERVER = "https://34.235.128.110"  # Replace with your Jitsi Meet server IP
+
+def generate_jitsi_token(username, meeting_id, is_host):
+    payload = {
+        "context": {
+            "user": {
+                "name": username,
+                "id": username
+            }
+        },
+        "aud": "my_django_app",
+        "iss": "my_django_app",
+        "sub": "your-jitsi-domain",
+        "room": meeting_id,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+        "moderator": is_host
+    }
+    token = jwt.encode(payload, JITSI_SECRET, algorithm='HS256')
+    return token

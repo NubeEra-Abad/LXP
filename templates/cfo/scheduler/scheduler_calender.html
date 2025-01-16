@@ -6,28 +6,9 @@
     text-align: center; /* Center text inside the modal */
   }
 
-  /* Container for checkbox and calendar layout */
-  .calendar-container {
-    display: flex;
-    align-items: flex-start; /* Align items at the top */
-    gap: 30px; /* Space between the checkboxes and calendar */
-  }
-
-  /* Style for the checkbox container */
-  .checkbox-container {
-    width: 250px; /* Set a fixed width for checkboxes container */
-    display: flex;
-    flex-direction: column; /* Align checkboxes vertically */
-    gap: 15px; /* Space between checkboxes */
-  }
-
-  .checkbox-container label {
-    margin-left: 10px; /* Add some margin between the checkbox and label */
-  }
-
-  /* Ensure calendar takes the remaining space */
+  /* Ensure calendar takes the full width */
   .calendar-wrapper {
-    flex-grow: 1;
+    width: 100%;
   }
 </style>
 
@@ -40,40 +21,10 @@
 
 <div class="card">
   <div class="card-body">
-    <!-- Flexbox container for checkboxes and calendar -->
-    <div class="calendar-container mb-3">
-      <!-- Left side: Checkbox container -->
-      <div class="checkbox-container">
-        <div>
-          <input type="checkbox" id="showSessionEvents" checked />
-          <label for="showSessionEvents">Show Sessions Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showInterviewEvents" checked />
-          <label for="showInterviewEvents">Show Interviews Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showClientRequirementEvents" checked />
-          <label for="showClientRequirementEvents">Show Client Requirements Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showLabCallEvents" checked />
-          <label for="showLabCallEvents">Show Lab Calls Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showMeetingEvents" checked />
-          <label for="showMeetingEvents">Show Meetings Only</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showOtherEvents" checked />
-          <label for="showOtherEvents">Show Other Events Only</label>
-        </div>
-      </div>
-
+    <!-- Flexbox container for calendar -->
+    <div class="calendar-wrapper mb-3">
       <!-- Right side: Calendar -->
-      <div class="calendar-wrapper">
-        <div id="calendar" class="app-fullcalendar fc fc-media-screen fc-direction-ltr fc-theme-standard"></div>
-      </div>
+      <div id="calendar" class="app-fullcalendar fc fc-media-screen fc-direction-ltr fc-theme-standard"></div>
     </div>
 
     <!-- Event Details Modal -->
@@ -124,6 +75,12 @@
                 <td id="eventDetails" style="text-align: left;"></td>
               </tr>
               <tr>
+                <td style="text-align: left; width: 30%;"><strong>Meeting Link:</strong></td>
+                <td id="eventMeetingLink" style="text-align: left;">
+                  <a href="#" id="meetingLink" target="_blank">Join Meeting</a>
+                </td>
+              </tr>
+              <tr>
                 <td style="text-align: left; width: 30%;"><strong>Complete:</strong></td>
                 <td id="eventStatusSum" style="text-align: left;">0 %</td>
               </tr>
@@ -144,7 +101,6 @@
     <script>
       "use strict";
       
-      // Initialize typeMap to map event types
       const typeMap = {
         "1": "Session",
         "2": "Interview",
@@ -154,7 +110,6 @@
         "6": "Others"
       };
 
-      // Initialize all events
       const schedulerEvents = [
         {% for scheduler in schedulers %}
         {
@@ -162,19 +117,19 @@
           start: "{{ scheduler.start|date:'Y-m-d\\TH:i:s'|escapejs }}",
           end: "{{ scheduler.end|date:'Y-m-d\\TH:i:s'|escapejs }}",
           extendedProps: {
-            Type: typeMap["{{ scheduler.type|escapejs }}"],  // Make sure this is correct
+            Type: typeMap["{{ scheduler.type|escapejs }}"],
             Subject: "{{ scheduler.subject.subject_name|escapejs }}",
             Chapter: "{{ scheduler.chapter.chapter_name|escapejs }}",
             Topic: "{{ scheduler.topic.topic_name|escapejs }}",
             Trainer: "{{ scheduler.trainer.first_name|escapejs }} {{ scheduler.trainer.last_name|escapejs }}",
             StatusSum: "{{ scheduler.status_sum|default:0|escapejs }} %",
-            Details: "{{ scheduler.eventdetails|escapejs }}"
+            Details: "{{ scheduler.eventdetails|escapejs }}",
+            MeetingLink: "{{ scheduler.meeting_link|escapejs }}"
           }
         },
         {% endfor %}
       ];
 
-      // Function to initialize and render FullCalendar
       function fullCalender() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -186,71 +141,46 @@
           selectable: true,
           editable: false,
           initialDate: new Date().toISOString().slice(0, 10),
-          events: schedulerEvents, // Load all events initially
+          events: schedulerEvents,
           eventClick: function(info) {
-            // Populate modal with event details
             $('#eventTitleDetails').text(info.event.title);
             $('#eventStartDetails').text(info.event.start.toLocaleString());
             $('#eventEndDetails').text(info.event.end ? info.event.end.toLocaleString() : 'N/A');
             $('#eventTrainer').text(info.event.extendedProps.Trainer);
             $('#eventStatusSum').text(info.event.extendedProps.StatusSum);
-          
-            // Set default values for Subject, Chapter, Topic, and Details
             $('#eventSubject').text(info.event.extendedProps.Subject || 'N/A');
             $('#eventChapter').text(info.event.extendedProps.Chapter || 'N/A');
             $('#eventTopic').text(info.event.extendedProps.Topic || 'N/A');
             $('#eventDetails').text(info.event.extendedProps.Details || 'N/A');
-          
-            // Set the Type (this should not be blank)
-            $('#eventType').text(info.event.extendedProps.Type || 'N/A'); // If no type, default to 'N/A'
-          
-            // Check event type and toggle rows accordingly
+            $('#eventType').text(info.event.extendedProps.Type || 'N/A');
+            // Handle the meeting link
+            const meetingLink = info.event.extendedProps.MeetingLink || '#';  // Default to '#' if no link exists
+            $('#meetingLink').attr('href', meetingLink);
+            $('#eventMeetingLink').toggle(meetingLink !== '#');  // Hide the link row if there's no link
+
+
             const eventType = info.event.extendedProps.Type;
-          
+
             if (eventType === "Session") {
-              // Show Session-related fields, hide Details
               $('#eventSubject').closest('tr').show();
               $('#eventChapter').closest('tr').show();
               $('#eventTopic').closest('tr').show();
-              
-              $('#eventDetails').closest('tr').hide(); // Hide Details row
+              $('#eventDetails').closest('tr').hide();
             } else {
-              // Show Details for other event types, hide Session-related fields
               $('#eventSubject').closest('tr').hide();
               $('#eventChapter').closest('tr').hide();
               $('#eventTopic').closest('tr').hide();
-              
-              $('#eventDetails').closest('tr').show(); // Show Details row
+              $('#eventDetails').closest('tr').show();
             }
-          
-            // Show the modal
+
             $('#eventDetailsModal').modal('show');
           }
         });
 
         calendar.render();
-        calendar.updateSize(); // Ensure calendar resizes properly
+        calendar.updateSize();
       }
 
-      // Filter events based on selected checkboxes
-      function filterEvents(calendar) {
-        const filteredEvents = schedulerEvents.filter(function(event) {
-          let showSession = $('#showSessionEvents').is(':checked') && event.extendedProps.Type === "Session";
-          let showInterview = $('#showInterviewEvents').is(':checked') && event.extendedProps.Type === "Interview";
-          let showClientRequirement = $('#showClientRequirementEvents').is(':checked') && event.extendedProps.Type === "Client Requirement";
-          let showLabCall = $('#showLabCallEvents').is(':checked') && event.extendedProps.Type === "Lab Call";
-          let showMeeting = $('#showMeetingEvents').is(':checked') && event.extendedProps.Type === "Meeting";
-          let showOther = $('#showOtherEvents').is(':checked') && event.extendedProps.Type === "Others";
-
-          return showSession || showInterview || showClientRequirement || showLabCall || showMeeting || showOther;
-        });
-
-        // Remove all events and add filtered events
-        calendar.removeAllEvents();
-        calendar.addEventSource(filteredEvents);
-      }
-
-      // Initialize calendar on window load
       jQuery(window).on('load', fullCalender);
     </script>
   </div>
