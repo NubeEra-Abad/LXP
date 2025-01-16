@@ -13,15 +13,15 @@
   </style>
   <nav aria-label="breadcrumb">
     <ul class="breadcrumb">
-      <li><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-      <li><a href="../../../../learner/learner-video-course-subject">Session Recorded Videos</a>
+      <li><a href="{% url 'learner-dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'learner-video-course-subject' %}">Session Recorded Videos</a>
       </li>
       <li aria-current="page">Video List</li>
     </ul>
   </nav>
 </div>
 <section class="course-content">
-  <h1 class="list_title px-5"></h1>
+  <!-- <h1 class="list_title px-5"></h1>
   <div class="container">
     <div class="row">
 
@@ -60,10 +60,207 @@
       {% endfor %}
 
     </div>
-  </div>
-  </div>
+  </div> -->
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-8 col-xxl-7">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="list_title"></h3>
+
+
+            <div class="course-details-tab style-2 mt-4">
+              <nav>
+                <div class="nav nav-tabs tab-auto" id="nav-tab" role="tablist">
+                  <button class="nav-link active" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
+                    type="button" role="tab" aria-controls="nav-about" aria-selected="true">About</button>
+                  <button class="nav-link" id="nav-reviews-tab" data-bs-toggle="tab" data-bs-target="#nav-reviews"
+                    type="button" role="tab" aria-controls="nav-reviews" aria-selected="false">Reviews</button>
+                  <button class="nav-link " id="nav-discussion-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-discussion" type="button" role="tab" aria-controls="nav-discussion"
+                    aria-selected="false">Discussion</button>
+                </div>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                  <div class="about-content">
+                    <h4>About This Course</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. </p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. </p>
+                  </div>
+                </div>
+                <div class="tab-pane fade " id="nav-reviews" role="tabpanel" aria-labelledby="nav-reviews-tab">
+                  <div class="user-pic2">
+                    <div class="d-flex align-items-center">
+                      <img src="assests/images/courses/pic2.jpg" alt="">
+                      <div class="ms-3">
+                        <h4>Karen Hope</h4>
+                        <ul class="d-flex align-items-center raiting my-0 flex-wrap">
+                          <li><span class="font-w500">5.0</span><i class="fas fa-star star-orange ms-2"></i>
+                            <i class="fas fa-star star-orange"></i>
+                            <i class="fas fa-star star-orange"></i>
+                            <i class="fas fa-star star-orange"></i>
+                            <i class="fas fa-star star-orange"></i>
+                          </li>
+                          <li>1 Month Ago</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. </p>
+                  </div>
+                  <div class="user-pic2">
+                    <div class="d-flex align-items-center">
+                      <img src="assests/images/courses/pic3.jpg" alt="">
+                      <div class="ms-3">
+                        <h4>Karen Hope</h4>
+                        <ul class="d-flex align-items-center raiting my-0 flex-wrap">
+                          <li><span class="font-w500">5.0</span><i class="fas fa-star star-orange ms-2"></i>
+                            <i class="fas fa-star star-orange"></i>
+                            <i class="fas fa-star star-orange"></i>
+                            <i class="fas fa-star star-orange"></i>
+                            <i class="fas fa-star star-orange"></i>
+                          </li>
+                          <li>1 Month Ago</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. </p>
+                  </div>
+                </div>
+                <div class="tab-pane fade show" id="nav-discussion" role="tabpanel"
+                  aria-labelledby="nav-discussion-tab">
+                  <div class="about-content">
+                    <h4>About This Course</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. </p>
+                    <h4>Course’s Objectives</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. </p>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-xxl-5">
+        <div class="custome-accordion">
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item card">
+              <h2 class="accordion-header border-0" id="headingOne">
+                <button class="accordion-button d-flex justify-content-between align-items-center" type="button"
+                  data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                  aria-controls="collapseOne">
+
+                  <span class="acc-heading">Videos</span>
+
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body card-body pt-0">
+                  {% for t in list %}
+                  {% if forloop.counter == 1 or t.unlocked >= 0 %}
+                  <div class="acc-courses">
+                    <a href="{% url 'learner-show-video' subject_id t.id  %}">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <span class="acc-icon">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M4 13C3.817 13 3.635 12.95 3.474 12.851C3.32918 12.7611 3.20965 12.6358 3.12671 12.4869C3.04378 12.338 3.00016 12.1704 3 12V4C3 3.653 3.18 3.331 3.474 3.149C3.61914 3.05976 3.7846 3.00891 3.95481 3.00121C4.12502 2.99351 4.29439 3.02923 4.447 3.105L12.447 7.105C12.6131 7.1882 12.7528 7.31599 12.8504 7.47405C12.948 7.63212 12.9997 7.81423 12.9997 8C12.9997 8.18578 12.948 8.36789 12.8504 8.52595C12.7528 8.68402 12.6131 8.8118 12.447 8.895L4.447 12.895C4.307 12.965 4.152 13 4 13Z"
+                                fill="var(--primary)" />
+                            </svg>
+                          </span>
+                          <h4 class="m-0">{{t.name}}</h4>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  {% else %}
+                  <div class="acc-courses">
+                    <a href="#">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <span class="acc-icon">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M4 13C3.817 13 3.635 12.95 3.474 12.851C3.32918 12.7611 3.20965 12.6358 3.12671 12.4869C3.04378 12.338 3.00016 12.1704 3 12V4C3 3.653 3.18 3.331 3.474 3.149C3.61914 3.05976 3.7846 3.00891 3.95481 3.00121C4.12502 2.99351 4.29439 3.02923 4.447 3.105L12.447 7.105C12.6131 7.1882 12.7528 7.31599 12.8504 7.47405C12.948 7.63212 12.9997 7.81423 12.9997 8C12.9997 8.18578 12.948 8.36789 12.8504 8.52595C12.7528 8.68402 12.6131 8.8118 12.447 8.895L4.447 12.895C4.307 12.965 4.152 13 4 13Z"
+                                fill="var(--primary)" />
+                            </svg>
+                          </span>
+                          <h4 class="m-0">{{t.name}}</h4>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="accordion-item card">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed d-flex justify-content-between align-items-center"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                    aria-controls="collapseTwo">
+
+                    <span class="acc-heading">Material</span>
+
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body card-body pt-0">
+                    {% for t in list %}
+                    {% if t.matid > 0 %}
+                    <div class="acc-courses">
+                      <a href="{% url 'learner-video-sesseionmaterial-list' subject_id t.id %}">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div class="d-flex align-items-center">
+                            <span class="acc-icon">
+                              <span class="far fa-eye"></span>
+                            </span>
+                            <h4 class="m-0">{{t.name}}</h4>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                    {% else %}
+                    <div class="acc-courses">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <span class="acc-icon">
+                            <span class="far fa-eye"></span>
+                          </span>
+                          <h4 class="m-0">{{t.name}}</h4>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </section>
-</div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
