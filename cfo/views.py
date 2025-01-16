@@ -300,7 +300,7 @@ def generate_meeting_link(request,meeting_type):
            '6':'Others'}
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y%m%d%H%M%S") + f"{now.microsecond // 1000:03d}"
-    base_url = "https://3.95.231.203/"  # Replace with your actual meeting service URL
+    base_url = "https://3.145.162.154/"  # Replace with your actual meeting service URL
     meeting_type = type[meeting_type]
     base_url = f"{base_url}{quote_plus(meeting_type)}-{timestamp}"
     print(base_url)
