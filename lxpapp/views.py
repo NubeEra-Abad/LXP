@@ -130,7 +130,7 @@ def afterlogin_view(request):
     user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
     if not user:
         request.session['utype'] = 'admin'
-        return redirect('admin-dashboard')
+        return redirect('admin-view-user-list')
     elif user:
         for xx in user:
             if xx.utype == 1:

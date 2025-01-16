@@ -12,8 +12,8 @@
 </head>
 
 <body class="body  h-100 white-bg">
-    
-    
+
+
     <div class="container h-100">
         <div class="row h-100 align-items-center justify-contain-center">
             <div class="col-xl-12 mt-3">
@@ -23,12 +23,12 @@
                             <div class="col-xl-6 col-md-6 sign text-center">
                                 <div>
                                     <div class="text-center my-5">
-                                    
+
                                     </div>
                                     <img src="/static/getskills/images/log.png" class="education-img"></img>
                                 </div>
                             </div>
-                            
+
                             <div class="col-xl-6 col-md-6">
                                 <div class="sign-in-your">
                                     {% if messages %}
@@ -50,9 +50,11 @@
                                     <h4 class="fs-20 font-w800 text-black">Sign in your account</h4>
                                     <span>Welcome back! Login with your data that you entered<br> during
                                         registration</span>
-                                        <div class="login-social">
-                                            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn font-w800 d-block my-4"><i class="fab fa-google me-2 text-primary"></i>Login with Google</a>
-                                        </div>
+                                    <div class="login-social">
+                                        <a href="{% url 'social:begin' 'google-oauth2' %}"
+                                            class="btn font-w800 d-block my-4"><i
+                                                class="fab fa-google me-2 text-primary"></i>Login with Google</a>
+                                    </div>
                                     <div class="mb-3"></div>
                                     <form method="post">
                                         {% csrf_token %}
@@ -84,17 +86,17 @@
                                 </form>
 
                                 <script>
-                                // Wait for the DOM to load
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    // Select the success message
-                                    var message = document.getElementById("success-message");
-                                    if (message) {
-                                        // Set a timer to hide the message after 5 seconds (5000 ms)
-                                        setTimeout(function () {
-                                            message.style.display = 'none';
-                                        }, 5000);
-                                    }
-                                });
+                                            // Wait for the DOM to load
+                                            document.addEventListener("DOMContentLoaded", function () {
+                                                // Select the success message
+                                                var message = document.getElementById("success-message");
+                                                if (message) {
+                                                    // Set a timer to hide the message after 5 seconds (5000 ms)
+                                                    setTimeout(function () {
+                                                        message.style.display = 'none';
+                                                    }, 5000);
+                                                }
+                                            });
                                 </script>
                             </div>
                         </div>
@@ -103,8 +105,10 @@
             </div>
         </div>
     </div>
-    </div>
 
+
+    <script src="/static/getskills/vendor/global/global.min.js"></script>
+    <script src="/static/getskills/js/dlabnav-init.js"></script>
 
 </body>
 

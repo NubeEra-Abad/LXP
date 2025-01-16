@@ -1,14 +1,8 @@
 <!--**********************************
             Sidebar start
         ***********************************-->
-<div class="dlabnav" style="overflow:auto; width: auto;">
+<!-- <div class="dlabnav" style="overflow:auto; width: auto;">
     <div class="text-center">
-        <!-- <img
-            src="{{request.user.profile_pic}}"
-            width="100"
-            class="img-fluid rounded-circle"
-            alt=""
-        > -->
         <img
             src="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
             width="100"
@@ -90,7 +84,101 @@
             </li>
         </ul>
     </div>
-</div>
+</div> -->
 <!--**********************************
             Sidebar end
         ***********************************-->
+
+
+<div class="dlabnav border-end">
+    <div class="text-center">
+        <img
+            src="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+            width="100"
+            class="rounded-circle mb-4"
+            style="max-width: 70%;"
+            alt=""
+        >
+        <h4>
+            <a href="#" style="font-size: 1rem;">{{request.user.first_name}} {{request.user.last_name}}</a>
+        </h4>
+        <h6>Learner</h6>
+    </div>
+    <div class="dlabnav-scroll">
+        <ul class="metismenu" id="menu">
+            <li>
+                <a href="{% url 'learner-dashboard' %}" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-video-course-subject' %}" class="" aria-expanded="false">
+                    <i class="bi bi-list-ul"></i>
+                    <span class="nav-text">Recorded Videos</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-studymaterial-module' %}" class="" aria-expanded="false">
+                    <i class="bi bi-list-check"></i>
+                    <span class="nav-text">My Enrolled Courses</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-availablecourse-module' %}" class="" aria-expanded="false">
+                    <i class="bi bi-list"></i>
+                    <span class="nav-text">All Courses</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-check-k8sterminal' %}" target="_blank" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Lab (K8S)</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-linux-terminal' %}" target="_blank" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Lab Linux</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-pyton-terminal' %}" target="_blank" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Lab Python</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    href="https://shell.cloud.google.com/?show=terminal"
+                    target="_blank"
+                    class="nav-link"
+                    aria-expanded="false"
+                >
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Lab Cloud Shell</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'learner-edit-Learner-details' request.user.id %}" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Edit Profile</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'logout' %}" class="" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">Sign Out</span>
+                </a>
+            </li>
+        </ul>
+        <div class="plus-box">
+            
+        </div>
+        <div class="copyright">
+            <p><strong>GetSkills Online Learning Admin</strong> © 2022 All Rights Reserved</p>
+            <p class="fs-12">Made with <span class="heart"></span> by HugeBinarys</p>
+        </div>
+    </div>
+</div>
