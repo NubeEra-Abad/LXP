@@ -1,94 +1,110 @@
-{% load widget_tweaks %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>NubeEra (LXP)</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="shortcut icon" type="image/x-icon" href="/static/dreamlms/img/favicon.svg">
+    <!-- PAGE TITLE HERE -->
+    <title>Steam Education</title>
     <link rel="stylesheet" href="/static/getskills/css/style.css">
-    
+
 </head>
 
-<body class="body  h-100" style="background-image: url('/static/getskills/images/bg-1.jpg'); background-size:cover;">
-        <div class="container" style="height: 100vh;">
-           <div class="row h-100 align-items-center justify-content-center">
-               <div class="col-xl-12 mt-3 align-self-center">
-                   <div class="card">
-                       <div class="card-body p-0">
-                           <div class="row m-0">
-                               <div class="col-xl-6 col-md-6 sign text-center">
-                                   <div>
-                                       <div class="text-center my-5">
-                                           <a href="index.html"><img width="200" src="/astatic/getskills/images/logo-full.png" alt=""></a>
-                                       </div>
-                                       <img src="/static/getskills/images/log.png" class="education-img"></img>
-                                   </div>	
-                               </div>
-                               <div class="col-xl-6 col-md-6">
-                                   <div class="sign-in-your">
-                                       <h4 class="fs-20 font-w800 text-black">log in your account</h4>
-                                       <span>Welcome back! Login with your data that you entered<br> during registration</span>
-                                       <div class="login-social">
-                                           <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn font-w800 d-block my-4"><i class="fab fa-google me-2 text-primary"></i>Login with Google</a>
-                                       </div>
-                                       <form method="post">
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                       <label class="form-control-label">User Name</label>
-                                       {% render_field form.username class="form-control" placeholder="Enter your user name" %}
-                                   </div>
-                                   <div class="form-group">
-                                       <label class="form-control-label">Password</label>
-                                       <div class="pass-group">
-                                           {% render_field form.password class="form-control" placeholder="Enter your password" %}
-                                           <!-- <span class="feather-eye toggle-password"></span> -->
-                                       </div>
-                                   </div>
-                                           <div class="row d-flex justify-content-between mt-4 mb-2">
-                                               <!-- <div class="mb-3">
-                                                  <div class="form-check custom-checkbox ms-1">
-                                                       <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
-                                                       <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
-                                                   </div>
-                                               </div> -->
-                                           </div>
-                                           <div class="text-center">
-                                               <button type="submit" class="btn btn-primary btn-block">Log Me In</button>
-                                           </div>
-                                           
-                                       </form>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-       </div>
+<body class="body  h-100 white-bg">
+    
+    
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-contain-center">
+            <div class="col-xl-12 mt-3">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="row m-0">
+                            <div class="col-xl-6 col-md-6 sign text-center">
+                                <div>
+                                    <div class="text-center my-5">
+                                    
+                                    </div>
+                                    <img src="/static/getskills/images/log.png" class="education-img"></img>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xl-6 col-md-6">
+                                <div class="sign-in-your">
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-info" id="success-message">{{ message }}</div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <script>
+                                        // Wait for the DOM to load
+                                        document.addEventListener("DOMContentLoaded", function () {
+                                            // Hide success message after 5 seconds
+                                            var message = document.getElementById("success-message");
+                                            if (message) {
+                                                setTimeout(function () {
+                                                    message.style.display = 'none';
+                                                }, 5000);
+                                            }
+                                    </script>
+                                    <h4 class="fs-20 font-w800 text-black">Sign in your account</h4>
+                                    <span>Welcome back! Login with your data that you entered<br> during
+                                        registration</span>
+                                        <div class="login-social">
+                                            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn font-w800 d-block my-4"><i class="fab fa-google me-2 text-primary"></i>Login with Google</a>
+                                        </div>
+                                    <div class="mb-3"></div>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label class="mb-1"><strong>User Name</strong></label>
+                                            <input name="username" id="username" type="text" class="form-control"
+                                                placeholder="Enter your user name" required>
+
+
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="mb-1"><strong>Password</strong></label>
+                                            <input name="password" id="password" type="password" class="form-control"
+                                                placeholder="Enter your password" required>
+
+                                        </div>
+                                        <div class="p-15">
+                                            {% if error_message %}
+                                            <div class="alert alert-danger " id="success-message">{{ error_message }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                        </div>
+                                </div>
+
+                                </form>
+
+                                <script>
+                                // Wait for the DOM to load
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    // Select the success message
+                                    var message = document.getElementById("success-message");
+                                    if (message) {
+                                        // Set a timer to hide the message after 5 seconds (5000 ms)
+                                        setTimeout(function () {
+                                            message.style.display = 'none';
+                                        }, 5000);
+                                    }
+                                });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 
-
-
-    <script src="/static/dreamlms/js/jquery-3.6.0.min.js"></script>
-    <script src="/static/dreamlms/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/dreamlms/js/owl.carousel.min.js"></script>
-    <script src="/static/dreamlms/js/script.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('.toggle-password').click(function() {
-                let input = $(this).siblings('input');
-                let type = input.attr('type') === 'password' ? 'text' : 'password';
-                input.attr('type', type);
-                $(this).toggleClass('feather-eye');
-            });
-        });
-    </script>
 
 </body>
 
