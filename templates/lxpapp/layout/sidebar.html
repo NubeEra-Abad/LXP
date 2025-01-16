@@ -1,61 +1,48 @@
 <!--**********************************
             Sidebar start
         ***********************************-->
-<div class="dlabnav" style="overflow:auto;">
-    <div class="settings-widget dash-profile">
-        <div class="settings-menu p-0">
-            <div class="profile-bg">
-                <img src="/static/dreamlms/img/instructor-profile-bg.jpg" alt="">
-                <div class="profile-img">
-                    {% if userdetails.userprofile_set.first.profile_img %}
-                    <a href="{% url 'user-profile' %}"><img src="{{ request.user.userprofile_set.first.profile_img.url }}" alt=""></a>
-                    {% endif %}
-                </div>
-            </div> 
-            <div class="profile-group">
-                <div class="profile-name text-center">
-                    {{request.user.first_name}} {{request.user.last_name}}
-                    <h6>({{request.user.username}})</h6>
-                    <h6>Admin</h6>
-                    
-                </div>
-            </div>
-        </div>
+
+
+<div class="dlabnav border-right">
+    <div class="text-center">
+        <!-- <img
+            src="{{request.user.profile_pic}}"
+            width="100"
+            class="img-fluid rounded-circle"
+            alt=""
+        > -->
+        <img
+            src="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+            width="100"
+            class="img-fluid rounded-circle mb-4"
+            alt=""
+        >
+        <h4>
+            <a href="">{{request.user.first_name}} {{request.user.last_name}}</a>
+        </h4>
+        <h6>({{request.user.username}})</h6>
     </div>
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
             <li>
-                <a href="{% url 'admin-dashboard' %}" class="" aria-expanded="false">
+                <a class=""  href="{% url 'admin-dashboard' %}" aria-expanded="false">
                     <i class="bi bi-grid"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
             </li>
-            <li>
-                <a class="has-arrow " href="{% url 'admin-view-user-list' %}" aria-expanded="false">
-                    <i class="bi bi-book"></i>
+            <li><a class="" href="{% url 'admin-view-user-list' %}" aria-expanded="false">
+                <i class="bi bi-book"></i>
+
                     <span class="nav-text">Users</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li>
-                        <a href="{% url 'admin-view-user-list' %}">User List</a>
-                    </li>
-                    
-                </ul>
             </li>
-            
-            <li>
-                <div class="instructor-title">
-                    <h4>ACCOUNT SETTINGS</h4>
-                </div>
-                <li>
-                    <a href="{% url 'logout' %}" class="" aria-expanded="false">
-                        <i class="bi bi-door-closed"></i>
-                        <span class="nav-text">Sign Out</span>
-                    </a>
-                    <li>
-                    </ul>
-                </div>
-            </div>
-            <!--**********************************
-            Sidebar end
-        ***********************************-->
+            <li><a class="" href="{% url 'logout' %}" aria-expanded="false">
+                <i class="bi bi-book"></i>
+
+                    <span class="nav-text">Sign Out</span>
+                </a>
+            </li>
+        </ul>
+        
+    </div>
+</div>
