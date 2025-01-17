@@ -432,7 +432,7 @@ def cto_delete_chapter_view(request,pk):
 
 @login_required
 def cto_add_module_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             form = LXPFORM.ModuleForm(request.POST or None)
             clist = LXPModel.Subject.objects.raw('SELECT  Distinct  lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')
@@ -507,7 +507,7 @@ def cto_add_module_view(request):
                 except Exception as e:
                     messages.error(request, "Could Not Add " + str(e))
             return render(request, 'cto/module/add_edit_module.html', context)
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
     
 @login_required
