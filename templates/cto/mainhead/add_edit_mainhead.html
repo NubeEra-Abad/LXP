@@ -22,18 +22,24 @@
     </ol>
   </nav>
 </div>
-<h2 style="text-align:center; ">{{page_title}}</h2>
-<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
-  {%csrf_token%}
-  <div class="form-group">
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="form-group">
-          {% include "common/form_editing/form_template.html" with messages=messages  form=form%}
+<div class="card">
+  <div class="card-header">
+    <h2 style="text-align:center;">{{page_title}}</h2>
+  </div>
+  <div class="card-body">
+    <form method="POST" autocomplete="off">
+      {%csrf_token%}
+      <div class="form-group">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+              {% include "common/form_editing/form_template.html" with messages=messages  form=form%}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
+</div>  
 
 {% endblock content %}

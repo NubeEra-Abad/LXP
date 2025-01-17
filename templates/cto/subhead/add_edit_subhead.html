@@ -22,8 +22,12 @@
     </ol>
   </nav>
 </div>
-<h2 style="text-align:center; ">{{page_title}}</h2>
-<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+<div class="card">
+  <div class ="card-header">
+    <h2 style="text-align:center; ">{{page_title}}</h2>
+  </div>
+  <div class="card-body">
+  <form method="POST" autocomplete="off" >
   {%csrf_token%}
   <div class="form-group">
     <div class="row">
@@ -35,5 +39,7 @@
     </div>
   </div>
 </form>
+</div>
+</div>
 
 {% endblock content %}

@@ -24,18 +24,32 @@ class SubjectForm(forms.ModelForm):
     subject_name = forms.CharField(
         max_length=90000,
         #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
+        widget=forms.TextInput(attrs={'autofocus': True , 'class': 'form-control '})
     )
     class Meta:
         model=models.Subject
         fields=['subject_name']
-
+        
 class ChapterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ChapterForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control mb-3'})  # Add a Bootstrap class or your custom class
+
     class Meta:
-        model=models.Chapter
-        fields=['subject', 'chapter_name']
+        model = models.Chapter
+        fields = ['subject', 'chapter_name']
+        widgets = {
+            'subject': forms.TextInput(attrs={
+                'class': 'form-control mb-3',
+                'placeholder': 'Enter the subject',
+            }),
+            'chapter_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the chapter name',
+            }),
+        }
+        
 
 
 class MainHeadForm(forms.ModelForm):
@@ -59,32 +73,41 @@ class SubHeadForm(forms.ModelForm):
         super(SubHeadForm, self).__init__(*args, **kwargs)
         self.fields['mainhead'].label = 'Main Head Name'
         self.fields['subhead_name'].label = 'Sub Head Name'
+        
+        # Add form-control class to mainhead dropdown
+        self.fields['mainhead'].widget.attrs['class'] = 'form-control mb-5'
     
-
     subhead_name = forms.CharField(
         max_length=90000,
-        #  forms ↓
         widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'})
     )
+    
     class Meta:
-        model=models.SubHead
-        
-        fields=['mainhead','subhead_name']
+        model = models.SubHead
+        fields = ['mainhead', 'subhead_name']
+
 
         
-class ModuleForm(forms.ModelForm):
-    class Meta:
-        model=models.Module 
-        fields=['mainhead','subhead','themecolor']
-    def __init__(self, *args, **kwargs):
-        super(ModuleForm, self).__init__(*args, **kwargs)
-
 class TopicForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control mb-3'  # Add Bootstrap class and margin
+            })
+
     class Meta:
-        model=models.Topic
-        fields=['topic_name','chapter']
+        model = models.Topic
+        fields = ['topic_name', 'chapter']
+        widgets = {
+            'topic_name': forms.TextInput(attrs={
+                'class': 'form-control mb-3',  # Add styling and spacing
+                'placeholder': 'Enter the topic name',
+            }),
+            'chapter': forms.Select(attrs={
+                'class': 'form-control mb-3',  # Add styling and spacing
+            }),
+        }        
 
 class LearnerDetailsForm(forms.ModelForm):
     user_full_name = forms.CharField(
@@ -108,6 +131,13 @@ class LearnerDetailsForm(forms.ModelForm):
     class Meta:
         model = models.LearnerDetails
         fields = ['user_full_name', 'mobile', 'whatsappno', 'profile_pic']
+        
+class ModuleForm(forms.ModelForm):
+    class Meta:
+        model=models.Module 
+        fields=['mainhead','subhead','themecolor']
+    def _init_(self, *args, **kwargs):
+        super(ModuleForm, self)._init_(*args, **kwargs)
 
 class CourseForm(forms.ModelForm):
     class Meta:

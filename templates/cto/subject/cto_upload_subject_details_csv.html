@@ -29,17 +29,21 @@
   <h4>Upload a Subject CSV File: </h4>
   <form onsubmit="return validateForm()" method="POST" enctype="multipart/form-data">
     {%csrf_token%}
-    <input type="file" name="select_file" id="select_file">
+    <input type="file" name="select_file" id="select_file" class="form-control">
     <br><br>
-    <button type="submit">Upload</button>
+    <button type="submit" class="btn btn-primary btn-sm mb-4">Upload</button>
     <BR>
   </form>
   <div id="waiting" style="display:none">
     <img src="/static/image/processing-gif-image-5.gif">
   </div>
-  <h1>Sample CSV</h1>
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark">
+  <div class="card">
+    <div class="card-header">  
+    <h1>Sample CSV</h1>
+    </div>
+  <div class="card-body">
+    <table class="table table-hover ">
+    <thead class="">
         <tr>
             <th>Subject</th>
             <th>Chapter</th>
@@ -109,6 +113,8 @@
         </tr>
     </tbody>
 </table>
+  </div>  
+  <div>
 </div>
 
 <script src="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
