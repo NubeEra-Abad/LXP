@@ -183,7 +183,7 @@ def afterlogin_view(request):
                                                                                 whatsappno=whatsappno,profile_pic=profile_pic)
                             learnerdetails.save()
                             logout(request)
-                            return HttpResponseRedirect('indexpage')  
+                            return HttpResponseRedirect('/')  
 #                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
                             
                         user =  User.objects.all().filter(id = request.user.id)

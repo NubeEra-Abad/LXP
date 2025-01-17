@@ -17,30 +17,44 @@
     <link rel="stylesheet" href="/static/dreamlms/css/feather.css">
 
     <link rel="stylesheet" href="/static/getskills/css/style.css">
+    <title>Nubeera (LXP)</title>
   </head>
 
   <body>
 
     <div class="main-wrapper">
-      <section class="course-content">
+      <section class="course-content" >
         <div class="container">
-          <div class="row">
-            <div class="col-lg-5 text-center mx-auto">
-              <div class="title-sec">
-                <h2>Hello {{request.user.first_name}} {{request.user.last_name}}</h2>
-                <p class="lead">Your Account is not approved till now <br><br>Our Team is checking your profile <br><br>
-                  Soon Your Account Will Be Approved</p>
-                <hr class="my-4">
-                <p>Check Later</p>
-                <p class="lead">
-                  <a class="btn btn-primary btn-lg" href="/logout" role="button">Logout For Now</a>
-                </p>
+          <div class="row justify-content-center align-item-center mt-5 pt-5" >
+            <div class="col-lg-5">
+              <div class="card">
+                <div class="card-header">
+                  <div class="row w-100">
+                    <div class="col-sm-12 col-md-6">
+                      <h4 class="card-title">Approval Pending</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="title-sec">
+                    <h2>Hello {{request.user.first_name}} {{request.user.last_name}}</h2>
+                    <p class="lead">Your Account is not approved till now <br><br>Our Team is checking your profile <br><br>
+                      Soon Your Account Will Be Approved</p>
+                    <p>Check Later</p>
+                    <p class="lead">
+                      <a class="btn btn-primary btn-lg" href="/logout" role="button">Logout For Now</a>
+                    </p>
+                  </div>
+                </div>
               </div>
+            </div>
+          </div>
         </div>
       </section>
 
 
-      {% comment %} <footer class="footer">
+      {% comment %} 
+      <footer class="footer">
 
         <div class="footer-top">
           <div class="container">
@@ -143,12 +157,16 @@
           </div>
         </div>
 
-      </footer> {% endcomment %}
+      </footer> 
+      {% endcomment %}
 
     </div>
 
 
     <script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="/static/getskills/vendor/global/global.min.js"></script>
+
+  <script src="/static/getskills/js/dlabnav-init.js"></script>
     <script src="/static/dreamlms/js/jquery-3.6.0.min.js"></script>
 
     <script src="/static/dreamlms/js/bootstrap.bundle.min.js"></script>
