@@ -33,19 +33,16 @@
             </li>
 
             <li>
-                <a class="has-arrow " href="{% url 'staff-schedulerstatus-list' %}" aria-expanded="false">
+                <a class="has-arrow " href="{% url 'staff-view-exam' %}" aria-expanded="false">
                     <i class="bi bi-book"></i>
-                    <span class="nav-text">Scheduler</span>
+                    <span class="nav-text">Exam</span>
                 </a>
                 <ul aria-expanded="false">
                     <li>
-                        <a href="{% url 'staff-schedulerstatus-create' %}">Add Scheduler Status</a>
+                        <a href="{% url 'staff-add-exam' %}">Add Exam</a>
                     </li>
                     <li>
-                        <a href="{% url 'staff-scheduler-calender' %}">View Calendar</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'staff-schedulerstatus-list' %}">View Scheduler Status</a>
+                        <a href="{% url 'staff-view-exam' %}">View Exam</a>
                     </li>
                 </ul>
             </li>
@@ -163,7 +160,7 @@
             <li>
                 <a class="has-arrow " href="{% url 'staff-view-ytexamquestion' %}" aria-expanded="false">
                     <i class="bi bi-book"></i>
-                    <span class="nav-text">Short Question</span>
+                    <span class="nav-text">Session Video Question</span>
                 </a>
                 <ul aria-expanded="false">
                     <li>

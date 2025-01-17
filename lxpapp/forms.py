@@ -178,7 +178,7 @@ class CourseTypeForm(forms.ModelForm):
     coursetype_name = forms.CharField(
         max_length=90000,
         #  forms ↓
-        widget=forms.TextInput(attrs={'autofocus': True})
+        widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'})
     )
     class Meta:
         model=models.CourseType

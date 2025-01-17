@@ -4,7 +4,7 @@
 
 <head>
   <link rel="stylesheet" href="/static/getskills/css/style.css">
- 
+
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -123,7 +123,7 @@
       }
       debugger;
       products.push(newProduct);
-      var html = "<table id='tblData' border='1|1' >";
+      var html = "<table class='p-2' id='tblData' border='1|1' >";
       html += "<td hidden>ID</td>";
       html += "<td>Name</td>";
       html += "<td hidden>Fee</td>";
@@ -133,7 +133,7 @@
         html += "<td hidden>" + products[i].product_id + "</td>";
         html += "<td>" + products[i].product_name + "</td>";
         html += "<td hidden>" + products[i].product_desc + "</td>";
-        html += "<td><button type='submit' onClick='deleteProduct(\"" + products[i].product_id + "\", this);'/>Delete Item</button></td>";
+        html += "<td><button class='btn btn-danger btn-sm' type='submit' onClick='deleteProduct(\"" + products[i].product_id + "\", this);'/>Delete Item</button></td>";
         html += "</tr>";
       }
       html += "</table>";
@@ -164,63 +164,131 @@
   <div>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'cfo-dashboard'%}">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'cfo-view-batch'%}">View Batch</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add Batch</li>
+        <li class=""><a href="{% url 'cfo-dashboard'%}">Dashboard</a></li>
+        <li class=" " aria-current="page">Add Batch</li>
       </ol>
     </nav>
   </div>
-  <h2 style="text-align:center;">Add Batch</h2>
-  <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
-    {%csrf_token%}
-    <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">
-    <div class="form-group">
-      <label for="batch_name">Batch Name</label>
-      {% render_field batchForm.batch_name class="form-control" placeholder="batch Name" %}
-      <label for="listbox3">Module Name</label>
-      <select class="form-control" name="listbox3" id="field3" multiple multiselect-search="true"
-        multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
-        {% for t in modules %}
-        <option value="{{ t.id }}">{{t.module_name}}
-          {% endfor %}
-      </select><BR>
-      <label for="listbox3">Recorded Video List</label>
-      <select class="form-control" name="vdolist" id="vdolist" multiple multiselect-search="true"
-        multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
-        {% for t in PList %}
-        <option value="{{ t.id }}">{{t.name}}
-          {% endfor %}
-      </select><BR>
-      <label for="coursetypeID">Course Type Name</label>
-      {% render_field batchForm.coursetypeID|attr:'required:true' class="form-control" %}
-      <label for="stdate">Start Date</label><BR>
-      {% render_field batchForm.stdate type="date" %}<BR>
-      <label for="enddate">End Date</label><BR>
-      {% render_field batchForm.enddate type="date" %}<BR>
-      <label for="listbox1">Trainers</label>
-      <select class="form-control" name="listbox1" id="field1" multiple multiselect-search="true"
-        multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
 
-        {% for t in trainers %}
-        <option value="{{ t.id }}">{{t.first_name}} {{t.last_name}} ({{t.email}})
-          {% endfor %}
-      </select>
+  <div class="card">
+    <div class="card-header">
+      <h2 style="text-align:center;">Add Batch</h2>
     </div>
-    <form name="order" id="order">
-      <label for="productID">Learner Name</label>
-      <select class="form-control" id="productID" name="product">
-        {% for t in learners %}
-        <option value="{{ t.id }}">{{t.first_name}} {{t.last_name}} ({{t.email}})
-          {{t.user.last_name}}</option>
-        {% endfor %}
-      </select>
-      <label for="product" hidden>Fee</label><BR>
-      <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
-      <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Learner">
-      <p id="demo"></p>
-      <button class="btn btn-primary form-control" type="submit" onclick="return generateJSON(event);">SUBMIT</button>
-    </form>
-  </form>
+    <div class="card-body">
+      <form method="POST" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">
+
+        <div class="container">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="batch_name" class="form-label">Batch Name</label>
+              {% render_field batchForm.batch_name class="form-control" placeholder="Batch Name" %}
+            </div>
+            <div class="col-md-6">
+              <label for="coursetypeID" class="form-label">Course Type Name</label>
+              {% render_field batchForm.coursetypeID|attr:'required:true' class="form-control" %}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="stdate" class="form-label">Start Date</label>
+              {% render_field batchForm.stdate type="date" class="form-control" %}
+            </div>
+            <div class="col-md-6">
+              <label for="enddate" class="form-label">End Date</label>
+              {% render_field batchForm.enddate type="date" class="form-control" %}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="listbox3" class="form-label">Module Name</label>
+              <select class="form-control" name="listbox3" id="field3" multiple multiselect-search="true"
+                multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+                {% for t in modules %}
+                <option value="{{ t.id }}">{{ t.module_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="vdolist" class="form-label">Recorded Video List</label>
+              <select class="form-control" name="vdolist" id="vdolist" multiple multiselect-search="true"
+                multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+                {% for t in PList %}
+                <option value="{{ t.id }}">{{ t.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="listbox1" class="form-label">Trainers</label>
+              <select class="form-control" name="listbox1" id="field1" multiple multiselect-search="true"
+                multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+                {% for t in trainers %}
+                <option value="{{ t.id }}">{{ t.first_name }} {{ t.last_name }} ({{ t.email }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <form name="order" id="order">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="productID" class="form-label">Learner Name</label>
+                <select class="form-control" id="productID" name="product">
+                  {% for t in learners %}
+                  <option value="{{ t.id }}">{{ t.first_name }} {{ t.last_name }} ({{ t.email }}) {{ t.user.last_name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
+                <button type="button" id="btnAddProduct" class="btn btn-secondary" onclick="addProduct();">Add
+                  Learner</button>
+                <label for="product" hidden>Fee</label><BR>
+                <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
+                <p id="demo" class="mt-2"></p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <button class="btn btn-primary form-control" type="submit"
+                  onclick="return generateJSON(event);">SUBMIT</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- <form name="order" id="order">
+    <label for="productID">Learner Name</label>
+    <select class="form-control" id="productID" name="product">
+      {% for t in learners %}
+      <option value="{{ t.id }}">{{t.first_name}} {{t.last_name}} ({{t.email}})
+        {{t.user.last_name}}</option>
+      {% endfor %}
+    </select>
+    <label for="product" hidden>Fee</label><BR>
+    <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
+    <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Learner">
+    <p id="demo"></p>
+    <button class="btn btn-primary form-control" type="submit"
+      onclick="return generateJSON(event);">SUBMIT</button>
+  </form> -->
+
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -233,5 +301,5 @@
       $("#productID").select2();
     }); 
   </script>
-
-  {% endblock content %}
+</body>
+{% endblock content %}

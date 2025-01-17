@@ -81,15 +81,5 @@ urlpatterns = [
     path('staff-pyton-terminal', views.staff_python_terminal_view,name='staff-pyton-terminal'),
     path('staff-linux-terminal', views.staff_linux_terminal_view,name='staff-linux-terminal'),
     path('staff-cloudshell-terminal', views.staff_cloudshell_terminal_view,name='staff-cloudshell-terminal'),
-    
-    path('staff-schedulerstatus-list/', views.staff_schedulerstatus_list, name='staff-schedulerstatus-list'),
-    path('staff-schedulerstatus-create/', views.schedulerstatus_create, name='staff-schedulerstatus-create'),
-    path('staff-schedulerstatus-delete/<int:id>/', views.schedulerstatus_delete, name='staff-schedulerstatus-delete'),
-    path('get-scheduler-status-sum/', views.get_scheduler_status_sum, name='get-scheduler-status-sum'),
-    path('staff-schedulerstatus-mark-done/', views.staff_schedulerstatus_mark_done, name='staff-schedulerstatus-mark-done'),
-    path('staff-scheduler-calender/', views.staff_scheduler_calender, name='staff-scheduler-calender'),
-    
-    
 
-    
 ]

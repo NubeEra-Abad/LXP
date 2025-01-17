@@ -3,12 +3,19 @@
 {% block content %}
 <div>
 <link rel="stylesheet" href="/static/getskills/css/style.css">
-
+<style>
+    ol.breadcrumb li+li:before {
+      content: '\f061';
+      display: inline-block;
+      font-family: 'fontAwesome';
+      padding: 0 10px;
+    }
+  </style>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'cfo-dashboard'%}">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'cfo-view-coursetype'%}">View Course Type</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{page_title}}</li>
+        <li><a href="{% url 'cfo-dashboard'%}">Dashboard</a></li>
+        <li><a href="{% url 'cfo-view-coursetype'%}">View Course Type</a></li>
+        <li aria-current="page">{{page_title}}</li>
       </ol>
     </nav>
   </div>

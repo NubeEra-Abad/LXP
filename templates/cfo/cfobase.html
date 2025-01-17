@@ -1,7 +1,16 @@
 {% extends 'cfo/layout/base.html' %}
 {% load static %}
 {% block body %}
+
 <div id="content-wrapper">
+  <style>
+    ol.breadcrumb li+li:before {
+      content: '\f061';
+      display: inline-block;
+      font-family: 'fontAwesome';
+      padding: 0 10px;
+    }
+  </style>
     <div class="container-fluid">
         {% block content %}
         {% endblock content %}
