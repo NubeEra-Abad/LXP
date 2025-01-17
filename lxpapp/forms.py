@@ -31,8 +31,8 @@ class SubjectForm(forms.ModelForm):
         fields=['subject_name']
         
 class ChapterForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ChapterForm, self).__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super(ChapterForm, self)._init_(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control mb-3'})  # Add a Bootstrap class or your custom class
 
@@ -40,15 +40,15 @@ class ChapterForm(forms.ModelForm):
         model = models.Chapter
         fields = ['subject', 'chapter_name']
         widgets = {
-            'subject': forms.TextInput(attrs={
-                'class': 'form-control mb-3',
-                'placeholder': 'Enter the subject',
-            }),
-            'chapter_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter the chapter name',
-            }),
-        }
+    'subject': forms.Select(attrs={
+        'class': 'form-control mb-3',
+        'placeholder': 'Enter the subject',
+    }),
+    'chapter_name': forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter the chapter name',
+    }),
+}
         
 
 

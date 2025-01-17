@@ -1,21 +1,8 @@
+{% extends 'cto/ctobase.html' %}
 {% load widget_tweaks %}
 {% block content %}
-
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>NubeEra (LXP)</title>
 
-	<link rel="shortcut icon" type="image/x-icon" href="/static/dreamlms/img/favicon.svg">
-
-	<link rel="stylesheet" href="/static/dreamlms/css/bootstrap.min.css">
-
-	<link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/fontawesome.min.css">
-	<link rel="stylesheet" href="/static/dreamlms/plugins/fontawesome/css/all.min.css">
-
-	<link rel="stylesheet" href="/static/dreamlms/css/feather.css">
-
-	<link rel="stylesheet" href="/static/getskills/css/style.css">
 	<!-- ckeditor -->
 	<script src="/static/ckeditor/ckeditor.js"></script>
 	<script src="/static/ckeditor/js/sample.js"></script>
@@ -59,9 +46,9 @@
 	<nav aria-label="breadcrumb">
 		<ul class="breadcrumb">
 			<li><a href="{% url 'cto-dashboard'%}">Dashboard</a></li>
-			<li><a href="../../../../cto/cto-view-module">View Module</a></li>
+			<li><a href="../../../../cto/cto-view-module">View Course</a></li>
 			{% if 'Edit' in page_title %}
-			<li><a href="../../../../cto/cto-add-module">Add Module</a></li>
+			<li><a href="../../../../cto/cto-add-module">Add Course</a></li>
 			{% endif %}
 			<li aria-current="page">{{page_title}}</li>
 		</ul>
@@ -75,9 +62,9 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12 col-xl-12">
-					<label for="module_name">Module Name</label>
+					<label for="module_name">Course Name</label>
 					<input type="text" name="module_name" id="module_name" class="form-control"
-						placeholder="Module Name" required value={{mod_name}}>
+						placeholder="Course Name" required value={{mod_name}}>
 				</div>
 			</div>
 			<div class="row">
@@ -111,7 +98,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12 col-xl-12">
-					<label for="description">Decription</label>
+					<label for="description">Description</label>
 					<input type="text" name="description" id="description" class="form-control" placeholder="Decription"
 						required value={{description}}>
 

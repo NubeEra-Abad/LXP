@@ -5524,7 +5524,7 @@
         "kind": 2,
         "importPath": "cfo.views",
         "description": "cfo.views",
-        "peekOfCode": "def cfo_delete_coursetype_view(request,pk):\n    try:\n        if str(request.session['utype']) == 'cfo':  \n            coursetype=LXPModel.CourseType.objects.get(id=pk)\n            coursetype.delete()\n            return HttpResponseRedirect('/cfo/coursetype/cfo-view-coursetype')\n        coursetypes = LXPModel.CourseType.objects.all()\n        return render(request,'cfo/coursetype/cfo_view_coursetype.html',{'coursetypes':coursetypes})\n    except:\n        return render(request,'lxpapp/404page.html')",
+        "peekOfCode": "def cfo_delete_coursetype_view(request,pk):\n    try:\n        if str(request.session['utype']) == 'cfo':  \n            coursetype=LXPModel.CourseType.objects.get(id=pk)\n            coursetype.delete()\n            return HttpResponseRedirect('/cfo/cfo-view-coursetype')\n        coursetypes = LXPModel.CourseType.objects.all()\n        return render(request,'cfo/coursetype/cfo_view_coursetype.html',{'coursetypes':coursetypes})\n    except:\n        return render(request,'lxpapp/404page.html')",
         "detail": "cfo.views",
         "documentation": {}
     },
@@ -7189,7 +7189,7 @@
         "kind": 6,
         "importPath": "lxpapp.forms",
         "description": "lxpapp.forms",
-        "peekOfCode": "class ChapterForm(forms.ModelForm):\n    def __init__(self, *args, **kwargs):\n        super(ChapterForm, self).__init__(*args, **kwargs)\n        for field in self.fields.values():\n            field.widget.attrs.update({'class': 'form-control mb-3'})  # Add a Bootstrap class or your custom class\n    class Meta:\n        model = models.Chapter\n        fields = ['subject', 'chapter_name']\n        widgets = {\n            'subject': forms.TextInput(attrs={",
+        "peekOfCode": "class ChapterForm(forms.ModelForm):\n    def _init_(self, *args, **kwargs):\n        super(ChapterForm, self)._init_(*args, **kwargs)\n        for field in self.fields.values():\n            field.widget.attrs.update({'class': 'form-control mb-3'})  # Add a Bootstrap class or your custom class\n    class Meta:\n        model = models.Chapter\n        fields = ['subject', 'chapter_name']\n        widgets = {\n    'subject': forms.Select(attrs={",
         "detail": "lxpapp.forms",
         "documentation": {}
     },
@@ -7279,7 +7279,7 @@
         "kind": 6,
         "importPath": "lxpapp.forms",
         "description": "lxpapp.forms",
-        "peekOfCode": "class CourseTypeForm(forms.ModelForm):\n    coursetype_name = forms.CharField(\n        max_length=90000,\n        #  forms ↓\n        widget=forms.TextInput(attrs={'autofocus': True})\n    )\n    class Meta:\n        model=models.CourseType\n        fields=['coursetype_name']\nclass BatchForm(forms.ModelForm):",
+        "peekOfCode": "class CourseTypeForm(forms.ModelForm):\n    coursetype_name = forms.CharField(\n        max_length=90000,\n        #  forms ↓\n        widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'})\n    )\n    class Meta:\n        model=models.CourseType\n        fields=['coursetype_name']\nclass BatchForm(forms.ModelForm):",
         "detail": "lxpapp.forms",
         "documentation": {}
     },
@@ -15721,16 +15721,7 @@
         "kind": 2,
         "importPath": "staff.views",
         "description": "staff.views",
-        "peekOfCode": "def staff_python_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  \n            return render(request,'staff/labs/python/staff_python_terminal.html')\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef staff_python_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  ",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "staff_python_terminal_view",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def staff_python_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  \n            return render(request,'staff/labs/python/staff_python_terminal.html')\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef staff_linux_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  ",
+        "peekOfCode": "def staff_python_terminal_view(request):\n    #try:\n        if str(request.session['utype']) == 'staff':  \n            return render(request,'staff/labs/python/staff_python_terminal.html')\n    #except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef staff_linux_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  ",
         "detail": "staff.views",
         "documentation": {}
     },
@@ -15748,70 +15739,7 @@
         "kind": 2,
         "importPath": "staff.views",
         "description": "staff.views",
-        "peekOfCode": "def staff_cloudshell_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  \n            return render(request,'staff/labs/cloudshell/staff_cloudshell_terminal.html')\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef staff_scheduler_calender(request):\n    schedulers = LXPModel.Scheduler.objects.annotate(\n        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "staff_scheduler_calender",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def staff_scheduler_calender(request):\n    schedulers = LXPModel.Scheduler.objects.annotate(\n        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),\n        completion_date=Case(\n            When(status_sum__gte=100, then=Max('schedulerstatus__date')),\n            default=Value(None),\n        )\n    ).filter(staff_id = request.user.id)\n    return render(request, 'staff/calender/staff_calender.html', {'schedulers': schedulers})\n@login_required",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "staff_calender",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def staff_calender(request):\n    # Get schedulers for the logged-in staff and use Coalesce to replace None with 0 for status_sum\n    schedulers = LXPModel.Scheduler.objects.filter(\n        staff_id=request.user.id\n    ).annotate(\n        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0))\n    )\n    return render(request, 'staff/scheduler/staff_calender.html', {'schedulers': schedulers})\n# Display list of schedulerstatus\n@login_required",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "staff_schedulerstatus_list",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def staff_schedulerstatus_list(request):\n    if str(request.session['utype']) == 'staff':\n        schedulerstatus = LXPModel.SchedulerStatus.objects.all()\n        return render(request, 'staff/schedulerstatus/staff_schedulerstatus_list.html', {'schedulerstatus': schedulerstatus})\n    else:\n        return render(request,'loginrelated/diffrentuser.html')\n# Create a new schedulerstatus\n@login_required\ndef schedulerstatus_create(request):\n    if str(request.session['utype']) == 'staff':",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "schedulerstatus_create",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def schedulerstatus_create(request):\n    if str(request.session['utype']) == 'staff':\n        if request.method == 'POST':\n            scheduler = request.POST.get('scheduler')\n            status = request.POST.get('status')\n            tdate_str = request.POST.get('tdate')\n            status_sum = LXPModel.SchedulerStatus.objects.filter(scheduler_id = scheduler).aggregate(Sum('status'))['status__sum']\n            value = status\n            if status_sum:\n                if (float(status) < float(status_sum)) :",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "get_scheduler_status_sum",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def get_scheduler_status_sum(request):\n    # Check if the request is AJAX using the appropriate header\n    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':\n        scheduler_id = request.GET.get(\"scheduler_id\")\n        # Get the sum of 'status' values for the given scheduler\n        status_sum = LXPModel.SchedulerStatus.objects.filter(scheduler_id=scheduler_id).aggregate(Sum('status'))['status__sum']\n        # If no statuses exist, set sum to 0\n        if status_sum is None:\n            status_sum = 0\n        # Log the status_sum for debugging (you can remove this in production)",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "schedulerstatus_delete",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def schedulerstatus_delete(request, id):\n    if str(request.session['utype']) == 'staff':\n        schedulerstatus = get_object_or_404(LXPModel.SchedulerStatus, id=id)\n        # Now delete the schedulerstatus instance\n        schedulerstatus.delete()\n        return redirect('staff-schedulerstatus-list')\n    else:\n        return render(request,'loginrelated/diffrentuser.html')\nimport json\n@login_required",
-        "detail": "staff.views",
-        "documentation": {}
-    },
-    {
-        "label": "staff_schedulerstatus_mark_done",
-        "kind": 2,
-        "importPath": "staff.views",
-        "description": "staff.views",
-        "peekOfCode": "def staff_schedulerstatus_mark_done(request):\n    if request.method == 'POST':\n        try:\n            data = json.loads(request.body)\n            status_id = int(data.get('id'))  # Convert ID to integer\n            # Get sum of all status values for this scheduler\n            total_status = LXPModel.SchedulerStatus.objects.filter(scheduler_id=status_id).aggregate(\n                total=Sum('status')\n            )['total'] or 0\n            if total_status < 100:",
+        "peekOfCode": "def staff_cloudshell_terminal_view(request):\n    try:\n        if str(request.session['utype']) == 'staff':  \n            return render(request,'staff/labs/cloudshell/staff_cloudshell_terminal.html')\n    except:\n        return render(request,'lxpapp/404page.html')",
         "detail": "staff.views",
         "documentation": {}
     },

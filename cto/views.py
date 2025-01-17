@@ -458,7 +458,7 @@ def cto_add_module_view(request):
             context = {
                 'form': form,
                 'js': js,
-                'page_title': 'Add Module',
+                'page_title': 'Add Course',
                 'chapterlistbyid' : bchapter
             }
             if request.method == 'POST':
