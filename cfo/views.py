@@ -52,7 +52,7 @@ def cfo_add_coursetype_view(request):
                                             coursetype_name = name)
                 coursetype.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('cfo-add-coursetype'))
+                return HttpResponseRedirect('/cfo/cfo-view-coursetype')
             except Exception as e:
                 messages.error(request, "Could Not Add " + str(e))
         else:
@@ -80,7 +80,7 @@ def cfo_update_coursetype_view(request, pk):
                 coursetype.coursetype_name = name
                 coursetype.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('cfo-update-coursetype', args=[pk]))
+                return HttpResponseRedirect('/cfo/cfo-view-coursetype')
             except Exception as e:
                 messages.error(request, "Could Not Add " + str(e))
         else:
@@ -103,7 +103,7 @@ def cfo_delete_coursetype_view(request,pk):
         if str(request.session['utype']) == 'cfo':  
             coursetype=LXPModel.CourseType.objects.get(id=pk)
             coursetype.delete()
-            return HttpResponseRedirect('/cfo/coursetype/cfo-view-coursetype')
+            return HttpResponseRedirect('/cfo/cfo-view-coursetype')
         coursetypes = LXPModel.CourseType.objects.all()
         return render(request,'cfo/coursetype/cfo_view_coursetype.html',{'coursetypes':coursetypes})
     except:
