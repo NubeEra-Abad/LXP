@@ -23,7 +23,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         usertoken = User.objects.raw('UPDATE social_auth_usersocialauth SET utype = 1 WHERE user_id = ' + str(uidb64))
-        return render(request, 'lxpapp/index.html')
+        return render(request, 'loginrelated/userlogin.html')
     
     else:
         # Display an error page

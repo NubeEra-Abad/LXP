@@ -150,6 +150,18 @@
                           {% else %}
                           <option value="4">CFO</option>
                           {% endif %}
+
+                          {% if entry.utype == 5 %}
+                          <option value="5" selected>Mentor</option>
+                          {% else %}
+                          <option value="5">Mentor</option>
+                          {% endif %}
+
+                          {% if entry.utype == 6 %}
+                          <option value="6" selected>Staff</option>
+                          {% else %}
+                          <option value="6">Staff</option>
+                          {% endif %}
                         </select>
                         <div class="text-danger w-100 d-block mt-1">
 

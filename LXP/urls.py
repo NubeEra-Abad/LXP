@@ -23,6 +23,8 @@ urlpatterns = [
     path('cfo/',include('cfo.urls')),
     path('learner/',include('learner.urls')),
     path('trainer/',include('trainer.urls')),
+    path('mentor/',include('mentor.urls')),
+    path('staff/',include('staff.urls')),
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
     path('uploadfolder', views.upload_folder,name='uploadfolder'),   

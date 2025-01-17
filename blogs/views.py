@@ -11,7 +11,7 @@ from social_django.models import UserSocialAuth
 from django.contrib.auth import update_session_auth_hash
 
 def login(request):
-    return render(request, 'lxpapp/index.html')
+    return render(request, 'loginrelated/userlogin.html')
 
 
 @login_required

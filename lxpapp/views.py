@@ -82,7 +82,7 @@ def session_expire_view(request):
     return render(request, 'loginrelated/user_session_expire.html')
 
 def login(request):
-    return render(request, 'lxpapp/index.html')
+    return render(request, 'loginrelated/userlogin.html')
 
 @receiver(user_logged_in)
 def post_login(sender, user, request, **kwargs):
@@ -133,80 +133,72 @@ def afterlogin_view(request):
         return redirect('admin-view-user-list')
     elif user:
         for xx in user:
+            if not xx.status:
+                return render(request,'loginrelated/wait_for_approval.html')
             if xx.utype == 1:
-                if xx.status:
-                    request.session['utype'] = 'trainer'
-                    notification = models.TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
-                    mco = models.Exam.objects.filter(questiontpye='MCQ').count()
-                    short = models.Exam.objects.filter(questiontpye='ShortAnswer').count()
-                    mcqques= models.McqQuestion.objects.all().count()
-                    sques= models.ShortQuestion.objects.all().count()
-                    schedulers = models.Scheduler.objects.annotate(
-                        status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
-                        completion_date=Case(
-                            When(status_sum__gte=100, then=Max('schedulerstatus__date')),
-                            default=Value(None),
-                        )).filter(trainer_id = request.user.id, status_sum__lte=99)
-                    dict={
-                    'total_course':0,
-                    schedulers:schedulers,
-                    'total_exam':0,
-                    'total_shortExam':0, 
-                    'total_question':0,
-                    'total_short':0,
-                    'total_learner':0,
-                    'notifications':notification,
-                    }
-                    return render(request,'trainer/trainer_dashboard.html',{'schedulers':schedulers,'mcqques':mcqques,'sques':sques,'mco':mco,'short':short,'dict':dict})
-                else:
-                    send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                    return render(request,'loginrelated/wait_for_approval.html')
-                 
+                request.session['utype'] = 'trainer'
+                notification = models.TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
+                mco = models.Exam.objects.filter(questiontpye='MCQ').count()
+                short = models.Exam.objects.filter(questiontpye='ShortAnswer').count()
+                mcqques= models.McqQuestion.objects.all().count()
+                sques= models.ShortQuestion.objects.all().count()
+                schedulers = models.Scheduler.objects.annotate(
+                    status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
+                    completion_date=Case(
+                        When(status_sum__gte=100, then=Max('schedulerstatus__date')),
+                        default=Value(None),
+                    )).filter(trainer_id = request.user.id, status_sum__lte=99)
+                dict={
+                'total_course':0,
+                schedulers:schedulers,
+                'total_exam':0,
+                'total_shortExam':0, 
+                'total_question':0,
+                'total_short':0,
+                'total_learner':0,
+                'notifications':notification,
+                }
+                return render(request,'trainer/trainer_dashboard.html',{'schedulers':schedulers,'mcqques':mcqques,'sques':sques,'mco':mco,'short':short,'dict':dict})
             elif xx.utype == 2  or xx.utype == 0 :
-                if xx.status:
-                    request.session.set_expiry(2400)
+                request.session.set_expiry(2400)
+                request.session['utype'] = 'learner'
+                # return render(request,'learner/learner_dashboard.html')
+                learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
+                if learnerdetails:
                     request.session['utype'] = 'learner'
-                    # return render(request,'learner/learner_dashboard.html')
-                    learnerdetails = models.LearnerDetails.objects.all().filter(learner_id = request.user.id)
-                    if learnerdetails:
-                        request.session['utype'] = 'learner'
-                        return render(request,'learner/learner_dashboard.html')
-                    else:
-                        if request.method=='POST':
-                            profile_pic = request.FILES.get('profile_pic')
-                            user_full_name = request.POST["user_full_name"]
-                            mobile = request.POST["mobile"]
-                            whatsappno = request.POST["whatsappno"]
-                            learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
-                                                                                user_full_name= user_full_name,
-                                                                                mobile=mobile,
-                                                                                whatsappno=whatsappno,profile_pic=profile_pic)
-                            learnerdetails.save()
-                            logout(request)
-                            return HttpResponseRedirect('/')  
+                    return render(request,'learner/learner_dashboard.html')
+                else:
+                    if request.method=='POST':
+                        profile_pic = request.FILES.get('profile_pic')
+                        user_full_name = request.POST["user_full_name"]
+                        mobile = request.POST["mobile"]
+                        whatsappno = request.POST["whatsappno"]
+                        learnerdetails = models.LearnerDetails.objects.create(learner_id=request.user.id,
+                                                                            user_full_name= user_full_name,
+                                                                            mobile=mobile,
+                                                                            whatsappno=whatsappno,profile_pic=profile_pic)
+                        learnerdetails.save()
+                        logout(request)
+                        return HttpResponseRedirect('/')  
 #                                send_mail('New User Login / Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                            
-                        user =  User.objects.all().filter(id = request.user.id)
-                        username=''
-                        for u in user:
-                            username = u.first_name + ' ' + u.last_name
-                        return render(request,'loginrelated/add_learnerdetails.html',{'username':username})
-                else:
-                    return render(request,'loginrelated/wait_for_approval.html')
+                        
+                    user =  User.objects.all().filter(id = request.user.id)
+                    username=''
+                    for u in user:
+                        username = u.first_name + ' ' + u.last_name
+                    return render(request,'loginrelated/add_learnerdetails.html',{'username':username})
             elif xx.utype == 3:
-                if xx.status:
-                    request.session['utype'] = 'cto'
-                    return render(request,'cto/cto_dashboard.html')
-                else:
-                    send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                    return render(request,'cto/cto_wait_for_approval.html')
+                request.session['utype'] = 'cto'
+                return render(request,'cto/cto_dashboard.html')
             elif xx.utype == 4:
-                if xx.status:
-                    request.session['utype'] = 'cfo'
-                    return render(request,'cfo/cfo_dashboard.html')
-                else:
-                    send_mail('Pending User Login Notification', 'Please check following user is registered or relogin before approval\n' + 'E-mail : ' + str (request.user.email) + '\nFirst Name : ' + str (request.user.first_name) + '\nLast Name : '+ str (request.user.last_name), 'info@nubeera.com', ['info@nubeera.com'])
-                    return render(request,'cfo/cfo_wait_for_approval.html')
+                request.session['utype'] = 'cfo'
+                return render(request,'cfo/cfo_dashboard.html')
+            elif xx.utype == 5:
+                request.session['utype'] = 'mentor'
+                return render(request,'mentor/mentor_dashboard.html')
+            elif xx.utype == 6:
+                request.session['utype'] = 'staff'
+                return render(request,'staff/staff_dashboard.html')
 
 
 def adminclick_view(request):
@@ -397,6 +389,10 @@ def user_profile_view(request):
             base_template = 'cto/ctobase.html'
         elif userdetails.social_auth.first().utype == 4:
             base_template = 'cfo/cfobase.html'
+        elif userdetails.social_auth.first().utype == 5:
+            base_template = 'mentor/mentorbase.html'
+        elif userdetails.social_auth.first().utype == 6:
+            base_template = 'staff/staffbase.html'
     return render(request,'lxpapp/users/user_profile.html',{'userdetails':userdetails,'base_template': base_template})
 
 @login_required
@@ -443,6 +439,10 @@ def user_profile_update_view(request):
             base_template = 'cto/ctobase.html'
         elif userdetails.social_auth.first().utype == 4:
             base_template = 'cfo/cfobase.html'
+        elif userdetails.social_auth.first().utype == 5:
+            base_template = 'mentor/mentorbase.html'
+        elif userdetails.social_auth.first().utype == 6:
+            base_template = 'staff/staffbase.html'
     return render(request,'lxpapp/users/user_profile_update.html',{'userdetails':userdetails,'base_template': base_template})
 from googleapiclient.discovery import build
 from django.conf import settings
