@@ -27,20 +27,21 @@
 
     function showError(message) {
       // Create an error message element or use an existing one
-      let errorDiv = document.getElementById('error-message');
-      if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.id = 'error-message';
-        errorDiv.style.color = 'red';
-        document.body.appendChild(errorDiv);
-      }
-      errorDiv.textContent = message;
-      errorDiv.style.display = 'block';
+      // let errorDiv = document.getElementById('error-message');
+      // if (!errorDiv) {
+      //   errorDiv = document.createElement('div');
+      //   errorDiv.id = 'error-message';
+      //   errorDiv.style.color = 'red';
+      //   document.body.appendChild(errorDiv);
+      // }
+      // errorDiv.textContent = message;
+      // errorDiv.style.display = 'block';
 
-      // Hide the error message after 5 seconds
-      setTimeout(() => {
-        errorDiv.style.display = 'none';
-      }, 5000);
+      // // Hide the error message after 5 seconds
+      // setTimeout(() => {
+      //   errorDiv.style.display = 'none';
+      // }, 5000);
+      alert("Error ", message);
     }
 
     function validateForm() {
@@ -63,11 +64,11 @@
     }
   </script>
 
-  <div class="main-wrapper log-wrap">
-    
-    <div class="row">
+  <div class="main-wrapper log-wrap h-100">
 
-      <div class="col-md-12">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+
+      <!-- <div class="col-md-12">
 
         <div class="login-wrapper">
           <div class="loginbox">
@@ -100,7 +101,6 @@
                 <label class="form-control-label">Profile Picture</label>
                 <input type="file" name="profile_pic" class="form-control" required> 
                 <div class="text-danger">
-                  <!-- Example of displaying errors (based on Django form validation, if any) -->
                   {% if errors.profile_pic %}
                     <p>{{ errors.profile_pic }}</p>
                   {% endif %}
@@ -117,11 +117,73 @@
           </div>
         </div>
 
+      </div> -->
+      <div class="col-xl-6 col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row w-100">
+              <div class="col-sm-12 col-md-6">
+                <h4 class="card-title">ADD DETAILS</h4>
+              </div>
+              <div class="col-sm-12 col-md-6 text-end">
+                <a class="btn btn-primary" href="{% url 'logout'%}">Logout for now</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="basic-form">
+              <form onsubmit="return validateForm()" method="POST" autocomplete="off" enctype="multipart/form-data">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Full Name</label>
+                  <div class="col-sm-9">
+                    <input type="text" name="user_full_name" class="form-control" placeholder="Enter Full Name"
+                      required>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Mobile No.</label>
+                  <div class="col-sm-9">
+                    <input type="text" name="mobile" class="form-control" placeholder="Enter Mobile No." required>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">WhatsApp No.</label>
+                  <div class="col-sm-9">
+                    <input type="text" name="whatsappno" class="form-control" placeholder="Enter WhatsApp No." required>
+                    <!-- <abbr class="ps-1" style="font-size: smaller;">If Mobile No. is not a WhatsApp No., please provide
+                      WhatsApp No.</abbr> -->
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Profile Picture</label>
+                  <div class="col-sm-9">
+                    <input type="file" name="profile_pic" class="form-control" placeholder="Browse Profile">
+                    <div class="text-danger">
+                      {% if errors.profile_pic %}
+                        <p>{{ errors.profile_pic }}</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Save Details</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="/static/dreamlms/js/jquery-3.6.0.min.js"></script>
+
+  <script src="/static/getskills/vendor/global/global.min.js"></script>
+
+  <script src="/static/getskills/js/dlabnav-init.js"></script>
 
   <script src="/static/dreamlms/js/bootstrap.bundle.min.js"></script>
 
