@@ -85,7 +85,7 @@
 <div class="container">
     <div class="panel panel-primary">
         <h1>Edit User {{ user.username }}</h1>
-        <form
+        <!-- <form
             onsubmit="return validateForm()"
             method="POST"
             autocomplete="off"
@@ -143,7 +143,89 @@
                 <button class="btn btn-primary btn-start" type="submit">Save Details</button>
             </div>
             <div id="error-message" style="color: red; display: none;"></div>
-        </form>
+        </form> -->
+        <div class="card">
+          <div class="card-header">
+            <div class="row w-100">
+              <div class="col-sm-12 col-md-6 d-flex align-items-center">
+                <h4 class="card-title">Edit User {{ user.username }}</h4>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="basic-form">
+              <div class="row">
+                <div class="col-sm-12 col-md-4">
+                  {% if user.profile_pic %}
+                  <img
+                    src="{{ user.profile_pic.url }}"
+                    class="img-fluid rounded"
+                    alt="Profile Picture"
+                    style="width: 100%; height: auto;"
+                  >
+                  {% else %}
+                  <img
+                    src="{% static 'getskills/img/default-profile-pic.png' %}"
+                    class="img-fluid rounded"
+                    alt="Profile Picture"
+                    style="width: 100%; height: auto;">
+                  {% endif %}
+                </div>
+                <div class="col-sm-12 col-md-8">
+                  <form onsubmit="return validateForm()" method="POST" autocomplete="off" enctype="multipart/form-data">
+                    {%csrf_token%}
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <div class="mb-3 row">
+                      <label for="{{ form.user_full_name.id_for_label }}" class="col-sm-3 col-form-label">Full Name</label>
+                      <div class="col-sm-9">
+                        {{ form.user_full_name }}
+                        {% if form.user_full_name.errors %}
+                        <div class="text-danger">{{ form.user_full_name.errors }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="{{ form.mobile.id_for_label }}" class="col-sm-3 col-form-label">Mobile No.</label>
+                      <div class="col-sm-9">
+                        {{ form.mobile }}
+                        {% if form.mobile.errors %}
+                            <div class="text-danger">{{ form.mobile.errors }}</div>
+                            {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="{{ form.whatsappno.id_for_label }}" class="col-sm-3 col-form-label">WhatsApp No.</label>
+                      <div class="col-sm-9">
+                        {{ form.whatsappno }}
+                      {% if form.whatsappno.errors %}
+                          <div class="text-danger">{{ form.whatsappno.errors }}</div>
+                          {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="{{ form.profile_pic.id_for_label }}" class="col-sm-3 col-form-label">Profile Picture</label>
+                      <div class="col-sm-9">
+                        {{ form.profile_pic }}
+                        <div class="text-danger">
+                          {% if form.profile_pic.errors %}
+                          <div class="text-danger">{{ form.profile_pic.errors }}</div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class=" text-end">
+                        <button type="submit" class="btn btn-primary">Save Details</button>
+                      </div>
+                    </div>
+                    <div id="error-message" style="color: red; display: none;"></div>
+                  </form>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
     </div>
 </div>
 <style>

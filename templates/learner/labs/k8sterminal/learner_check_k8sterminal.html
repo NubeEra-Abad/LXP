@@ -18,19 +18,32 @@
     </ul>
   </nav>
 </div>
-<h2 style="text-align:center; ">K8S Terminal</h2>
-<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
-    <div class="form-group">
-      <label for="password">Password</label><br>
-        <input type="password" id="password" name="password" autofocus><br>
+<div class="row justify-content-center align-items-center h-100">
+  <div class="col-sm-12 col-md-5">
+    <div class="card">
+      <div class="card-header">
+        <h2 style="text-align:center; ">K8S Terminal</h2>
+      </div>
+      <div class="card-body">
+        <form method="POST" autocomplete="off">
+          <div class="form-group mb-0">
+            <label for="password">Password</label><br>
+              <input type="password" class="form-control" id="password" name="password" autofocus><br>
+          </div>
+          <button type="submit" class="btn btn-primary">Start</button>
+        </form>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-danger mt-3 {{ message.tags }}" role="alert-warning">
+          <p>{{ message }}</p>
+      </div>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Start</button>
-  </form>
-{% if messages %}
-{% for message in messages %}
-<div class="alert {{ message.tags }}" role="alert-warning">
-    {{ message }}
+  </div>
 </div>
+
+
+
 {% endfor %}
 {% endif %}
 <br><br><br>
