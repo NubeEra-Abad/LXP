@@ -723,3 +723,28 @@ class SchedulerStatus(models.Model):
     trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     status=models.PositiveIntegerField(default=0)
 
+
+
+
+class Activity(models.Model):
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    id = models.AutoField(primary_key=True)
+    serial_number = models.IntegerField(default=0)
+    urlvalue = models.CharField(max_length=2000)
+    description = models.CharField(max_length=200)
+
+    class Meta:
+        ordering = ['subject', 'chapter', 'serial_number']
+
+    def save(self, *args, **kwargs):
+        if not self.serial_number:
+            last_material = Activity.objects.filter(
+                subject=self.subject,
+                chapter=self.chapter
+            ).order_by('-serial_number').first()
+            if last_material:
+                self.serial_number = last_material.serial_number + 1
+            else:
+                self.serial_number = 1
+        super(Activity, self).save(*args, **kwargs)

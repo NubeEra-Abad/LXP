@@ -1255,3 +1255,321 @@ def staff_cloudshell_terminal_view(request):
             return render(request,'staff/labs/cloudshell/staff_cloudshell_terminal.html')
     except:
         return render(request,'lxpapp/404page.html')
+
+
+# @login_required
+# def staff_add_activity_view(request):
+#     try:
+#         if str(request.session['utype']) == 'staff':
+#             if request.method=='POST':
+#                 activityForm=LXPFORM.ActivityForm(request.POST)
+#                 subject = request.POST.get('subject')
+#                 chapter = request.POST.get('chapter')
+#                 mtype = request.POST.get('mtype')
+#                 topic = request.POST.get('topic')
+#                 urlvalue = request.POST.get('urlvalue')
+#                 description = request.POST.get('description')
+#                 activity = LXPModel.Activity.objects.create(subject_id = subject,chapter_id = chapter,topic = topic,mtype = mtype,urlvalue = urlvalue,description = description)
+#                 activity.save()
+                
+#             activityForm=LXPFORM.ActivityForm()
+#             return render(request,'staff/activity/staff_add_activity.html',{'activityForm':activityForm})
+#     except:
+#         return render(request,'lxpapp/404page.html')
+    
+# @login_required
+# def staff_update_activity_view(request,pk):
+#     try:
+#         if str(request.session['utype']) == 'staff':
+#             activityForm=LXPFORM.ActivityForm(request.POST)
+#             if request.method=='POST':
+#                 subject = request.POST.get('subject')
+#                 chapter = request.POST.get('chapter')
+#                 mtype = request.POST.get('mtype')
+#                 topic = request.POST.get('topic')
+#                 urlvalue = request.POST.get('urlvalue')
+#                 description = request.POST.get('description')
+                
+#                 activity = LXPModel.Activity.objects.get(id=pk)
+#                 activity.subject_id = subject
+#                 activity.chapter_id = chapter
+#                 activity.topic = topic
+#                 activity.mtype = mtype
+#                 activity.urlvalue = urlvalue
+#                 activity.description = description
+#                 activity.save()
+#                 activitys = LXPModel.Activity.objects.all()
+#                 return render(request,'staff/activity/staff_view_activity.html',{'activitys':activitys})
+#             activity_instance = get_object_or_404(LXPModel.Activity, id=pk)
+#             activityForm = LXPFORM.ActivityForm(instance=activity_instance)
+#             return render(request,'staff/activity/staff_update_activity.html',{'activityForm':activityForm})
+#     except:
+#         return render(request,'lxpapp/404page.html')
+
+# @login_required
+# def staff_view_activity_view(request):
+#     #try:
+#         if str(request.session['utype']) == 'staff':
+#             activitys = LXPModel.Activity.objects.all()
+#             return render(request,'staff/activity/staff_view_activity.html',{'activitys':activitys})
+#     #except:
+#         return render(request,'lxpapp/404page.html')
+
+# @login_required
+# def staff_delete_activity_view(request,pk):
+#     try:
+#         if str(request.session['utype']) == 'staff':  
+#             activity=LXPModel.Activity.objects.get(id=pk)
+#             activity.delete()
+#             activitys = LXPModel.Activity.objects.all()
+#             return render(request,'staff/activity/staff_view_activity.html',{'activitys':activitys})
+#     except:
+#         return render(request,'lxpapp/404page.html')
+
+# @login_required
+# def staff_show_activity_view(request,activitytype,pk):
+#     try:
+#         if str(request.session['utype']) == 'staff':
+#             details= LXPModel.Activity.objects.all().filter(id=pk)
+#             if activitytype == 'HTML':
+#                 return render(request,'staff/activity/staff_activity_htmlshow.html',{'details':details})
+#             if activitytype == 'URL':
+#                 return render(request,'staff/activity/staff_activity_urlshow.html',{'details':details})
+#             if activitytype == 'PDF':
+#                 return render(request,'staff/activity/staff_activity_pdfshow.html',{'details':details})
+#             if activitytype == 'Video':
+#                 return render(request,'staff/activity/staff_activity_videoshow.html',{'details':details})
+#     except:
+#         return render(request,'lxpapp/404page.html')
+
+# @login_required
+# def staff_activity_upload_file_view(request):
+#     subjects = LXPModel.Playlist.objects.all()
+#     context = {'subjects': subjects}
+#     return render(request,'staff/uploadpdf/staff_activity_upload_file.html',context)
+
+# from django.conf import settings
+# from datetime import datetime
+# import boto3, botocore
+# ALLOWED_EXTENSIONS = set(['pdf'])
+# def allowed_file(name):
+#     return "." in name and name.split(".")[1].lower() in ALLOWED_EXTENSIONS
+# # Connect to the s3 service
+# s3 = boto3.client(
+#     "s3",
+#     aws_access_key_id='AKIATZQFG2PZIUPD23GA',
+#     aws_secret_access_key='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'
+# )
+# #upload file to s3 w/ acl as public
+
+# @login_required  
+# def upload_activity_file_to_s3(request,file, bucket_name, acl="public-read"):
+#     try:
+#         filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
+#         print("intered in function")
+#         s3.upload_fileobj(
+#             file,
+#             bucket_name,
+#             filename,
+#             ExtraArgs={
+#                 "ACL": acl,
+#                 "ContentType": file.content_type
+#             }
+#         )
+#     except Exception as e:
+#         print("Something Unexpected Happened: ", e)
+#         return e
+#     # returns the webling to file upload to view
+#     url=settings.AWS_DOMAIN + '' + filename
+#     subject = request.POST.getlist('subject')
+#     chapter = request.POST.getlist('chapters')
+#     mtype = '3'
+#     description = 'file uploaded'
+#     for x in subject:
+#         subject = x
+#     for x in chapter:
+#         chapter = x
+#     for x in mtype:
+#         mtype = x
+#     if subject == 'Choose your Subject':
+#         messages.info(request, 'Please Select Subject')
+#     if chapter == 'Choose your Chapter':
+#         messages.info(request, 'Please Select Chapter')
+#     if mtype == 'Choose your Type':
+#         messages.info(request, 'Please Select Activity Type')
+#     if description is None:
+#         messages.info(request, 'Please Enter Description')
+
+#     if description is not None and subject !='Choose your Subject' and  chapter !='Choose your Chapter' and mtype !='Choose your Type' :
+#         activity = LXPModel.Activity.objects.create(
+#             subject_id = subject,
+#             chapter_id = chapter,
+#             mtype = mtype,
+#             urlvalue=url,
+#             description=description
+#         ).save()
+    
+#     subjects = LXPModel.Playlist.objects.all()
+#     context = {'subjects': subjects}
+#     return render(request,'staff/uploadpdf/staff_activity_upload_file.html',context)
+
+# @login_required
+# def staff_activity_start_upload_file_view(request):
+#     if request.method=="POST":
+#         file=request.FILES["select_file"]
+#         if file == "":
+#             return "Please return to previous page and select a file"
+#         if file:
+#             output = upload_activity_file_to_s3(request, file, settings.AWS_BUCKET_NAME)
+#             return output
+#         else:
+#             return redirect("/")
+
+# @login_required
+# def staff_upload_activity_details_csv_view(request):
+#     if request.method=='POST':
+#         if request.POST.get('select_file') == '':
+#             messages.info(request, 'Please select CSV file for upload')
+#         else:
+#             csv_file = request.FILES["select_file"]
+#             file_data = csv_file.read().decode("utf-8")		
+#             lines = file_data.split("\n")
+#             mat_type =''
+#             mat_url =''
+#             mat_desc =''
+#             oldsub =''
+#             oldchap=''
+#             top=''
+#             subid =0
+#             chapid=0
+#             topid=0
+#             tochk=''
+#             no = 0
+#             for line in lines:						
+#                 no = no + 1
+#                 if no > 1:
+#                     fields = line.split(",")
+#                     mat_type = str(fields[3]).replace('///',',').replace('\r','')
+#                     mat_url = str(fields[4]).replace('///',',').replace('\r','')
+#                     mat_desc = str(fields[5]).replace('///',',').replace('\r','')
+#                     tochk = str(fields[0]).replace('///',',').replace('\r','')
+#                     if tochk != oldsub:
+#                         oldsub = tochk
+#                         sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+#                         if not sub:
+#                             sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+#                             sub.save()
+#                             subid=sub.id
+#                         else:
+#                             for x in sub:
+#                                 subid=x.id  
+#                     tochk = str(fields[1]).replace('///',',').replace('\r','')
+#                     if tochk != oldchap:
+#                         oldchap = tochk
+#                         chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
+#                         if not chap:
+#                             chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
+#                             chap.save()
+#                             chapid=chap.id
+#                         else:
+#                             for x in chap:
+#                                 chapid=x.id 
+#                     top = str(fields[2]).replace('///',',').replace('\r','')
+                    
+#                     mat = LXPModel.Activity.objects.create(
+#                                 subject_id=subid,
+#                                 chapter_id=chapid,
+#                                 topic =top,
+#                                 mtype = mat_type,
+#                                 urlvalue = mat_url,
+#                                 description = mat_desc
+#                                 )
+#                     mat.save()
+#     return render(request,'staff/activity/staff_upload_activity_details_csv.html')
+
+# @login_required
+# def staff_upload_activity_folder_view(request):
+#     return render(request,'staff/activity/staff_Upload_activity_folder.html')
+
+
+# import os
+# from pathlib import Path
+# def upload_folder_to_s3(path, bucket_name):
+#     s3 = boto3.client(
+#     "s3",
+#     aws_access_key_id='AKIAVV2TMMSHQ46LTJ6R',
+#     aws_secret_access_key='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'
+# )
+#     oldsub =''
+#     oldchap=''
+#     tochk=''
+#     subid =0
+#     chapid=0
+#     filelist = []
+#     folder = ''
+#     for root, dirs, files in os.walk(path):
+#         for file in files:
+#             file_path = os.path.join(root, file)
+#             s3.upload_file(file_path, bucket_name, file_path)
+#             aws_link = s3.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': file_path}, ExpiresIn=604800) # 1 week
+#             fullfolderpath = os.path.dirname(file_path)
+#             path=os.path.dirname(file_path)
+#             onlyFoldername = os.path.basename(path)
+#             onlyfilenamewithoutextension = Path(file_path).stem
+#             onlyfilenamewithextension = os.path.basename(file_path)
+#             file_extension = Path(onlyfilenamewithextension).suffix
+#             subname = os.path.abspath(os.path.join(fullfolderpath, os.pardir))
+#             tochk = os.path.basename(subname)
+#             if tochk != oldsub:
+#                 oldsub = tochk
+#             sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
+#             if not sub:
+#                 sub = LXPModel.Subject.objects.create(subject_name = oldsub )
+#                 sub.save()
+#                 subid=sub.id
+#             else:
+#                 for x in sub:
+#                     subid=x.id  
+#             Srno = 0
+#             tochk = onlyFoldername
+#             if tochk != oldchap:
+#                 oldchap = tochk
+#                 Srno = 1
+#                 chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
+#                 if not chap:
+#                     chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
+#                     chap.save()
+#                     chapid=chap.id
+#                 else:
+#                     Srno = Srno + 1
+#                     for x in chap:
+#                         chapid=x.id
+#             topic = onlyfilenamewithoutextension
+#             doctype = ''
+#             file_extension = file_extension.replace('.','')
+#             if str(file_extension).upper() == 'VIDEO':
+#                 doctype = 'Video'
+#             else :
+#                 doctype = str(file_extension).upper()
+#             desc = topic
+#             data = LXPModel.Activity.objects.create(
+#                     serial_number = Srno,
+#                     topic = topic,
+#                     mtype = doctype,
+#                     urlvalue = aws_link,
+#                     description = desc,
+#                     chapter_id = chapid,
+#                     subject_id = subid
+#             )
+#             data.save()
+
+# def staff_start_upload_activity_folder_view(request):
+#     if request.method=="POST":
+#         folder=request.POST["select_folder"]
+#         folder = str.replace(folder,'/','\\')
+#         path ='D:\\upload\\iLMS'
+#         path =folder
+#         AWS_BUCKET_NAME='nubeera-study'
+#         upload_folder_to_s3(path, AWS_BUCKET_NAME)
+#         return  redirect("/")    
+    
