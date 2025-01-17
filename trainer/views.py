@@ -641,13 +641,6 @@ def trainer_python_terminal_view(request):
     except:
         return render(request,'lxpapp/404page.html')
     
-@login_required
-def trainer_python_terminal_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            return render(request,'trainer/labs/python/trainer_python_terminal.html')
-    except:
-        return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_linux_terminal_view(request):
