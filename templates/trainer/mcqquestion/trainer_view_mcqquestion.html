@@ -6,9 +6,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-add-mcqquestion">Add Mcq Question</a></li>
       <li class="breadcrumb-item"><a href="../../../../trainer/trainer-view-mcqquestion-exams">View Mcq Question</a></li>
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-add-mcqquestion">Add Mcq Question</a></li>
       <li class="breadcrumb-item active" aria-current="page">View Mcq Question of Exam</li>
     </ol>
   </nav>
@@ -26,7 +24,6 @@
             <th>Option 4</th>
             <th>Answer</th>
             <th>Marks</th>
-            <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -42,9 +39,7 @@
             {{t.answer}}
           </td>
           <td> {{t.marks}}</td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'trainer-delete-mcqquestion' t.id  %}"
-            onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
-        </tr>
+      </tr>
         {% endfor %}
         
       </tbody>

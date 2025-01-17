@@ -6,7 +6,6 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-add-ytexamquestion">Add Session Video Question</a></li>
       <li class="breadcrumb-item active" aria-current="page">View Session Video Question</li>
     </ol>
   </nav>
@@ -25,7 +24,6 @@
             <th>Option 4</th>
             <th>Answer</th>
             <th>Marks</th>
-            <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -42,9 +40,7 @@
             {{t.answer}}
           </td>
           <td> {{t.marks}}</td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'trainer-delete-ytexamquestion' t.id  %}"
-            onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
-        </tr>
+       </tr>
         {% endfor %}
         
       </tbody>

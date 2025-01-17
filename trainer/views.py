@@ -44,72 +44,12 @@ def trainer_dashboard_view(request):
         return render(request,'lxpapp/404page.html')
  
 @login_required
-def trainer_add_material_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            if request.method=='POST':
-                materialForm=LXPFORM.MaterialForm(request.POST)
-                subject = request.POST.get('subject')
-                chapter = request.POST.get('chapter')
-                mtype = request.POST.get('mtype')
-                topic = request.POST.get('topic')
-                urlvalue = request.POST.get('urlvalue')
-                description = request.POST.get('description')
-                material = LXPModel.Material.objects.create(subject_id = subject,chapter_id = chapter,topic = topic,mtype = mtype,urlvalue = urlvalue,description = description)
-                material.save()
-                
-            materialForm=LXPFORM.MaterialForm()
-            return render(request,'trainer/material/trainer_add_material.html',{'materialForm':materialForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-    
-@login_required
-def trainer_update_material_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            materialForm=LXPFORM.MaterialForm(request.POST)
-            if request.method=='POST':
-                subject = request.POST.get('subject')
-                chapter = request.POST.get('chapter')
-                mtype = request.POST.get('mtype')
-                topic = request.POST.get('topic')
-                urlvalue = request.POST.get('urlvalue')
-                description = request.POST.get('description')
-                
-                material = LXPModel.Material.objects.get(id=pk)
-                material.subject_id = subject
-                material.chapter_id = chapter
-                material.topic = topic
-                material.mtype = mtype
-                material.urlvalue = urlvalue
-                material.description = description
-                material.save()
-                materials = LXPModel.Material.objects.all()
-                return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
-            material_instance = get_object_or_404(LXPModel.Material, id=pk)
-            materialForm = LXPFORM.MaterialForm(instance=material_instance)
-            return render(request,'trainer/material/trainer_update_material.html',{'materialForm':materialForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
 def trainer_view_material_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
             materials = LXPModel.Material.objects.all()
             return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
     #except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_delete_material_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            material=LXPModel.Material.objects.get(id=pk)
-            material.delete()
-            materials = LXPModel.Material.objects.all()
-            return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
-    except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
@@ -128,305 +68,11 @@ def trainer_show_material_view(request,materialtype,pk):
     except:
         return render(request,'lxpapp/404page.html')
 
-@login_required
-def trainer_material_upload_file_view(request):
-    subjects = LXPModel.Playlist.objects.all()
-    context = {'subjects': subjects}
-    return render(request,'trainer/uploadpdf/trainer_material_upload_file.html',context)
-
-from django.conf import settings
-from datetime import datetime
-import boto3, botocore
-ALLOWED_EXTENSIONS = set(['pdf'])
-def allowed_file(name):
-    return "." in name and name.split(".")[1].lower() in ALLOWED_EXTENSIONS
-# Connect to the s3 service
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id='AKIATZQFG2PZIUPD23GA',
-    aws_secret_access_key='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'
-)
-#upload file to s3 w/ acl as public
-
-@login_required  
-def upload_material_file_to_s3(request,file, bucket_name, acl="public-read"):
-    try:
-        filename = datetime.now().strftime("%Y%m%d%H%M%S.pdf")
-        print("intered in function")
-        s3.upload_fileobj(
-            file,
-            bucket_name,
-            filename,
-            ExtraArgs={
-                "ACL": acl,
-                "ContentType": file.content_type
-            }
-        )
-    except Exception as e:
-        print("Something Unexpected Happened: ", e)
-        return e
-    # returns the webling to file upload to view
-    url=settings.AWS_DOMAIN + '' + filename
-    subject = request.POST.getlist('subject')
-    chapter = request.POST.getlist('chapters')
-    mtype = '3'
-    description = 'file uploaded'
-    for x in subject:
-        subject = x
-    for x in chapter:
-        chapter = x
-    for x in mtype:
-        mtype = x
-    if subject == 'Choose your Subject':
-        messages.info(request, 'Please Select Subject')
-    if chapter == 'Choose your Chapter':
-        messages.info(request, 'Please Select Chapter')
-    if mtype == 'Choose your Type':
-        messages.info(request, 'Please Select Material Type')
-    if description is None:
-        messages.info(request, 'Please Enter Description')
-
-    if description is not None and subject !='Choose your Subject' and  chapter !='Choose your Chapter' and mtype !='Choose your Type' :
-        material = LXPModel.Material.objects.create(
-            subject_id = subject,
-            chapter_id = chapter,
-            mtype = mtype,
-            urlvalue=url,
-            description=description
-        ).save()
-    
-    subjects = LXPModel.Playlist.objects.all()
-    context = {'subjects': subjects}
-    return render(request,'trainer/uploadpdf/trainer_material_upload_file.html',context)
-
-@login_required
-def trainer_material_start_upload_file_view(request):
-    if request.method=="POST":
-        file=request.FILES["select_file"]
-        if file == "":
-            return "Please return to previous page and select a file"
-        if file:
-            output = upload_material_file_to_s3(request, file, settings.AWS_BUCKET_NAME)
-            return output
-        else:
-            return redirect("/")
-
-@login_required
-def trainer_upload_material_details_csv_view(request):
-    if request.method=='POST':
-        if request.POST.get('select_file') == '':
-            messages.info(request, 'Please select CSV file for upload')
-        else:
-            csv_file = request.FILES["select_file"]
-            file_data = csv_file.read().decode("utf-8")		
-            lines = file_data.split("\n")
-            mat_type =''
-            mat_url =''
-            mat_desc =''
-            oldsub =''
-            oldchap=''
-            top=''
-            subid =0
-            chapid=0
-            topid=0
-            tochk=''
-            no = 0
-            for line in lines:						
-                no = no + 1
-                if no > 1:
-                    fields = line.split(",")
-                    mat_type = str(fields[3]).replace('///',',').replace('\r','')
-                    mat_url = str(fields[4]).replace('///',',').replace('\r','')
-                    mat_desc = str(fields[5]).replace('///',',').replace('\r','')
-                    tochk = str(fields[0]).replace('///',',').replace('\r','')
-                    if tochk != oldsub:
-                        oldsub = tochk
-                        sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
-                        if not sub:
-                            sub = LXPModel.Subject.objects.create(subject_name = oldsub )
-                            sub.save()
-                            subid=sub.id
-                        else:
-                            for x in sub:
-                                subid=x.id  
-                    tochk = str(fields[1]).replace('///',',').replace('\r','')
-                    if tochk != oldchap:
-                        oldchap = tochk
-                        chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
-                        if not chap:
-                            chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
-                            chap.save()
-                            chapid=chap.id
-                        else:
-                            for x in chap:
-                                chapid=x.id 
-                    top = str(fields[2]).replace('///',',').replace('\r','')
-                    
-                    mat = LXPModel.Material.objects.create(
-                                subject_id=subid,
-                                chapter_id=chapid,
-                                topic =top,
-                                mtype = mat_type,
-                                urlvalue = mat_url,
-                                description = mat_desc
-                                )
-                    mat.save()
-    return render(request,'trainer/material/trainer_upload_material_details_csv.html')
-
-@login_required
-def trainer_upload_material_folder_view(request):
-    return render(request,'trainer/material/trainer_Upload_material_folder.html')
-
-
-import os
-from pathlib import Path
-def upload_folder_to_s3(path, bucket_name):
-    s3 = boto3.client(
-    "s3",
-    aws_access_key_id='AKIAVV2TMMSHQ46LTJ6R',
-    aws_secret_access_key='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'
-)
-    oldsub =''
-    oldchap=''
-    tochk=''
-    subid =0
-    chapid=0
-    filelist = []
-    folder = ''
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            s3.upload_file(file_path, bucket_name, file_path)
-            aws_link = s3.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': file_path}, ExpiresIn=604800) # 1 week
-            fullfolderpath = os.path.dirname(file_path)
-            path=os.path.dirname(file_path)
-            onlyFoldername = os.path.basename(path)
-            onlyfilenamewithoutextension = Path(file_path).stem
-            onlyfilenamewithextension = os.path.basename(file_path)
-            file_extension = Path(onlyfilenamewithextension).suffix
-            subname = os.path.abspath(os.path.join(fullfolderpath, os.pardir))
-            tochk = os.path.basename(subname)
-            if tochk != oldsub:
-                oldsub = tochk
-            sub = LXPModel.Subject.objects.all().filter(subject_name__exact = oldsub )
-            if not sub:
-                sub = LXPModel.Subject.objects.create(subject_name = oldsub )
-                sub.save()
-                subid=sub.id
-            else:
-                for x in sub:
-                    subid=x.id  
-            Srno = 0
-            tochk = onlyFoldername
-            if tochk != oldchap:
-                oldchap = tochk
-                Srno = 1
-                chap = LXPModel.Chapter.objects.all().filter(chapter_name__exact = oldchap,subject_id=subid)
-                if not chap:
-                    chap = LXPModel.Chapter.objects.create(chapter_name = oldchap,subject_id=subid)
-                    chap.save()
-                    chapid=chap.id
-                else:
-                    Srno = Srno + 1
-                    for x in chap:
-                        chapid=x.id
-            topic = onlyfilenamewithoutextension
-            doctype = ''
-            file_extension = file_extension.replace('.','')
-            if str(file_extension).upper() == 'VIDEO':
-                doctype = 'Video'
-            else :
-                doctype = str(file_extension).upper()
-            desc = topic
-            data = LXPModel.Material.objects.create(
-                    serial_number = Srno,
-                    topic = topic,
-                    mtype = doctype,
-                    urlvalue = aws_link,
-                    description = desc,
-                    chapter_id = chapid,
-                    subject_id = subid
-            )
-            data.save()
-
-def trainer_start_upload_material_folder_view(request):
-    if request.method=="POST":
-        folder=request.POST["select_folder"]
-        folder = str.replace(folder,'/','\\')
-        path ='D:\\upload\\iLMS'
-        path =folder
-        AWS_BUCKET_NAME='nubeera-study'
-        upload_folder_to_s3(path, AWS_BUCKET_NAME)
-        return  redirect("/")
-@login_required
-def trainer_sessionmaterial_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            return render(request,'trainer/sessionmaterial/trainer_sessionmaterial.html')
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_add_sessionmaterial_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            if request.method=='POST':
-                sessionmaterialForm=LXPFORM.SessionMaterialForm(request.POST)
-                playlist = request.POST.get('playlist')
-                video = request.POST.get('video')
-                mtype = request.POST.get('mtype')
-                urlvalue = request.POST.get('urlvalue')
-                description = request.POST.get('description')
-                sessionmaterial = LXPModel.SessionMaterial.objects.create(playlist_id = playlist,video_id = video,mtype = mtype,urlvalue = urlvalue,description = description)
-                sessionmaterial.save()
-                
-            sessionmaterialForm=LXPFORM.SessionMaterialForm()
-            return render(request,'trainer/sessionmaterial/trainer_add_sessionmaterial.html',{'sessionmaterialForm':sessionmaterialForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-    
-@login_required
-def trainer_update_sessionmaterial_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            sessionmaterialForm=LXPFORM.SessionMaterialForm(request.POST)
-            if request.method=='POST':
-                playlist = request.POST.get('playlist')
-                video = request.POST.get('video')
-                mtype = request.POST.get('mtype')
-                urlvalue = request.POST.get('urlvalue')
-                description = request.POST.get('description')
-                
-                sessionmaterial = LXPModel.SessionMaterial.objects.get(id=pk)
-                sessionmaterial.playlist_id = playlist
-                sessionmaterial.video_id = video
-                sessionmaterial.mtype = mtype
-                sessionmaterial.urlvalue = urlvalue
-                sessionmaterial.description = description
-                sessionmaterial.save()
-                sessionmaterials = LXPModel.SessionMaterial.objects.all()
-                return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
-            sessionmaterial_instance = get_object_or_404(LXPModel.SessionMaterial, id=pk)
-            sessionmaterialForm = LXPFORM.SessionMaterialForm(instance=sessionmaterial_instance)
-            return render(request,'trainer/sessionmaterial/trainer_update_sessionmaterial.html',{'sessionmaterialForm':sessionmaterialForm})
-    except:
-        return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_sessionmaterial_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            sessionmaterials = LXPModel.SessionMaterial.objects.all()
-            return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_delete_sessionmaterial_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            sessionmaterial=LXPModel.SessionMaterial.objects.get(id=pk)
-            sessionmaterial.delete()
             sessionmaterials = LXPModel.SessionMaterial.objects.all()
             return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
     except:
@@ -682,55 +328,6 @@ def trainer_mcqquestion_view(request):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def trainer_add_mcqquestion_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            storage = messages.get_messages(request)
-            storage.used = True
-            if request.method=='POST':
-                mcqquestionForm=LXPFORM.McqQuestionForm(request.POST)
-                if mcqquestionForm.is_valid(): 
-                    questiontext = mcqquestionForm.cleaned_data["question"]
-                    mcqquestion = LXPModel.McqQuestion.objects.all().filter(question__iexact = questiontext)
-                    if mcqquestion:
-                        messages.info(request, 'Mcq Question Name Already Exist')
-                        mcqquestionForm=LXPFORM.McqQuestionForm()
-                        return render(request,'trainer/mcqquestion/trainer_add_mcqquestion.html',{'mcqquestionForm':mcqquestionForm})                  
-                    else:
-                        exam=LXPModel.Exam.objects.get(id=request.POST.get('examID'))
-                        mcqquestion = LXPModel.McqQuestion.objects.create(exam_id = exam.id,question = questiontext,option1=request.POST.get('option1'),option2=request.POST.get('option2'),option3=request.POST.get('option3'),option4=request.POST.get('option4'),answer=request.POST.get('answer'),marks=request.POST.get('marks'))
-                        mcqquestion.save()
-                        messages.info(request, 'Mcq Question added')
-                else:
-                    print("form is invalid")
-            mcqquestionForm=LXPFORM.McqQuestionForm()
-            return render(request,'trainer/mcqquestion/trainer_add_mcqquestion.html',{'mcqquestionForm':mcqquestionForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_update_mcqquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            mcqquestion = LXPModel.McqQuestion.objects.get(id=pk)
-            mcqquestionForm=LXPFORM.McqQuestionForm(request.POST,instance=mcqquestion)
-            if request.method=='POST':
-                if mcqquestionForm.is_valid(): 
-                    mcqquestiontext = mcqquestionForm.cleaned_data["mcqquestion_name"]
-                    mcqquestion = LXPModel.McqQuestion.objects.all().filter(mcqquestion_name__iexact = mcqquestiontext).exclude(id=pk)
-                    if mcqquestion:
-                        messages.info(request, 'McqQuestion Name Already Exist')
-                        return render(request,'trainer/mcqquestion/trainer_update_mcqquestion.html',{'mcqquestionForm':mcqquestionForm})
-                    else:
-                        mcqquestionForm.save()
-                        mcqquestions = LXPModel.McqQuestion.objects.all()
-                        return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
-            mcqquestion_instance = get_object_or_404(LXPModel.McqQuestion, id=pk)
-            mcqquestionForm = LXPFORM.McqQuestionForm(instance=mcqquestion_instance)
-            return render(request,'trainer/mcqquestion/trainer_update_mcqquestion.html',{'mcqquestionForm':mcqquestionForm,'ex':mcqquestion.mcqquestion_name,'sub':mcqquestion.questiontpye})
-    except:
-        return render(request,'lxpapp/404page.html')
-@login_required
 def trainer_view_mcqquestion_exams_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
@@ -748,70 +345,10 @@ def trainer_view_mcqquestion_view(request,examid):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def trainer_delete_mcqquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            mcqquestion=LXPModel.McqQuestion.objects.get(id=pk)
-            mcqquestion.delete()
-            return HttpResponseRedirect('/trainer/trainer-view-mcqquestion')
-        mcqquestions = LXPModel.McqQuestion.objects.all()
-        return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
 def trainer_shortquestion_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
             return render(request,'trainer/shortquestion/trainer_shortquestion.html')
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_add_shortquestion_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            if request.method=='POST':
-                shortquestionForm=LXPFORM.ShortQuestionForm(request.POST)
-                if shortquestionForm.is_valid(): 
-                    questiontext = shortquestionForm.cleaned_data["question"]
-                    shortquestion = LXPModel.ShortQuestion.objects.all().filter(question__iexact = questiontext)
-                    if shortquestion:
-                        messages.info(request, 'Short Question Already Exist')
-                        shortquestionForm=LXPFORM.ShortQuestionForm()
-                        return render(request,'trainer/shortquestion/trainer_add_shortquestion.html',{'shortquestionForm':shortquestionForm})                  
-                    else:
-                        exam=LXPModel.Exam.objects.get(id=request.POST.get('examID'))
-                        shortquestion = LXPModel.ShortQuestion.objects.create(exam_id = exam.id,question = questiontext,marks=request.POST.get('marks'))
-                        shortquestion.save()
-                else:
-                    print("form is invalid")
-            shortquestionForm=LXPFORM.ShortQuestionForm()
-            return render(request,'trainer/shortquestion/trainer_add_shortquestion.html',{'shortquestionForm':shortquestionForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_update_shortquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            shortquestion = LXPModel.ShortQuestion.objects.get(id=pk)
-            shortquestionForm=LXPFORM.ShortQuestionForm(request.POST,instance=shortquestion)
-            if request.method=='POST':
-                if shortquestionForm.is_valid(): 
-                    shortquestiontext = shortquestionForm.cleaned_data["question"]
-                    shortquestion = LXPModel.ShortQuestion.objects.all().filter(question__iexact = shortquestiontext).exclude(id=pk)
-                    if shortquestion:
-                        messages.info(request, 'ShortQuestion Name Already Exist')
-                    else:
-                        examid = LXPModel.Exam.objects.all().filter(id=request.POST['examID'])
-                        shortquestionForm.examID=examid
-                        shortquestionForm.save()
-                        shortquestions = LXPModel.ShortQuestion.objects.all()
-                        return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
-            shortquestion_instance = get_object_or_404(LXPModel.ShortQuestion, id=pk)
-            shortquestionForm = LXPFORM.ShortQuestionForm(instance=shortquestion_instance)
-            return render(request,'trainer/shortquestion/trainer_update_shortquestion.html',{'shortquestionForm':shortquestionForm,'ex':shortquestion.question})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -821,18 +358,6 @@ def trainer_view_shortquestion_view(request):
         if str(request.session['utype']) == 'trainer':
             shortquestions = LXPModel.ShortQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all())
             return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_delete_shortquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            shortquestion=LXPModel.ShortQuestion.objects.get(id=pk)
-            shortquestion.delete()
-            return HttpResponseRedirect('/trainer/trainer-view-shortquestion')
-        shortquestions = LXPModel.ShortQuestion.objects.all()
-        return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -896,61 +421,6 @@ def trainer_ytexamquestion_view(request):
     except:
         return render(request,'lxpapp/404page.html')
 
-@login_required
-def trainer_add_ytexamquestion_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            if request.method=='POST':
-                ytexamquestionForm=LXPFORM.YTExamQuestionForm(request.POST)
-                if ytexamquestionForm.is_valid(): 
-                    questiontext = ytexamquestionForm.cleaned_data["question"]
-                    ytexamquestion = LXPModel.YTExamQuestion.objects.all().filter(question__iexact = questiontext)
-                    if ytexamquestion:
-                        messages.info(request, 'Mcq Question Name Already Exist')
-                        ytexamquestionForm=LXPFORM.YTExamQuestionForm()
-                        return render(request,'trainer/ytexamquestion/trainer_add_ytexamquestion.html',{'ytexamquestionForm':ytexamquestionForm})                  
-                    else:
-                        playlist=LXPModel.Playlist.objects.get(id=ytexamquestionForm.cleaned_data["playlistID"].pk)
-                        video=LXPModel.Video.objects.get(id=ytexamquestionForm.cleaned_data["videoID"].pk)
-                        ytexamquestion = LXPModel.YTExamQuestion.objects.create(
-                            playlist_id = playlist.id,
-                            video_id = video.id,
-                            question = questiontext,
-                            option1=request.POST.get('option1'),
-                            option2=request.POST.get('option2'),
-                            option3=request.POST.get('option3'),
-                            option4=request.POST.get('option4'),
-                            answer=request.POST.get('answer'),
-                            marks=request.POST.get('marks'))
-                        ytexamquestion.save()
-                else:
-                    print("form is invalid")
-            ytexamquestionForm=LXPFORM.YTExamQuestionForm()
-            return render(request,'trainer/ytexamquestion/trainer_add_ytexamquestion.html',{'ytexamquestionForm':ytexamquestionForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_update_ytexamquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            ytexamquestion = LXPModel.YTExamQuestion.objects.get(id=pk)
-            ytexamquestionForm=LXPFORM.YTExamQuestionForm(request.POST,instance=ytexamquestion)
-            if request.method=='POST':
-                if ytexamquestionForm.is_valid(): 
-                    ytexamquestiontext = ytexamquestionForm.cleaned_data["ytexamquestion_name"]
-                    ytexamquestion = LXPModel.YTExamQuestion.objects.all().filter(ytexamquestion_name__iexact = ytexamquestiontext).exclude(id=pk)
-                    if ytexamquestion:
-                        messages.info(request, 'Question Already Exist')
-                    else:
-                        ytexamquestionForm.save()
-                        ytexamquestions = LXPModel.YTExamQuestion.objects.all()
-                        return render(request,'trainer/ytexamquestion/trainer_view_ytexamquestion.html',{'ytexamquestions':ytexamquestions})
-            ytexamquestion_instance = get_object_or_404(LXPModel.YTExamQuestion, id=pk)
-            ytexamquestionForm = LXPFORM.YTExamQuestionForm(instance=ytexamquestion_instance)
-            return render(request,'trainer/ytexamquestion/trainer_update_ytexamquestion.html',{'ytexamquestionForm':ytexamquestionForm,'ex':ytexamquestion.ytexamquestion_name,'sub':ytexamquestion.questiontpye})
-    except:
-        return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_ytexamquestion_view(request):
@@ -961,17 +431,6 @@ def trainer_view_ytexamquestion_view(request):
     except:
         return render(request,'lxpapp/404page.html')
 
-@login_required
-def trainer_delete_ytexamquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            ytexamquestion=LXPModel.YTExamQuestion.objects.get(id=pk)
-            ytexamquestion.delete()
-            return HttpResponseRedirect('/trainer/trainer-view-ytexamquestion')
-        ytexamquestions = LXPModel.YTExamQuestion.objects.all()
-        return render(request,'trainer/ytexamquestion/trainer_view_ytexamquestion.html',{'ytexamquestions':ytexamquestions})
-    except:
-        return render(request,'lxpapp/404page.html')
 
 @login_required
 def trainer_view_learner_video_view(request):
@@ -1067,54 +526,6 @@ def trainer_learner_show_video_view(request,subject_id,video_id):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def trainer_add_chapterquestion_view(request):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            storage = messages.get_messages(request)
-            storage.used = True
-            if request.method=='POST':
-                chapterquestionForm=LXPFORM.ChapterQuestionForm(request.POST)
-                if chapterquestionForm.is_valid(): 
-                    questiontext = chapterquestionForm.cleaned_data["question"]
-                    chapterquestion = LXPModel.ChapterQuestion.objects.all().filter(question__iexact = questiontext)
-                    if chapterquestion:
-                        messages.info(request, 'Chapter Question Name Already Exist')
-                        chapterquestionForm=LXPFORM.ChapterQuestionForm()
-                        return render(request,'trainer/chapterquestion/trainer_add_chapterquestion.html',{'chapterquestionForm':chapterquestionForm})                  
-                    else:
-                        chapterquestion = LXPModel.ChapterQuestion.objects.create(subject_id = chapterquestionForm.cleaned_data["subject"].pk,chapter_id = chapterquestionForm.cleaned_data["chapter"].pk,question = questiontext,option1=request.POST.get('option1'),option2=request.POST.get('option2'),option3=request.POST.get('option3'),option4=request.POST.get('option4'),answer=request.POST.get('answer'),marks=request.POST.get('marks'))
-                        chapterquestion.save()
-                        messages.info(request, 'Chapter  Question added')
-                else:
-                    print("form is invalid")
-            chapterquestionForm=LXPFORM.ChapterQuestionForm()
-            return render(request,'trainer/chapterquestion/trainer_add_chapterquestion.html',{'chapterquestionForm':chapterquestionForm})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_update_chapterquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':
-            chapterquestion = LXPModel.ChapterQuestion.objects.get(id=pk)
-            chapterquestionForm=LXPFORM.ChapterQuestionForm(request.POST,instance=chapterquestion)
-            if request.method=='POST':
-                if chapterquestionForm.is_valid(): 
-                    chapterquestiontext = chapterquestionForm.cleaned_data["chapterquestion_name"]
-                    chapterquestion = LXPModel.ChapterQuestion.objects.all().filter(chapterquestion_name__iexact = chapterquestiontext).exclude(id=pk)
-                    if chapterquestion:
-                        messages.info(request, 'ChapterQuestion Name Already Exist')
-                    else:
-                        chapterquestionForm.save()
-                        chapterquestions = LXPModel.ChapterQuestion.objects.all()
-                        return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
-            chapterquestion_instance = get_object_or_404(LXPModel.ChapterQuestion, id=pk)
-            chapterquestionForm = LXPFORM.ChapterQuestionForm(instance=chapterquestion_instance)
-            return render(request,'trainer/chapterquestion/trainer_update_chapterquestion.html',{'chapterquestionForm':chapterquestionForm,'ex':chapterquestion.chapterquestion_name,'sub':chapterquestion.questiontpye})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
 def trainer_view_chapterquestion_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
@@ -1131,18 +542,6 @@ def trainer_view_chapterquestion_chapter_view(request,chapter_id):
             chapter_name = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
 
             return render(request,'trainer/chapterquestion/trainer_view_chapterquestion_chapter.html',{'chapterquestions':chapterquestions,'chapter_name':chapter_name})
-    except:
-        return render(request,'lxpapp/404page.html')
-
-@login_required
-def trainer_delete_chapterquestion_view(request,pk):
-    try:
-        if str(request.session['utype']) == 'trainer':  
-            chapterquestion=LXPModel.ChapterQuestion.objects.get(id=pk)
-            chapterquestion.delete()
-            return HttpResponseRedirect('/trainer/trainer-view-chapterquestion')
-        chapterquestions = LXPModel.ChapterQuestion.objects.all()
-        return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -1367,6 +766,7 @@ def schedulerstatus_delete(request, id):
         return render(request,'loginrelated/diffrentuser.html')
 
 import json
+from  datetime import datetime
 @login_required
 @csrf_exempt
 def trainer_schedulerstatus_mark_done(request):

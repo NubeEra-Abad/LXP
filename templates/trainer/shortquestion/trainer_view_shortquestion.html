@@ -6,7 +6,6 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-add-shortquestion">Add Short Question</a></li>
       <li class="breadcrumb-item active" aria-current="page">View Short Question</li>
     </ol>
   </nav>
@@ -19,8 +18,6 @@
           <th>Exam Name</th>
             <th>Short Question Name</th>
             <th>Marks</th>
-            <th>Update</th>
-            <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -29,11 +26,7 @@
           <td> {{t.exam.exam_name}}</td>
           <td> {{t.question}}</td>
           <td> {{t.marks}}</td>
-            <td><a class="btn btn-primary btn-xs" href="{% url 'trainer-update-mcqquestion' t.id  %}"><span
-              class="	far fa-edit"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'trainer-delete-mcqquestion' t.id  %}"
-            onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
-        </tr>
+      </tr>
         {% endfor %}
         
       </tbody>

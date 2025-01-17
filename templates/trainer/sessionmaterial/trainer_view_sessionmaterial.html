@@ -6,7 +6,6 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="../../../../trainer/trainer-dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="../../../../trainer/trainer-add-sessionmaterial">Add Session Material</a></li>
       <li class="breadcrumb-item active" aria-current="page">View Session Material</li>
     </ol>
   </nav>
@@ -21,8 +20,6 @@
           <th>Session Material Type</th>
           <th>Description</th>
           <th>Show</th>
-          <th>Update</th>
-          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -34,10 +31,6 @@
           <td> {{t.description}}</td>
           <td><a class="btn btn-success btn-xs" href="{% url 'trainer-show-sessionmaterial' t.mtype t.id  %}"><span
             class="	fas fa-binoculars"></span></a></td>
-            <td><a class="btn btn-primary btn-xs" href="{% url 'trainer-update-sessionmaterial' t.id  %}"><span
-              class="	far fa-edit"></span></a></td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'trainer-delete-sessionmaterial' t.id  %}"
-              onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
         </tr>
         {% endfor %}
       </tbody>
