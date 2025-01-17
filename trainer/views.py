@@ -264,6 +264,7 @@ def trainer_upload_exam_csv_view(request):
                             exam_id = exam.id
                         )
                         question.save()
+            messages.info(request, 'Questions Added Successfully')
     batch = LXPModel.Batch.objects.all()
     context = {'batch': batch}
     return render(request,'trainer/exam/trainer_upload_exam_csv.html',context)
@@ -404,6 +405,7 @@ def trainer_save_short_question_result_view(request,pk):
                     maintbl.status=True
                 maintbl.marks = totmarks
                 maintbl.save()
+                messages.info(request, 'Records saved successfully')
                 if tot == totgiven:
                     resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = pk)
                     return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
