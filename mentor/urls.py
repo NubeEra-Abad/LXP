@@ -89,6 +89,16 @@ urlpatterns = [
     path('mentor-schedulerstatus-mark-done/', views.mentor_schedulerstatus_mark_done, name='mentor-schedulerstatus-mark-done'),
     path('mentor-scheduler-calender/', views.mentor_scheduler_calender, name='mentor-scheduler-calender'),
     
+    path('mentor-add-activity', views.mentor_add_activity_view,name='mentor-add-activity'),
+    path('mentor-update-activity/<int:pk>', views.mentor_update_activity_view,name='mentor-update-activity'),
+    path('mentor-view-activity', views.mentor_view_activity_view,name='mentor-view-activity'),
+    path('mentor-delete-activity/<int:pk>', views.mentor_delete_activity_view,name='mentor-delete-activity'),
+    path('mentor-show-activity/<activitytype>,/<int:pk>', views.mentor_show_activity_view,name='mentor-show-activity'),
+    path('mentor-activity-upload-file', views.mentor_activity_upload_file_view,name='mentor-activity-upload-file'),
+    path('mentor-activity-start-upload-file', views.mentor_activity_start_upload_file_view,name='mentor-activity-start-upload-file'),
+    path('mentor-upload-activity-details-csv', views.mentor_upload_activity_details_csv_view,name='mentor-upload-activity-details-csv'),
+    path('mentor-upload-activity-folder', views.mentor_upload_activity_folder_view,name='mentor-upload-activity-folder'),
+    path('mentor-start-upload-activity-folder', views.mentor_start_upload_activity_folder_view,name='mentor-start-upload-activity-folder'),    
     
 
     
