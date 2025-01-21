@@ -295,3 +295,11 @@ class PlayListForm(forms.ModelForm):
     class Meta:
         model=models.Playlist
         fields=['channel_id','channel_name','playlist_id','name']
+
+class ActivityForm(forms.ModelForm):
+    class Meta:
+        model = models.Activity
+        fields = ('subject', 'chapter','urlvalue','description')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

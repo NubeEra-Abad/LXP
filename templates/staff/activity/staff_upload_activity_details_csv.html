@@ -30,17 +30,17 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="../../../../staff/staff-dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="../../../../staff/staff-add-material">Add Material</a></li>
-    <li class="breadcrumb-item"><a href="../../../../staff/staff-view-material">View Material</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Upload a Material CSV File</li>
+    <li class="breadcrumb-item"><a href="../../../../staff/staff-add-activity">Add Activity</a></li>
+    <li class="breadcrumb-item"><a href="../../../../staff/staff-view-activity">View Activity</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Upload a Activity CSV File</li>
   </ol>
 </nav>
 </div>
   <div class="container">
-    <h4>Upload a Material CSV File: </h4>
+    <h4>Upload a Activity CSV File: </h4>
     <form onsubmit="return validateForm()" method="POST" enctype="multipart/form-data">
       {%csrf_token%}
-      <label for="material_name">Material Name</label>
+      <label for="activity_name">Activity Name</label>
       <input type="file" name="select_file" id="select_file">
       <br><br>
       <button type="submit">Upload</button>

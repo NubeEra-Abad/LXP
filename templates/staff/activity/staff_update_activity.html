@@ -12,15 +12,15 @@
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="../../../../staff/staff-dashboard">Dashboard</a></li>
-			<li class="breadcrumb-item"><a href="../../../../staff/staff-add-material">Add Material</a></li>
-			<li class="breadcrumb-item"><a href="../../../../staff/staff-view-material">View Material</a></li>
-			<li class="breadcrumb-item"><a href="../../../../staff/staff-upload-material-details-csv">Upload Material CSV</a></li>
-			<li class="breadcrumb-item active" aria-current="page">Update Material</li>
+			<li class="breadcrumb-item"><a href="../../../../staff/staff-add-activity">Add Activity</a></li>
+			<li class="breadcrumb-item"><a href="../../../../staff/staff-view-activity">View Activity</a></li>
+			<li class="breadcrumb-item"><a href="../../../../staff/staff-upload-activity-details-csv">Upload Activity CSV</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Update Activity</li>
 		</ol>
 	</nav>
 </div>
-<h2 style="text-align:center;">Update Material</h2>
-<form method="POST" id="materialForm" data-chapters-url="{% url 'ajax_load_chapters' %}" autocomplete="off"
+<h2 style="text-align:center;">Update Activity</h2>
+<form method="POST" id="activityForm" data-chapters-url="{% url 'ajax_load_chapters' %}" autocomplete="off"
 	style="margin:100px;margin-top: 0px;">
 	{%csrf_token%}
 	<div class="form-group">
@@ -28,29 +28,29 @@
 			<div class="row">
 				<div class="col-md-6 col-xl-6">
 					<label for="subject_name">Subject Name</label>
-					{% render_field materialForm.subject class="form-control"%}
+					{% render_field activityForm.subject class="form-control"%}
 				</div>
 				<div class="col-md-6 col-xl-6">
 					<label for="chapter_name">Chapter Name</label>
-					{% render_field materialForm.chapter class="form-control"%}
+					{% render_field activityForm.chapter class="form-control"%}
 				</div>
 				<div class="col-md-12 col-xl-12">
 
 					<label for="title">topic</label>
-					{% render_field materialForm.toipc class="form-control" placeholder="Title" %}
+					{% render_field activityForm.toipc class="form-control" placeholder="Title" %}
 				</div>
 				<div class="col-md-12 col-xl-12">
-					<label for="mtype">Material Type</label>
-					{% render_field materialForm.mtype class="form-control"%}
+					<label for="mtype">Activity Type</label>
+					{% render_field activityForm.mtype class="form-control"%}
 				</div>
 				<div class="col-md-12 col-xl-12">
 					<label for="urlvalue">URL</label>
-					{% render_field materialForm.urlvalue class="form-control" placeholder="Material URL" %}
+					{% render_field activityForm.urlvalue class="form-control" placeholder="Activity URL" %}
 				</div>
 				<div class="col-md-12 col-xl-12">
 
 					<label for="description">Description</label>
-					{% render_field materialForm.description class="form-control" placeholder="Description" %}
+					{% render_field activityForm.description class="form-control" placeholder="Description" %}
 				</div>
 				<button class="btn btn-primary form-control" type="submit"
 					onclick="return checkvalid(event);">SUBMIT</button>
@@ -86,7 +86,7 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 	$("#id_subject").change(function () {
-		var url = $("#materialForm").attr("data-chapters-url");  // get the url of the `load_topics` view
+		var url = $("#activityForm").attr("data-chapters-url");  // get the url of the `load_topics` view
 		var subjectId = $(this).val();  // get the selected subject ID from the HTML input
 
 		$.ajax({                       // initialize an AJAX request

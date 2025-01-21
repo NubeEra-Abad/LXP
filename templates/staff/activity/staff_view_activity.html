@@ -6,10 +6,10 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'staff-dashboard' %}">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'staff-add-material' %}">Add Material</a></li>
-			<li class="breadcrumb-item"><a href="{% url 'staff-upload-material-details-csv' %}">Upload Material CSV</a></li>
-			<li class="breadcrumb-item"><a href="{% url 'staff-upload-material-folder' %}">Upload Material Folder</a></li>
-      <li class="breadcrumb-item active" aria-current="page">View Material</li>
+      <li class="breadcrumb-item"><a href="{% url 'staff-add-activity' %}">Add Activity</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'staff-upload-activity-details-csv' %}">Upload Activity CSV</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'staff-upload-activity-folder' %}">Upload Activity Folder</a></li>
+      <li class="breadcrumb-item active" aria-current="page">View Activity</li>
     </ol>
   </nav>
 </div>
@@ -20,8 +20,7 @@
         <tr>
           <th>Subject Name</th>
           <th>Chapter Name</th>
-          <th>Topic Name</th>
-          <th>Material Type</th>
+         
           <th>Description</th>
           <th>Show</th>
           <th>Update</th>
@@ -29,18 +28,16 @@
         </tr>
       </thead>
       <tbody>
-        {% for t in materials %}
+        {% for t in activitys %}
         <tr>
           <td> {{t.subject}}</td>
           <td> {{t.chapter}}</td>
-          <td> {{t.topic}}</td>
-          <td> {{t.mtype}}</td>
           <td> {{t.description}}</td>
-          <td><a class="btn btn-success btn-xs" href="{% url 'staff-show-material' t.mtype t.id  %}"><span
+          <td><a class="btn btn-success btn-xs" href="{% url 'staff-show-activity' t.id  %}"><span
             class="	fas fa-binoculars"></span></a></td>
-            <td><a class="btn btn-primary btn-xs" href="{% url 'staff-update-material' t.id  %}"><span
+            <td><a class="btn btn-primary btn-xs" href="{% url 'staff-update-activity' t.id  %}"><span
               class="	far fa-edit"></span></a></td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'staff-delete-material' t.id  %}"
+          <td><a class="btn btn-danger btn-xs" href="{% url 'staff-delete-activity' t.id  %}"
               onclick="return confirm('Are you sure?')"><span class="far fa-trash-alt"></span></a></td>
         </tr>
         {% endfor %}
