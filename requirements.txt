@@ -44,3 +44,4 @@ oauth2client
 django-ckeditor
 PyGithub
 PyJWT
+gitpython

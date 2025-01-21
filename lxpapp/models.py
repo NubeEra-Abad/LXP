@@ -667,7 +667,6 @@ class Activity(models.Model):
     serial_number = models.IntegerField(default=0)
     urlvalue = models.CharField(max_length=2000)
     description = models.CharField(max_length=200)
-
     class Meta:
         ordering = ['subject', 'chapter', 'serial_number']
 

@@ -512,7 +512,7 @@ def cto_add_course_view(request):
     
 @login_required
 def cto_update_course_view(request, pk):
-    try:
+   # try:
         if str(request.session['utype']) == 'cto':
             course_name = ''
             description = ''
@@ -616,8 +616,8 @@ def cto_update_course_view(request, pk):
                     return render(request,'cto/course/cto_view_course.html',{'courses':c_list})
                 except Exception as e:
                     messages.error(request, "Could Not Add " + str(e))
-            return render(request, 'cto/course/add_edit_course.html', context)
-    except:
+            return render(request, 'cto/course/cto_update_course.html', context)
+    #except:
         return render(request,'lxpapp/404page.html')
     
 @login_required
