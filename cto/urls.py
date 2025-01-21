@@ -28,6 +28,7 @@ urlpatterns = [
     path('cto-update-course/<int:pk>', views.cto_update_course_view,name='cto-update-course'),
     path('cto-view-course', views.cto_view_course_view,name='cto-view-course'),
     path('cto-delete-course/<int:pk>', views.cto_delete_course_view,name='cto-delete-course'),
+    path('cto-upload-course-details-csv', views.cto_upload_course_details_csv_view,name='cto-upload-course-details-csv'),
 
     path('cto-topic', views.cto_topic_view,name='cto-topic'),
     path('cto-add-topic', views.cto_add_topic_view,name='cto-add-topic'),

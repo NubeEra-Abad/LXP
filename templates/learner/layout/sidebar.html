@@ -114,61 +114,50 @@
             </li>
             <li>
                 <a href="{% url 'learner-video-course-subject' %}" class="" aria-expanded="false">
-                    <i class="bi bi-list-ul"></i>
+                    <i class="bi bi-camera-video"></i>
                     <span class="nav-text">Recorded Videos</span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'learner-studymaterial-course' %}" class="" aria-expanded="false">
-                    <i class="bi bi-list-check"></i>
+                    <i class="bi bi-book"></i>
                     <span class="nav-text">My Enrolled Courses</span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'learner-availablecourse-course' %}" class="" aria-expanded="false">
-                    <i class="bi bi-list"></i>
+                    <i class="bi bi-book"></i>
                     <span class="nav-text">All Courses</span>
                 </a>
             </li>
             <li>
-                <a href="{% url 'learner-check-k8sterminal' %}" target="_blank" class="" aria-expanded="false">
-                    <i class="bi bi-grid"></i>
-                    <span class="nav-text">Lab (K8S)</span>
+                <a class="has-arrow " href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-vial"></i>
+                    <span class="nav-text">Labs</span>
                 </a>
-            </li>
-            <li>
-                <a href="{% url 'learner-linux-terminal' %}" target="_blank" class="" aria-expanded="false">
-                    <i class="bi bi-grid"></i>
-                    <span class="nav-text">Lab Linux</span>
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'learner-pyton-terminal' %}" target="_blank" class="" aria-expanded="false">
-                    <i class="bi bi-grid"></i>
-                    <span class="nav-text">Lab Python</span>
-                </a>
-            </li>
-            <li>
-                <a
-                    href="https://shell.cloud.google.com/?show=terminal"
-                    target="_blank"
-                    class="nav-link"
-                    aria-expanded="false"
-                >
-                    <i class="bi bi-grid"></i>
-                    <span class="nav-text">Lab Cloud Shell</span>
-                </a>
+                <ul aria-expanded="false">
+                    <a href="{% url 'learner-check-k8sterminal' %}"  class="nav-link">K8S</a>
+                    <a href="{% url 'learner-linux-terminal' %}" class="nav-link">
+                       Python
+                    </a>
+                    <a href="{% url 'learner-linux-terminal' %}" class="nav-link">
+                        linux
+                    </a>
+                    <a target="_blank" href="https://shell.cloud.google.com/?show=terminal" class="nav-link">
+                        Cloud Shell
+                    </a>
+                </ul>
             </li>
             <li>
                 <a href="{% url 'learner-edit-Learner-details' request.user.id %}" class="" aria-expanded="false">
-                    <i class="bi bi-grid"></i>
+                    <i class="bi bi-person-circle"></i>
                     <span class="nav-text">Edit Profile</span>
                 </a>
             </li>
 
             <li>
                 <a href="{% url 'logout' %}" class="" aria-expanded="false">
-                    <i class="bi bi-grid"></i>
+                    <i class="bi bi-door-open"></i>
                     <span class="nav-text">Sign Out</span>
                 </a>
             </li>
