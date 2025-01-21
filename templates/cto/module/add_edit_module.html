@@ -46,24 +46,24 @@
 	<nav aria-label="breadcrumb">
 		<ul class="breadcrumb">
 			<li><a href="{% url 'cto-dashboard'%}">Dashboard</a></li>
-			<li><a href="../../../../cto/cto-view-module">View Course</a></li>
+			<li><a href="../../../../cto/cto-view-course">View Course</a></li>
 			{% if 'Edit' in page_title %}
-			<li><a href="../../../../cto/cto-add-module">Add Course</a></li>
+			<li><a href="../../../../cto/cto-add-course">Add Course</a></li>
 			{% endif %}
 			<li aria-current="page">{{page_title}}</li>
 		</ul>
 	</nav>
 </div>
 <h2 style="text-align:center;">{{page_title}}</h2>
-<form method="post" id="moduleForm" data-subheads-url="{% url 'ajax_load_subheads' %}" autocomplete="off"
+<form method="post" id="courseForm" data-subheads-url="{% url 'ajax_load_subheads' %}" autocomplete="off"
 	style="margin:100px;margin-top: 0px;">
 	{%csrf_token%}
 	<div class="form-group">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12 col-xl-12">
-					<label for="module_name">Course Name</label>
-					<input type="text" name="module_name" id="module_name" class="form-control"
+					<label for="course_name">Course Name</label>
+					<input type="text" name="course_name" id="course_name" class="form-control"
 						placeholder="Course Name" required value={{mod_name}}>
 				</div>
 			</div>
@@ -242,7 +242,7 @@
 		document.getElementById("chapterlist").value = message;
 	}
 	$("#id_mainhead").change(function () {
-		var url = $("#moduleForm").attr("data-subheads-url");  // get the url of the `load_topics` view
+		var url = $("#courseForm").attr("data-subheads-url");  // get the url of the `load_topics` view
 		var mainheadId = $(this).val();  // get the selected mainhead ID from the HTML input
 
 		$.ajax({                       // initialize an AJAX request

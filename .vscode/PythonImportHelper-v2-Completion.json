@@ -4243,7 +4243,7 @@
         "documentation": {}
     },
     {
-        "label": "module_member",
+        "label": "course_member",
         "importPath": "social_core.utils",
         "description": "social_core.utils",
         "isExtraImport": true,
@@ -5560,7 +5560,7 @@
         "kind": 2,
         "importPath": "cfo.views",
         "description": "cfo.views",
-        "peekOfCode": "def cfo_view_batch_details_view(request,batchname,pk):\n    try:\n        if str(request.session['utype']) == 'cfo':\n            batchs = LXPModel.Batch.objects.raw(\"SELECT lxpapp_batch.id, GROUP_CONCAT(DISTINCT lxpapp_module.module_name) AS module_name, GROUP_CONCAT(DISTINCT lxpapp_playlist.name) AS video_name, lxpapp_batch.stdate, lxpapp_batch.enddate, GROUP_CONCAT(DISTINCT trainer.first_name || ' ' || trainer.last_name) AS trainer_name, GROUP_CONCAT(DISTINCT learner.first_name || ' ' || learner.last_name) AS learner_name FROM lxpapp_batch LEFT OUTER JOIN lxpapp_batchmodule ON (lxpapp_batchmodule.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchrecordedvdolist ON (lxpapp_batchrecordedvdolist.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_batchrecordedvdolist.playlist_id = lxpapp_playlist.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_batchtrainer ON (lxpapp_batch.id = lxpapp_batchtrainer.batch_id) LEFT OUTER JOIN auth_user trainer ON (lxpapp_batchtrainer.trainer_id = trainer.id) LEFT OUTER JOIN lxpapp_module ON (lxpapp_batchmodule.module_id = lxpapp_module.id) LEFT OUTER JOIN auth_user learner ON (lxpapp_batchlearner.learner_id = learner.id) WHERE lxpapp_batch.id = \" + str(pk))\n            return render(request,'cfo/batch/cfo_view_batch_details.html',{'batchs':batchs,'batchname':batchname})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cfo_delete_batch_view(request,pk):\n    try:",
+        "peekOfCode": "def cfo_view_batch_details_view(request,batchname,pk):\n    try:\n        if str(request.session['utype']) == 'cfo':\n            batchs = LXPModel.Batch.objects.raw(\"SELECT lxpapp_batch.id, GROUP_CONCAT(DISTINCT lxpapp_course.course_name) AS course_name, GROUP_CONCAT(DISTINCT lxpapp_playlist.name) AS video_name, lxpapp_batch.stdate, lxpapp_batch.enddate, GROUP_CONCAT(DISTINCT trainer.first_name || ' ' || trainer.last_name) AS trainer_name, GROUP_CONCAT(DISTINCT learner.first_name || ' ' || learner.last_name) AS learner_name FROM lxpapp_batch LEFT OUTER JOIN lxpapp_batchcourse ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchrecordedvdolist ON (lxpapp_batchrecordedvdolist.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_batchrecordedvdolist.playlist_id = lxpapp_playlist.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_batchtrainer ON (lxpapp_batch.id = lxpapp_batchtrainer.batch_id) LEFT OUTER JOIN auth_user trainer ON (lxpapp_batchtrainer.trainer_id = trainer.id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id) LEFT OUTER JOIN auth_user learner ON (lxpapp_batchlearner.learner_id = learner.id) WHERE lxpapp_batch.id = \" + str(pk))\n            return render(request,'cfo/batch/cfo_view_batch_details.html',{'batchs':batchs,'batchname':batchname})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cfo_delete_batch_view(request,pk):\n    try:",
         "detail": "cfo.views",
         "documentation": {}
     },
@@ -5862,38 +5862,38 @@
         "documentation": {}
     },
     {
-        "label": "cto_add_module_view",
+        "label": "cto_add_course_view",
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def cto_add_module_view(request):\n    #try:\n        if str(request.session['utype']) == 'cto':\n            form = LXPFORM.ModuleForm(request.POST or None)\n            clist = LXPModel.Subject.objects.raw('SELECT  Distinct  lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')\n            sub = ''\n            oldsub = ''\n            js = '[{' \n            a = 1\n            for x in clist:",
+        "peekOfCode": "def cto_add_course_view(request):\n    #try:\n        if str(request.session['utype']) == 'cto':\n            form = LXPFORM.CourseForm(request.POST or None)\n            clist = LXPModel.Subject.objects.raw('SELECT  Distinct  lxpapp_subject.id as id,  lxpapp_chapter.id as chapter_id, lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name  FROM  lxpapp_chapter  INNER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id) ORDER BY  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name')\n            sub = ''\n            oldsub = ''\n            js = '[{' \n            a = 1\n            for x in clist:",
         "detail": "cto.views",
         "documentation": {}
     },
     {
-        "label": "cto_update_module_view",
+        "label": "cto_update_course_view",
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def cto_update_module_view(request, pk):\n    try:\n        if str(request.session['utype']) == 'cto':\n            module_name = ''\n            description = ''\n            whatlearn = ''\n            includes = ''\n            image = ''\n            price = ''\n            tags = ''",
+        "peekOfCode": "def cto_update_course_view(request, pk):\n    try:\n        if str(request.session['utype']) == 'cto':\n            course_name = ''\n            description = ''\n            whatlearn = ''\n            includes = ''\n            image = ''\n            price = ''\n            tags = ''",
         "detail": "cto.views",
         "documentation": {}
     },
     {
-        "label": "cto_view_module_view",
+        "label": "cto_view_course_view",
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def cto_view_module_view(request):\n    try:\n        if str(request.session['utype']) == 'cto':\n            c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')\n            return render(request,'cto/module/cto_view_module.html',{'modules':c_list})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cto_delete_module_view(request,pk):\n    try:",
+        "peekOfCode": "def cto_view_course_view(request):\n    try:\n        if str(request.session['utype']) == 'cto':\n            c_list = LXPModel.Course.objects.raw('SELECT    lxpapp_course.id,  lxpapp_course.course_name,  lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_course  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_course.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_course.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_coursechapter ON (lxpapp_course.id = lxpapp_coursechapter.course_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_course.id,  lxpapp_course.course_name,  lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')\n            return render(request,'cto/course/cto_view_course.html',{'courses':c_list})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cto_delete_course_view(request,pk):\n    try:",
         "detail": "cto.views",
         "documentation": {}
     },
     {
-        "label": "cto_delete_module_view",
+        "label": "cto_delete_course_view",
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def cto_delete_module_view(request,pk):\n    try:\n        if str(request.session['utype']) == 'cto':  \n            module=LXPModel.Module.objects.get(id=pk)\n            module.delete()\n        c_list = LXPModel.Module.objects.raw('SELECT    lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_module  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_modulechapter ON (lxpapp_module.id = lxpapp_modulechapter.module_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_module.id,  lxpapp_module.module_name,  lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')\n        return render(request,'cto/module/cto_view_module.html',{'modules':c_list})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required",
+        "peekOfCode": "def cto_delete_course_view(request,pk):\n    try:\n        if str(request.session['utype']) == 'cto':  \n            course=LXPModel.Course.objects.get(id=pk)\n            course.delete()\n        c_list = LXPModel.Course.objects.raw('SELECT    lxpapp_course.id,  lxpapp_course.course_name,  lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name,  COunt(lxpapp_material.topic) AS lessons FROM  lxpapp_course  LEFT OUTER JOIN lxpapp_mainhead ON (lxpapp_course.mainhead_id = lxpapp_mainhead.id)  LEFT OUTER JOIN lxpapp_subhead ON (lxpapp_course.subhead_id = lxpapp_subhead.id)  LEFT OUTER JOIN lxpapp_coursechapter ON (lxpapp_course.id = lxpapp_coursechapter.course_id)  LEFT OUTER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id) GROUP BY  lxpapp_course.id,  lxpapp_course.course_name,  lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name')\n        return render(request,'cto/course/cto_view_course.html',{'courses':c_list})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required",
         "detail": "cto.views",
         "documentation": {}
     },
@@ -5983,7 +5983,7 @@
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def cto_view_course_details_view(request,coursename,pk):\n    try:\n        if str(request.session['utype']) == 'cto':\n            courses = LXPModel.Course.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursedetails  INNER JOIN lxpapp_course ON (lxpapp_coursedetails.course_id = lxpapp_course.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursedetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_module ON (lxpapp_coursedetails.module_id = lxpapp_module.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursedetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursedetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursedetails.course_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')\n            return render(request,'cto/course/cto_view_course_details.html',{'courses':courses,'coursename':coursename})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cto_delete_course_view(request,pk):\n    try:",
+        "peekOfCode": "def cto_view_course_details_view(request,coursename,pk):\n    try:\n        if str(request.session['utype']) == 'cto':\n            courses = LXPModel.Course.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_course.course_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursedetails  INNER JOIN lxpapp_course ON (lxpapp_coursedetails.course_id = lxpapp_course.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursedetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_course ON (lxpapp_coursedetails.course_id = lxpapp_course.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursedetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursedetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursedetails.course_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_course.course_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')\n            return render(request,'cto/course/cto_view_course_details.html',{'courses':courses,'coursename':coursename})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cto_delete_course_view(request,pk):\n    try:",
         "detail": "cto.views",
         "documentation": {}
     },
@@ -6046,7 +6046,7 @@
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def cto_view_courseset_details_view(request,coursesetname,pk):\n    try:\n        if str(request.session['utype']) == 'cto':\n            coursesets = LXPModel.CourseSet.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_courseset ON (lxpapp_coursesetdetails.courseset_id = lxpapp_courseset.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursesetdetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_module ON (lxpapp_coursesetdetails.module_id = lxpapp_module.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursesetdetails.courseset_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_module.module_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')\n            return render(request,'cto/courseset/cto_view_courseset_details.html',{'coursesets':coursesets,'coursesetname':coursesetname})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cto_delete_courseset_view(request,pk):\n    try:",
+        "peekOfCode": "def cto_view_courseset_details_view(request,coursesetname,pk):\n    try:\n        if str(request.session['utype']) == 'cto':\n            coursesets = LXPModel.CourseSet.objects.raw('SELECT 1 as id,  lxpapp_subject.subject_name,  lxpapp_course.course_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name FROM  lxpapp_coursesetdetails  INNER JOIN lxpapp_courseset ON (lxpapp_coursesetdetails.courseset_id = lxpapp_courseset.id)  INNER JOIN lxpapp_subject ON (lxpapp_coursesetdetails.subject_id = lxpapp_subject.id)  INNER JOIN lxpapp_course ON (lxpapp_coursesetdetails.course_id = lxpapp_course.id)  INNER JOIN lxpapp_chapter ON (lxpapp_coursesetdetails.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_topic ON (lxpapp_coursesetdetails.topic_id = lxpapp_topic.id) WHERE lxpapp_coursesetdetails.courseset_id = ' + str(pk) + ' ORDER BY lxpapp_subject.subject_name,  lxpapp_course.course_name,  lxpapp_chapter.chapter_name,  lxpapp_topic.topic_name')\n            return render(request,'cto/courseset/cto_view_courseset_details.html',{'coursesets':coursesets,'coursesetname':coursesetname})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef cto_delete_courseset_view(request,pk):\n    try:",
         "detail": "cto.views",
         "documentation": {}
     },
@@ -6073,16 +6073,16 @@
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def load_subheads(request):\n    try:\n        mainhead_id = request.GET.get('mainhead')\n        subheads = LXPModel.SubHead.objects.filter(mainhead_id=mainhead_id).order_by('subhead_name')\n        context = {'subheads': subheads}\n        return render(request, 'hr/subhead_dropdown_list_options.html', context)\n    except:\n        return render(request,'lxpapp/404page.html')\ndef load_modules(request):\n    try:",
+        "peekOfCode": "def load_subheads(request):\n    try:\n        mainhead_id = request.GET.get('mainhead')\n        subheads = LXPModel.SubHead.objects.filter(mainhead_id=mainhead_id).order_by('subhead_name')\n        context = {'subheads': subheads}\n        return render(request, 'hr/subhead_dropdown_list_options.html', context)\n    except:\n        return render(request,'lxpapp/404page.html')\ndef load_courses(request):\n    try:",
         "detail": "cto.views",
         "documentation": {}
     },
     {
-        "label": "load_modules",
+        "label": "load_courses",
         "kind": 2,
         "importPath": "cto.views",
         "description": "cto.views",
-        "peekOfCode": "def load_modules(request):\n    try:\n        subject_id = request.GET.get('subject')\n        modules = LXPModel.Module.objects.filter(subject_id=subject_id).order_by('module_name')\n        context = {'modules': modules}\n        return render(request, 'hr/module_dropdown_list_options.html', context)\n    except:\n        return render(request,'lxpapp/404page.html')\ndef load_chapters(request):\n    try:",
+        "peekOfCode": "def load_courses(request):\n    try:\n        subject_id = request.GET.get('subject')\n        courses = LXPModel.Course.objects.filter(subject_id=subject_id).order_by('course_name')\n        context = {'courses': courses}\n        return render(request, 'hr/course_dropdown_list_options.html', context)\n    except:\n        return render(request,'lxpapp/404page.html')\ndef load_chapters(request):\n    try:",
         "detail": "cto.views",
         "documentation": {}
     },
@@ -6510,20 +6510,20 @@
         "documentation": {}
     },
     {
-        "label": "learner_studymaterial_module_view",
+        "label": "learner_studymaterial_course_view",
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_studymaterial_module_view(request):\n    try:    \n        if str(request.session['utype']) == 'learner':\n            modules = LXPModel.Module.objects.raw('SELECT id, module_name, description, whatlearn, includes, themecolor, image , Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( SELECT mainmod.id, mainmod.module_name, mainmod.description, mainmod.whatlearn, mainmod.includes, mainmod.themecolor, mainmod.image , (SELECT count(chpmod.topic) AS Topiccount FROM lxpapp_modulechapter INNER JOIN lxpapp_material chpmod ON (lxpapp_modulechapter.chapter_id = chpmod.chapter_id) WHERE lxpapp_modulechapter.module_id = mainmod.id ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.module_id = mainmod.id) as watchcount FROM lxpapp_batchmodule LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchmodule.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_module mainmod ON (lxpapp_batchmodule.module_id = mainmod.id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id) + ' )')\n            if  not modules:\n                return render(request,'learner/studymaterial/learner_studymaterial_nomodule.html')\n            else:        \n                return render(request,'learner/studymaterial/learner_studymaterial_module.html',{'modules':modules})\n    except:\n        return render(request,'lxpapp/404page.html')",
+        "peekOfCode": "def learner_studymaterial_course_view(request):\n    try:    \n        if str(request.session['utype']) == 'learner':\n            courses = LXPModel.Course.objects.raw('SELECT id, course_name, description, whatlearn, includes, themecolor, image , Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( SELECT mainmod.id, mainmod.course_name, mainmod.description, mainmod.whatlearn, mainmod.includes, mainmod.themecolor, mainmod.image , (SELECT count(chpmod.topic) AS Topiccount FROM lxpapp_coursechapter INNER JOIN lxpapp_material chpmod ON (lxpapp_coursechapter.chapter_id = chpmod.chapter_id) WHERE lxpapp_coursechapter.course_id = mainmod.id ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.course_id = mainmod.id) as watchcount FROM lxpapp_batchcourse LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_course mainmod ON (lxpapp_batchcourse.course_id = mainmod.id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id) + ' )')\n            if  not courses:\n                return render(request,'learner/studymaterial/learner_studymaterial_nocourse.html')\n            else:        \n                return render(request,'learner/studymaterial/learner_studymaterial_course.html',{'courses':courses})\n    except:\n        return render(request,'lxpapp/404page.html')",
         "detail": "learner.views",
         "documentation": {}
     },
     {
-        "label": "learner_studymaterial_module_chapter_view",
+        "label": "learner_studymaterial_course_chapter_view",
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_studymaterial_module_chapter_view(request,module_id):\n#    try:     \n        if str(request.session['utype']) == 'learner':\n            list = LXPModel.Module.objects.raw(\"SELECT  id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, per, CASE WHEN ROW_NUMBER() OVER (ORDER BY srno) = 1 THEN 'yes' WHEN LAG(per) OVER (ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM ( SELECT lxpapp_material.id, ROW_NUMBER() OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, ( SELECT per FROM ( SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / (lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.module_id = main.module_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = \" + str(request.user.id) + \" ) a ORDER BY per DESC, 1 ) AS per FROM lxpapp_modulechapter main LEFT OUTER JOIN lxpapp_material ON (main.chapter_id = lxpapp_material.chapter_id) LEFT OUTER JOIN lxpapp_chapter ON (main.chapter_id = lxpapp_chapter.id) WHERE main.module_id = \" + str(module_id) + \" ) order By chapter_name, id\")\n            #list = LXPModel.Module.objects.raw(\"SELECT DISTINCT * FROM (SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_modulechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_modulechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_modulechapter.module_id = \" + str(module_id) + \") WHERE id > 0\")\n            #list = LXPModel.Module.objects.raw(\"SELECT id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, questions, per, CASE WHEN questions = 0 THEN 'yes' WHEN Row_number() OVER ( ORDER BY srno) = 1 THEN 'yes' WHEN Lag(per) OVER ( ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM (SELECT lxpapp_material.id, Row_number() OVER ( partition BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, (SELECT Count (lxpapp_chapterquestion.id) AS questions FROM lxpapp_chapterquestion WHERE lxpapp_chapterquestion.chapter_id = main.chapter_id) AS questions, (SELECT per FROM (SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / ( lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct ) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.module_id = main.module_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = \" + str(request.user.id) + \") a ORDER BY per DESC, 1) AS per FROM lxpapp_modulechapter main LEFT OUTER JOIN lxpapp_material ON ( main.chapter_id = lxpapp_material.chapter_id ) LEFT OUTER JOIN lxpapp_chapter ON ( main.chapter_id = lxpapp_chapter.id ) WHERE main.module_id = \" + str(module_id) + \") subquery\")\n            # from django.db.models import F, Max, Case, When, IntegerField, CharField, Value\n            # from django.db.models.functions import RowNumber\n            # from django.db.models.expressions import Window, Subquery, OuterRef\n            # per_subquery = (",
+        "peekOfCode": "def learner_studymaterial_course_chapter_view(request,course_id):\n#    try:     \n        if str(request.session['utype']) == 'learner':\n            list = LXPModel.Course.objects.raw(\"SELECT  id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, per, CASE WHEN ROW_NUMBER() OVER (ORDER BY srno) = 1 THEN 'yes' WHEN LAG(per) OVER (ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM ( SELECT lxpapp_material.id, ROW_NUMBER() OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, ( SELECT per FROM ( SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / (lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.course_id = main.course_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = \" + str(request.user.id) + \" ) a ORDER BY per DESC, 1 ) AS per FROM lxpapp_coursechapter main LEFT OUTER JOIN lxpapp_material ON (main.chapter_id = lxpapp_material.chapter_id) LEFT OUTER JOIN lxpapp_chapter ON (main.chapter_id = lxpapp_chapter.id) WHERE main.course_id = \" + str(course_id) + \" ) order By chapter_name, id\")\n            #list = LXPModel.Course.objects.raw(\"SELECT DISTINCT * FROM (SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_coursechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_coursechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_coursechapter.course_id = \" + str(course_id) + \") WHERE id > 0\")\n            #list = LXPModel.Course.objects.raw(\"SELECT id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, questions, per, CASE WHEN questions = 0 THEN 'yes' WHEN Row_number() OVER ( ORDER BY srno) = 1 THEN 'yes' WHEN Lag(per) OVER ( ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM (SELECT lxpapp_material.id, Row_number() OVER ( partition BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, (SELECT Count (lxpapp_chapterquestion.id) AS questions FROM lxpapp_chapterquestion WHERE lxpapp_chapterquestion.chapter_id = main.chapter_id) AS questions, (SELECT per FROM (SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / ( lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct ) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.course_id = main.course_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = \" + str(request.user.id) + \") a ORDER BY per DESC, 1) AS per FROM lxpapp_coursechapter main LEFT OUTER JOIN lxpapp_material ON ( main.chapter_id = lxpapp_material.chapter_id ) LEFT OUTER JOIN lxpapp_chapter ON ( main.chapter_id = lxpapp_chapter.id ) WHERE main.course_id = \" + str(course_id) + \") subquery\")\n            # from django.db.models import F, Max, Case, When, IntegerField, CharField, Value\n            # from django.db.models.functions import RowNumber\n            # from django.db.models.expressions import Window, Subquery, OuterRef\n            # per_subquery = (",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6532,7 +6532,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_studymaterial_chapter_show_view(request,chapter_id,module_id):\n#    try:     \n        if str(request.session['utype']) == 'learner':\n            chapter_name = ''\n            topiccount = 0\n            Topiccount = 0\n            watchcount = 0\n            per = 0\n            count = LXPModel.Module.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_modulechapter INNER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_modulechapter.module_id = ' + str(module_id) + ' AND lxpapp_material.chapter_id = ' + str(chapter_id) + ') AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.module_id = ' + str(module_id) + ' AND lxpapp_learnermaterialwatched.learner_id = ' + str(request.user.id) + ' AND lxpapp_learnermaterialwatched.chapter_id = ' + str(chapter_id) + ' ) as watchcount )')\n            result = LXPModel.Chapter.objects.raw(\"SELECT 1 as id,   lxpapp_chapter.chapter_name,  Count(lxpapp_material.id) as count FROM  lxpapp_material  INNER JOIN lxpapp_chapter ON (lxpapp_material.chapter_id = lxpapp_chapter.id) WHERE lxpapp_chapter.id = \" + str(chapter_id) + \" GROUP BY lxpapp_chapter.chapter_name\")",
+        "peekOfCode": "def learner_studymaterial_chapter_show_view(request,chapter_id,course_id):\n#    try:     \n        if str(request.session['utype']) == 'learner':\n            chapter_name = ''\n            topiccount = 0\n            Topiccount = 0\n            watchcount = 0\n            per = 0\n            count = LXPModel.Course.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_coursechapter INNER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_coursechapter.course_id = ' + str(course_id) + ' AND lxpapp_material.chapter_id = ' + str(chapter_id) + ') AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.course_id = ' + str(course_id) + ' AND lxpapp_learnermaterialwatched.learner_id = ' + str(request.user.id) + ' AND lxpapp_learnermaterialwatched.chapter_id = ' + str(chapter_id) + ' ) as watchcount )')\n            result = LXPModel.Chapter.objects.raw(\"SELECT 1 as id,   lxpapp_chapter.chapter_name,  Count(lxpapp_material.id) as count FROM  lxpapp_material  INNER JOIN lxpapp_chapter ON (lxpapp_material.chapter_id = lxpapp_chapter.id) WHERE lxpapp_chapter.id = \" + str(chapter_id) + \" GROUP BY lxpapp_chapter.chapter_name\")",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6541,7 +6541,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def save_topic(request):\n    try:\n        if request.method == 'POST':\n            id = request.body\n            id = str(id).replace(\"'\",'')\n            id = str(id).replace(\"bid=\",'')\n            id = str (id).replace(\"&module_id=\",',')\n            id = str (id).replace(\"&chapter_id=\",',')\n            x = id.split(\",\")\n            matid= x[0]",
+        "peekOfCode": "def save_topic(request):\n    try:\n        if request.method == 'POST':\n            id = request.body\n            id = str(id).replace(\"'\",'')\n            id = str(id).replace(\"bid=\",'')\n            id = str (id).replace(\"&course_id=\",',')\n            id = str (id).replace(\"&chapter_id=\",',')\n            x = id.split(\",\")\n            matid= x[0]",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6555,20 +6555,20 @@
         "documentation": {}
     },
     {
-        "label": "learner_availablecourse_module_view",
+        "label": "learner_availablecourse_course_view",
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_availablecourse_module_view(request):\n    try:    \n        if str(request.session['utype']) == 'learner':\n            modules = LXPModel.Module.objects.all().order_by('module_name')\n            return render(request,'learner/availablecourse/learner_availablecourse_module.html',{'modules':modules})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef learner_availablecourse_module_chapter_view(request,modulename,module_id):\n#    try:     ",
+        "peekOfCode": "def learner_availablecourse_course_view(request):\n    try:    \n        if str(request.session['utype']) == 'learner':\n            courses = LXPModel.Course.objects.all().order_by('course_name')\n            return render(request,'learner/availablecourse/learner_availablecourse_course.html',{'courses':courses})\n    except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef learner_availablecourse_course_chapter_view(request,coursename,course_id):\n#    try:     ",
         "detail": "learner.views",
         "documentation": {}
     },
     {
-        "label": "learner_availablecourse_module_chapter_view",
+        "label": "learner_availablecourse_course_chapter_view",
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_availablecourse_module_chapter_view(request,modulename,module_id):\n#    try:     \n        if str(request.session['utype']) == 'learner':\n            list = LXPModel.Module.objects.raw(\"SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_modulechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_modulechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_modulechapter.module_id = \" + str(module_id) )\n            moddet = LXPModel.Module.objects.raw(\"SELECT lxpapp_module.id, lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_module  INNER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id) WHERE lxpapp_module.id = \" + str(module_id) )\n            return render(request,'learner/availablecourse/learner_availablecourse_chapter_topic.html',{'list':list,'modulename':modulename,'module_id':module_id,'moddet':moddet})\n #   except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef learner_chapterexam_view(request,chapter_id,module_id):",
+        "peekOfCode": "def learner_availablecourse_course_chapter_view(request,coursename,course_id):\n#    try:     \n        if str(request.session['utype']) == 'learner':\n            list = LXPModel.Course.objects.raw(\"SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_coursechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_coursechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_coursechapter.course_id = \" + str(course_id) )\n            moddet = LXPModel.Course.objects.raw(\"SELECT lxpapp_course.id, lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_course  INNER JOIN lxpapp_mainhead ON (lxpapp_course.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_course.subhead_id = lxpapp_subhead.id) WHERE lxpapp_course.id = \" + str(course_id) )\n            return render(request,'learner/availablecourse/learner_availablecourse_chapter_topic.html',{'list':list,'coursename':coursename,'course_id':course_id,'moddet':moddet})\n #   except:\n        return render(request,'lxpapp/404page.html')\n@login_required\ndef learner_chapterexam_view(request,chapter_id,course_id):",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6577,7 +6577,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_chapterexam_view(request,chapter_id,module_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            chapterexams=LXPModel.Chapter.objects.all().filter(id =  chapter_id) \n            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam.html',{'chapterexams':chapterexams,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})\n    #except:\n        return render(request,'lxpapp/404page.html')\n@login_required",
+        "peekOfCode": "def learner_chapterexam_view(request,chapter_id,course_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            chapterexams=LXPModel.Chapter.objects.all().filter(id =  chapter_id) \n            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam.html',{'chapterexams':chapterexams,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})\n    #except:\n        return render(request,'lxpapp/404page.html')\n@login_required",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6586,7 +6586,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_take_chapterexam_view(request,chapter_id,module_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            mcqquestion= LXPModel.ChapterQuestion.objects.filter(chapter_id=chapter_id)\n            total_marks = 0\n            total_questions = 0\n            for x in mcqquestion:\n                total_marks = total_marks + x.marks",
+        "peekOfCode": "def learner_take_chapterexam_view(request,chapter_id,course_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            mcqquestion= LXPModel.ChapterQuestion.objects.filter(chapter_id=chapter_id)\n            total_marks = 0\n            total_questions = 0\n            for x in mcqquestion:\n                total_marks = total_marks + x.marks",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6595,7 +6595,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_start_chapterexam_view(request,chapter_id,module_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            if request.method == 'POST':\n                mcqresult = LXPModel.ChapterResult.objects.create(learner_id = request.user.id,module_id =module_id,chapter_id =chapter_id,marks=0,wrong=0,correct=0)\n                mcqresult.save()\n                questions=LXPModel.ChapterQuestion.objects.all().filter(chapter_id=chapter_id).order_by('?')\n                score=0",
+        "peekOfCode": "def learner_start_chapterexam_view(request,chapter_id,course_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            if request.method == 'POST':\n                mcqresult = LXPModel.ChapterResult.objects.create(learner_id = request.user.id,course_id =course_id,chapter_id =chapter_id,marks=0,wrong=0,correct=0)\n                mcqresult.save()\n                questions=LXPModel.ChapterQuestion.objects.all().filter(chapter_id=chapter_id).order_by('?')\n                score=0",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6604,7 +6604,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_show_chapterexam_reuslt_view(request,chapter_id,module_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            chapterexams=LXPModel.ChapterResult.objects.all().filter(chapter_id = chapter_id,learner_id=request.user.id)\n            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            return render(request,'learner/studymaterial/chapterexam/learner_show_chapterexam_reuslt.html',{'chapterexams':chapterexams,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})\n    #except:\n        return render(request,'lxpapp/404page.html')\n@login_required",
+        "peekOfCode": "def learner_show_chapterexam_reuslt_view(request,chapter_id,course_id):\n    #try:    \n        if str(request.session['utype']) == 'learner':\n            chapterexams=LXPModel.ChapterResult.objects.all().filter(chapter_id = chapter_id,learner_id=request.user.id)\n            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            return render(request,'learner/studymaterial/chapterexam/learner_show_chapterexam_reuslt.html',{'chapterexams':chapterexams,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})\n    #except:\n        return render(request,'lxpapp/404page.html')\n@login_required",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6613,7 +6613,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def learner_show_chapterexam_reuslt_details_view(request,result_id,attempt,chapter_id,module_id):\n    try:    \n        if str(request.session['utype']) == 'learner':\n            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            chapterexams=LXPModel.ChapterResultDetails.objects.all().filter(question_id__in = LXPModel.ChapterQuestion.objects.all(), chapterresult_id = result_id)\n            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result_details.html',{'chapterexams':chapterexams,'attempt':attempt,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})\n    except:\n        return render(request,'lxpapp/404page.html')\ndef save_cart(request):",
+        "peekOfCode": "def learner_show_chapterexam_reuslt_details_view(request,result_id,attempt,chapter_id,course_id):\n    try:    \n        if str(request.session['utype']) == 'learner':\n            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name\n            chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name\n            chapterexams=LXPModel.ChapterResultDetails.objects.all().filter(question_id__in = LXPModel.ChapterQuestion.objects.all(), chapterresult_id = result_id)\n            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result_details.html',{'chapterexams':chapterexams,'attempt':attempt,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})\n    except:\n        return render(request,'lxpapp/404page.html')\ndef save_cart(request):",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -6622,7 +6622,7 @@
         "kind": 2,
         "importPath": "learner.views",
         "description": "learner.views",
-        "peekOfCode": "def save_cart(request):\n    try:\n        if request.method == 'POST':\n            id = request.POST.get('id')\n            # id = str(id).replace(\"'\",'')\n            # id = str(id).replace(\"bid=\",'')\n            # id = str (id).replace(\"&module_id=\",',')\n            # id = str (id).replace(\"&chapter_id=\",',')\n            cart =LXPModel.LearnerCart.objects.all().filter(learner_id = request.user.id,module_id=id)\n            if not cart:",
+        "peekOfCode": "def save_cart(request):\n    try:\n        if request.method == 'POST':\n            id = request.POST.get('id')\n            # id = str(id).replace(\"'\",'')\n            # id = str(id).replace(\"bid=\",'')\n            # id = str (id).replace(\"&course_id=\",',')\n            # id = str (id).replace(\"&chapter_id=\",',')\n            cart =LXPModel.LearnerCart.objects.all().filter(learner_id = request.user.id,course_id=id)\n            if not cart:",
         "detail": "learner.views",
         "documentation": {}
     },
@@ -7230,11 +7230,11 @@
         "documentation": {}
     },
     {
-        "label": "ModuleForm",
+        "label": "CourseForm",
         "kind": 6,
         "importPath": "lxpapp.forms",
         "description": "lxpapp.forms",
-        "peekOfCode": "class ModuleForm(forms.ModelForm):\n    class Meta:\n        model=models.Module \n        fields=['mainhead','subhead','themecolor']\n    def _init_(self, *args, **kwargs):\n        super(ModuleForm, self)._init_(*args, **kwargs)\nclass CourseForm(forms.ModelForm):\n    class Meta:\n        model = models.Course\n        fields = ('course_name', 'subject', 'module', 'chapter', 'topic')",
+        "peekOfCode": "class CourseForm(forms.ModelForm):\n    class Meta:\n        model=models.Course \n        fields=['mainhead','subhead','themecolor']\n    def _init_(self, *args, **kwargs):\n        super(CourseForm, self)._init_(*args, **kwargs)\nclass CourseForm(forms.ModelForm):\n    class Meta:\n        model = models.Course\n        fields = ('course_name', 'subject', 'course', 'chapter', 'topic')",
         "detail": "lxpapp.forms",
         "documentation": {}
     },
@@ -7243,7 +7243,7 @@
         "kind": 6,
         "importPath": "lxpapp.forms",
         "description": "lxpapp.forms",
-        "peekOfCode": "class CourseForm(forms.ModelForm):\n    class Meta:\n        model = models.Course\n        fields = ('course_name', 'subject', 'module', 'chapter', 'topic')\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\nclass CourseSetForm(forms.ModelForm):\n    class Meta:\n        model = models.CourseSet\n        fields = ('courseset_name', 'subject', 'module', 'chapter', 'topic')",
+        "peekOfCode": "class CourseForm(forms.ModelForm):\n    class Meta:\n        model = models.Course\n        fields = ('course_name', 'subject', 'course', 'chapter', 'topic')\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\nclass CourseSetForm(forms.ModelForm):\n    class Meta:\n        model = models.CourseSet\n        fields = ('courseset_name', 'subject', 'course', 'chapter', 'topic')",
         "detail": "lxpapp.forms",
         "documentation": {}
     },
@@ -7252,7 +7252,7 @@
         "kind": 6,
         "importPath": "lxpapp.forms",
         "description": "lxpapp.forms",
-        "peekOfCode": "class CourseSetForm(forms.ModelForm):\n    class Meta:\n        model = models.CourseSet\n        fields = ('courseset_name', 'subject', 'module', 'chapter', 'topic')\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\nclass TrainerNotificationForm(forms.ModelForm):\n    trainerID=forms.ModelChoiceField(queryset=UserSocialAuth.objects.all().filter(utype = '1',user_id__in=models.User.objects.all().order_by('first_name')),empty_label=\"Trainer Name\", to_field_name=\"id\")\n    trainernotification_message = forms.CharField(\n        max_length=255,",
+        "peekOfCode": "class CourseSetForm(forms.ModelForm):\n    class Meta:\n        model = models.CourseSet\n        fields = ('courseset_name', 'subject', 'course', 'chapter', 'topic')\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\nclass TrainerNotificationForm(forms.ModelForm):\n    trainerID=forms.ModelChoiceField(queryset=UserSocialAuth.objects.all().filter(utype = '1',user_id__in=models.User.objects.all().order_by('first_name')),empty_label=\"Trainer Name\", to_field_name=\"id\")\n    trainernotification_message = forms.CharField(\n        max_length=255,",
         "detail": "lxpapp.forms",
         "documentation": {}
     },
@@ -7423,7 +7423,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class Chapter(models.Model):\n    chapter_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)\n    def __str__(self):\n        return self.chapter_name\n# class Module(models.Model):\n#     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)\n#     module_name = models.CharField(max_length=200)\n#     def __str__(self):\n#         return self.module_name",
+        "peekOfCode": "class Chapter(models.Model):\n    chapter_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)\n    def __str__(self):\n        return self.chapter_name\n# class Course(models.Model):\n#     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)\n#     course_name = models.CharField(max_length=200)\n#     def __str__(self):\n#         return self.course_name",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7441,34 +7441,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class SubHead(models.Model):\n    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)\n    subhead_name = models.CharField(max_length=200)\n    def __str__(self):\n        return self.subhead_name\nclass Module(models.Model):\n    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)\n    subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)\n    module_name = models.CharField(max_length=200)\n    description = models.CharField(max_length=1000,default='')",
-        "detail": "lxpapp.models",
-        "documentation": {}
-    },
-    {
-        "label": "Module",
-        "kind": 6,
-        "importPath": "lxpapp.models",
-        "description": "lxpapp.models",
-        "peekOfCode": "class Module(models.Model):\n    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)\n    subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)\n    module_name = models.CharField(max_length=200)\n    description = models.CharField(max_length=1000,default='')\n    whatlearn = models.CharField(max_length=1000,default='')\n    includes = models.CharField(max_length=1000,default='')\n    cat=(('1','Red'),('2','Green'),('3','Blue'),('4','Orange'))\n    themecolor=models.CharField(max_length=200,choices=cat,default='Green')\n    tags = models.CharField(max_length=10000,default='')",
-        "detail": "lxpapp.models",
-        "documentation": {}
-    },
-    {
-        "label": "ModuleChapter",
-        "kind": 6,
-        "importPath": "lxpapp.models",
-        "description": "lxpapp.models",
-        "peekOfCode": "class ModuleChapter(models.Model):\n    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)\n    def __str__(self):\n        return self.chapter.chapter_name\nclass Topic(models.Model):\n    topic_name = models.CharField(max_length=200)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)\n    def __str__(self):",
-        "detail": "lxpapp.models",
-        "documentation": {}
-    },
-    {
-        "label": "Topic",
-        "kind": 6,
-        "importPath": "lxpapp.models",
-        "description": "lxpapp.models",
-        "peekOfCode": "class Topic(models.Model):\n    topic_name = models.CharField(max_length=200)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)\n    def __str__(self):\n        return self.topic_name\nclass Course(models.Model):\n    course_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)",
+        "peekOfCode": "class SubHead(models.Model):\n    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)\n    subhead_name = models.CharField(max_length=200)\n    def __str__(self):\n        return self.subhead_name\nclass Course(models.Model):\n    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)\n    subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)\n    course_name = models.CharField(max_length=200)\n    description = models.CharField(max_length=1000,default='')",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7477,7 +7450,34 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class Course(models.Model):\n    course_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.course_name\nclass CourseDetails(models.Model):\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)",
+        "peekOfCode": "class Course(models.Model):\n    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)\n    subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)\n    course_name = models.CharField(max_length=200)\n    description = models.CharField(max_length=1000,default='')\n    whatlearn = models.CharField(max_length=1000,default='')\n    includes = models.CharField(max_length=1000,default='')\n    cat=(('1','Red'),('2','Green'),('3','Blue'),('4','Orange'))\n    themecolor=models.CharField(max_length=200,choices=cat,default='Green')\n    tags = models.CharField(max_length=10000,default='')",
+        "detail": "lxpapp.models",
+        "documentation": {}
+    },
+    {
+        "label": "CourseChapter",
+        "kind": 6,
+        "importPath": "lxpapp.models",
+        "description": "lxpapp.models",
+        "peekOfCode": "class CourseChapter(models.Model):\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)\n    def __str__(self):\n        return self.chapter.chapter_name\nclass Topic(models.Model):\n    topic_name = models.CharField(max_length=200)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)\n    def __str__(self):",
+        "detail": "lxpapp.models",
+        "documentation": {}
+    },
+    {
+        "label": "Topic",
+        "kind": 6,
+        "importPath": "lxpapp.models",
+        "description": "lxpapp.models",
+        "peekOfCode": "class Topic(models.Model):\n    topic_name = models.CharField(max_length=200)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)\n    def __str__(self):\n        return self.topic_name\nclass Course(models.Model):\n    course_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)",
+        "detail": "lxpapp.models",
+        "documentation": {}
+    },
+    {
+        "label": "Course",
+        "kind": 6,
+        "importPath": "lxpapp.models",
+        "description": "lxpapp.models",
+        "peekOfCode": "class Course(models.Model):\n    course_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.course_name\nclass CourseDetails(models.Model):\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7486,7 +7486,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class CourseDetails(models.Model):\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.course\n    def to_dict(c):\n            if isinstance(c, CourseDetails):",
+        "peekOfCode": "class CourseDetails(models.Model):\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.course\n    def to_dict(c):\n            if isinstance(c, CourseDetails):",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7495,7 +7495,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class CourseSet(models.Model):\n    courseset_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.courseset_name\nclass CourseSetDetails(models.Model):\n    courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)",
+        "peekOfCode": "class CourseSet(models.Model):\n    courseset_name = models.CharField(max_length=200)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.courseset_name\nclass CourseSetDetails(models.Model):\n    courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7504,7 +7504,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class CourseSetDetails(models.Model):\n    courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.courseset\n    def to_dict(c):\n            if isinstance(c, CourseSetDetails):",
+        "peekOfCode": "class CourseSetDetails(models.Model):\n    courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)\n    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)\n    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)\n    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)\n    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)\n    def __str__(self):\n        return self.courseset\n    def to_dict(c):\n            if isinstance(c, CourseSetDetails):",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7585,16 +7585,16 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class Batch(models.Model):\n   batch_name = models.CharField(max_length=50)\n   coursetype=models.ForeignKey(CourseType,on_delete=models.SET_NULL, null=True)\n   stdate = models.DateField()\n   enddate = models.DateField()\n   def __str__(self):\n      return self.batch_name\nclass BatchModule(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)",
+        "peekOfCode": "class Batch(models.Model):\n   batch_name = models.CharField(max_length=50)\n   coursetype=models.ForeignKey(CourseType,on_delete=models.SET_NULL, null=True)\n   stdate = models.DateField()\n   enddate = models.DateField()\n   def __str__(self):\n      return self.batch_name\nclass BatchCourse(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   course=models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)",
         "detail": "lxpapp.models",
         "documentation": {}
     },
     {
-        "label": "BatchModule",
+        "label": "BatchCourse",
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class BatchModule(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)\nclass BatchRecordedVDOList(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)\nclass BatchTrainer(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\nclass Batchlearner(models.Model):",
+        "peekOfCode": "class BatchCourse(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   course=models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)\nclass BatchRecordedVDOList(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)\nclass BatchTrainer(models.Model):\n   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)\n   trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\nclass Batchlearner(models.Model):",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7747,7 +7747,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class SessionMaterial(models.Model):\n    playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)\n    video=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True)\n    cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))\n    mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')\n    urlvalue=models.CharField(max_length=200)\n    description=models.CharField(max_length=200)\nclass LearnerMaterialWatched(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)",
+        "peekOfCode": "class SessionMaterial(models.Model):\n    playlist=models.ForeignKey(Playlist,on_delete=models.SET_NULL, null=True)\n    video=models.ForeignKey(Video,on_delete=models.SET_NULL, null=True)\n    cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))\n    mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')\n    urlvalue=models.CharField(max_length=200)\n    description=models.CharField(max_length=200)\nclass LearnerMaterialWatched(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    course=models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7756,7 +7756,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class LearnerMaterialWatched(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)\n    chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)\n    material=models.ForeignKey(Material,on_delete=models.SET_NULL, null=True)\nclass LastUserLogin(models.Model):\n    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\nclass ChapterQuestion(models.Model):\n   subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)\n   chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)",
+        "peekOfCode": "class LearnerMaterialWatched(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    course=models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)\n    chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)\n    material=models.ForeignKey(Material,on_delete=models.SET_NULL, null=True)\nclass LastUserLogin(models.Model):\n    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\nclass ChapterQuestion(models.Model):\n   subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)\n   chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7783,7 +7783,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class ChapterResult(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)\n    subject = models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)\n    chapter = models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)\n    marks = models.PositiveIntegerField()\n    wrong = models.PositiveIntegerField()\n    correct = models.PositiveIntegerField()\n    timetaken = models.CharField(max_length=200)\n    date = models.DateTimeField(auto_now=True)",
+        "peekOfCode": "class ChapterResult(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    course = models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)\n    subject = models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)\n    chapter = models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)\n    marks = models.PositiveIntegerField()\n    wrong = models.PositiveIntegerField()\n    correct = models.PositiveIntegerField()\n    timetaken = models.CharField(max_length=200)\n    date = models.DateTimeField(auto_now=True)",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -7819,7 +7819,7 @@
         "kind": 6,
         "importPath": "lxpapp.models",
         "description": "lxpapp.models",
-        "peekOfCode": "class LearnerCart(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)\n    status=models.IntegerField(default=0)\nclass K8STerminal(models.Model):\n    trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='%(class)s_requests_trainer')\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='%(class)s_requests_learner')\n    Password=models.TextField()\n    usagevalue=models.PositiveIntegerField(default=0)\nclass K8STerminalLearnerCount(models.Model):",
+        "peekOfCode": "class LearnerCart(models.Model):\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)\n    course = models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)\n    status=models.IntegerField(default=0)\nclass K8STerminal(models.Model):\n    trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='%(class)s_requests_trainer')\n    learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='%(class)s_requests_learner')\n    Password=models.TextField()\n    usagevalue=models.PositiveIntegerField(default=0)\nclass K8STerminalLearnerCount(models.Model):",
         "detail": "lxpapp.models",
         "documentation": {}
     },
@@ -11014,7 +11014,7 @@
         "kind": 2,
         "importPath": "social_core.backends.utils",
         "description": "social_core.backends.utils",
-        "peekOfCode": "def load_backends(backends, force_load=False):\n    \"\"\"\n    Load backends defined on SOCIAL_AUTH_AUTHENTICATION_BACKENDS, backends will\n    be imported and cached on BACKENDSCACHE. The key in that dict will be the\n    backend name, and the value is the backend class.\n    Only subclasses of BaseAuth (and sub-classes) are considered backends.\n    Previously there was a BACKENDS attribute expected on backends modules,\n    this is not needed anymore since it's enough with the\n    AUTHENTICATION_BACKENDS setting. BACKENDS was used because backends used to\n    be split on two classes the authentication backend and another class that",
+        "peekOfCode": "def load_backends(backends, force_load=False):\n    \"\"\"\n    Load backends defined on SOCIAL_AUTH_AUTHENTICATION_BACKENDS, backends will\n    be imported and cached on BACKENDSCACHE. The key in that dict will be the\n    backend name, and the value is the backend class.\n    Only subclasses of BaseAuth (and sub-classes) are considered backends.\n    Previously there was a BACKENDS attribute expected on backends courses,\n    this is not needed anymore since it's enough with the\n    AUTHENTICATION_BACKENDS setting. BACKENDS was used because backends used to\n    be split on two classes the authentication backend and another class that",
         "detail": "social_core.backends.utils",
         "documentation": {}
     },
@@ -11023,7 +11023,7 @@
         "kind": 2,
         "importPath": "social_core.backends.utils",
         "description": "social_core.backends.utils",
-        "peekOfCode": "def get_backend(backends, name):\n    \"\"\"Returns a backend by name. Backends are stored in the BACKENDSCACHE\n    cache dict. If not found, each of the modules referenced in\n    AUTHENTICATION_BACKENDS is imported and checked for a BACKENDS\n    definition. If the named backend is found in the module's BACKENDS\n    definition, it's then stored in the cache for future access.\n    \"\"\"\n    try:\n        # Cached backend which has previously been discovered\n        return BACKENDSCACHE[name]",
+        "peekOfCode": "def get_backend(backends, name):\n    \"\"\"Returns a backend by name. Backends are stored in the BACKENDSCACHE\n    cache dict. If not found, each of the courses referenced in\n    AUTHENTICATION_BACKENDS is imported and checked for a BACKENDS\n    definition. If the named backend is found in the course's BACKENDS\n    definition, it's then stored in the cache for future access.\n    \"\"\"\n    try:\n        # Cached backend which has previously been discovered\n        return BACKENDSCACHE[name]",
         "detail": "social_core.backends.utils",
         "documentation": {}
     },
@@ -11041,7 +11041,7 @@
         "kind": 5,
         "importPath": "social_core.backends.utils",
         "description": "social_core.backends.utils",
-        "peekOfCode": "BACKENDSCACHE = OrderedDict()\ndef load_backends(backends, force_load=False):\n    \"\"\"\n    Load backends defined on SOCIAL_AUTH_AUTHENTICATION_BACKENDS, backends will\n    be imported and cached on BACKENDSCACHE. The key in that dict will be the\n    backend name, and the value is the backend class.\n    Only subclasses of BaseAuth (and sub-classes) are considered backends.\n    Previously there was a BACKENDS attribute expected on backends modules,\n    this is not needed anymore since it's enough with the\n    AUTHENTICATION_BACKENDS setting. BACKENDS was used because backends used to",
+        "peekOfCode": "BACKENDSCACHE = OrderedDict()\ndef load_backends(backends, force_load=False):\n    \"\"\"\n    Load backends defined on SOCIAL_AUTH_AUTHENTICATION_BACKENDS, backends will\n    be imported and cached on BACKENDSCACHE. The key in that dict will be the\n    backend name, and the value is the backend class.\n    Only subclasses of BaseAuth (and sub-classes) are considered backends.\n    Previously there was a BACKENDS attribute expected on backends courses,\n    this is not needed anymore since it's enough with the\n    AUTHENTICATION_BACKENDS setting. BACKENDS was used because backends used to",
         "detail": "social_core.backends.utils",
         "documentation": {}
     },
@@ -11527,7 +11527,7 @@
         "kind": 6,
         "importPath": "social_core.tests.backends.base",
         "description": "social_core.tests.backends.base",
-        "peekOfCode": "class BaseBackendTest(unittest.TestCase):\n    backend = None\n    backend_path = None\n    name = None\n    complete_url = ''\n    raw_complete_url = '/complete/{0}'\n    def setUp(self):\n        HTTPretty.enable(allow_net_connect=False)\n        Backend = module_member(self.backend_path)\n        self.strategy = TestStrategy(TestStorage)",
+        "peekOfCode": "class BaseBackendTest(unittest.TestCase):\n    backend = None\n    backend_path = None\n    name = None\n    complete_url = ''\n    raw_complete_url = '/complete/{0}'\n    def setUp(self):\n        HTTPretty.enable(allow_net_connect=False)\n        Backend = course_member(self.backend_path)\n        self.strategy = TestStrategy(TestStorage)",
         "detail": "social_core.tests.backends.base",
         "documentation": {}
     },
@@ -12913,7 +12913,7 @@
         "kind": 5,
         "importPath": "social_core.tests.backends.test_saml",
         "description": "social_core.tests.backends.test_saml",
-        "peekOfCode": "DATA_DIR = path.join(path.dirname(__file__), 'data')\n@unittest.skipIf('TRAVIS' in os.environ,\n                  'Travis-ci segfaults probably due to a bad '\n                  'dependencies build')\n@unittest.skipIf('__pypy__' in sys.builtin_module_names,\n                  'dm.xmlsec not compatible with pypy')\nclass SAMLTest(BaseBackendTest):\n    backend_path = 'social_core.backends.saml.SAMLAuth'\n    expected_username = 'myself'\n    def extra_settings(self):",
+        "peekOfCode": "DATA_DIR = path.join(path.dirname(__file__), 'data')\n@unittest.skipIf('TRAVIS' in os.environ,\n                  'Travis-ci segfaults probably due to a bad '\n                  'dependencies build')\n@unittest.skipIf('__pypy__' in sys.builtin_course_names,\n                  'dm.xmlsec not compatible with pypy')\nclass SAMLTest(BaseBackendTest):\n    backend_path = 'social_core.backends.saml.SAMLAuth'\n    expected_username = 'myself'\n    def extra_settings(self):",
         "detail": "social_core.tests.backends.test_saml",
         "documentation": {}
     },
@@ -14313,20 +14313,20 @@
         "documentation": {}
     },
     {
-        "label": "import_module",
+        "label": "import_course",
         "kind": 2,
         "importPath": "social_core.utils",
         "description": "social_core.utils",
-        "peekOfCode": "def import_module(name):\n    __import__(name)\n    return sys.modules[name]\ndef module_member(name):\n    mod, member = name.rsplit('.', 1)\n    module = import_module(mod)\n    return getattr(module, member)\ndef user_agent():\n    \"\"\"Builds a simple User-Agent string to send in requests\"\"\"\n    return 'social-auth-' + social_core.__version__",
+        "peekOfCode": "def import_course(name):\n    __import__(name)\n    return sys.courses[name]\ndef course_member(name):\n    mod, member = name.rsplit('.', 1)\n    course = import_course(mod)\n    return getattr(course, member)\ndef user_agent():\n    \"\"\"Builds a simple User-Agent string to send in requests\"\"\"\n    return 'social-auth-' + social_core.__version__",
         "detail": "social_core.utils",
         "documentation": {}
     },
     {
-        "label": "module_member",
+        "label": "course_member",
         "kind": 2,
         "importPath": "social_core.utils",
         "description": "social_core.utils",
-        "peekOfCode": "def module_member(name):\n    mod, member = name.rsplit('.', 1)\n    module = import_module(mod)\n    return getattr(module, member)\ndef user_agent():\n    \"\"\"Builds a simple User-Agent string to send in requests\"\"\"\n    return 'social-auth-' + social_core.__version__\ndef url_add_parameters(url, params):\n    \"\"\"Adds parameters to URL, parameter will be repeated if already present\"\"\"\n    if params:",
+        "peekOfCode": "def course_member(name):\n    mod, member = name.rsplit('.', 1)\n    course = import_course(mod)\n    return getattr(course, member)\ndef user_agent():\n    \"\"\"Builds a simple User-Agent string to send in requests\"\"\"\n    return 'social-auth-' + social_core.__version__\ndef url_add_parameters(url, params):\n    \"\"\"Adds parameters to URL, parameter will be repeated if already present\"\"\"\n    if params:",
         "detail": "social_core.utils",
         "documentation": {}
     },
@@ -14497,7 +14497,7 @@
         "kind": 2,
         "importPath": "social_core.utils",
         "description": "social_core.utils",
-        "peekOfCode": "def get_strategy(strategy, storage, *args, **kwargs):\n    Strategy = module_member(strategy)\n    Storage = module_member(storage)\n    return Strategy(Storage, *args, **kwargs)\nclass cache:\n    \"\"\"\n    Cache decorator that caches the return value of a method for a\n    specified time.\n    It maintains a cache per class, so subclasses have a different cache entry\n    for the same cached method.",
+        "peekOfCode": "def get_strategy(strategy, storage, *args, **kwargs):\n    Strategy = course_member(strategy)\n    Storage = course_member(storage)\n    return Strategy(Storage, *args, **kwargs)\nclass cache:\n    \"\"\"\n    Cache decorator that caches the return value of a method for a\n    specified time.\n    It maintains a cache per class, so subclasses have a different cache entry\n    for the same cached method.",
         "detail": "social_core.utils",
         "documentation": {}
     },
@@ -15028,7 +15028,7 @@
         "kind": 5,
         "importPath": "social_django.utils",
         "description": "social_django.utils",
-        "peekOfCode": "STRATEGY = getattr(settings, setting_name('STRATEGY'),\n                   'social_django.strategy.DjangoStrategy')\nSTORAGE = getattr(settings, setting_name('STORAGE'),\n                  'social_django.models.DjangoStorage')\nStrategy = module_member(STRATEGY)\nStorage = module_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)",
+        "peekOfCode": "STRATEGY = getattr(settings, setting_name('STRATEGY'),\n                   'social_django.strategy.DjangoStrategy')\nSTORAGE = getattr(settings, setting_name('STORAGE'),\n                  'social_django.models.DjangoStorage')\nStrategy = course_member(STRATEGY)\nStorage = course_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)",
         "detail": "social_django.utils",
         "documentation": {}
     },
@@ -15037,7 +15037,7 @@
         "kind": 5,
         "importPath": "social_django.utils",
         "description": "social_django.utils",
-        "peekOfCode": "STORAGE = getattr(settings, setting_name('STORAGE'),\n                  'social_django.models.DjangoStorage')\nStrategy = module_member(STRATEGY)\nStorage = module_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)\ndef psa(redirect_uri=None, load_strategy=load_strategy):\n    def decorator(func):",
+        "peekOfCode": "STORAGE = getattr(settings, setting_name('STORAGE'),\n                  'social_django.models.DjangoStorage')\nStrategy = course_member(STRATEGY)\nStorage = course_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)\ndef psa(redirect_uri=None, load_strategy=load_strategy):\n    def decorator(func):",
         "detail": "social_django.utils",
         "documentation": {}
     },
@@ -15046,7 +15046,7 @@
         "kind": 5,
         "importPath": "social_django.utils",
         "description": "social_django.utils",
-        "peekOfCode": "Strategy = module_member(STRATEGY)\nStorage = module_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)\ndef psa(redirect_uri=None, load_strategy=load_strategy):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, backend, *args, **kwargs):",
+        "peekOfCode": "Strategy = course_member(STRATEGY)\nStorage = course_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)\ndef psa(redirect_uri=None, load_strategy=load_strategy):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, backend, *args, **kwargs):",
         "detail": "social_django.utils",
         "documentation": {}
     },
@@ -15055,7 +15055,7 @@
         "kind": 5,
         "importPath": "social_django.utils",
         "description": "social_django.utils",
-        "peekOfCode": "Storage = module_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)\ndef psa(redirect_uri=None, load_strategy=load_strategy):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, backend, *args, **kwargs):\n            uri = redirect_uri",
+        "peekOfCode": "Storage = course_member(STORAGE)\ndef load_strategy(request=None):\n    return get_strategy(STRATEGY, STORAGE, request)\ndef load_backend(strategy, name, redirect_uri):\n    return strategy.get_backend(name, redirect_uri=redirect_uri)\ndef psa(redirect_uri=None, load_strategy=load_strategy):\n    def decorator(func):\n        @wraps(func)\n        def wrapper(request, backend, *args, **kwargs):\n            uri = redirect_uri",
         "detail": "social_django.utils",
         "documentation": {}
     },

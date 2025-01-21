@@ -307,32 +307,32 @@ def learner_see_sesseionmaterial_view(request,subject_id,video_id,pk):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_studymaterial_module_view(request):
+def learner_studymaterial_course_view(request):
     try:    
         if str(request.session['utype']) == 'learner':
-            modules = LXPModel.Module.objects.raw('SELECT id, module_name, description, whatlearn, includes, themecolor, image , Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( SELECT mainmod.id, mainmod.module_name, mainmod.description, mainmod.whatlearn, mainmod.includes, mainmod.themecolor, mainmod.image , (SELECT count(chpmod.topic) AS Topiccount FROM lxpapp_modulechapter INNER JOIN lxpapp_material chpmod ON (lxpapp_modulechapter.chapter_id = chpmod.chapter_id) WHERE lxpapp_modulechapter.module_id = mainmod.id ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.module_id = mainmod.id) as watchcount FROM lxpapp_batchmodule LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchmodule.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_module mainmod ON (lxpapp_batchmodule.module_id = mainmod.id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id) + ' )')
-            if  not modules:
-                return render(request,'learner/studymaterial/learner_studymaterial_nomodule.html')
+            courses = LXPModel.Course.objects.raw('SELECT id, course_name, description, whatlearn, includes, themecolor, image , Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( SELECT mainmod.id, mainmod.course_name, mainmod.description, mainmod.whatlearn, mainmod.includes, mainmod.themecolor, mainmod.image , (SELECT count(chpmod.topic) AS Topiccount FROM lxpapp_coursechapter INNER JOIN lxpapp_material chpmod ON (lxpapp_coursechapter.chapter_id = chpmod.chapter_id) WHERE lxpapp_coursechapter.course_id = mainmod.id ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.course_id = mainmod.id) as watchcount FROM lxpapp_batchcourse LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_course mainmod ON (lxpapp_batchcourse.course_id = mainmod.id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id) + ' )')
+            if  not courses:
+                return render(request,'learner/studymaterial/learner_studymaterial_nocourse.html')
             else:        
-                return render(request,'learner/studymaterial/learner_studymaterial_module.html',{'modules':modules})
+                return render(request,'learner/studymaterial/learner_studymaterial_course.html',{'courses':courses})
     except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_studymaterial_module_chapter_view(request,module_id):
+def learner_studymaterial_course_chapter_view(request,course_id):
 #    try:     
         if str(request.session['utype']) == 'learner':
-            list = LXPModel.Module.objects.raw("SELECT  id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, per, CASE WHEN ROW_NUMBER() OVER (ORDER BY srno) = 1 THEN 'yes' WHEN LAG(per) OVER (ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM ( SELECT lxpapp_material.id, ROW_NUMBER() OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, ( SELECT per FROM ( SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / (lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.module_id = main.module_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + " ) a ORDER BY per DESC, 1 ) AS per FROM lxpapp_modulechapter main LEFT OUTER JOIN lxpapp_material ON (main.chapter_id = lxpapp_material.chapter_id) LEFT OUTER JOIN lxpapp_chapter ON (main.chapter_id = lxpapp_chapter.id) WHERE main.module_id = " + str(module_id) + " ) order By chapter_name, id")
+            list = LXPModel.Course.objects.raw("SELECT  id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, per, CASE WHEN ROW_NUMBER() OVER (ORDER BY srno) = 1 THEN 'yes' WHEN LAG(per) OVER (ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM ( SELECT lxpapp_material.id, ROW_NUMBER() OVER (PARTITION BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, ( SELECT per FROM ( SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / (lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.course_id = main.course_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + " ) a ORDER BY per DESC, 1 ) AS per FROM lxpapp_coursechapter main LEFT OUTER JOIN lxpapp_material ON (main.chapter_id = lxpapp_material.chapter_id) LEFT OUTER JOIN lxpapp_chapter ON (main.chapter_id = lxpapp_chapter.id) WHERE main.course_id = " + str(course_id) + " ) order By chapter_name, id")
             
-            #list = LXPModel.Module.objects.raw("SELECT DISTINCT * FROM (SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_modulechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_modulechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_modulechapter.module_id = " + str(module_id) + ") WHERE id > 0")
+            #list = LXPModel.Course.objects.raw("SELECT DISTINCT * FROM (SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_coursechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_coursechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_coursechapter.course_id = " + str(course_id) + ") WHERE id > 0")
 
-            #list = LXPModel.Module.objects.raw("SELECT id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, questions, per, CASE WHEN questions = 0 THEN 'yes' WHEN Row_number() OVER ( ORDER BY srno) = 1 THEN 'yes' WHEN Lag(per) OVER ( ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM (SELECT lxpapp_material.id, Row_number() OVER ( partition BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, (SELECT Count (lxpapp_chapterquestion.id) AS questions FROM lxpapp_chapterquestion WHERE lxpapp_chapterquestion.chapter_id = main.chapter_id) AS questions, (SELECT per FROM (SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / ( lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct ) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.module_id = main.module_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + ") a ORDER BY per DESC, 1) AS per FROM lxpapp_modulechapter main LEFT OUTER JOIN lxpapp_material ON ( main.chapter_id = lxpapp_material.chapter_id ) LEFT OUTER JOIN lxpapp_chapter ON ( main.chapter_id = lxpapp_chapter.id ) WHERE main.module_id = " + str(module_id) + ") subquery")
+            #list = LXPModel.Course.objects.raw("SELECT id, srno, chapter_name, chapter_id, topic, mtype, urlvalue, description, questions, per, CASE WHEN questions = 0 THEN 'yes' WHEN Row_number() OVER ( ORDER BY srno) = 1 THEN 'yes' WHEN Lag(per) OVER ( ORDER BY srno) > 0 THEN 'yes' ELSE 'no' END AS flag FROM (SELECT lxpapp_material.id, Row_number() OVER ( partition BY lxpapp_chapter.chapter_name) AS srno, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, lxpapp_material.topic, lxpapp_material.mtype, lxpapp_material.urlvalue, lxpapp_material.description, (SELECT Count (lxpapp_chapterquestion.id) AS questions FROM lxpapp_chapterquestion WHERE lxpapp_chapterquestion.chapter_id = main.chapter_id) AS questions, (SELECT per FROM (SELECT lxpapp_chapterresult.id, lxpapp_chapterresult.correct * 100 / ( lxpapp_chapterresult.wrong + lxpapp_chapterresult.correct ) AS per FROM lxpapp_chapterresult WHERE lxpapp_chapterresult.course_id = main.course_id AND lxpapp_chapterresult.chapter_id = main.chapter_id AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + ") a ORDER BY per DESC, 1) AS per FROM lxpapp_coursechapter main LEFT OUTER JOIN lxpapp_material ON ( main.chapter_id = lxpapp_material.chapter_id ) LEFT OUTER JOIN lxpapp_chapter ON ( main.chapter_id = lxpapp_chapter.id ) WHERE main.course_id = " + str(course_id) + ") subquery")
             # from django.db.models import F, Max, Case, When, IntegerField, CharField, Value
             # from django.db.models.functions import RowNumber
             # from django.db.models.expressions import Window, Subquery, OuterRef
             # per_subquery = (
             #     LXPModel.ChapterResult.objects.filter(
-            #         module_id=module_id,
+            #         course_id=course_id,
             #         chapter_id=OuterRef('chapter_id'),
             #         learner_id=request.user.id,
             #     ).annotate(
@@ -363,13 +363,13 @@ def learner_studymaterial_module_chapter_view(request,module_id):
             #         per=Subquery(per_subquery),
             #         flag=flag_annotation,
             #     ).filter(
-            #         chapter__modulechapter__module_id=module_id
+            #         chapter__coursechapter__course_id=course_id
             #     ).order_by('srno')
             #     .values('id', 'srno', 'chapter__chapter_name', 'chapter_id', 'topic', 'mtype', 'urlvalue', 'description', 'per', 'flag')
             # )
 
-            count = LXPModel.Module.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_modulechapter INNER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_modulechapter.module_id = ' + str(module_id) + ' ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.module_id = ' + str(module_id) + ' ) as watchcount )')
-            moddet = LXPModel.Module.objects.raw("SELECT lxpapp_module.id, lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_module  INNER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id) WHERE lxpapp_module.id = " + str(module_id) )
+            count = LXPModel.Course.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_coursechapter INNER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_coursechapter.course_id = ' + str(course_id) + ' ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.course_id = ' + str(course_id) + ' ) as watchcount )')
+            moddet = LXPModel.Course.objects.raw("SELECT lxpapp_course.id, lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_course  INNER JOIN lxpapp_mainhead ON (lxpapp_course.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_course.subhead_id = lxpapp_subhead.id) WHERE lxpapp_course.id = " + str(course_id) )
             Topiccount = 0
             watchcount = 0
             per = 0
@@ -378,13 +378,13 @@ def learner_studymaterial_module_chapter_view(request,module_id):
                 watchcount= r.watchcount
                 per= r.per
             per = 55
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
-            return render(request,'learner/studymaterial/learner_studymaterial_chapter_topic.html',{'list':list,'modulename':modulename,'module_id':module_id,'moddet':moddet,'Topiccount':Topiccount,'watchcount':watchcount,'per':per})
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
+            return render(request,'learner/studymaterial/learner_studymaterial_chapter_topic.html',{'list':list,'coursename':coursename,'course_id':course_id,'moddet':moddet,'Topiccount':Topiccount,'watchcount':watchcount,'per':per})
  #   except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_studymaterial_chapter_show_view(request,chapter_id,module_id):
+def learner_studymaterial_chapter_show_view(request,chapter_id,course_id):
 #    try:     
         if str(request.session['utype']) == 'learner':
             chapter_name = ''
@@ -392,7 +392,7 @@ def learner_studymaterial_chapter_show_view(request,chapter_id,module_id):
             Topiccount = 0
             watchcount = 0
             per = 0
-            count = LXPModel.Module.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_modulechapter INNER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_modulechapter.module_id = ' + str(module_id) + ' AND lxpapp_material.chapter_id = ' + str(chapter_id) + ') AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.module_id = ' + str(module_id) + ' AND lxpapp_learnermaterialwatched.learner_id = ' + str(request.user.id) + ' AND lxpapp_learnermaterialwatched.chapter_id = ' + str(chapter_id) + ' ) as watchcount )')
+            count = LXPModel.Course.objects.raw('SELECT 1 as id, Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END  as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( (SELECT count(lxpapp_material.topic) AS Topiccount FROM lxpapp_coursechapter INNER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id) WHERE lxpapp_coursechapter.course_id = ' + str(course_id) + ' AND lxpapp_material.chapter_id = ' + str(chapter_id) + ') AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.course_id = ' + str(course_id) + ' AND lxpapp_learnermaterialwatched.learner_id = ' + str(request.user.id) + ' AND lxpapp_learnermaterialwatched.chapter_id = ' + str(chapter_id) + ' ) as watchcount )')
             result = LXPModel.Chapter.objects.raw("SELECT 1 as id,   lxpapp_chapter.chapter_name,  Count(lxpapp_material.id) as count FROM  lxpapp_material  INNER JOIN lxpapp_chapter ON (lxpapp_material.chapter_id = lxpapp_chapter.id) WHERE lxpapp_chapter.id = " + str(chapter_id) + " GROUP BY lxpapp_chapter.chapter_name")
             exam = LXPModel.ChapterQuestion.objects.filter(chapter_id = chapter_id).values_list("id").count()
             for r in result:
@@ -402,9 +402,9 @@ def learner_studymaterial_chapter_show_view(request,chapter_id,module_id):
                 Topiccount = r.Topiccount
                 watchcount= r.watchcount
                 per= r.per
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
-            list = LXPModel.Module.objects.raw("SELECT mat.id, (SELECT COUNT(lxpapp_learnermaterialwatched.id) AS MatCount FROM lxpapp_learnermaterialwatched LEFT OUTER JOIN lxpapp_material matwatch ON (lxpapp_learnermaterialwatched.material_id = matwatch.id) WHERE mat.id = matwatch.id AND lxpapp_learnermaterialwatched.module_id = " + str(module_id) + " ) AS matcount, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, mat.topic, mat.mtype, mat.urlvalue, mat.description FROM lxpapp_material mat INNER JOIN lxpapp_chapter ON (mat.chapter_id = lxpapp_chapter.id) WHERE lxpapp_chapter.id = " + str(chapter_id) )
-            return render(request,'learner/studymaterial/learner_studymaterial_chapter_show.html',{'list':list,'chapter_id':chapter_id,'chapter_name':chapter_name,'topiccount':topiccount,'modulename':modulename,'module_id':module_id,'Topiccount':Topiccount,'watchcount':watchcount,'per':per,'exam':exam})
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
+            list = LXPModel.Course.objects.raw("SELECT mat.id, (SELECT COUNT(lxpapp_learnermaterialwatched.id) AS MatCount FROM lxpapp_learnermaterialwatched LEFT OUTER JOIN lxpapp_material matwatch ON (lxpapp_learnermaterialwatched.material_id = matwatch.id) WHERE mat.id = matwatch.id AND lxpapp_learnermaterialwatched.course_id = " + str(course_id) + " ) AS matcount, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, mat.topic, mat.mtype, mat.urlvalue, mat.description FROM lxpapp_material mat INNER JOIN lxpapp_chapter ON (mat.chapter_id = lxpapp_chapter.id) WHERE lxpapp_chapter.id = " + str(chapter_id) )
+            return render(request,'learner/studymaterial/learner_studymaterial_chapter_show.html',{'list':list,'chapter_id':chapter_id,'chapter_name':chapter_name,'topiccount':topiccount,'coursename':coursename,'course_id':course_id,'Topiccount':Topiccount,'watchcount':watchcount,'per':per,'exam':exam})
  #   except:
         return render(request,'lxpapp/404page.html')
 
@@ -414,28 +414,28 @@ def save_topic(request):
             id = request.body
             id = str(id).replace("'",'')
             id = str(id).replace("bid=",'')
-            id = str (id).replace("&module_id=",',')
+            id = str (id).replace("&course_id=",',')
             id = str (id).replace("&chapter_id=",',')
             x = id.split(",")
             matid= x[0]
             modid= x[1]
             chpid= x[2]
-            mat =LXPModel.LearnerMaterialWatched.objects.all().filter(learner_id = request.user.id,material_id=matid,module_id = modid,chapter_id = chpid)
+            mat =LXPModel.LearnerMaterialWatched.objects.all().filter(learner_id = request.user.id,material_id=matid,course_id = modid,chapter_id = chpid)
             if not mat:
-                mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=matid,module_id = modid,chapter_id = chpid)
+                mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=matid,course_id = modid,chapter_id = chpid)
                 mat.save()
             nextvalue = LXPModel.Material.objects.raw('SELECT lxpapp_material.id  FROM lxpapp_material where  lxpapp_material.id > ' + str(matid) + ' limit 1')
             a = len(nextvalue)
             if a == 0:
-                xyz = LXPModel.LearnerMaterialWatched.objects.all().filter(learner_id = request.user.id,material_id=matid,module_id = modid,chapter_id = chpid)
+                xyz = LXPModel.LearnerMaterialWatched.objects.all().filter(learner_id = request.user.id,material_id=matid,course_id = modid,chapter_id = chpid)
                 a = len(xyz)
                 if a == 1:
-                    mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=matid,module_id = modid,chapter_id = chpid)
+                    mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=matid,course_id = modid,chapter_id = chpid)
                     mat.save()
             for c in nextvalue:
-                mat =LXPModel.LearnerMaterialWatched.objects.all().filter(learner_id = request.user.id,material_id=c.id,module_id = modid,chapter_id = chpid)
+                mat =LXPModel.LearnerMaterialWatched.objects.all().filter(learner_id = request.user.id,material_id=c.id,course_id = modid,chapter_id = chpid)
                 if not mat:
-                    mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=c.id,module_id = modid,chapter_id = chpid)
+                    mat = LXPModel.LearnerMaterialWatched.objects.create(learner_id = request.user.id,material_id=c.id,course_id = modid,chapter_id = chpid)
                     mat.save()
             return JsonResponse({'status': 'success'})    
     except:
@@ -457,43 +457,43 @@ def learner_show_studymaterial_view(request,studymaterialtype,pk):
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_availablecourse_module_view(request):
+def learner_availablecourse_course_view(request):
     try:    
         if str(request.session['utype']) == 'learner':
-            modules = LXPModel.Module.objects.all().order_by('module_name')
-            return render(request,'learner/availablecourse/learner_availablecourse_module.html',{'modules':modules})
+            courses = LXPModel.Course.objects.all().order_by('course_name')
+            return render(request,'learner/availablecourse/learner_availablecourse_course.html',{'courses':courses})
     except:
         return render(request,'lxpapp/404page.html')
 
 
 @login_required
-def learner_availablecourse_module_chapter_view(request,modulename,module_id):
+def learner_availablecourse_course_chapter_view(request,coursename,course_id):
 #    try:     
         if str(request.session['utype']) == 'learner':
-            list = LXPModel.Module.objects.raw("SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_modulechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_modulechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_modulechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_modulechapter.module_id = " + str(module_id) )
-            moddet = LXPModel.Module.objects.raw("SELECT lxpapp_module.id, lxpapp_module.description,  lxpapp_module.whatlearn,  lxpapp_module.includes,  lxpapp_module.themecolor,  lxpapp_module.tags,  lxpapp_module.image,  lxpapp_module.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_module  INNER JOIN lxpapp_mainhead ON (lxpapp_module.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_module.subhead_id = lxpapp_subhead.id) WHERE lxpapp_module.id = " + str(module_id) )
-            return render(request,'learner/availablecourse/learner_availablecourse_chapter_topic.html',{'list':list,'modulename':modulename,'module_id':module_id,'moddet':moddet})
+            list = LXPModel.Course.objects.raw("SELECT lxpapp_material.id, ROW_NUMBER() OVER(PARTITION BY lxpapp_chapter.chapter_name) as srno,  lxpapp_chapter.chapter_name,  lxpapp_chapter.id as chapter_id,  lxpapp_material.topic,  lxpapp_material.mtype,  lxpapp_material.urlvalue,  lxpapp_material.description FROM  lxpapp_coursechapter  LEFT OUTER JOIN lxpapp_material ON (lxpapp_coursechapter.chapter_id = lxpapp_material.chapter_id)  LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_coursechapter.chapter_id = lxpapp_chapter.id) WHERE lxpapp_coursechapter.course_id = " + str(course_id) )
+            moddet = LXPModel.Course.objects.raw("SELECT lxpapp_course.id, lxpapp_course.description,  lxpapp_course.whatlearn,  lxpapp_course.includes,  lxpapp_course.themecolor,  lxpapp_course.tags,  lxpapp_course.image,  lxpapp_course.price,  lxpapp_mainhead.mainhead_name,  lxpapp_subhead.subhead_name FROM  lxpapp_course  INNER JOIN lxpapp_mainhead ON (lxpapp_course.mainhead_id = lxpapp_mainhead.id)  INNER JOIN lxpapp_subhead ON (lxpapp_course.subhead_id = lxpapp_subhead.id) WHERE lxpapp_course.id = " + str(course_id) )
+            return render(request,'learner/availablecourse/learner_availablecourse_chapter_topic.html',{'list':list,'coursename':coursename,'course_id':course_id,'moddet':moddet})
  #   except:
         return render(request,'lxpapp/404page.html')
 
 
 
 @login_required
-def learner_chapterexam_view(request,chapter_id,module_id):
+def learner_chapterexam_view(request,chapter_id,course_id):
     #try:    
         if str(request.session['utype']) == 'learner':
             chapterexams=LXPModel.Chapter.objects.all().filter(id =  chapter_id) 
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
-            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam.html',{'chapterexams':chapterexams,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})
+            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam.html',{'chapterexams':chapterexams,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})
     #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_take_chapterexam_view(request,chapter_id,module_id):
+def learner_take_chapterexam_view(request,chapter_id,course_id):
     #try:    
         if str(request.session['utype']) == 'learner':
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
             
             mcqquestion= LXPModel.ChapterQuestion.objects.filter(chapter_id=chapter_id)
@@ -502,18 +502,18 @@ def learner_take_chapterexam_view(request,chapter_id,module_id):
             for x in mcqquestion:
                 total_marks = total_marks + x.marks
                 total_questions = total_questions + 1
-            return render(request,'learner/studymaterial/chapterexam/learner_take_chapterexam.html',{'modulename':modulename,'chaptername':chaptername,'total_questions':total_questions,'total_marks':total_marks,'module_id':module_id,'chapter_id':chapter_id})
+            return render(request,'learner/studymaterial/chapterexam/learner_take_chapterexam.html',{'coursename':coursename,'chaptername':chaptername,'total_questions':total_questions,'total_marks':total_marks,'course_id':course_id,'chapter_id':chapter_id})
     #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_start_chapterexam_view(request,chapter_id,module_id):
+def learner_start_chapterexam_view(request,chapter_id,course_id):
     #try:    
         if str(request.session['utype']) == 'learner':
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
             if request.method == 'POST':
-                mcqresult = LXPModel.ChapterResult.objects.create(learner_id = request.user.id,module_id =module_id,chapter_id =chapter_id,marks=0,wrong=0,correct=0)
+                mcqresult = LXPModel.ChapterResult.objects.create(learner_id = request.user.id,course_id =course_id,chapter_id =chapter_id,marks=0,wrong=0,correct=0)
                 mcqresult.save()
                 questions=LXPModel.ChapterQuestion.objects.all().filter(chapter_id=chapter_id).order_by('?')
                 score=0
@@ -551,7 +551,7 @@ def learner_start_chapterexam_view(request,chapter_id,module_id):
                 mcqresult.timetaken = request.POST.get('timer')
                 mcqresult.save()
                 resdetobj = LXPModel.ChapterResultDetails.objects.raw("SELECT 1 as id,  lxpapp_chapterquestion.question as q,  lxpapp_chapterquestion.option1 as o1,  lxpapp_chapterquestion.option2 as o2,  lxpapp_chapterquestion.option3 as o3,  lxpapp_chapterquestion.option4 as o4,  lxpapp_chapterquestion.answer AS Correct,  lxpapp_chapterquestion.marks,  lxpapp_chapterresultdetails.selected AS answered  FROM  lxpapp_chapterresultdetails  INNER JOIN lxpapp_chapterresult ON (lxpapp_chapterresultdetails.chapterresult_id = lxpapp_chapterresult.id)  INNER JOIN lxpapp_chapterquestion ON (lxpapp_chapterresultdetails.question_id = lxpapp_chapterquestion.id) WHERE lxpapp_chapterresult.id = " + str(r_id) + " AND lxpapp_chapterresult.learner_id = " + str(request.user.id) + " ORDER BY lxpapp_chapterquestion.id" )
-                return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result.html',{'total':total,'percent':percent, 'wrong':wrong,'correct':correct,'time': request.POST.get('timer'),'score':score,'resdetobj':resdetobj,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})
+                return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result.html',{'total':total,'percent':percent, 'wrong':wrong,'correct':correct,'time': request.POST.get('timer'),'score':score,'resdetobj':resdetobj,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})
             else:
                 questions=LXPModel.ChapterQuestion.objects.all()
                 context = {
@@ -559,29 +559,29 @@ def learner_start_chapterexam_view(request,chapter_id,module_id):
                 }
             questions=LXPModel.ChapterQuestion.objects.all().filter(chapter_id=chapter_id).order_by('?')
             
-            return render(request,'learner/studymaterial/chapterexam/learner_start_chapterexam.html',{'questions':questions,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})
+            return render(request,'learner/studymaterial/chapterexam/learner_start_chapterexam.html',{'questions':questions,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})
     #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_show_chapterexam_reuslt_view(request,chapter_id,module_id):
+def learner_show_chapterexam_reuslt_view(request,chapter_id,course_id):
     #try:    
         if str(request.session['utype']) == 'learner':
             chapterexams=LXPModel.ChapterResult.objects.all().filter(chapter_id = chapter_id,learner_id=request.user.id)
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
-            return render(request,'learner/studymaterial/chapterexam/learner_show_chapterexam_reuslt.html',{'chapterexams':chapterexams,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})
+            return render(request,'learner/studymaterial/chapterexam/learner_show_chapterexam_reuslt.html',{'chapterexams':chapterexams,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})
     #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
-def learner_show_chapterexam_reuslt_details_view(request,result_id,attempt,chapter_id,module_id):
+def learner_show_chapterexam_reuslt_details_view(request,result_id,attempt,chapter_id,course_id):
     try:    
         if str(request.session['utype']) == 'learner':
-            modulename = LXPModel.Module.objects.only('module_name').get(id=module_id).module_name
+            coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             chaptername = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
             chapterexams=LXPModel.ChapterResultDetails.objects.all().filter(question_id__in = LXPModel.ChapterQuestion.objects.all(), chapterresult_id = result_id)
-            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result_details.html',{'chapterexams':chapterexams,'attempt':attempt,'modulename':modulename,'module_id':module_id,'chaptername':chaptername,'chapter_id':chapter_id})
+            return render(request,'learner/studymaterial/chapterexam/learner_chapterexam_result_details.html',{'chapterexams':chapterexams,'attempt':attempt,'coursename':coursename,'course_id':course_id,'chaptername':chaptername,'chapter_id':chapter_id})
     except:
         return render(request,'lxpapp/404page.html')
 
@@ -592,12 +592,12 @@ def save_cart(request):
             id = request.POST.get('id')
             # id = str(id).replace("'",'')
             # id = str(id).replace("bid=",'')
-            # id = str (id).replace("&module_id=",',')
+            # id = str (id).replace("&course_id=",',')
             # id = str (id).replace("&chapter_id=",',')
             
-            cart =LXPModel.LearnerCart.objects.all().filter(learner_id = request.user.id,module_id=id)
+            cart =LXPModel.LearnerCart.objects.all().filter(learner_id = request.user.id,course_id=id)
             if not cart:
-                 cart = LXPModel.LearnerCart.objects.create(learner_id = request.user.id,module_id=id)
+                 cart = LXPModel.LearnerCart.objects.create(learner_id = request.user.id,course_id=id)
                  cart.save()
             return JsonResponse({'status': 'success'})    
     except:

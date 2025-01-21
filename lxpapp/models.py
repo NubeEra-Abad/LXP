@@ -54,12 +54,12 @@ class Chapter(models.Model):
     def __str__(self):
         return self.chapter_name
     
-# class Module(models.Model):
+# class Course(models.Model):
 #     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-#     module_name = models.CharField(max_length=200)
+#     course_name = models.CharField(max_length=200)
 
 #     def __str__(self):
-#         return self.module_name
+#         return self.course_name
 
 class MainHead(models.Model):
     mainhead_name = models.CharField(max_length=200)
@@ -76,10 +76,10 @@ class SubHead(models.Model):
 
     def __str__(self):
         return self.subhead_name
-class Module(models.Model):
+class Course(models.Model):
     mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
     subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)
-    module_name = models.CharField(max_length=200)
+    course_name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000,default='')
     whatlearn = models.CharField(max_length=1000,default='')
     includes = models.CharField(max_length=1000,default='')
@@ -91,10 +91,10 @@ class Module(models.Model):
     price = models.IntegerField(default=0)
     
     def __str__(self):
-        return self.module_name
+        return self.course_name
 
-class ModuleChapter(models.Model):
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+class CourseChapter(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
     def __str__(self):
@@ -108,73 +108,7 @@ class Topic(models.Model):
     def __str__(self):
         return self.topic_name
 
-class Course(models.Model):
-    course_name = models.CharField(max_length=200)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
 
-    def __str__(self):
-        return self.course_name
-
-class CourseDetails(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,blank=True)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
-
-    def __str__(self):
-        return self.course
-    def to_dict(c):
-            if isinstance(c, CourseDetails):
-                dict = {
-                    "id": c.id,
-                    "course_name": c.course.course_name,
-                    "subject_name": c.subject.subject_name,
-                    "module_name": c.module.module_name,
-                    "chapter_name": c.chapter.chapter_name,
-                    "topic_name": c.topic.topic_name
-                }
-                return dict
-            else:
-                type_name = c.__class__.__name__
-                raise TypeError("Unexpected type {0}".format(type_name))
-    
-class CourseSet(models.Model):
-    courseset_name = models.CharField(max_length=200)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
-
-    def __str__(self):
-        return self.courseset_name
-
-class CourseSetDetails(models.Model):
-    courseset = models.ForeignKey(CourseSet, on_delete=models.SET_NULL, null=True,blank=True)
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True,blank=True)
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True,blank=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True,blank=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True,blank=True)
-
-    def __str__(self):
-        return self.courseset
-    def to_dict(c):
-            if isinstance(c, CourseSetDetails):
-                dict = {
-                    "id": c.id,
-                    "courseset_name": c.courseset.courseset_name,
-                    "subject_name": c.subject.subject_name,
-                    "module_name": c.module.module_name,
-                    "chapter_name": c.chapter.chapter_name,
-                    "topic_name": c.topic.topic_name
-                }
-                return dict
-            else:
-                type_name = c.__class__.__name__
-                raise TypeError("Unexpected type {0}".format(type_name))
     
 
 ###################################
@@ -493,9 +427,9 @@ class Batch(models.Model):
    def __str__(self):
       return self.batch_name
 
-class BatchModule(models.Model):
+class BatchCourse(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
-   module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+   course=models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)
 
 class BatchRecordedVDOList(models.Model):
    batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
@@ -615,7 +549,7 @@ class SessionMaterial(models.Model):
 
 class LearnerMaterialWatched(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    module=models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    course=models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)
     chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
     material=models.ForeignKey(Material,on_delete=models.SET_NULL, null=True)
 
@@ -637,7 +571,7 @@ class ChapterQuestion(models.Model):
 
 class ChapterResult(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    course = models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)
     subject = models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
     marks = models.PositiveIntegerField()
@@ -686,7 +620,7 @@ class ErrorLog(models.Model):
 
 class LearnerCart(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    module = models.ForeignKey(Module,on_delete=models.SET_NULL, null=True)
+    course = models.ForeignKey(Course,on_delete=models.SET_NULL, null=True)
     status=models.IntegerField(default=0)
 
 class K8STerminal(models.Model):

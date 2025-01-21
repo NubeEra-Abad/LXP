@@ -295,7 +295,6 @@ def delete_user_view(request,userid,pk):
             # cursor = connection.cursor()
             # cursor.execute("DELETE FROM lxpapp_BatchTrainer WHERE trainer_id = " + str(pk))
             # cursor.execute("DELETE FROM lxpapp_UserPics WHERE user_id = " + str(userid))
-            # cursor.execute("DELETE FROM lxpapp_UserCourse WHERE user_id = " + str(userid))
             # cursor.execute("DELETE FROM lxpapp_LearnerDetails WHERE learner_id = " + str(userid))
             # cursor.execute("DELETE FROM lxpapp_IsFirstLogIn WHERE user_id = " + str(userid))
             # cursor.execute("DELETE FROM lxpapp_McqResult WHERE learner_id = " + str(userid))

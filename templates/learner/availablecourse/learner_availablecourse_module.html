@@ -23,7 +23,7 @@
   <section class="course-content pt-1 pb-0 px-0">
     <div class="container-fluid">
       <div class="row">
-          {% for t in modules %}
+          {% for t in courses %}
           <div class="col-xl-4 col-md-6 box-shadow">
             <div class="card all-crs-wid">
               <div class="card-body">
@@ -35,8 +35,8 @@
                   <div class="dlab-info">
                     <div class="dlab-title d-flex justify-content-between">
                       <div>
-                        <h4><a class="srv_title" data-value="{{t.module_name}}"
-                          href="{% url 'learner-availablecourse-module-chapter' t.module_name t.id %}">{{t.module_name}}</a></h4>
+                        <h4><a class="srv_title" data-value="{{t.course_name}}"
+                          href="{% url 'learner-availablecourse-course-chapter' t.course_name t.id %}">{{t.course_name}}</a></h4>
       
                       </div>
                       <h4 class="text-primary">
@@ -51,7 +51,7 @@
                     <div class="d-flex justify-content-between content align-items-center">
                       <div class="student-percent">
                         <a data-id="{{ t.id }}" class="btn btn btn-primary btn-sm" onclick="addToCart('{{ t.id }}')">Add To Cart</a>
-                        <a href="{% url 'learner-availablecourse-module-chapter' t.module_name t.id %}" class="btn btn-primary btn-sm">Details</a>
+                        <a href="{% url 'learner-availablecourse-course-chapter' t.course_name t.id %}" class="btn btn-primary btn-sm">Details</a>
                       </div>
                     </div>
                   </div>
@@ -77,7 +77,7 @@
           contentType: 'application/json',
           data: {
               id: selectedValue,
-              module_id: '{{module_id}}'
+              course_id: '{{course_id}}'
           },
           success: function (response) {
               console.log('Updated model successfully');
@@ -114,7 +114,7 @@
 
       <div class="product">
         <div class="product-img">
-          <a href="{% url 'learner-availablecourse-module-chapter' t.module_name t.id %}">
+          <a href="{% url 'learner-availablecourse-course-chapter' t.course_name t.id %}">
             <img class="img-fluid" alt="" src="{{t.image}}">
           </a>
           <div class="price">
@@ -127,7 +127,7 @@
         </div>
         <div class="product-content">
           <div class="head-course-title">
-            <h3 class="title"><a href="{% url 'learner-availablecourse-module-chapter' t.module_name t.id %}">{{t.module_name}}</a></h3>
+            <h3 class="title"><a href="{% url 'learner-availablecourse-course-chapter' t.course_name t.id %}">{{t.course_name}}</a></h3>
             
             <div class="all-btn all-category d-flex align-items-center">
               <a data-id="{{ t.id }}" class="link btn btn-primary" onclick="addToCart('{{ t.id }}')">Add to Cart</a>

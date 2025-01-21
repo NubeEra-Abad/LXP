@@ -141,7 +141,7 @@ def cfo_add_batch_view(request):
                     selectedlist = request.POST.getlist('listbox3')
                     for x in selectedlist:
                         modid = str(x)
-                        batchmodtable = LXPModel.BatchModule.objects.create(batch_id=batchtable.id,module_id=modid)
+                        batchmodtable = LXPModel.BatchCourse.objects.create(batch_id=batchtable.id,course_id=modid)
                         batchmodtable.save()
                     selectedlist = request.POST.getlist('vdolist')
                     for x in selectedlist:
@@ -151,9 +151,9 @@ def cfo_add_batch_view(request):
             batchForm=LXPFORM.BatchForm()
             trainers =  User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 1 AND  social_auth_usersocialauth.status = true')
             learners =  list(User.objects.raw('SELECT   auth_user.id,  auth_user.username,  auth_user.first_name,  auth_user.last_name,  auth_user.email FROM  social_auth_usersocialauth  INNER JOIN auth_user ON (social_auth_usersocialauth.user_id = auth_user.id) WHERE  social_auth_usersocialauth.utype = 2 AND  social_auth_usersocialauth.status = true ORDER BY auth_user.first_name, auth_user.last_name'))
-            modules =  LXPModel.Module.objects.all()
+            courses =  LXPModel.Course.objects.all()
             PList =  LXPModel.Playlist.objects.all().order_by('name')
-            return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners,'modules':modules,'PList':PList})
+            return render(request,'cfo/batch/cfo_add_batch.html',{'batchForm':batchForm,'trainers':trainers,'learners':learners,'courses':courses,'PList':PList})
     except:
         return render(request,'lxpapp/404page.html')
 import json
@@ -188,11 +188,11 @@ def cfo_update_batch_view(request,pk):
                             batchlearnertable = LXPModel.Batchlearner.objects.create(batch_id=pk,learner_id=a,fee=b)
                             batchlearnertable.save()
                         selectedlist = request.POST.getlist('listbox3')
-                        det = LXPModel.BatchModule.objects.all().filter(batch_id=pk)
+                        det = LXPModel.BatchCourse.objects.all().filter(batch_id=pk)
                         det.delete()
                         for x in selectedlist:
-                            moduleid = str(x)
-                            batchcoursetable = LXPModel.BatchModule.objects.create(batch_id=pk,module_id=moduleid)
+                            courseid = str(x)
+                            batchcoursetable = LXPModel.BatchCourse.objects.create(batch_id=pk,course_id=courseid)
                             batchcoursetable.save()
                         det = LXPModel.BatchRecordedVDOList.objects.all().filter(batch_id=pk)
                         det.delete()
@@ -234,7 +234,6 @@ def cfo_update_batch_view(request,pk):
                 btrnr["email"]=c.email
                 btrnr["fee"]=c.fee
                 blearner.append(btrnr)
-            courses =  LXPModel.Course.objects.all()
             btrainer = json.dumps(btrainer)
             blearner = json.dumps(blearner)
             query = LXPModel.Batch.objects.get(id=pk)
@@ -248,7 +247,6 @@ def cfo_update_batch_view(request,pk):
             'learners':learners,
             'batchtrainers':batchtrainers,
             'batchlearners':batchlearners,
-            'courses':courses,
             'btrainer':btrainer,
             'blearner':blearner,
             'stdate':stdate,
@@ -273,7 +271,7 @@ def cfo_view_batch_view(request):
 def cfo_view_batch_details_view(request,batchname,pk):
     try:
         if str(request.session['utype']) == 'cfo':
-            batchs = LXPModel.Batch.objects.raw("SELECT lxpapp_batch.id, GROUP_CONCAT(DISTINCT lxpapp_module.module_name) AS module_name, GROUP_CONCAT(DISTINCT lxpapp_playlist.name) AS video_name, lxpapp_batch.stdate, lxpapp_batch.enddate, GROUP_CONCAT(DISTINCT trainer.first_name || ' ' || trainer.last_name) AS trainer_name, GROUP_CONCAT(DISTINCT learner.first_name || ' ' || learner.last_name) AS learner_name FROM lxpapp_batch LEFT OUTER JOIN lxpapp_batchmodule ON (lxpapp_batchmodule.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchrecordedvdolist ON (lxpapp_batchrecordedvdolist.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_batchrecordedvdolist.playlist_id = lxpapp_playlist.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_batchtrainer ON (lxpapp_batch.id = lxpapp_batchtrainer.batch_id) LEFT OUTER JOIN auth_user trainer ON (lxpapp_batchtrainer.trainer_id = trainer.id) LEFT OUTER JOIN lxpapp_module ON (lxpapp_batchmodule.module_id = lxpapp_module.id) LEFT OUTER JOIN auth_user learner ON (lxpapp_batchlearner.learner_id = learner.id) WHERE lxpapp_batch.id = " + str(pk))
+            batchs = LXPModel.Batch.objects.raw("SELECT lxpapp_batch.id, GROUP_CONCAT(DISTINCT lxpapp_course.course_name) AS course_name, GROUP_CONCAT(DISTINCT lxpapp_playlist.name) AS video_name, lxpapp_batch.stdate, lxpapp_batch.enddate, GROUP_CONCAT(DISTINCT trainer.first_name || ' ' || trainer.last_name) AS trainer_name, GROUP_CONCAT(DISTINCT learner.first_name || ' ' || learner.last_name) AS learner_name FROM lxpapp_batch LEFT OUTER JOIN lxpapp_batchcourse ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchrecordedvdolist ON (lxpapp_batchrecordedvdolist.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_playlist ON (lxpapp_batchrecordedvdolist.playlist_id = lxpapp_playlist.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_batchtrainer ON (lxpapp_batch.id = lxpapp_batchtrainer.batch_id) LEFT OUTER JOIN auth_user trainer ON (lxpapp_batchtrainer.trainer_id = trainer.id) LEFT OUTER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id) LEFT OUTER JOIN auth_user learner ON (lxpapp_batchlearner.learner_id = learner.id) WHERE lxpapp_batch.id = " + str(pk))
             return render(request,'cfo/batch/cfo_view_batch_details.html',{'batchs':batchs,'batchname':batchname})
     except:
         return render(request,'lxpapp/404page.html')

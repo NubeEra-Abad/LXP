@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <div class="course-content d-flex justify-content-between flex-wrap">
                         <div>
-                            <h3>{{d.module_name}}</h3>
+                            <h3>{{d.course_name}}</h3>
                             <ul class="d-flex align-items-center raiting my-0 flex-wrap">
                                 <li><span class="font-w500">{{watchcount}} out of {{Topiccount}} completed</span>
                                 </li>
@@ -103,7 +103,7 @@
                                     {% if t.srno == 1 %}
                                     {% if t.flag == 'yes' or t.srno != -1 %}
                                 <div>
-                                    <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id module_id %}">Let's
+                                    <a href="{% url 'learner-studymaterial-chapter-show' t.chapter_id course_id %}">Let's
                                         Start</a>
                                 </div>
                                 {% else %}

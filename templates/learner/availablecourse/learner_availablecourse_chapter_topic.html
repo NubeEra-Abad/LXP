@@ -54,8 +54,8 @@
     <nav aria-label="breadcrumb">
       <ul class="breadcrumb">
         <li><a href="{% url 'learner-dashboard' %}">Dashboard</a></li>
-        <li aria-current="page"> <a href="{% url 'learner-availablecourse-module' %}">All Courses</a></li>
-        <li aria-current="page">Cource Details</li>
+        <li aria-current="page"> <a href="{% url 'learner-availablecourse-course' %}">All Courses</a></li>
+        <li aria-current="page">Course Details</li>
       </ul>
     </nav>
   </div>
@@ -63,7 +63,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-                <h2>{{d.module_name}}</h2>
+                <h2>{{d.course_name}}</h2>
                 <div class="course-info d-flex align-items-center border-bottom-0 m-0 p-0">
                     <div class="cou-info">
                         <img src="/static/dreamlms/img/icon/icon-01.svg" alt="">
@@ -218,7 +218,7 @@
         <div class="col-xl-7">
             <div class="card  course-dedails-bx">
                 <div class="card-header border-0 pb-0">
-                    <h2>{{d.modulename}}</h2>
+                    <h2>{{d.coursename}}</h2>
                 </div>
                 
                 <div class="card-body pt-0">

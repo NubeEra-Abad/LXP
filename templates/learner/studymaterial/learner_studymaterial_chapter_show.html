@@ -21,9 +21,9 @@
     <nav aria-label="breadcrumb">
         <ul class="breadcrumb">
             <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-            <li ><a href="../../../../learner/learner-studymaterial-module">Courses</a></li>
+            <li ><a href="../../../../learner/learner-studymaterial-course">Courses</a></li>
             <li ><a
-                    href="../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
+                    href="../../../../learner/learner-studymaterial-course-chapter/{{course_id}} ">{{coursename}}</a>
             </li>
             <li  aria-current="page">Preview</li>
         </ul>
@@ -79,7 +79,7 @@
                         {% if forloop.last and exam > 0 and per == 100 %}
                         <li>
                             <p class="play-intro">
-                                <a href="{% url 'learner-chapterexam' t.chapter_id module_id %}">Exam</a>
+                                <a href="{% url 'learner-chapterexam' t.chapter_id course_id %}">Exam</a>
                             </p>
                             <div>
                                 <img src="/static/dreamlms/img/icon/exam.svg" alt="">
@@ -158,7 +158,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify({
                     id: selectedValue,
-                    module_id: '{{ module_id }}',
+                    course_id: '{{ course_id }}',
                     chapter_id: '{{ chapter_id }}'
                 }),
                 success: function(response) {

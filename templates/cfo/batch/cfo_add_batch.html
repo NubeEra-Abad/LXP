@@ -208,11 +208,11 @@
 
           <div class="row mb-3">
             <div class="col-md-6">
-              <label for="listbox3" class="form-label">Module Name</label>
+              <label for="listbox3" class="form-label">Course Name</label>
               <select class="form-control" name="listbox3" id="field3" multiple multiselect-search="true"
                 multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
-                {% for t in modules %}
-                <option value="{{ t.id }}">{{ t.module_name }}</option>
+                {% for t in courses %}
+                <option value="{{ t.id }}">{{ t.course_name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -350,8 +350,8 @@
                       <select class="form-control" name="listbox3" id="field3" multiple multiselect-search="true"
                         multiselect-select-all="true" multiselect-max-items="20"
                         onchange="console.log(this.selectedOptions)">
-                        {% for t in modules %}
-                        <option value="{{ t.id }}">{{ t.module_name }}</option>
+                        {% for t in courses %}
+                        <option value="{{ t.id }}">{{ t.course_name }}</option>
                         {% endfor %}
                       </select>
                     </div>

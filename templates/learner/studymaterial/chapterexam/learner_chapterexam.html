@@ -17,11 +17,11 @@
   <nav aria-label="breadcrumb">
     <ul class="breadcrumb">
       <li ><a href="../../../../learner/learner-dashboard">Dashboard</a></li>
-      <li ><a href="../../../../learner/learner-studymaterial-module">Courses</a></li>
+      <li ><a href="../../../../learner/learner-studymaterial-course">Courses</a></li>
       <li ><a
-          href="../../../../learner/learner-studymaterial-module-chapter/{{module_id}} ">{{modulename}}</a>
+          href="../../../../learner/learner-studymaterial-course-chapter/{{course_id}} ">{{coursename}}</a>
       <li ><a
-          href="../../../../learner/learner-studymaterial-chapter-show/{{chapter_id}}/{{module_id}} ">{{chaptername}}</a>
+          href="../../../../learner/learner-studymaterial-chapter-show/{{chapter_id}}/{{course_id}} ">{{chaptername}}</a>
       <li  aria-current="page">Exams</li>
     </ul>
   </nav>
@@ -39,9 +39,9 @@
       {% for t in chapterexams %}
       <tr>
         <td> {{t.chapter_name}}</td>
-        <td><a class="btn btn-success" href="{% url 'learner-take-chapterexam' t.id module_id %}"><span
+        <td><a class="btn btn-success" href="{% url 'learner-take-chapterexam' t.id course_id %}"><span
               class="	fas fa-angle-double-up"></span></a></td>
-        <td><a class="btn btn-primary" href="{% url 'learner-show-chapterexam-reuslt' t.id module_id %}"><span
+        <td><a class="btn btn-primary" href="{% url 'learner-show-chapterexam-reuslt' t.id course_id %}"><span
               class="fas fa-angle-double-right"></span></a></td>
       </tr>
       {% endfor %}

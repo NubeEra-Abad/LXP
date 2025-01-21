@@ -132,28 +132,14 @@ class LearnerDetailsForm(forms.ModelForm):
         model = models.LearnerDetails
         fields = ['user_full_name', 'mobile', 'whatsappno', 'profile_pic']
         
-class ModuleForm(forms.ModelForm):
-    class Meta:
-        model=models.Module 
-        fields=['mainhead','subhead','themecolor']
-    def _init_(self, *args, **kwargs):
-        super(ModuleForm, self)._init_(*args, **kwargs)
-
 class CourseForm(forms.ModelForm):
     class Meta:
-        model = models.Course
-        fields = ('course_name', 'subject', 'module', 'chapter', 'topic')
+        model=models.Course 
+        fields=['mainhead','subhead','themecolor']
+    def _init_(self, *args, **kwargs):
+        super(CourseForm, self)._init_(*args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-class CourseSetForm(forms.ModelForm):
-    class Meta:
-        model = models.CourseSet
-        fields = ('courseset_name', 'subject', 'module', 'chapter', 'topic')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 class TrainerNotificationForm(forms.ModelForm):
     trainerID=forms.ModelChoiceField(queryset=UserSocialAuth.objects.all().filter(utype = '1',user_id__in=models.User.objects.all().order_by('first_name')),empty_label="Trainer Name", to_field_name="id")

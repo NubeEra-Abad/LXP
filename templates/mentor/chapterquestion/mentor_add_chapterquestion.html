@@ -21,7 +21,7 @@
   {{ message }}
   {% endfor %}
   {% endif %}
-  <form method="POST" id="chapterquestionForm" data-modules-url="{% url 'ajax_load_chapters' %}" autocomplete="off">
+  <form method="POST" id="chapterquestionForm" data-courses-url="{% url 'ajax_load_chapters' %}" autocomplete="off">
     {%csrf_token%}
     <div class="form-group">
       <div class="row">
@@ -81,7 +81,7 @@
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script>
     $("#id_subject").change(function () {
-      var url = $("#chapterquestionForm").attr("data-modules-url");  // get the url of the `load_topics` view
+      var url = $("#chapterquestionForm").attr("data-courses-url");  // get the url of the `load_topics` view
       var subjectId = $(this).val();  // get the selected subject ID from the HTML input
 
       $.ajax({                       // initialize an AJAX request

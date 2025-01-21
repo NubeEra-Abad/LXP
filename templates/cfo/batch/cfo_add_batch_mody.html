@@ -235,14 +235,14 @@
             </style>
           <div class="row mb-3">
             <div class="col-md-6">
-              <label for="listbox3" class="form-label">Module Name</label>
+              <label for="listbox3" class="form-label">Course Name</label>
               <div class="dropdown-container">
-                <div class="dropdown-header" onclick="toggleDropdown()">Select Modules</div>
+                <div class="dropdown-header" onclick="toggleDropdown()">Select Courses</div>
                 <div class="dropdown-body">
-                    {% for t in modules %}
+                    {% for t in courses %}
                     <label class="dropdown-item">
-                        <input type="checkbox" value="{{ t.id }}" data-fee="5000" onchange="selectModule(this)">
-                        <span>{{ t.module_name }}</span>
+                        <input type="checkbox" value="{{ t.id }}" data-fee="5000" onchange="selectCourse(this)">
+                        <span>{{ t.course_name }}</span>
                         <input type="number" class="fee-input" value="5000" onchange="updateFee(this, '{{ t.id }}')">
                     </label>
                     {% endfor %}
@@ -250,30 +250,30 @@
             </div>
             </div>
             <script>
-              let selectedModules = {};
+              let selectedCourses = {};
 
 function toggleDropdown() {
     const dropdownBody = document.querySelector('.dropdown-body');
     dropdownBody.style.display = dropdownBody.style.display === 'block' ? 'none' : 'block';
 }
 
-function selectModule(checkbox) {
-    const moduleId = checkbox.value;
+function selectCourse(checkbox) {
+    const courseId = checkbox.value;
     const fee = checkbox.nextElementSibling.nextElementSibling.value;
     if (checkbox.checked) {
-        selectedModules[moduleId] = fee;  // Add the selected module with default fee
+        selectedCourses[courseId] = fee;  // Add the selected course with default fee
     } else {
-        delete selectedModules[moduleId];  // Remove unselected module
+        delete selectedCourses[courseId];  // Remove unselected course
     }
-    console.log("Selected Modules:", selectedModules);
+    console.log("Selected Courses:", selectedCourses);
 }
 
-function updateFee(input, moduleId) {
+function updateFee(input, courseId) {
     const newFee = input.value;
-    if (selectedModules[moduleId] !== undefined) {
-        selectedModules[moduleId] = newFee;  // Update fee for selected module
+    if (selectedCourses[courseId] !== undefined) {
+        selectedCourses[courseId] = newFee;  // Update fee for selected course
     }
-    console.log("Updated Fee for Module:", moduleId, "New Fee:", newFee);
+    console.log("Updated Fee for Course:", courseId, "New Fee:", newFee);
 }
               </script>
             <div class="col-md-6">
