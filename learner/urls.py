@@ -28,8 +28,8 @@ urlpatterns = [
     path('learner-studymaterial-show/<studymaterialtype>/<int:pk>', views.learner_show_studymaterial_view,name='learner-studymaterial-show'),
     path('ajax/save-topic/', views.save_topic, name='ajax_save_topic'),
 
-    path('learner-availablecourse-course', views.learner_availablecourse_course_view,name='learner-availablecourse-course'),
-    path('learner-availablecourse-course-chapter/<coursename>/<int:course_id>', views.learner_availablecourse_course_chapter_view,name='learner-availablecourse-course-chapter'),
+    path('learner-available-course', views.learner_availablecourse_course_view,name='learner-available-course'),
+    path('learner-available-course-chapter/<coursename>/<int:course_id>', views.learner_availablecourse_course_chapter_view,name='learner-available-course-chapter'),
     
     path('learner-chapterexam/<int:chapter_id>/<int:course_id>', views.learner_chapterexam_view,name='learner-chapterexam'),
     path('learner-take-chapterexam/<int:chapter_id>/<int:course_id>', views.learner_take_chapterexam_view,name='learner-take-chapterexam'),
