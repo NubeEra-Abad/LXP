@@ -208,7 +208,7 @@ def learner_video_Course_view(request):
 
 @login_required
 def learner_video_Course_subject_view(request):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'learner':
             subject = LXPModel.Playlist.objects.raw('SELECT ID AS id, NAME, VTOTAL, Mtotal, SUM(VWATCHED) AS VWatched,((100*VWATCHED)/VTOTAL) as per, THUMBNAIL_URL FROM (SELECT YYY.ID, YYY.NAME, YYY.THUMBNAIL_URL, ( SELECT COUNT(XX.ID) FROM LXPAPP_PLAYLISTITEM XX WHERE XX.PLAYLIST_ID = YYY.ID ) AS Vtotal, ( SELECT COUNT(zz.ID) FROM LXPAPP_sessionmaterial zz WHERE zz.PLAYLIST_ID = YYY.ID ) AS Mtotal, (SELECT COUNT (LXPAPP_VIDEOWATCHED.ID) AS a FROM LXPAPP_PLAYLISTITEM GHGH LEFT OUTER JOIN LXPAPP_VIDEOWATCHED ON ( GHGH.VIDEO_ID = LXPAPP_VIDEOWATCHED.VIDEO_ID ) WHERE GHGH.PLAYLIST_ID = YYY.ID AND LXPAPP_VIDEOWATCHED.LEARNER_ID = ' + str(request.user.id) + ') AS VWatched FROM LXPAPP_BATCHLEARNER INNER JOIN LXPAPP_BATCH ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCH.ID) INNER JOIN LXPAPP_BATCHRECORDEDVDOLIST ON (LXPAPP_BATCH.ID = LXPAPP_BATCHRECORDEDVDOLIST.BATCH_ID) INNER JOIN LXPAPP_PLAYLIST YYY ON (LXPAPP_BATCHRECORDEDVDOLIST.PLAYLIST_ID = YYY.ID) WHERE LXPAPP_BATCHLEARNER.LEARNER_ID = ' + str(request.user.id) + ') GROUP BY ID, NAME, VTOTAL ORDER BY NAME')
             videocount = LXPModel.LearnerPlaylistCount.objects.all().filter(learner_id = request.user.id)
@@ -231,7 +231,7 @@ def learner_video_Course_subject_view(request):
             dif = tc- wc
 
             return render(request,'learner/video/learner_video_course_subject.html',{'subject':subject,'dif':dif,'per':per,'wc':wc,'tc':tc})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
  
 @login_required
@@ -308,14 +308,14 @@ def learner_see_sesseionmaterial_view(request,subject_id,video_id,pk):
 
 @login_required
 def learner_studymaterial_course_view(request):
-    try:    
+    #try:    
         if str(request.session['utype']) == 'learner':
             courses = LXPModel.Course.objects.raw('SELECT id, course_name, description, whatlearn, includes, themecolor, image , Topiccount, CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END as watchcount, ((CASE WHEN watchcount = 0 THEN 0 ELSE watchcount - 1 END)*100)/Topiccount as per FROM ( SELECT mainmod.id, mainmod.course_name, mainmod.description, mainmod.whatlearn, mainmod.includes, mainmod.themecolor, mainmod.image , (SELECT count(chpmod.topic) AS Topiccount FROM lxpapp_coursechapter INNER JOIN lxpapp_material chpmod ON (lxpapp_coursechapter.chapter_id = chpmod.chapter_id) WHERE lxpapp_coursechapter.course_id = mainmod.id ) AS Topiccount, ( SELECT count (lxpapp_learnermaterialwatched.id) as watchcount FROM lxpapp_learnermaterialwatched WHERE lxpapp_learnermaterialwatched.course_id = mainmod.id) as watchcount FROM lxpapp_batchcourse LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchcourse.batch_id = lxpapp_batch.id) LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id) LEFT OUTER JOIN lxpapp_course mainmod ON (lxpapp_batchcourse.course_id = mainmod.id) WHERE lxpapp_batchlearner.learner_id = ' + str(request.user.id) + ' )')
             if  not courses:
                 return render(request,'learner/studymaterial/learner_studymaterial_nocourse.html')
             else:        
                 return render(request,'learner/studymaterial/learner_studymaterial_course.html',{'courses':courses})
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
