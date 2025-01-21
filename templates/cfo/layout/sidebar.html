@@ -134,20 +134,6 @@
                         </a>
                     </li>
 					<li>
-                        <a class="has-arrow " href="{% url 'cfo-view-coursetype' %}" aria-expanded="false">
-                            <i class="bi bi-book"></i>
-                            <span class="nav-text">Course Type</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li>
-                                <a href="{% url 'cfo-add-coursetype' %}">Add Course Type</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'cfo-view-coursetype' %}">View Course Type</a>
-                            </li>
-                        </ul>
-                    </li>
-					<li>
                         <a class="has-arrow " href="{% url 'cfo-view-batch' %}" aria-expanded="false">
                             <i class="bi bi-people"></i>
                             <span class="nav-text">Batch</span>
@@ -163,7 +149,7 @@
                     </li>
                     <li>
                         <a class="has-arrow " href="{% url 'cfo-scheduler-list' %}" aria-expanded="false">
-                            <i class="bi bi-book"></i>
+                            <i class="bi bi-alarm"></i>
                             <span class="nav-text">Scheduler</span>
                         </a>
                         <ul aria-expanded="false">
@@ -178,13 +164,27 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a class="has-arrow " href="{% url 'cfo-view-coursetype' %}" aria-expanded="false">
+                            <i class="bi bi-book"></i>
+                            <span class="nav-text">Course Type</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li>
+                                <a href="{% url 'cfo-add-coursetype' %}">Add Course Type</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'cfo-view-coursetype' %}">View Course Type</a>
+                            </li>
+                        </ul>
+                    </li>
                     <div class="instructor-title">
                         <h6 class="ps-5 mt-2">ACCOUNT SETTINGS</h6>
                     </div>
         
                     <li class="nav-item">
                         <a href="{% url 'user-profile-update'%}" class="nav-link">
-                            <i class="bi bi-people"></i> Update Profile
+                            <i class="bi bi-person-circle"></i> Update Profile
                         </a>
                     </li>
                     <li>
@@ -194,6 +194,12 @@
                         </a>
                     <li>
                 </ul>
-				
+                <div class="plus-box">
+                    
+                </div>
+                <div class="copyright">
+                    <p><strong>NubeEra Learning</strong> © 2025 All Rights Reserved</p>
+                    <p class="fs-12"><span class="heart"></span</p>
+                </div>
 			</div>
         </div>
