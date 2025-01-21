@@ -22,7 +22,7 @@
               </div> -->
             </div>
             <div class="card-body py-0">
-              <div class="table-responsive">
+              <div class="table-responsive" style="height: 100vh;">
                 <table class="table display mb-4 dataTablesCard order-table card-table text-black application" id="application-tbl1">
                   <thead>
                     <tr>
@@ -64,13 +64,13 @@
                       <td>{{t.mobile}}</td>
                       <td>
                         {% if t.status %}
-                        <span class="badge  light badge-success">
+                        <a href="{% url 'inactive-user' t.id  %}" class="badge  light badge-success">
                           Active
-                        </span>
+                        </a>
                         {% else %}
-                        <span class="badge  light badge-danger">
+                        <a href="{% url 'active-user' t.user_id t.id  %}" class="badge  light badge-danger">
                           On Hold
-                        </span>
+                        </a>
                         {% endif %}
                       </td>
                       <td>
@@ -81,11 +81,6 @@
                             </svg>
                           </a>
                           <div class="dropdown-menu dropdown-menu-start">
-                            {% if t.status %}
-                            <a class="dropdown-item" href="{% url 'inactive-user' t.id  %}" >Make On Hold</a>
-                            {% else %}
-                            <a class="dropdown-item" href="{% url 'active-user' t.user_id t.id  %}" >Make Active</a>
-                            {% endif %}
                             <a class="dropdown-item" href="{% url 'admin-view-user-log-details' t.user_id  %}">Check Login Details</a>
                             <a class="dropdown-item" href="{% url 'admin-view-user-activity-details' t.user_id  %}">Check Activity Details</a>
                             <a class="dropdown-item" href="{% url 'update-user' t.user.first_name t.user.last_name t.user_id t.id  %}">Edit</a>
