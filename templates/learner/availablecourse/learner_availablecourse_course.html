@@ -3,7 +3,6 @@
 {%load static%}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/static/getskills/css/style.css">
-{% for d in moddet %}
 
 <style>
     ul.breadcrumb li+li:before {
@@ -88,6 +87,8 @@
             <div class="col-xl-7">
                 <div class="card  course-dedails-bx">
                     <div class="card-body pt-0">
+                        {% for d in moddet %}
+
                         <div class="description pt-3">
                             <h2>Description</h2>
                             <p>{{d.description}}</p>
