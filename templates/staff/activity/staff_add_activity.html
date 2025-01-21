@@ -22,7 +22,7 @@
 	</nav>
 </div>
 <h2 style="text-align:center;">Add Activity</h2>
-<form method="POST" id="activityForm" data-courses-url="{% url 'ajax_load_chapters' %}" autocomplete="off"
+<form method="POST" id="activityForm" data-modules-url="{% url 'ajax_load_chapters' %}" autocomplete="off"
 	style="margin:100px;margin-top: 0px;">
 	{%csrf_token%}
 	<div class="form-group">
@@ -80,7 +80,7 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 	$("#id_subject").change(function () {
-		var url = $("#activityForm").attr("data-courses-url");  // get the url of the `load_topics` view
+		var url = $("#activityForm").attr("data-modules-url");  // get the url of the `load_topics` view
 		var subjectId = $(this).val();  // get the selected subject ID from the HTML input
 
 		$.ajax({                       // initialize an AJAX request

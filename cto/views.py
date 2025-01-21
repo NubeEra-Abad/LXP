@@ -209,7 +209,7 @@ def cto_delete_subhead_view(request,pk):
 
 @login_required
 def cto_add_subject_view(request):
-    try:
+    #try:
         if str(request.session['utype']) == 'cto':
             form = LXPFORM.SubjectForm(request.POST or None)
             context = {
@@ -234,7 +234,7 @@ def cto_add_subject_view(request):
                 else:
                     messages.error(request, "Fill Form Properly")
             return render(request, 'cto/subject/add_edit_subject.html', context)
-    except:
+    #except:
         return render(request,'lxpapp/404page.html')
 
 @login_required
