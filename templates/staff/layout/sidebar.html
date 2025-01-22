@@ -5,7 +5,7 @@
     <div class="settings-widget dash-profile">
         <div class="settings-menu p-0">
             <div class="profile-bg">
-                <img src="/static/dreamlms/img/instructor-profile-bg.jpg" alt="">
+                
                 <div class="profile-img">
                     {% if request.user.userprofile_set.first.profile_img %}
                     <a href="{% url 'user-profile' %}"><img
@@ -89,7 +89,7 @@
                 </ul>
             </li>
 
-            <li>
+            <!-- <li>
                 <a class="has-arrow " href="{% url 'staff-view-k8sterminal' %}" aria-expanded="false">
                     <i class="bi bi-book"></i>
                     <span class="nav-text">Lab (K8S)</span>
@@ -120,7 +120,7 @@
                 <a href="https://shell.cloud.google.com/?show=terminal" class="nav-link">
                     <i class="feather-book"></i> Lab Cloud Shell
                 </a>
-            </li>
+            </li> -->
             <li>
                 <a class="has-arrow " href="{% url 'staff-view-chapterquestion' %}" aria-expanded="false">
                     <i class="bi bi-book"></i>

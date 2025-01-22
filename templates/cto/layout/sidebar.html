@@ -19,51 +19,7 @@
                             <span class="nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a class="has-arrow " href="{% url 'cto-view-subject' %}" aria-expanded="false">
-                            <i class="bi bi-book"></i>
-                            <span class="nav-text">Subjects</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li>
-                                <a href="{% url 'cto-add-subject' %}">Add Subjects</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'cto-view-subject' %}">View Subjects</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'cto-upload-subject-details-csv' %}">Upload Subject CSV</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow " href="{% url 'cto-view-chapter' %}" aria-expanded="false">
-                            <i class="bi bi-book-half"></i>
-                            <span class="nav-text">Chapters</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li>
-                                <a href="{% url 'cto-add-chapter' %}">Add Chapters</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'cto-view-chapter' %}">View Chapters</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow " href="{% url 'cto-view-topic' %}" aria-expanded="false">
-                            <i class="bi bi-book-half"></i>
-                            <span class="nav-text">Topics</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li>
-                                <a href="{% url 'cto-add-topic' %}">Add Topics</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'cto-view-topic' %}">View Topics</a>
-                            </li>
-                        </ul>
-                    </li>
+                    
                     <li>
                         <a class="has-arrow " href="{% url 'cto-view-course' %}" aria-expanded="false">
                             <i class="bi bi-card-list"></i>
@@ -79,73 +35,113 @@
                         </ul>
                     </li>
                     <li>
-                        <a class="has-arrow " href="{% url 'cto-sync-youtube' %}" class="" aria-expanded="false">
+                        <a class=" " href="{% url 'cto-sync-youtube' %}" class="" aria-expanded="false">
                             <i class="bi bi-arrow-repeat"></i>
                             <span class="nav-text">Sync Videos</span>
                         </a>
-                        <ul aria-expanded="false">
+                    </li>
+                    <li>
+                        <a class="has-arrow " href="#" aria-expanded="false">
+                            <i class="bi bi-book"></i>
+                            <span class="nav-text">MASTER ENTRIES</span>
+                        </a>
+                        <ul aria-example="false">
                             <li>
-                                <a href="{% url 'cto-sync-youtube' %}">Sync Videos</a>
+                                <a class="has-arrow " href="{% url 'cto-view-subject' %}" aria-expanded="false">
+                                    <i class="bi bi-book"></i>
+                                    <span class="nav-text">Subjects</span>
+                                </a>
+                                <ul aria-expanded="false">
+                                    <li>
+                                        <a href="{% url 'cto-add-subject' %}">Add Subjects</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cto-view-subject' %}">View Subjects</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cto-upload-subject-details-csv' %}">Upload Subject CSV</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
-                                <a href="{% url 'cto-lxp-upload-doc-file' %}">Video Material Upload</a>
+                                <a class="has-arrow " href="{% url 'cto-view-chapter' %}" aria-expanded="false">
+                                    <i class="bi bi-book-half"></i>
+                                    <span class="nav-text">Chapters</span>
+                                </a>
+                                <ul aria-expanded="false">
+                                    <li>
+                                        <a href="{% url 'cto-add-chapter' %}">Add Chapters</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cto-view-chapter' %}">View Chapters</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
-                                <a href="{% url 'cto-add-playlist' %}">Add Subject</a>
+                                <a class="has-arrow " href="{% url 'cto-view-topic' %}" aria-expanded="false">
+                                    <i class="bi bi-book-half"></i>
+                                    <span class="nav-text">Topics</span>
+                                </a>
+                                <ul aria-expanded="false">
+                                    <li>
+                                        <a href="{% url 'cto-add-topic' %}">Add Topics</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cto-view-topic' %}">View Topics</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
-                                <a href="{% url 'cto-view-playlist' %}">View Subject</a>
+                                <a class="has-arrow " href="{% url 'cto-view-mainhead' %}" aria-expanded="false">
+                                    <i class="bi bi-bookmark"></i>
+                                    <span class="nav-text">Main Headings</span>
+                                </a>
+                                <ul aria-expanded="false">
+                                    <li>
+                                        <a href="{% url 'cto-add-mainhead' %}">Add Main Headings</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cto-view-mainhead' %}">View Main Headings</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
-                                <a href="{% url 'cto-view-video-list' %}">View Chapter</a>
+                                <a class="has-arrow " href="{% url 'cto-view-subhead' %}" aria-expanded="false">
+                                    <i class="bi  bi-bookmark-dash"></i>
+                                    <span class="nav-text">Sub Headings</span>
+                                </a>
+                                <ul aria-expanded="false">
+                                    <li>
+                                        <a href="{% url 'cto-add-subhead' %}">Add Sub Headings</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cto-view-subhead' %}">View Sub Headings</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
-                    <div class="instructor-title">
-                        <h6 class="ps-5 mt-3">MASTER ENTRIES</h6>
-                    </div>
                     <li>
-                        <a class="has-arrow " href="{% url 'cto-view-mainhead' %}" aria-expanded="false">
-                            <i class="bi bi-bookmark"></i>
-                            <span class="nav-text">Main Headings</span>
+                        <a class="has-arrow " href="#" aria-expanded="false">
+                            <i class="bi bi-book"></i>
+                            <span class="nav-text">ACCOUNT SETTINGS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li>
-                                <a href="{% url 'cto-add-mainhead' %}">Add Main Headings</a>
+                            <li class="nav-item">
+                                <a href="{% url 'user-profile-update'%}" class="nav-link">
+                                    <i class="bi-person-circle"></i> Update Profile
+                                </a>
                             </li>
                             <li>
-                                <a href="{% url 'cto-view-mainhead' %}">View Main Headings</a>
+                                <a href="{% url 'logout' %}" class="" aria-expanded="false">
+                                    <i class="bi bi-door-closed"></i>
+                                    <span class="nav-text">Sign Out</span>
+                                </a>
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a class="has-arrow " href="{% url 'cto-view-subhead' %}" aria-expanded="false">
-                            <i class="bi  bi-bookmark-dash"></i>
-                            <span class="nav-text">Sub Headings</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li>
-                                <a href="{% url 'cto-add-subhead' %}">Add Sub Headings</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'cto-view-subhead' %}">View Sub Headings</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <div class="instructor-title">
-                        <h6 class="ps-5 mt-3">ACCOUNT SETTINGS</h6>
-                    </div>
-                    <li class="nav-item">
-                        <a href="{% url 'user-profile-update'%}" class="nav-link">
-                            <i class="bi-person-circle"></i> Update Profile
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout' %}" class="" aria-expanded="false">
-                            <i class="bi bi-door-closed"></i>
-                            <span class="nav-text">Sign Out</span>
-                        </a>
-                    </li>
+
+                   
                 </ul>
                 <div class="plus-box">
                 
