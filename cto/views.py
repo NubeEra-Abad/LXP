@@ -500,7 +500,8 @@ def cto_add_course_view(request):
                         if x[0:4] != "s___":
                            ch = LXPModel.CourseChapter.objects.create(
                                     course_id = course.id,
-                                    chapter_id = x[4:])
+                                    chapter_id = x[4:],
+                                    subject_id = LXPModel.Chapter.objects.get(id=x[4:]).subject_id)
                            ch.save()
                     messages.success(request, "Successfully Updated")
                     return redirect(reverse('cto-add-course'))

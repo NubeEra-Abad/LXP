@@ -128,5 +128,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-LXP.sqlite3
-LXP.sqlite3
+/LXP.sqlite3
+./LXP.sqlite3

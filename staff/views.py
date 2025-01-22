@@ -16,28 +16,19 @@ from django.views.decorators.csrf import csrf_exempt
 def staff_dashboard_view(request):
     #try:
         if str(request.session['utype']) == 'staff':
-            notification = LXPModel.staffNotification.objects.all().filter(staff_id = request.user.id,status = False)
             mco = LXPModel.Exam.objects.filter(questiontpye='MCQ').count()
             short = LXPModel.Exam.objects.filter(questiontpye='ShortAnswer').count()
             mcqques= LXPModel.McqQuestion.objects.all().count()
             sques= LXPModel.ShortQuestion.objects.all().count()
-            schedulers = LXPModel.Scheduler.objects.annotate(
-                status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
-                completion_date=Case(
-                    When(status_sum__gte=100, then=Max('schedulerstatus__date')),
-                    default=Value(None),
-                )).filter(staff_id = request.user.id, status_sum__lte=99)
             dict={
             'total_course':0,
-            schedulers:schedulers,
             'total_exam':0,
             'total_shortExam':0, 
             'total_question':0,
             'total_short':0,
             'total_learner':0,
-            'notifications':notification,
             }
-            return render(request,'staff/staff_dashboard.html',{'schedulers':schedulers,'mcqques':mcqques,'sques':sques,'mco':mco,'short':short,'dict':dict})
+            return render(request,'staff/staff_dashboard.html',{'mcqques':mcqques,'sques':sques,'mco':mco,'short':short,'dict':dict})
         else:
             return render(request,'loginrelated/diffrentuser.html')
     #except:
