@@ -83,7 +83,7 @@ class Course(models.Model):
     description = models.CharField(max_length=1000,default='')
     whatlearn = models.CharField(max_length=1000,default='')
     includes = models.CharField(max_length=1000,default='')
-    cat=(('1','Red'),('2','Green'),('3','Blue'),('4','Orange'))
+    cat=(('1','Advanced'),('2','Easy'),('3','Intermideate'))
     themecolor=models.CharField(max_length=200,choices=cat,default='Green')
     tags = models.CharField(max_length=10000,default='')
     image = models.CharField(max_length=1000,default='')
