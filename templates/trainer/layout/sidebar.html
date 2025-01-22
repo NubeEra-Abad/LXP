@@ -43,7 +43,7 @@
                 </ul>
             </li>
             <li>
-                <a class="has-arrow " href="{% url 'trainer-schedulerstatus-list' %}" aria-expanded="false">
+                <a class="has-arrow " href="#" aria-expanded="false">
                     <i class="bi bi-book"></i>
                     <span class="nav-text">Materials</span>
                 </a>
@@ -60,17 +60,17 @@
             </li>
 
             <li>
-                <a class="has-arrow " href="{% url 'trainer-schedulerstatus-list' %}" aria-expanded="false">
+                <a class="has-arrow " href="#" aria-expanded="false">
                     <i class="bi bi-book"></i>
                     <span class="nav-text">Labs</span>
                 </a>
                 <ul aria-expanded="false">
-                    <a href="{% url 'trainer-add-k8sterminal' %}"  class="nav-link">Add Lab (K8S)</a>
-                    <a href="{% url 'trainer-view-k8sterminal' %}"  class="nav-link">View Lab (K8S)</a>
-                    <a href="{% url 'trainer-pyton-terminal'%}" class="nav-link">
+                    <a href="{% url 'trainer-add-k8sterminal' %}" target="_blank" class="nav-link">Add Lab (K8S)</a>
+                    <a href="{% url 'trainer-view-k8sterminal' %}" target="_blank"  class="nav-link">View Lab (K8S)</a>
+                    <a href="{% url 'trainer-pyton-terminal'%}" target="_blank" class="nav-link">
                        Python
                     </a>
-                    <a href="{% url 'trainer-linux-terminal'%}" class="nav-link">
+                    <a href="{% url 'trainer-linux-terminal'%}" target="_blank" class="nav-link">
                         linux
                     </a>
                     <a target="_blank" href="https://shell.cloud.google.com/?show=terminal" class="nav-link">
@@ -80,7 +80,7 @@
             </li>
 
             <li>
-                <a class="has-arrow " href="{% url 'trainer-schedulerstatus-list' %}" aria-expanded="false">
+                <a class="has-arrow " href="#" aria-expanded="false">
                     <i class="bi bi-book"></i>
                     <span class="nav-text">Evaluations</span>
                 </a>

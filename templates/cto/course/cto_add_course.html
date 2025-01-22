@@ -105,144 +105,133 @@
 
 	<div class="content-body">
 		<div class="container-fluid" style="overflow: auto;">
-		<div>
-			<nav aria-label="breadcrumb">
-				<ul class="breadcrumb">
-					<li><a href="{% url 'cto-dashboard'%}">Dashboard</a></li>
-					<li><a href="../../../../cto/cto-view-course">View Course</a></li>
-					{% if 'Edit' in page_title %}
-					<li><a href="../../../../cto/cto-add-course">Add Course</a></li>
-					{% endif %}
-					<li aria-current="page">{{page_title}}</li>
-				</ul>
-			</nav>
-		</div>
-		<div class="card">
-			<div class="card-header"><h2 style="text-align:center;">{{page_title}}</h2></div>
-			<div class="card-body">
-				<form method="post" id="courseForm" data-subheads-url="{% url 'ajax_load_subheads' %}" autocomplete="off">
-					{%csrf_token%}
-					<div class="form-group">
-						<div class="">
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="course_name">Course Name</label>
-									<input type="text" name="course_name" id="course_name" class="form-control"
-										placeholder="Course Name" required value={{mod_name}}>
+			<div>
+				<nav aria-label="breadcrumb">
+					<ul class="breadcrumb">
+						<li><a href="{% url 'cto-dashboard'%}">Dashboard</a></li>
+						<li><a href="../../../../cto/cto-view-course">View Course</a></li>
+						{% if 'Edit' in page_title %}
+						<li><a href="../../../../cto/cto-add-course">Add Course</a></li>
+						{% endif %}
+						<li aria-current="page">{{page_title}}</li>
+					</ul>
+				</nav>
+			</div>
+			
+			<div class="card" >
+				<div class="card-header">
+					<h4 style="text-align:center;">{{page_title}}</h4>
+				</div>
+				<div class="card-body">
+					<form method="post" id="courseForm" data-subheads-url="{% url 'ajax_load_subheads' %}"
+						autocomplete="off">
+						{%csrf_token%}
+						<div class="form-group">
+							<div class="">
+								<div class="row mb-3">
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="course_name">Course Name</label>
+										<input type="text" name="course_name" id="course_name" class="form-control"
+											placeholder="Course Name" required value={{mod_name}}>
+									</div>
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="description">Description</label>
+										<input type="text" name="description" id="description" class="form-control"
+											placeholder="Description" required value={{description}}>
+									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6 col-xl-6">
-									<label for="mainhead_name">Main Head Name</label>
-									{% render_field form.mainhead class="form-control"%}
+								<div class="row mb-3">
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="mainhead_name">Select Category</label>
+										{% render_field form.mainhead class="form-control"%}
+									</div>
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="subhead_name">Select Sub Category</label>
+										{% render_field form.subhead class="form-control"%}
+									</div>
 								</div>
-								<div class="col-md-6 col-xl-6">
-									<label for="subhead_name">Sub Head Name</label>
-									{% render_field form.subhead class="form-control"%}
-								</div>
-							</div>
-		
-							<div>
-								<div class="row">
-		
-									<div class="col-md-12 col-xl-12">
-		
+								<div class="row mb-3">
+									<div class="col-sm-12 col-md-6 col-xl-6">
 										<div id="example">
-		
 											<div class="demo-section">
 												<label for="chapter_name">Chapters</label>
-												<input class="k-textbox" class="form-control" placeholder="Search Here" />
+												<input class="k-textbox form-control" id="c_search" class="form-control"
+													placeholder="Search Here" />
 												<div id="treeview"></div>
-												<input hidden type="text" name="chapterlist" id="chapterlist" class="form-control"
-													placeholder="chapter list">
+												<input hidden type="text" name="chapterlist" id="chapterlist"
+													class="form-control" placeholder="chapter list">
 											</div>
 										</div>
 									</div>
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="themecolor">Select Difficulty Level</label>
+										{% render_field form.themecolor class="form-control"%}
+									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="description">Description</label>
-									<input type="text" name="description" id="description" class="form-control"
-										placeholder="Decription" required value={{description}}>
-		
+								<!-- <div class="row">
+									<div class="col-md-12 col-xl-12">
+										<label for="whatlearn">What Student will Learn</label>
+
+										<textarea name="whatlearn" class="ckeditor"
+											required></textarea>
+										<script type="text/javascript">
+											CKEDITOR.replace('whatlearn');
+											CKEDITOR.add
+											CKEDITOR.instances['whatlearn'].setData('{{whatlearn}}');         
+										</script>
+									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="whatlearn">What Student will Learn</label>
-		
-									<textarea name="whatlearn" style="height:30px;" class="ckeditor" required></textarea>
-									<script type="text/javascript">
-										CKEDITOR.replace('whatlearn');
-										CKEDITOR.add
-										CKEDITOR.instances['whatlearn'].setData('{{whatlearn}}');         
-									</script>
+								<div class="row">
+									<div class="col-md-12 col-xl-12">
+										<label for="includes">Course Include</label>
+										<textarea name="includes" style="height:40px;" class="ckeditor"
+											required></textarea>
+										<script type="text/javascript">
+											CKEDITOR.replace('includes');
+											CKEDITOR.add
+											CKEDITOR.instances['includes'].setData('{{includes}}');         
+										</script>
+									</div>
+								</div> -->
+								<div class="row mb-3">
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="tags">Tags</label>
+										<input type="text" name="tag-input" id="tag-input"
+											class="form-control list-unstyled" placeholder="Tags">
+										<input type="text" id="tag-output" name="tag-output" class="form-control"
+											readonly hidden>
+									</div>
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="image">Image Link</label>
+										<input type="text" name="image" id="image" class="form-control"
+											placeholder="Path to Image" required value={{image}}>
+									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="includes">Course Include</label>
-									<textarea name="includes" style="height:40px;" class="ckeditor" required></textarea>
-									<script type="text/javascript">
-										CKEDITOR.replace('includes');
-										CKEDITOR.add
-										CKEDITOR.instances['includes'].setData('{{includes}}');         
-									</script>
+								<div class="row mb-3">
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="banner">Banner Link</label>
+										<input type="text" name="banner" id="banner" class="form-control"
+											placeholder="Path to Banner Image" required value={{banner}}>
+									</div>
+									<div class="col-sm-12 col-md-6 col-xl-6">
+										<label for="price">Price</label>
+										<input type="number" name="price" id="price" class="form-control"
+											placeholder="Price" required value={{price}}>
+									</div>
 								</div>
+								<button class="btn btn-primary" type="submit"
+									onclick="return checkvalid(event);">Submit</button>
 							</div>
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="themecolor">Theme Color</label>
-									{% render_field form.themecolor class="form-control"%}
-		
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="tags">Tags</label>
-									<input type="text" name="tag-input" id="tag-input" class="form-control list-unstyled"
-										placeholder="Tags">
-									<input type="text" id="tag-output" name="tag-output" class="form-control" readonly hidden>
-								</div>
-							</div>
-		
-		
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="image">Image Link</label>
-									<input type="text" name="image" id="image" class="form-control" placeholder="Path to Image"
-										required value={{image}}>
-								</div>
-							</div>
-		
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="banner">Banner Link</label>
-									<input type="text" name="banner" id="banner" class="form-control"
-										placeholder="Path to Banner Image" required value={{banner}}>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 col-xl-12">
-									<label for="price">Price</label>
-									<input type="number" name="price" id="price" class="form-control" placeholder="Price"
-										required value={{price}}>
-								</div>
-							</div>
-							<button class="btn btn-primary form-control" type="submit"
-								onclick="return checkvalid(event);">SUBMIT</button>
 						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 
 
 	<script>
-		$("input").on("input", function () {
+		$("#c_search").on("input", function () {
 			var query = this.value.toLowerCase();
 			var dataSource = $("#treeview").data("kendoTreeView").dataSource;
 
@@ -393,14 +382,11 @@
 	</script>
 
 	<!-- Required vendors -->
-	
 	<script src="/static/getskills/vendor/jquery-nice-select//static/getskills/js/jquery.nice-select.min.js"></script>
 	<script src="/static/getskills/vendor/swiper//static/getskills/js/swiper-bundle.min.js"></script>
 	<script src="/static/getskills/js/dlab.carousel.js"></script>
 	<script src="/static/getskills/js/custom.js"></script>
 	<script src="/static/getskills/js/dlabnav-init.js"></script>
 	<script src="/static/getskills/js/styleSwitcher.js"></script>
-	<script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
-	<script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
 </div>
 {% endblock content %}
