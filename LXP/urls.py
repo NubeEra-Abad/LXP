@@ -27,7 +27,6 @@ urlpatterns = [
     path('staff/',include('staff.urls')),
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
-    path('uploadfolder', views.upload_folder,name='uploadfolder'),   
     path('indexpage/', views.afterlogin_view,name='indexpage'),   
     path('user-session-expired', views.session_expire_view,name='user-session-expired'),   
 
@@ -55,7 +54,6 @@ urlpatterns = [
     path('ushms', TemplateView.as_view(template_name='blogs/ushms.html'),name='ushms'),
     path('ytemail', TemplateView.as_view(template_name='yt.html'),name='ytemail'),
 
-    path('add-emails-to-video/', views.add_emails_to_video, name='add_emails_to_video'),
 
 
     path('nubeera-docs', TemplateView.as_view(template_name='docs/docsindex.html'),name='nubeera-docs'),

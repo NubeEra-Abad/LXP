@@ -171,10 +171,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
    'https://www.googleapis.com/auth/userinfo.email',
    'https://www.googleapis.com/auth/userinfo.profile',
 ]
-AWS_BUCKET_NAME='bkt-test-08nov'
-AWS_ACCESS_KEY='AKIATZQFG2PZIUPD23GA'
-AWS_SECRET_ACCESS_KEY='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'
-AWS_DOMAIN='http://bkt-test-08nov.s3.amazonaws.com/'
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
         messages.INFO: 'alert-info',
@@ -182,9 +178,5 @@ MESSAGE_TAGS = {
         messages.WARNING: 'alert-warning',
         messages.ERROR: 'alert-danger',
 }
-
-GITHUB_ACCESS_TOKEN = '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'
-GITHUB_REPO_OWNER = 'teamnubeera'
-GITHUB_REPO_NAME = 'LXP_Video_docs'
 
 JITSI_SECRET = "a5f9c73e4d85e0c9f25b2d4394b6d24d5c00f27aaebef34f97f13a9f6f1c9ec7"

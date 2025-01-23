@@ -11,11 +11,7 @@ urlpatterns = [
     path('mentor-view-material', views.mentor_view_material_view,name='mentor-view-material'),
     path('mentor-delete-material/<int:pk>', views.mentor_delete_material_view,name='mentor-delete-material'),
     path('mentor-show-material/<materialtype>,/<int:pk>', views.mentor_show_material_view,name='mentor-show-material'),
-    path('mentor-material-upload-file', views.mentor_material_upload_file_view,name='mentor-material-upload-file'),
-    path('mentor-material-start-upload-file', views.mentor_material_start_upload_file_view,name='mentor-material-start-upload-file'),
     path('mentor-upload-material-details-csv', views.mentor_upload_material_details_csv_view,name='mentor-upload-material-details-csv'),
-    path('mentor-upload-material-folder', views.mentor_upload_material_folder_view,name='mentor-upload-material-folder'),
-    path('mentor-start-upload-material-folder', views.mentor_start_upload_material_folder_view,name='mentor-start-upload-material-folder'),
 
     path('mentor-sessionmaterial', views.mentor_sessionmaterial_view,name='mentor-sessionmaterial'),
     path('mentor-add-sessionmaterial', views.mentor_add_sessionmaterial_view,name='mentor-add-sessionmaterial'),
@@ -94,11 +90,7 @@ urlpatterns = [
     path('mentor-view-activity', views.mentor_view_activity_view,name='mentor-view-activity'),
     path('mentor-delete-activity/<int:pk>', views.mentor_delete_activity_view,name='mentor-delete-activity'),
     path('mentor-show-activity/<activitytype>,/<int:pk>', views.mentor_show_activity_view,name='mentor-show-activity'),
-    path('mentor-activity-upload-file', views.mentor_activity_upload_file_view,name='mentor-activity-upload-file'),
-    path('mentor-activity-start-upload-file', views.mentor_activity_start_upload_file_view,name='mentor-activity-start-upload-file'),
     path('mentor-upload-activity-details-csv', views.mentor_upload_activity_details_csv_view,name='mentor-upload-activity-details-csv'),
-    path('mentor-upload-activity-folder', views.mentor_upload_activity_folder_view,name='mentor-upload-activity-folder'),
-    path('mentor-start-upload-activity-folder', views.mentor_start_upload_activity_folder_view,name='mentor-start-upload-activity-folder'),    
     
 
     

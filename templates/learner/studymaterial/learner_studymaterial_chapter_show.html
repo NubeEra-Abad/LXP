@@ -84,9 +84,24 @@
                             <div>
                                 <img src="/static/dreamlms/img/icon/exam.svg" alt="">
                             </div>
-                            {% endif %}
 
                         </li>
+                        {% endif %}
+
+                        {% if forloop.last and activity %}
+                        {% for act in activity %}
+                        <li>
+                            <p class="play-intro">
+                                <img src="/static/dreamlms/img/icon/exam.svg" alt=""><span>
+                                <a href='https://nbviewer.org/github{{act.urlvalue|cut:"https://github.com"}}'
+                                class="link" data-id="{{ act.id }}">{{act.description}}</a></span>
+                            </p>
+
+                        </li>
+                        {% endfor %}
+
+                        {% endif %}
+
                         {% endfor %}
                     </ul>
                 </div>

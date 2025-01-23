@@ -11,11 +11,7 @@ urlpatterns = [
     path('staff-view-material', views.staff_view_material_view,name='staff-view-material'),
     path('staff-delete-material/<int:pk>', views.staff_delete_material_view,name='staff-delete-material'),
     path('staff-show-material/<materialtype>,/<int:pk>', views.staff_show_material_view,name='staff-show-material'),
-    path('staff-material-upload-file', views.staff_material_upload_file_view,name='staff-material-upload-file'),
-    path('staff-material-start-upload-file', views.staff_material_start_upload_file_view,name='staff-material-start-upload-file'),
     path('staff-upload-material-details-csv', views.staff_upload_material_details_csv_view,name='staff-upload-material-details-csv'),
-    path('staff-upload-material-folder', views.staff_upload_material_folder_view,name='staff-upload-material-folder'),
-    path('staff-start-upload-material-folder', views.staff_start_upload_material_folder_view,name='staff-start-upload-material-folder'),
 
     path('staff-sessionmaterial', views.staff_sessionmaterial_view,name='staff-sessionmaterial'),
     path('staff-add-sessionmaterial', views.staff_add_sessionmaterial_view,name='staff-add-sessionmaterial'),
@@ -87,9 +83,5 @@ urlpatterns = [
     path('staff-view-activity', views.staff_view_activity_view,name='staff-view-activity'),
     path('staff-delete-activity/<int:pk>', views.staff_delete_activity_view,name='staff-delete-activity'),
     path('staff-show-activity/<int:pk>', views.staff_show_activity_view,name='staff-show-activity'),
-    path('staff-activity-upload-file', views.staff_activity_upload_file_view,name='staff-activity-upload-file'),
-    path('staff-activity-start-upload-file', views.staff_activity_start_upload_file_view,name='staff-activity-start-upload-file'),
     path('staff-upload-activity-details-csv', views.staff_upload_activity_details_csv_view,name='staff-upload-activity-details-csv'),
-    path('staff-upload-activity-folder', views.staff_upload_activity_folder_view,name='staff-upload-activity-folder'),
-    path('staff-start-upload-activity-folder', views.staff_start_upload_activity_folder_view,name='staff-start-upload-activity-folder'),
 ]
