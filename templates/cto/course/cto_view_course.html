@@ -55,6 +55,8 @@
                                             onclick="addToCart('{{ t.id }}')">Add To Cart</a> -->
                                         <a href="{% url 'cto-update-course' t.id %}"
                                             class="btn btn-primary btn-sm">Details</a>
+                                        <a href="{% url 'cto-delete-course' t.id %}"
+                                            class="btn btn-danger btn-sm">Delete</a>
                                     </div>
                                 </div>
                             </div>
