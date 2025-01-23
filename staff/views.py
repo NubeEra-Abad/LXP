@@ -43,10 +43,16 @@ def staff_add_material_view(request):
                 subject = request.POST.get('subject')
                 chapter = request.POST.get('chapter')
                 mtype = request.POST.get('mtype')
-                topic = request.POST.get('topic')
+                topic = name = request.POST.get('topic')
                 urlvalue = request.POST.get('urlvalue')
                 description = request.POST.get('description')
                 material = LXPModel.Material.objects.create(subject_id = subject,chapter_id = chapter,topic = topic,mtype = mtype,urlvalue = urlvalue,description = description)
+                topic = LXPModel.Topic.objects.all().filter(topic_name__iexact = name)
+                if not topic:
+                    topic = LXPModel.Topic.objects.create(
+                                                topic_name = name,
+                                                chapter_id = chapter)
+                    topic.save()
                 material.save()
                 
             materialForm=LXPFORM.MaterialForm()

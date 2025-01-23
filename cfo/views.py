@@ -224,6 +224,7 @@ def cfo_update_batch_view(request,pk):
                 btrnr["last_name"]=c.last_name
                 btrnr["email"]=c.email
                 btrainer.append(btrnr)
+            btrainer = json.dumps(btrainer)
             batchlearners =  list(User.objects.raw('SELECT DISTINCT   auth_user.id,  auth_user.first_name , auth_user.last_name ,  auth_user.email,lxpapp_batchlearner.fee FROM  lxpapp_batchlearner  INNER JOIN auth_user ON (lxpapp_batchlearner.learner_id = auth_user.id)   WHERE lxpapp_batchlearner.batch_id = ' + str (pk)))
             blearner = []
             for c in batchlearners:
@@ -234,8 +235,16 @@ def cfo_update_batch_view(request,pk):
                 btrnr["email"]=c.email
                 btrnr["fee"]=c.fee
                 blearner.append(btrnr)
-            btrainer = json.dumps(btrainer)
             blearner = json.dumps(blearner)
+            courses = LXPModel.BatchCourse.objects.filter(batch_id=pk).select_related('course').values('course__course_name','course__id', 'batch_id')
+            course = []
+            for c in courses:
+                btrnr={}
+                btrnr["id"]=c['course__id']
+                btrnr["course_name"]=c['course__course_name']
+                course.append(btrnr)
+            course = json.dumps(course)
+            courses  = LXPModel.Course.objects.all()
             query = LXPModel.Batch.objects.get(id=pk)
             stdate = (query.stdate).strftime('%Y-%m-%d')
             enddate = (query.enddate).strftime('%Y-%m-%d')
@@ -253,7 +262,9 @@ def cfo_update_batch_view(request,pk):
             'enddate':enddate,
             'coursetype':coursetype,
             'bPList':bPList,
-            'PList':PList}
+            'PList':PList,
+            'courses':courses,
+            'selectedcourse':course}
             return render(request,'cfo/batch/cfo_update_batch.html',context=dict)
     #except:
         return render(request,'lxpapp/404page.html')
