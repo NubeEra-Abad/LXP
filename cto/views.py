@@ -57,7 +57,7 @@ def cto_add_mainhead_view(request):
                                                     mainhead_name = name)
                         mainhead.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-mainhead'))
+                        return redirect(reverse('cto-view-mainhead'))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -89,7 +89,7 @@ def cto_update_mainhead_view(request, pk):
                         mainhead.mainhead_name = name
                         mainhead.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-update-mainhead', args=[pk]))
+                        return redirect(reverse('cto-view-mainhead', args=[pk]))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -142,7 +142,7 @@ def cto_add_subhead_view(request):
                                                     subhead_name = name)
                         subhead.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-subhead'))
+                        return redirect(reverse('cto-view-subhead'))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -228,7 +228,7 @@ def cto_add_subject_view(request):
                                                     subject_name = name)
                         subject.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-subject'))
+                        return redirect(reverse('cto-view-subject'))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -260,7 +260,7 @@ def cto_update_subject_view(request, pk):
                         subject.subject_name = name
                         subject.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-update-subject', args=[pk]))
+                        return redirect(reverse('cto-view-subject', args=[pk]))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -364,7 +364,7 @@ def cto_add_chapter_view(request):
                                                     subject_id = subject)
                         chapter.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-chapter'))
+                        return redirect(reverse('cto-view-chapter'))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -504,7 +504,7 @@ def cto_add_course_view(request):
                                     subject_id = LXPModel.Chapter.objects.get(id=x[4:]).subject_id)
                            ch.save()
                     messages.success(request, "Successfully Updated")
-                    return redirect(reverse('cto-add-course'))
+                    return redirect(reverse('cto-view-course'))
                 except Exception as e:
                     messages.error(request, "Could Not Add " + str(e))
             return render(request, 'cto/course/cto_add_course.html', context)
@@ -721,7 +721,7 @@ def cto_upload_course_details_csv_view(request):
                                         topic_id=topid1
                                         )
                             coursedet.save()
-            return render(request,'cto/course/cto_upload_course_details_csv.html')
+            return render(request,'cto/course/cto_view_course.html')
     except:
         return render(request,'lxpapp/404page.html')
     
@@ -756,7 +756,7 @@ def cto_add_topic_view(request):
                                                     chapter_id = chapter)
                         topic.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-add-topic'))
+                        return redirect(reverse('cto-view-topic'))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
@@ -790,7 +790,7 @@ def cto_update_topic_view(request, pk):
                         topic.chapter_id = chapter
                         topic.save()
                         messages.success(request, "Successfully Updated")
-                        return redirect(reverse('cto-update-topic', args=[pk]))
+                        return redirect(reverse('cto-view-topic'))
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
                 else:
