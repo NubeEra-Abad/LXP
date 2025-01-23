@@ -20,7 +20,7 @@
 	<!-- FAVICONS ICON -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	
+
 	<link href="/static/getskills/vendor/jquery-nice-select//static/getskills/css/nice-select.css" rel="stylesheet">
 	<link href="/static/getskills/vendor/swiper//static/getskills/css/swiper-bundle.min.css" rel="stylesheet">
 	<!-- Style css -->
@@ -104,8 +104,7 @@
         ***********************************-->
 		<div class="footer">
 			<div class="copyright">
-				<p>Copyright © Designed by <a href="https://nubeera.com"
-					target="_blank">Nubeera</a> 2022</p>
+				<p>Copyright © Designed by <a href="https://nubeera.com" target="_blank">Nubeera</a> 2022</p>
 			</div>
 		</div>
 		<!--**********************************
@@ -139,9 +138,19 @@
 	<script src="/static/getskills/js/demo.js"></script>
 	<script src="/static/getskills/js/styleSwitcher.js"></script>
 	<script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+
 	<script>
 		$(document).ready(function () {
+			$.fn.dataTable.ext.errMode = 'none';
 			new DataTable('#dataTable');
+			$.fn.dataTable.ext.errMode = function (settings, techNote, message) {
+				console.warn("DataTables Warning:", message);
+			};
+
 			$(".pagination-down a").on('click', function () {
 				$(".pagination-down a").removeClass("active");
 				$(this).addClass("active");

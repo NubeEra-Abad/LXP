@@ -163,6 +163,57 @@
         }
       }
     }
+
+    function validateForm() {
+      let errors = [];
+
+      // Get form values
+      const batchName = document.getElementById("id_batch_name"); // Adjust ID if needed
+      const courseType = document.getElementById("id_coursetypeID"); // Adjust ID if needed
+      const startDate = document.getElementById("id_stdate"); // Adjust ID if needed
+      const endDate = document.getElementById("id_enddate"); // Adjust ID if needed
+      const course = document.getElementById("field3");
+      const learner = document.getElementById("productID");
+
+      // Validate Batch Name
+      if (!batchName || batchName.value.trim() === "") {
+        errors.push("Batch Name is required.");
+      }
+
+      // Validate Course Type
+      if (!courseType || courseType.value.trim() === "") {
+        errors.push("Course Type is required.");
+      }
+
+      // Validate Start and End Dates
+      if (!startDate || startDate.value.trim() === "") {
+        errors.push("Start Date is required.");
+      }
+      if (!endDate || endDate.value.trim() === "") {
+        errors.push("End Date is required.");
+      }
+      if (startDate && endDate && new Date(startDate.value) > new Date(endDate.value)) {
+        errors.push("Start Date cannot be later than End Date.");
+      }
+
+      // Validate Course Selection
+      if (course && course.selectedOptions.length === 0) {
+        errors.push("Please select at least one Course.");
+      }
+
+      // Validate Learner Selection
+      if (learner && learner.value.trim() === "") {
+        errors.push("Please select a Learner.");
+      }
+
+      // If there are errors, show an alert and prevent form submission
+      if (errors.length > 0) {
+        alert("Please correct the following errors:\n" + errors.join("\n"));
+        return false;
+      }
+
+      return true; // Allow form submission if no errors
+    }
   </script>
 </head>
 
@@ -294,7 +345,22 @@
       onclick="return generateJSON(event);">SUBMIT</button>
   </form> -->
 
-  
+  {% if message %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if error %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+
   <div class="card">
     <div class="card-header d-block">
       <h4 class="card-title">Add Batch</h4>
@@ -303,227 +369,6 @@
       <form onsubmit="return validateForm()" method="POST" autocomplete="off">
         {% csrf_token %}
         <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">
-        <div class="card">
-          <div class="card-header">
-              <h4 class="card-title">Form step</h4>
-          </div>
-          <div class="card-body">
-<div id="smartwizard" class="form-wizard order-create sw sw-theme-default sw-justified">
-<ul class="nav nav-wizard">
-  <li><a class="nav-link inactive active" href="#wizard_Service"> 
-    <span>1</span> 
-  </a></li>
-  <li><a class="nav-link inactive" href="#wizard_Time">
-    <span>2</span>
-  </a></li>
-  <li><a class="nav-link inactive" href="#wizard_Details">
-    <span>3</span>
-  </a></li>
-  <li><a class="nav-link inactive" href="#wizard_Payment">
-    <span>4</span>
-  </a></li>
-</ul>
-<div class="tab-content" style="height: 283.225px;">
-  <div id="wizard_Service" class="tab-pane" role="tabpanel" style="display: block;">
-    <div class="row">
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">First Name*</label>
-          <input type="text" name="firstName" class="form-control" placeholder="Parsley" required="">
-        </div>
-      </div>
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Last Name*</label>
-          <input type="text" name="lastName" class="form-control" placeholder="Montana" required="">
-        </div>
-      </div>
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Email Address*</label>
-          <input type="email" class="form-control" id="inputGroupPrepend2" aria-describedby="inputGroupPrepend2" placeholder="example@example.com.com" required="">
-        </div>
-      </div>
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Phone Number*</label>
-          <input type="text" name="phoneNumber" class="form-control" placeholder="(+1)408-657-9007" required="">
-        </div>
-      </div>
-      <div class="col-lg-12 mb-3">
-        <div class="mb-3">
-          <label class="text-label form-label">Where are you from*</label>
-          <input type="text" name="place" class="form-control" required="">
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="wizard_Time" class="tab-pane" role="tabpanel" style="display: none;">
-    <div class="row">
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Company Name*</label>
-          <input type="text" name="firstName" class="form-control" placeholder="Cellophane Square" required="">
-        </div>
-      </div>
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Company Email Address*</label>
-          <input type="email" class="form-control" id="emial1" placeholder="example@example.com.com" required="">
-        </div>
-      </div>
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Company Phone Number*</label>
-          <input type="text" name="phoneNumber" class="form-control" placeholder="(+1)408-657-9007" required="">
-        </div>
-      </div>
-      <div class="col-lg-6 mb-2">
-        <div class="mb-3">
-          <label class="text-label form-label">Your position in Company*</label>
-          <input type="text" name="place" class="form-control" required="">
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="wizard_Details" class="tab-pane" role="tabpanel" style="display: none;">
-    <div class="row">
-      <div class="col-sm-4 mb-2">
-        <h4>Monday *</h4>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="9.00" type="number" name="input1" id="input1">
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="6.00" type="number" name="input2" id="input2">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 mb-2">
-        <h4>Tuesday *</h4>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="9.00" type="number" name="input3" id="input3">
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="6.00" type="number" name="input4" id="input4">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 mb-2">
-        <h4>Wednesday *</h4>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="9.00" type="number" name="input5" id="input5">
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="6.00" type="number" name="input6" id="input6">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 mb-2">
-        <h4>Thrusday *</h4>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="9.00" type="number" name="input7" id="input7">
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="6.00" type="number" name="input8" id="input8">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 mb-2">
-        <h4>Friday *</h4>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="9.00" type="number" name="input9" id="input9">
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 mb-2">
-        <div class="mb-3">
-          <input class="form-control" value="6.00" type="number" name="input10" id="input10">
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="wizard_Payment" class="tab-pane" role="tabpanel" style="display: none;">
-    <div class="row emial-setup">
-      <div class="col-lg-3 col-sm-6 col-6">
-        <div class="mb-3">
-          <label for="mailclient11" class="mailclinet mailclinet-gmail">
-            <input type="radio" name="emailclient" id="mailclient11">
-            <span class="mail-icon">
-              <i class="mdi mdi-google-plus" aria-hidden="true"></i>
-            </span>
-            <span class="mail-text">I'm using Gmail</span>
-          </label>
-        </div>
-      </div>
-      <div class="col-lg-3 col-sm-6 col-6">
-        <div class="mb-3">
-          <label for="mailclient12" class="mailclinet mailclinet-office">
-            <input type="radio" name="emailclient" id="mailclient12">
-            <span class="mail-icon">
-              <i class="mdi mdi-office" aria-hidden="true"></i>
-            </span>
-            <span class="mail-text">I'm using Office</span>
-          </label>
-        </div>
-      </div>
-      <div class="col-lg-3 col-sm-6 col-6">
-        <div class="mb-3">
-          <label for="mailclient13" class="mailclinet mailclinet-drive">
-            <input type="radio" name="emailclient" id="mailclient13">
-            <span class="mail-icon">
-              <i class="mdi mdi-google-drive" aria-hidden="true"></i>
-            </span>
-            <span class="mail-text">I'm using Drive</span>
-          </label>
-        </div>
-      </div>
-      <div class="col-lg-3 col-sm-6 col-6">
-        <div class="mb-3">
-          <label for="mailclient14" class="mailclinet mailclinet-another">
-            <input type="radio" name="emailclient" id="mailclient14">
-            <span class="mail-icon">
-              <i class="fa fa-question-circle" aria-hidden="true"></i>
-            </span>
-            <span class="mail-text">Another Service</span>
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <div class="skip-email text-center">
-          <p>Or if want skip this step entirely and setup it later</p>
-          <a href="javascript:void(0)">Skip step</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><div class="toolbar toolbar-bottom" role="toolbar" style="text-align: right;"><button class="btn btn-primary sw-btn-prev disabled" type="button">Previous</button><button class="btn btn-primary sw-btn-next" type="button">Next</button></div>
-</div>
-          </div>
-      </div>
         <div class="accordion accordion-no-gutter accordion-primary-solid" id="accordion-four">
           <div class="accordion-item">
             <div class="accordion-header rounded-lg" id="accord-4One" data-bs-toggle="collapse"
@@ -644,7 +489,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
+          <h5 class="modal-title">Learners</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal">
           </button>
         </div>
@@ -653,19 +498,19 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
   </div>
 
-
+  <script src="assests/vendor/global/global.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/static/vendor/jquery-steps/build/jquery.steps.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="/static/multiselect-dropdown.js"></script>
   <!-- Form Steps -->
-	<script src="/static/getskills/vendor/jquery-smartwizard/dist/assests/js/jquery.smartWizard.js"></script>
+  <script src="/static/getskills/vendor/jquery-smartwizard/dist/assests/js/jquery.smartWizard.js"></script>
   <script>
     $(function () {
       $("#productID").select2();
