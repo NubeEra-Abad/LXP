@@ -141,6 +141,7 @@
 	<script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
 	<script>
 		$(document).ready(function () {
+			new DataTable('#dataTable');
 			$(".pagination-down a").on('click', function () {
 				$(".pagination-down a").removeClass("active");
 				$(this).addClass("active");
