@@ -27,6 +27,7 @@ urlpatterns = [
     path('learner-studymaterial-chapter-show/<int:chapter_id>/<int:course_id>', views.learner_studymaterial_chapter_show_view,name='learner-studymaterial-chapter-show'),
     path('learner-studymaterial-show/<studymaterialtype>/<int:pk>', views.learner_show_studymaterial_view,name='learner-studymaterial-show'),
     path('ajax/save-topic/', views.save_topic, name='ajax_save_topic'),
+    path('learner-upload-activity/<int:activity_id>/<int:course_id>/<int:chapter_id>', views.learner_upload_activity_view,name='learner-upload-activity'),
 
     path('learner-available-course', views.learner_availablecourse_course_view,name='learner-available-course'),
     path('learner-available-course-chapter/<coursename>/<int:course_id>', views.learner_availablecourse_course_chapter_view,name='learner-available-course-chapter'),

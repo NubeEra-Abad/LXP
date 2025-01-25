@@ -681,3 +681,18 @@ class Activity(models.Model):
             else:
                 self.serial_number = 1
         super(Activity, self).save(*args, **kwargs)
+
+
+class ActivityAnswers(models.Model):
+    activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, null=True)
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
+    learner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    file_url = models.URLField()
+    marks = models.IntegerField(default=0)
+    remarks = models.CharField(max_length=2000, default='')
+    status = models.BooleanField(default=False)
+    submitted_on = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.file_url

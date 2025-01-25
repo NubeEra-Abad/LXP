@@ -180,3 +180,9 @@ MESSAGE_TAGS = {
 }
 
 JITSI_SECRET = "a5f9c73e4d85e0c9f25b2d4394b6d24d5c00f27aaebef34f97f13a9f6f1c9ec7"
+
+
+# Add these settings to your settings.py file
+GITHUB_TOKEN_ACTIVITY = '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'
+GITHUB_REPO_ACTIVITY = 'NubeEra-ImranAli/study_kit'
+GITHUB_PATH_ACTIVITY = 'your_pdf_path_on_github'

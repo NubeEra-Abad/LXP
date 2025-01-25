@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from lxpapp import models as LXPModel
+from lxpapp.models import *
 from lxpapp import forms as LXPFORM
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -16,12 +16,12 @@ from django.views.decorators.csrf import csrf_exempt
 def trainer_dashboard_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
-            notification = LXPModel.TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
-            mco = LXPModel.Exam.objects.filter(questiontpye='MCQ').count()
-            short = LXPModel.Exam.objects.filter(questiontpye='ShortAnswer').count()
-            mcqques= LXPModel.McqQuestion.objects.all().count()
-            sques= LXPModel.ShortQuestion.objects.all().count()
-            schedulers = LXPModel.Scheduler.objects.annotate(
+            notification = TrainerNotification.objects.all().filter(trainer_id = request.user.id,status = False)
+            mco = Exam.objects.filter(questiontpye='MCQ').count()
+            short = Exam.objects.filter(questiontpye='ShortAnswer').count()
+            mcqques= McqQuestion.objects.all().count()
+            sques= ShortQuestion.objects.all().count()
+            schedulers = Scheduler.objects.annotate(
                 status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
                 completion_date=Case(
                     When(status_sum__gte=100, then=Max('schedulerstatus__date')),
@@ -47,7 +47,7 @@ def trainer_dashboard_view(request):
 def trainer_view_material_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
-            materials = LXPModel.Material.objects.all()
+            materials = Material.objects.all()
             return render(request,'trainer/material/trainer_view_material.html',{'materials':materials})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -56,7 +56,7 @@ def trainer_view_material_view(request):
 def trainer_show_material_view(request,materialtype,pk):
     try:
         if str(request.session['utype']) == 'trainer':
-            details= LXPModel.Material.objects.all().filter(id=pk)
+            details= Material.objects.all().filter(id=pk)
             if materialtype == 'HTML':
                 return render(request,'trainer/material/trainer_material_htmlshow.html',{'details':details})
             if materialtype == 'URL':
@@ -73,7 +73,7 @@ def trainer_show_material_view(request,materialtype,pk):
 def trainer_view_sessionmaterial_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            sessionmaterials = LXPModel.SessionMaterial.objects.all()
+            sessionmaterials = SessionMaterial.objects.all()
             return render(request,'trainer/sessionmaterial/trainer_view_sessionmaterial.html',{'sessionmaterials':sessionmaterials})
     except:
         return render(request,'lxpapp/404page.html')
@@ -82,7 +82,7 @@ def trainer_view_sessionmaterial_view(request):
 def trainer_show_sessionmaterial_view(request,sessionmaterialtype,pk):
     try:
         if str(request.session['utype']) == 'trainer':
-            details= LXPModel.SessionMaterial.objects.all().filter(id=pk)
+            details= SessionMaterial.objects.all().filter(id=pk)
             if sessionmaterialtype == 'HTML':
                 return render(request,'trainer/sessionmaterial/trainer_sessionmaterial_htmlshow.html',{'details':details})
             if sessionmaterialtype == 'URL':
@@ -97,7 +97,7 @@ def trainer_show_sessionmaterial_view(request,sessionmaterialtype,pk):
 def load_videos(request):
     try:
         playlist_id = request.GET.get('playlist')
-        videos = LXPModel.PlaylistItem.objects.raw('SELECT  lxpapp_video.id as id,lxpapp_video.id as pk, lxpapp_video.name FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) WHERE  lxpapp_playlistitem.playlist_id = ' + str(playlist_id) + ' ORDER BY  lxpapp_video.name')
+        videos = PlaylistItem.objects.raw('SELECT  lxpapp_video.id as id,lxpapp_video.id as pk, lxpapp_video.name FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) WHERE  lxpapp_playlistitem.playlist_id = ' + str(playlist_id) + ' ORDER BY  lxpapp_video.name')
         context = {'videos': videos}
         return render(request, 'hr/video_dropdown_list_options.html', context)
     except:
@@ -141,14 +141,14 @@ def trainer_add_exam_view(request):
             if request.method == 'POST':
                 if form.is_valid():
                     name = form.cleaned_data.get('exam_name')
-                    exam = LXPModel.Exam.objects.all().filter(exam_name__iexact = name)
+                    exam = Exam.objects.all().filter(exam_name__iexact = name)
                     if exam:
                         messages.info(request, 'Exam Name Already Exist')
                         return redirect(reverse('trainer-add-exam'))
                     try:
                         qtype = form.cleaned_data.get('questiontpye')
                         batch = form.cleaned_data.get('batch').pk
-                        exam = LXPModel.Exam.objects.create(
+                        exam = Exam.objects.create(
                                                     exam_name = name,questiontpye=qtype,batch_id=batch)
                         exam.save()
                         messages.success(request, "Successfully Updated")
@@ -165,7 +165,7 @@ def trainer_add_exam_view(request):
 def trainer_update_exam_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':
-            instance = get_object_or_404(LXPModel.Exam, id=pk)
+            instance = get_object_or_404(Exam, id=pk)
             form = LXPFORM.ExamForm(request.POST or None, instance=instance)
             breadcrumblink = []
             btrnr={}
@@ -199,18 +199,18 @@ def trainer_update_exam_view(request,pk):
                     name = form.cleaned_data.get('exam_name')
                     batch = form.cleaned_data.get('batch').pk
                     qtype = form.cleaned_data.get('questiontpye')
-                    exam = LXPModel.Exam.objects.all().filter(exam_name__iexact = name).exclude(id=pk)
+                    exam = Exam.objects.all().filter(exam_name__iexact = name).exclude(id=pk)
                     if exam:
                         messages.info(request, 'Exam Name Already Exist')
                         return redirect(reverse('trainer-update-exam', args=[pk]))
                     try:
-                        exam = LXPModel.Exam.objects.get(id=pk)
+                        exam = Exam.objects.get(id=pk)
                         exam.exam_name = name
                         exam.batch_id = batch
                         exam.questiontpye = qtype
                         exam.save()
                         messages.success(request, "Successfully Updated")
-                        exams = LXPModel.Exam.objects.all()
+                        exams = Exam.objects.all()
                         return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
                     except Exception as e:
                         messages.error(request, "Could Not Add " + str(e))
@@ -227,7 +227,7 @@ def trainer_upload_exam_csv_view(request):
         examtext=request.POST.get('exam_name')
         batch=request.POST.get('batch')
         qtype=request.POST.get('examtype')
-        exam = LXPModel.Exam.objects.all().filter(exam_name__iexact = examtext)
+        exam = Exam.objects.all().filter(exam_name__iexact = examtext)
         if exam:
             messages.info(request, 'Exam Name Already Exist')
         else:
@@ -235,7 +235,7 @@ def trainer_upload_exam_csv_view(request):
                 qtype = 'MCQ'
             else:
                 qtype = 'ShortAnswer'
-            exam = LXPModel.Exam.objects.create(batch_id = batch,exam_name = examtext,questiontpye = qtype)
+            exam = Exam.objects.create(batch_id = batch,exam_name = examtext,questiontpye = qtype)
             exam.save()   
             csv_file = request.FILES["select_file"]
             file_data = csv_file.read().decode("utf-8")		
@@ -246,7 +246,7 @@ def trainer_upload_exam_csv_view(request):
                 if no > 1:
                     fields = line.split(",")
                     if qtype == 'MCQ':
-                        question = LXPModel.McqQuestion.objects.create(
+                        question = McqQuestion.objects.create(
                             question = fields[0],
                             option1 = fields[1],
                             option2 = fields[2],
@@ -258,14 +258,14 @@ def trainer_upload_exam_csv_view(request):
                         )
                         question.save()
                     elif qtype == 'ShortAnswer':
-                        question = LXPModel.ShortQuestion.objects.create(
+                        question = ShortQuestion.objects.create(
                             question = fields[0],
                             marks = fields[1],
                             exam_id = exam.id
                         )
                         question.save()
             messages.info(request, 'Questions Added Successfully')
-    batch = LXPModel.Batch.objects.all()
+    batch = Batch.objects.all()
     context = {'batch': batch}
     return render(request,'trainer/exam/trainer_upload_exam_csv.html',context)
 
@@ -295,7 +295,7 @@ def upload_csv(request):
 def trainer_view_exam_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            exams = LXPModel.Exam.objects.all().filter(batch_id__in = LXPModel.Batch.objects.all())
+            exams = Exam.objects.all().filter(batch_id__in = Batch.objects.all())
             return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -303,7 +303,7 @@ def trainer_view_exam_view(request):
 def trainer_view_filter_exam_view(request,type):
     try:
         if str(request.session['utype']) == 'trainer':
-            exams = LXPModel.Exam.objects.all().filter(batch_id__in = LXPModel.Batch.objects.all(),questiontpye = type)
+            exams = Exam.objects.all().filter(batch_id__in = Batch.objects.all(),questiontpye = type)
             return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -312,10 +312,10 @@ def trainer_view_filter_exam_view(request,type):
 def trainer_delete_exam_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':  
-            exam=LXPModel.Exam.objects.get(id=pk)
+            exam=Exam.objects.get(id=pk)
             exam.delete()
             return HttpResponseRedirect('/trainer/trainer-view-exam')
-        exams = LXPModel.Exam.objects.all()
+        exams = Exam.objects.all()
         return render(request,'trainer/exam/trainer_view_exam.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -332,7 +332,7 @@ def trainer_mcqquestion_view(request):
 def trainer_view_mcqquestion_exams_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            exams = LXPModel.Exam.objects.all().filter(questiontpye='MCQ')
+            exams = Exam.objects.all().filter(questiontpye='MCQ')
             return render(request,'trainer/mcqquestion/trainer_view_mcqquestion_exams.html',{'exams':exams})
     except:
         return render(request,'lxpapp/404page.html')
@@ -340,7 +340,7 @@ def trainer_view_mcqquestion_exams_view(request):
 def trainer_view_mcqquestion_view(request,examid):
     try:
         if str(request.session['utype']) == 'trainer':
-            mcqquestions = LXPModel.McqQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all().filter(id=examid))
+            mcqquestions = McqQuestion.objects.all().filter(exam_id__in = Exam.objects.all().filter(id=examid))
             return render(request,'trainer/mcqquestion/trainer_view_mcqquestion.html',{'mcqquestions':mcqquestions})
     except:
         return render(request,'lxpapp/404page.html')
@@ -357,7 +357,7 @@ def trainer_shortquestion_view(request):
 def trainer_view_shortquestion_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            shortquestions = LXPModel.ShortQuestion.objects.all().filter(exam_id__in = LXPModel.Exam.objects.all())
+            shortquestions = ShortQuestion.objects.all().filter(exam_id__in = Exam.objects.all())
             return render(request,'trainer/shortquestion/trainer_view_shortquestion.html',{'shortquestions':shortquestions})
     except:
         return render(request,'lxpapp/404page.html')
@@ -366,7 +366,7 @@ def trainer_view_shortquestion_view(request):
 def trainer_pending_short_exam_result_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            pending = LXPModel.ShortResult.objects.all().filter( learner_id__in = User.objects.all(),exam_id__in = LXPModel.Exam.objects.all(),status = False)
+            pending = ShortResult.objects.all().filter( learner_id__in = User.objects.all(),exam_id__in = Exam.objects.all(),status = False)
             return render(request,'trainer/shortexam/trainer_pending_short_exam_reuslt.html',{'pending':pending})
     except:
         return render(request,'lxpapp/404page.html')
@@ -375,7 +375,7 @@ def trainer_pending_short_exam_result_view(request):
 def trainer_update_short_question_result_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':
-            resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = pk)
+            resultdetails = ShortResultDetails.objects.all().filter( question_id__in = ShortQuestion.objects.all(),shortresult_id = pk)
             
             return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
     except:
@@ -392,25 +392,25 @@ def trainer_save_short_question_result_view(request,pk):
                 qid=request.POST['newqid']
                 answer=request.POST['newanswer']
                 mainid=request.POST['newmainid']
-                resupdate = LXPModel.ShortResultDetails.objects.all().filter(id=pk)
+                resupdate = ShortResultDetails.objects.all().filter(id=pk)
                 resupdate.delete()
-                resupdate = LXPModel.ShortResultDetails.objects.create(id=pk,marks=marks,feedback=feedback,question_id=qid,answer=answer,shortresult_id=mainid)
+                resupdate = ShortResultDetails.objects.create(id=pk,marks=marks,feedback=feedback,question_id=qid,answer=answer,shortresult_id=mainid)
                 resupdate.save()
                 
-                totmarks=LXPModel.ShortResultDetails.objects.all().filter(shortresult_id=mainid).aggregate(stars=Sum('marks'))['stars']
-                maintbl=LXPModel.ShortResult.objects.get(id=mainid)
-                tot=LXPModel.ShortResultDetails.objects.all().filter(shortresult_id=mainid).aggregate(stars=Count('marks'))['stars']
-                totgiven=LXPModel.ShortResultDetails.objects.all().filter(shortresult_id=mainid,marks__gt=0).aggregate(stars=Count('marks'))['stars']
+                totmarks=ShortResultDetails.objects.all().filter(shortresult_id=mainid).aggregate(stars=Sum('marks'))['stars']
+                maintbl=ShortResult.objects.get(id=mainid)
+                tot=ShortResultDetails.objects.all().filter(shortresult_id=mainid).aggregate(stars=Count('marks'))['stars']
+                totgiven=ShortResultDetails.objects.all().filter(shortresult_id=mainid,marks__gt=0).aggregate(stars=Count('marks'))['stars']
                 if tot == totgiven:
                     maintbl.status=True
                 maintbl.marks = totmarks
                 maintbl.save()
                 messages.info(request, 'Records saved successfully')
                 if tot == totgiven:
-                    resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = pk)
+                    resultdetails = ShortResultDetails.objects.all().filter( question_id__in = ShortQuestion.objects.all(),shortresult_id = pk)
                     return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
                 else:
-                    resultdetails = LXPModel.ShortResultDetails.objects.all().filter( question_id__in = LXPModel.ShortQuestion.objects.all(),shortresult_id = mainid)
+                    resultdetails = ShortResultDetails.objects.all().filter( question_id__in = ShortQuestion.objects.all(),shortresult_id = mainid)
                     return render(request,'trainer/shortexam/trainer_update_short_question_result.html',{'resultdetails':resultdetails})
     except:
         return render(request,'lxpapp/404page.html') 
@@ -428,7 +428,7 @@ def trainer_ytexamquestion_view(request):
 def trainer_view_ytexamquestion_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            ytexamquestions = LXPModel.YTExamQuestion.objects.all().filter(playlist_id__in = LXPModel.Playlist.objects.all())
+            ytexamquestions = YTExamQuestion.objects.all().filter(playlist_id__in = Playlist.objects.all())
             return render(request,'trainer/ytexamquestion/trainer_view_ytexamquestion.html',{'ytexamquestions':ytexamquestions})
     except:
         return render(request,'lxpapp/404page.html')
@@ -447,7 +447,7 @@ def trainer_view_learner_video_view(request):
 def trainer_learner_video_Course_view(request,user_id,userfirstname,userlastname):
 #    try:    
         if str(request.session['utype']) == 'trainer':
-            videos1 = LXPModel.BatchCourseSet.objects.raw('SELECT DISTINCT lxpapp_courseset.id,  lxpapp_courseset.courseset_name,lxpapp_batchcourseset.batch_id FROM  lxpapp_batchcourseset   INNER JOIN lxpapp_courseset ON (lxpapp_batchcourseset.courseset_id = lxpapp_courseset.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourseset.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(user_id))
+            videos1 = BatchCourseSet.objects.raw('SELECT DISTINCT lxpapp_courseset.id,  lxpapp_courseset.courseset_name,lxpapp_batchcourseset.batch_id FROM  lxpapp_batchcourseset   INNER JOIN lxpapp_courseset ON (lxpapp_batchcourseset.courseset_id = lxpapp_courseset.id)   INNER JOIN lxpapp_batch ON (lxpapp_batchcourseset.batch_id = lxpapp_batch.id)   INNER JOIN lxpapp_batchlearner ON (lxpapp_batchlearner.batch_id = lxpapp_batch.id) WHERE   lxpapp_batchlearner.learner_id = ' + str(user_id))
             return render(request,'trainer/learnervideo/trainer_learner_video_course.html',{'videos':videos1,'userfirstname':userfirstname,'userlastname':userlastname,'user_id':user_id})
  #   except:
         return render(request,'lxpapp/404page.html')
@@ -457,8 +457,8 @@ def trainer_learner_video_Course_subject_view(request,user_id,userfirstname,user
 #    try:    
         if str(request.session['utype']) == 'trainer':
             
-            subject = LXPModel.Playlist.objects.raw('SELECT ID AS id, NAME, VTOTAL, Mtotal, SUM(VWATCHED) AS VWatched,((100*VWATCHED)/VTOTAL) as per, THUMBNAIL_URL FROM (SELECT YYY.ID, YYY.NAME, YYY.THUMBNAIL_URL, ( SELECT COUNT(XX.ID) FROM LXPAPP_PLAYLISTITEM XX WHERE XX.PLAYLIST_ID = YYY.ID ) AS Vtotal, ( SELECT COUNT(zz.ID) FROM LXPAPP_sessionmaterial zz WHERE zz.PLAYLIST_ID = YYY.ID ) AS Mtotal, (SELECT COUNT (LXPAPP_VIDEOWATCHED.ID) AS a FROM LXPAPP_PLAYLISTITEM GHGH LEFT OUTER JOIN LXPAPP_VIDEOWATCHED ON ( GHGH.VIDEO_ID = LXPAPP_VIDEOWATCHED.VIDEO_ID ) WHERE GHGH.PLAYLIST_ID = YYY.ID AND LXPAPP_VIDEOWATCHED.LEARNER_ID = ' + str( user_id) + ') AS VWatched FROM LXPAPP_BATCHLEARNER INNER JOIN LXPAPP_BATCH ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCH.ID) INNER JOIN LXPAPP_BATCHRECORDEDVDOLIST ON (LXPAPP_BATCH.ID = LXPAPP_BATCHRECORDEDVDOLIST.BATCH_ID) INNER JOIN LXPAPP_PLAYLIST YYY ON (LXPAPP_BATCHRECORDEDVDOLIST.PLAYLIST_ID = YYY.ID) WHERE LXPAPP_BATCHLEARNER.LEARNER_ID = ' + str(user_id) + ') GROUP BY ID, NAME, VTOTAL ORDER BY NAME')
-            videocount = LXPModel.LearnerPlaylistCount.objects.all().filter(learner_id = user_id)
+            subject = Playlist.objects.raw('SELECT ID AS id, NAME, VTOTAL, Mtotal, SUM(VWATCHED) AS VWatched,((100*VWATCHED)/VTOTAL) as per, THUMBNAIL_URL FROM (SELECT YYY.ID, YYY.NAME, YYY.THUMBNAIL_URL, ( SELECT COUNT(XX.ID) FROM LXPAPP_PLAYLISTITEM XX WHERE XX.PLAYLIST_ID = YYY.ID ) AS Vtotal, ( SELECT COUNT(zz.ID) FROM LXPAPP_sessionmaterial zz WHERE zz.PLAYLIST_ID = YYY.ID ) AS Mtotal, (SELECT COUNT (LXPAPP_VIDEOWATCHED.ID) AS a FROM LXPAPP_PLAYLISTITEM GHGH LEFT OUTER JOIN LXPAPP_VIDEOWATCHED ON ( GHGH.VIDEO_ID = LXPAPP_VIDEOWATCHED.VIDEO_ID ) WHERE GHGH.PLAYLIST_ID = YYY.ID AND LXPAPP_VIDEOWATCHED.LEARNER_ID = ' + str( user_id) + ') AS VWatched FROM LXPAPP_BATCHLEARNER INNER JOIN LXPAPP_BATCH ON (LXPAPP_BATCHLEARNER.BATCH_ID = LXPAPP_BATCH.ID) INNER JOIN LXPAPP_BATCHRECORDEDVDOLIST ON (LXPAPP_BATCH.ID = LXPAPP_BATCHRECORDEDVDOLIST.BATCH_ID) INNER JOIN LXPAPP_PLAYLIST YYY ON (LXPAPP_BATCHRECORDEDVDOLIST.PLAYLIST_ID = YYY.ID) WHERE LXPAPP_BATCHLEARNER.LEARNER_ID = ' + str(user_id) + ') GROUP BY ID, NAME, VTOTAL ORDER BY NAME')
+            videocount = LearnerPlaylistCount.objects.all().filter(learner_id = user_id)
             countpresent =False
             if videocount:
                 countpresent = True
@@ -467,7 +467,7 @@ def trainer_learner_video_Course_subject_view(request,user_id,userfirstname,user
             wc = 0
             for x in subject:
                 if not videocount:
-                    countsave = LXPModel.LearnerPlaylistCount.objects.create(playlist_id = x.id, learner_id = user_id,count =x.Vtotal )
+                    countsave = LearnerPlaylistCount.objects.create(playlist_id = x.id, learner_id = user_id,count =x.Vtotal )
                     countsave.save()
                 tc += x.Vtotal
                 wc += x.VWatched
@@ -484,8 +484,8 @@ def trainer_learner_video_Course_subject_view(request,user_id,userfirstname,user
 def trainer_learner_video_list_view(request,subject_id,user_id):
     try:     
         if str(request.session['utype']) == 'trainer':
-            subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
-            list = LXPModel.PlaylistItem.objects.raw('SELECT DISTINCT mainvid.id, mainvid.name, IFNULL((SELECT lxpapp_videowatched.video_id FROM lxpapp_videowatched WHERE lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id = mainvid.id), 0) AS watched, IFNULL((SELECT lxpapp_videotounlock.video_id FROM lxpapp_videotounlock WHERE lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id = mainvid.id), 0) AS unlocked FROM lxpapp_video mainvid INNER JOIN lxpapp_playlistitem ON (mainvid.id = lxpapp_playlistitem.video_id) WHERE lxpapp_playlistitem.playlist_id = ' + str (subject_id) + ' AND mainvid.name <> "Deleted video"')  
+            subjectname = Playlist.objects.only('name').get(id=subject_id).name
+            list = PlaylistItem.objects.raw('SELECT DISTINCT mainvid.id, mainvid.name, IFNULL((SELECT lxpapp_videowatched.video_id FROM lxpapp_videowatched WHERE lxpapp_videowatched.learner_id = ' + str(user_id) + ' AND lxpapp_videowatched.video_id = mainvid.id), 0) AS watched, IFNULL((SELECT lxpapp_videotounlock.video_id FROM lxpapp_videotounlock WHERE lxpapp_videotounlock.learner_id = ' + str(user_id) + ' AND lxpapp_videotounlock.video_id = mainvid.id), 0) AS unlocked FROM lxpapp_video mainvid INNER JOIN lxpapp_playlistitem ON (mainvid.id = lxpapp_playlistitem.video_id) WHERE lxpapp_playlistitem.playlist_id = ' + str (subject_id) + ' AND mainvid.name <> "Deleted video"')  
             return render(request,'trainer/learnervideo/trainer_learner_video_list.html',{'list':list,'subjectname':subjectname,'subject_id':subject_id,'user_id':user_id})
     except:
         return render(request,'lxpapp/404page.html')
@@ -494,7 +494,7 @@ def trainer_learner_video_list_view(request,subject_id,user_id):
 def trainer_learner_approve_video(request,pk,studid):
     try:
         if str(request.session['utype']) == 'trainer':
-            unlock = LXPModel.VideoToUnlock.objects.create(learner_id=studid,video_id=pk)
+            unlock = VideoToUnlock.objects.create(learner_id=studid,video_id=pk)
             unlock.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     except:
@@ -504,9 +504,9 @@ def trainer_learner_approve_video(request,pk,studid):
 def trainer_learner_approveall_video(request,userid,subject_id):
     try:
         if str(request.session['utype']) == 'trainer':
-            videos=LXPModel.Playlist.objects.raw('SELECT   lxpapp_video.id FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) where lxpapp_playlistitem.playlist_id = ' + str (subject_id))
+            videos=Playlist.objects.raw('SELECT   lxpapp_video.id FROM  lxpapp_playlistitem  INNER JOIN lxpapp_video ON (lxpapp_playlistitem.video_id = lxpapp_video.id) where lxpapp_playlistitem.playlist_id = ' + str (subject_id))
             for x in videos:
-                unlock = LXPModel.VideoToUnlock.objects.create(learner_id=userid,video_id=x.id)
+                unlock = VideoToUnlock.objects.create(learner_id=userid,video_id=x.id)
                 unlock.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     except:
@@ -516,8 +516,8 @@ def trainer_learner_approveall_video(request,userid,subject_id):
 def trainer_learner_show_video_view(request,subject_id,video_id):
     try:    
         if str(request.session['utype']) == 'trainer':
-            subjectname = LXPModel.Playlist.objects.only('name').get(id=subject_id).name
-            Videos=LXPModel.Video.objects.all().filter(id=video_id)
+            subjectname = Playlist.objects.only('name').get(id=subject_id).name
+            Videos=Video.objects.all().filter(id=video_id)
             topicname =''
             url=''
             for x in Videos:
@@ -531,7 +531,7 @@ def trainer_learner_show_video_view(request,subject_id,video_id):
 def trainer_view_chapterquestion_view(request):
     try:
         if str(request.session['utype']) == 'trainer':
-            chapterquestions = LXPModel.ChapterQuestion.objects.raw('SELECT DISTINCT  lxpapp_chapter.id,  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name FROM  lxpapp_chapterquestion  INNER JOIN lxpapp_chapter ON (lxpapp_chapterquestion.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_subject ON (lxpapp_chapterquestion.subject_id = lxpapp_subject.id)')
+            chapterquestions = ChapterQuestion.objects.raw('SELECT DISTINCT  lxpapp_chapter.id,  lxpapp_subject.subject_name,  lxpapp_chapter.chapter_name FROM  lxpapp_chapterquestion  INNER JOIN lxpapp_chapter ON (lxpapp_chapterquestion.chapter_id = lxpapp_chapter.id)  INNER JOIN lxpapp_subject ON (lxpapp_chapterquestion.subject_id = lxpapp_subject.id)')
             return render(request,'trainer/chapterquestion/trainer_view_chapterquestion.html',{'chapterquestions':chapterquestions})
     except:
         return render(request,'lxpapp/404page.html')
@@ -540,8 +540,8 @@ def trainer_view_chapterquestion_view(request):
 def trainer_view_chapterquestion_chapter_view(request,chapter_id):
     try:
         if str(request.session['utype']) == 'trainer':
-            chapterquestions = LXPModel.ChapterQuestion.objects.all().filter(chapter_id__in = LXPModel.Chapter.objects.all().filter(id=chapter_id))
-            chapter_name = LXPModel.Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
+            chapterquestions = ChapterQuestion.objects.all().filter(chapter_id__in = Chapter.objects.all().filter(id=chapter_id))
+            chapter_name = Chapter.objects.only('chapter_name').get(id=chapter_id).chapter_name
 
             return render(request,'trainer/chapterquestion/trainer_view_chapterquestion_chapter.html',{'chapterquestions':chapterquestions,'chapter_name':chapter_name})
     except:
@@ -568,7 +568,7 @@ def trainer_add_k8sterminal_view(request):
                 if password1 and password2 and password1 != password2:
                     messages.info(request, 'password_mismatch')
                 else:
-                    k8sterminal = LXPModel.K8STerminal.objects.create(
+                    k8sterminal = K8STerminal.objects.create(
                         trainer_id = request.user.id,
                         learner_id = learner_id,
                         Password = password1,
@@ -585,27 +585,27 @@ def trainer_add_k8sterminal_view(request):
 def trainer_update_k8sterminal_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':
-            k8sterminal = LXPModel.K8STerminal.objects.get(id=pk)
+            k8sterminal = K8STerminal.objects.get(id=pk)
             k8sterminalForm=LXPFORM.K8STerminalForm(request.POST,instance=k8sterminal)
             if request.method=='POST':
                 if k8sterminalForm.is_valid(): 
                     k8sterminaltext = k8sterminalForm.cleaned_data["k8sterminal_name"]
                     chaptertext = k8sterminalForm.cleaned_data["chapterID"]
                     subjecttext = k8sterminalForm.cleaned_data["subjectID"]
-                    k8sterminal = LXPModel.K8STerminal.objects.all().filter(k8sterminal_name__iexact = k8sterminaltext).exclude(id=pk)
+                    k8sterminal = K8STerminal.objects.all().filter(k8sterminal_name__iexact = k8sterminaltext).exclude(id=pk)
                     if k8sterminal:
                         messages.info(request, 'K8STerminal Name Already Exist')
                     else:
-                        chapter = LXPModel.Video.objects.get(chapter_name=chaptertext)
-                        subject = LXPModel.Playlist.objects.get(subject_name=subjecttext)
-                        k8sterminal = LXPModel.K8STerminal.objects.get(id=pk)
+                        chapter = Video.objects.get(chapter_name=chaptertext)
+                        subject = Playlist.objects.get(subject_name=subjecttext)
+                        k8sterminal = K8STerminal.objects.get(id=pk)
                         k8sterminal.k8sterminal_name = k8sterminaltext
                         k8sterminal.subject_id = subject.id
                         k8sterminal.chapter_id = chapter.id
                         k8sterminal.save()
-                        c_list = LXPModel.K8STerminal.objects.filter(chapter_id__in=LXPModel.Video.objects.all())
+                        c_list = K8STerminal.objects.filter(chapter_id__in=Video.objects.all())
                         return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':c_list})
-            k8sterminal_instance = get_object_or_404(LXPModel.K8STerminal, id=pk)
+            k8sterminal_instance = get_object_or_404(K8STerminal, id=pk)
             k8sterminalForm = LXPFORM.K8STerminalForm(instance=k8sterminal_instance)
             return render(request,'trainer/labs/k8sterminal/trainer_update_k8sterminal.html',{'k8sterminalForm':k8sterminalForm,'sub':k8sterminal.k8sterminal_name})
     except:
@@ -615,7 +615,7 @@ def trainer_update_k8sterminal_view(request,pk):
 def trainer_view_k8sterminal_view(request):
     #try:
         if str(request.session['utype']) == 'trainer':
-            k8sterminals = LXPModel.K8STerminal.objects.all().filter(learner_id__in = User.objects.all().order_by('first_name').filter(id__in=UserSocialAuth.objects.all()))
+            k8sterminals = K8STerminal.objects.all().filter(learner_id__in = User.objects.all().order_by('first_name').filter(id__in=UserSocialAuth.objects.all()))
             return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
     #except:
         return render(request,'lxpapp/404page.html')
@@ -624,10 +624,10 @@ def trainer_view_k8sterminal_view(request):
 def trainer_delete_k8sterminal_view(request,pk):
     try:
         if str(request.session['utype']) == 'trainer':  
-            k8sterminal=LXPModel.K8STerminal.objects.get(id=pk)
+            k8sterminal=K8STerminal.objects.get(id=pk)
             k8sterminal.delete()
             return HttpResponseRedirect('/trainer/trainer-view-k8sterminal')
-        k8sterminals = LXPModel.K8STerminal.objects.all()
+        k8sterminals = K8STerminal.objects.all()
         return render(request,'trainer/labs/k8sterminal/trainer_view_k8sterminal.html',{'k8sterminals':k8sterminals})
     except:
         return render(request,'lxpapp/404page.html')
@@ -660,7 +660,7 @@ def trainer_cloudshell_terminal_view(request):
 
 @login_required
 def trainer_scheduler_calender(request):
-    schedulers = LXPModel.Scheduler.objects.annotate(
+    schedulers = Scheduler.objects.annotate(
         status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
         completion_date=Case(
             When(status_sum__gte=100, then=Max('schedulerstatus__date')),
@@ -673,7 +673,7 @@ def trainer_scheduler_calender(request):
 @login_required
 def trainer_calender(request):
     # Get schedulers for the logged-in trainer and use Coalesce to replace None with 0 for status_sum
-    schedulers = LXPModel.Scheduler.objects.filter(
+    schedulers = Scheduler.objects.filter(
         trainer_id=request.user.id
     ).annotate(
         status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0))
@@ -684,7 +684,7 @@ def trainer_calender(request):
 @login_required
 def trainer_schedulerstatus_list(request):
     if str(request.session['utype']) == 'trainer':
-        schedulerstatus = LXPModel.SchedulerStatus.objects.all()
+        schedulerstatus = SchedulerStatus.objects.all()
         return render(request, 'trainer/schedulerstatus/trainer_schedulerstatus_list.html', {'schedulerstatus': schedulerstatus})
     else:
         return render(request,'loginrelated/diffrentuser.html')
@@ -697,7 +697,7 @@ def schedulerstatus_create(request):
             scheduler = request.POST.get('scheduler')
             status = request.POST.get('status')
             tdate_str = request.POST.get('tdate')
-            status_sum = LXPModel.SchedulerStatus.objects.filter(scheduler_id = scheduler).aggregate(Sum('status'))['status__sum']
+            status_sum = SchedulerStatus.objects.filter(scheduler_id = scheduler).aggregate(Sum('status'))['status__sum']
             value = status
             if status_sum:
                 if (float(status) < float(status_sum)) :
@@ -715,7 +715,7 @@ def schedulerstatus_create(request):
             except ValueError:
                 return JsonResponse({"error": "Invalid date format"}, status=400)
            
-            mode = LXPModel.SchedulerStatus.objects.create(scheduler_id=scheduler,
+            mode = SchedulerStatus.objects.create(scheduler_id=scheduler,
                                                            trainer_id = request.user.id,
                                                   status=value,
                                                   date = tdate
@@ -723,7 +723,7 @@ def schedulerstatus_create(request):
             mode.save()
             messages.success(request, 'Scheduler Status created successfully!')
             return redirect('trainer-schedulerstatus-create')
-        schedulers = LXPModel.Scheduler.objects.filter(trainer_id = request.user.id)
+        schedulers = Scheduler.objects.filter(trainer_id = request.user.id)
         
         return render(request, 'trainer/schedulerstatus/trainer_schedulerstatus_create.html',{'schedulers':schedulers})
     else:
@@ -736,7 +736,7 @@ def get_scheduler_status_sum(request):
         scheduler_id = request.GET.get("scheduler_id")
         
         # Get the sum of 'status' values for the given scheduler
-        status_sum = LXPModel.SchedulerStatus.objects.filter(scheduler_id=scheduler_id).aggregate(Sum('status'))['status__sum']
+        status_sum = SchedulerStatus.objects.filter(scheduler_id=scheduler_id).aggregate(Sum('status'))['status__sum']
         
         # If no statuses exist, set sum to 0
         if status_sum is None:
@@ -752,7 +752,7 @@ def get_scheduler_status_sum(request):
 @login_required
 def schedulerstatus_delete(request, id):
     if str(request.session['utype']) == 'trainer':
-        schedulerstatus = get_object_or_404(LXPModel.SchedulerStatus, id=id)
+        schedulerstatus = get_object_or_404(SchedulerStatus, id=id)
         # Now delete the schedulerstatus instance
         schedulerstatus.delete()
         
@@ -771,13 +771,13 @@ def trainer_schedulerstatus_mark_done(request):
             status_id = int(data.get('id'))  # Convert ID to integer
 
             # Get sum of all status values for this scheduler
-            total_status = LXPModel.SchedulerStatus.objects.filter(scheduler_id=status_id).aggregate(
+            total_status = SchedulerStatus.objects.filter(scheduler_id=status_id).aggregate(
                 total=Sum('status')
             )['total'] or 0
 
             if total_status < 100:
                 dif = 100 - total_status
-                sch = LXPModel.SchedulerStatus.objects.create(
+                sch = SchedulerStatus.objects.create(
                     scheduler_id=status_id,
                     trainer_id=request.user.id,
                     status=dif,
@@ -795,3 +795,165 @@ def trainer_schedulerstatus_mark_done(request):
             return JsonResponse({'success': False, 'message': str(e)})
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+    
+def trainer_activity_learner_list(request):
+    if str(request.session['utype']) == 'trainer':
+        activity_answers = User.objects.filter(
+        batchlearner__batch__batchtrainer__trainer_id= request.user.id  # Traverse through BatchLearner, Batch, and BatchTrainer
+    ).distinct().values('id','first_name', 'last_name')
+
+        return render(request, 'trainer/learneractivity/trainer_activity_learner_list.html', {'activity_answers': activity_answers})
+    else:
+        return render(request,'loginrelated/diffrentuser.html')
+    
+def trainer_activity_learner_batch_list(request,learner_id):
+    if str(request.session['utype']) == 'trainer':
+        # # Get the specific Batch objects where the trainer_id = 6
+        # batches = Batch.objects.filter(batchtrainer__trainer_id=6)
+
+        # # Get the Batchlearner objects where batch is in the filtered batches and learner_id = 4
+        # batchlearners = Batchlearner.objects.filter(batch__in=batches, learner_id=4)
+
+        # # Now filter ActivityAnswers based on the Batchlearner's learners and join other related models
+        # activity_answers = ActivityAnswers.objects.filter(
+        #     learner__in=batchlearners.values('learner_id')
+        # ).select_related(
+        #     'activity', 'activity__chapter', 'activity__chapter__subject', 'course', 'activity__chapter__topic',
+        #     'batchlearner'
+        # ).distinct()
+
+        # # Now we can filter and retrieve the necessary data:
+        # results = activity_answers.values(
+        #     'learner__batchlearner__batch__batch_name',
+        #     'course__course_name',
+        #     'activity__description',
+        #     'activity__chapter__subject__subject_name',
+        #     'activity__chapter__chapter_name',
+        #     'activity__chapter__topic__topic_name',  # Correct reference to topic_name
+        #     'remarks',
+        #     'status',
+        #     'marks',
+        #     'id'
+        # ).distinct().order_by(
+        #     'course__course_name',
+        #     'activity__chapter__subject__subject_name',
+        #     'activity__chapter__chapter_name',
+        #     'activity__chapter__topic__topic_name'
+        # )
+        # result_list = list(results)
+
+        # # Remove duplicates based on key fields (e.g., course_name, subject_name, etc.)
+        # seen = set()
+        # unique_results = []
+        # for item in result_list:
+            
+        #     # Create a unique key based on fields that define uniqueness (adjust fields as needed)
+        #     key = (
+        #         item['learner__batchlearner__batch__batch_name'],
+        #         item['course__course_name'],
+        #         item['activity__description'],
+        #         item['activity__chapter__subject__subject_name'],
+        #         item['activity__chapter__chapter_name'],
+        #         item['activity__chapter__topic__topic_name']
+        #     )
+
+        #     # If the key is not in the seen set, it's a unique entry
+        #     if key not in seen:
+        #         if key[0] == None:
+        #             continue
+        #         seen.add(key)
+        #         unique_results.append(item)
+
+        # results = unique_results
+        
+        results = ActivityAnswers.objects.raw("""
+                                                 SELECT DISTINCT 
+                lxpapp_batch.batch_name,
+                lxpapp_course.course_name,
+                lxpapp_subject.subject_name,
+                lxpapp_chapter.chapter_name,
+                lxpapp_activity.description,
+                lxpapp_activity.id,
+                (SELECT anscount FROM (SELECT COUNT (lxpapp_activityanswers.id) as anscount  FROM lxpapp_activityanswers  WHERE lxpapp_activityanswers.course_ID = lxpapp_course.id
+                AND lxpapp_activityanswers.id = ans.id
+                AND lxpapp_activityanswers.learner_id = lxpapp_batchlearner.learner_id AND lxpapp_activityanswers.course_id = lxpapp_batchcourse.course_id) ) as anscount 
+                FROM
+                lxpapp_batchtrainer
+                LEFT OUTER JOIN lxpapp_batch ON (lxpapp_batchtrainer.batch_id = lxpapp_batch.id)
+                LEFT OUTER JOIN lxpapp_batchlearner ON (lxpapp_batch.id = lxpapp_batchlearner.batch_id)
+                LEFT OUTER JOIN lxpapp_batchcourse ON (lxpapp_batch.id = lxpapp_batchcourse.batch_id)
+                LEFT OUTER JOIN lxpapp_course ON (lxpapp_batchcourse.course_id = lxpapp_course.id)
+                LEFT OUTER JOIN lxpapp_coursechapter ON (lxpapp_course.id = lxpapp_coursechapter.course_id)
+                LEFT OUTER JOIN lxpapp_chapter ON (lxpapp_coursechapter.chapter_id = lxpapp_chapter.id)
+                LEFT OUTER JOIN lxpapp_subject ON (lxpapp_chapter.subject_id = lxpapp_subject.id)
+                LEFT OUTER JOIN lxpapp_activity ON (lxpapp_activity.chapter_id = lxpapp_chapter.id)
+                LEFT OUTER JOIN lxpapp_activityanswers ans ON (ans.activity_id = lxpapp_activity.id)
+                WHERE
+                lxpapp_activity.id IS NOT NULL AND lxpapp_batchlearner.learner_id = %s AND lxpapp_batchtrainer.trainer_id = %s
+                                              """ % (learner_id,request.user.id))
+        
+        return render(request, 'trainer/learneractivity/trainer_activity_learner_batch_list.html', {'results': results})
+    else:
+        return render(request,'loginrelated/diffrentuser.html')
+
+
+def trainer_activity_learner_batch_activity(request,activity_id):
+    if str(request.session['utype']) == 'trainer':
+        activity = ActivityAnswers.objects.filter(activity_id=activity_id).select_related('activity').values(
+            'activity__description',
+            'id',
+            'file_url',
+            'marks',
+            'remarks',
+            'status',
+            'submitted_on'
+            )
+        return render(request, 'trainer/learneractivity/trainer_activity_learner_batch_activity.html', {'activity': activity})
+    else:
+        return render(request,'loginrelated/diffrentuser.html')
+    
+@csrf_exempt  # To handle the POST request without CSRF token, optional if you're using AJAX with CSRF token
+def trainer_activity_learner_batch_activity_update(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+
+            # Extract data from the request
+            activityanswer_id = data.get('id')
+            marks = data.get('marks')
+            status = data.get('status')
+            remarks = data.get('remarks')
+
+            # Ensure the required fields are provided
+            if activityanswer_id is None or marks is None or remarks is None:
+                return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
+
+            # Try to find the Answer object with the provided activityanswer_id
+            answer = ActivityAnswers.objects.get(id=activityanswer_id)
+
+            # Update the Answer fields with the new data
+            answer.marks = marks
+            answer.status = status
+            answer.remarks = remarks
+
+            # Save the changes
+            answer.save()
+
+            # Return a success response
+            return JsonResponse({'status': 'success', 'message': 'Answer updated successfully'})
+
+        except ActivityAnswers.DoesNotExist:
+            # Handle the case where the Answer with the provided ID does not exist
+            return JsonResponse({'status': 'error', 'message': 'Answer not found'}, status=404)
+
+        except json.JSONDecodeError:
+            # Handle JSON decode errors
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
+
+        except Exception as e:
+            # General error handling for unexpected issues
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    # Return an error response if the request is not a POST request
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)

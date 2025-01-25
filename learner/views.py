@@ -361,7 +361,7 @@ def learner_studymaterial_chapter_show_view(request,chapter_id,course_id):
             coursename = LXPModel.Course.objects.only('course_name').get(id=course_id).course_name
             list = LXPModel.Course.objects.raw("SELECT mat.id, (SELECT COUNT(lxpapp_learnermaterialwatched.id) AS MatCount FROM lxpapp_learnermaterialwatched LEFT OUTER JOIN lxpapp_material matwatch ON (lxpapp_learnermaterialwatched.material_id = matwatch.id) WHERE mat.id = matwatch.id AND lxpapp_learnermaterialwatched.course_id = " + str(course_id) + " ) AS matcount, lxpapp_chapter.chapter_name, lxpapp_chapter.id AS chapter_id, mat.topic, mat.mtype, mat.urlvalue, mat.description FROM lxpapp_material mat INNER JOIN lxpapp_chapter ON (mat.chapter_id = lxpapp_chapter.id) WHERE lxpapp_chapter.id = " + str(chapter_id) )
             activity = LXPModel.Activity.objects.all().filter(chapter_id = chapter_id)
-            return render(request,'learner/studymaterial/learner_studymaterial_chapter_show.html',{'list':list,'chapter_id':chapter_id,'chapter_name':chapter_name,'topiccount':topiccount,'coursename':coursename,'course_id':course_id,'Topiccount':Topiccount,'watchcount':watchcount,'per':per,'exam':exam, 'activity':activity})
+            return render(request,'learner/studymaterial/learner_studymaterial_chapter_show.html',{'list':list,'chapter_id':chapter_id,'course_id':course_id,'chapter_name':chapter_name,'topiccount':topiccount,'coursename':coursename,'course_id':course_id,'Topiccount':Topiccount,'watchcount':watchcount,'per':per,'exam':exam, 'activity':activity})
  #   except:
         return render(request,'lxpapp/404page.html')
 
@@ -636,3 +636,26 @@ def learner_edit_Learner_details_view(request, user_id):
         form = LXPFORM.LearnerDetailsForm(instance=user)
     
     return render(request, 'learner/learner_edit_details.html', {'form': form, 'user': user})
+
+import base64
+from django.conf import settings
+from lxpapp.gitupload import upload_to_github,check_file_exists_on_github
+def learner_upload_activity_view(request,activity_id, course_id, chapter_id):
+    if request.method == 'POST':
+        pdf_file = request.FILES['pdf_file']
+        content = pdf_file.read()
+        content_base64 = base64.b64encode(content).decode('utf-8')
+        
+        # Construct the path dynamically using the uploaded file's name
+        file_name = pdf_file.name
+        github_path = f'activity/{file_name}'
+        if check_file_exists_on_github(github_path) != 404:
+            messages.info(request, 'File already exists on server with same name of \n'+file_name)
+        else:
+            response = upload_to_github(github_path, content_base64)
+            url = response['content']['html_url']
+            
+            pdf_instance =LXPModel.ActivityAnswers( activity_id = activity_id, course_id = course_id, chapter_id = chapter_id, learner_id = request.user.id, file_url = url)
+            pdf_instance.save()
+            messages.success(request, 'PDF uploaded successfully')
+    return render(request, 'learner/activity/learner_upload_activity.html')

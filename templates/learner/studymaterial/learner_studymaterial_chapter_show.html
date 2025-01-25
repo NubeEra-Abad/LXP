@@ -94,7 +94,10 @@
                             <p class="play-intro">
                                 <img src="/static/dreamlms/img/icon/exam.svg" alt=""><span>
                                 <a href='https://nbviewer.org/github{{act.urlvalue|cut:"https://github.com"}}'
-                                class="link" data-id="{{ act.id }}">{{act.description}}</a></span>
+                                class="link" data-id="{{ act.id }}">{{act.description}}</a>
+                                <a class="btn btn-primary" href="{% url 'learner-upload-activity' act.id course_id chapter_id  %}"><span
+                                    class="fas fa-angle-double-right"></span></a>
+                            </span>
                             </p>
 
                         </li>

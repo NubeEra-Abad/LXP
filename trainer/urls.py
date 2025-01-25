@@ -47,7 +47,6 @@ urlpatterns = [
     path('trainer-view-chapterquestion', views.trainer_view_chapterquestion_view,name='trainer-view-chapterquestion'),
     path('trainer-view-chapterquestion-chapter/<int:chapter_id>', views.trainer_view_chapterquestion_chapter_view,name='trainer-view-chapterquestion-chapter'),
 
-
     path('trainer-k8sterminal', views.trainer_k8sterminal_view,name='trainer-k8sterminal'),
     path('trainer-add-k8sterminal', views.trainer_add_k8sterminal_view,name='trainer-add-k8sterminal'),
     path('trainer-update-k8sterminal/<int:pk>', views.trainer_update_k8sterminal_view,name='trainer-update-k8sterminal'),
@@ -64,8 +63,10 @@ urlpatterns = [
     path('get-scheduler-status-sum/', views.get_scheduler_status_sum, name='get-scheduler-status-sum'),
     path('trainer-schedulerstatus-mark-done/', views.trainer_schedulerstatus_mark_done, name='trainer-schedulerstatus-mark-done'),
     path('trainer-scheduler-calender/', views.trainer_scheduler_calender, name='trainer-scheduler-calender'),
-    
-    
 
+    path('trainer-activity-learner-list/', views.trainer_activity_learner_list, name='trainer-activity-learner-list'),
+    path('trainer-activity-learner-batch-list/<int:learner_id>/', views.trainer_activity_learner_batch_list, name='trainer-activity-learner-batch-list'),
+    path('trainer-activity-learner-batch-activity/<int:activity_id>/', views.trainer_activity_learner_batch_activity, name='trainer-activity-learner-batch-activity'),
+    path('trainer-activity-learner-batch-activity-update/', views.trainer_activity_learner_batch_activity_update, name='trainer-activity-learner-batch-activity-update'),
     
 ]
