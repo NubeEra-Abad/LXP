@@ -48,3 +48,8 @@ class BatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Batch
         fields = ['id', 'batch_name', 'coursetype', 'stdate', 'enddate', 'courses', 'trainers', 'learners', 'videos']
+        
+class SchedulerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scheduler
+        fields = '__all__'
