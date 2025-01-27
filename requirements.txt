@@ -1,0 +1,19 @@
+django
+asgiref
+django-widget-tweaks
+Pillow
+pytz
+sqlparse
+django-ckeditor
+djangorestframework
+djangorestframework-simplejwt
+requests
+humanize
+social-auth-app-django
+google-api-python-client 
+django-environ
+django-cors-headers
+# pyodbc
+# django-mssql-backend
+# mssql-django
+# # Ensure this driver is installed ODBC Driver 17 for SQL Server
