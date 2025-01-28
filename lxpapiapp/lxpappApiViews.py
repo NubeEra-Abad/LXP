@@ -1030,3 +1030,30 @@ class UserProfileView(APIView):
           return Response({"message": "Profile updated successfully."}, status=status.HTTP_200_OK)
 
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class UserInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            # Fetch the user info based on the logged-in user
+            user = request.user  # `request.user` will give the currently authenticated user
+            
+            # Serialize the data you want to return (e.g., user details)
+            user_data = {
+                'user_full_name': user.user_full_name,
+                'email': user.email,
+                'utype': user.utype,
+                'mobile': user.mobile,
+                'whatsappno': user.whatsappno,
+                'profile_pic': user.profile_pic.url if user.profile_pic else None,
+                'profile_updated': user.profile_updated,
+                'status': user.status,
+                'created': user.created,
+                'skills': user.skills,
+                'bio': user.bio,
+            }
+            return Response(user_data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/admin/toggle-user-status/<int:user_id>/', AdminToggleUserStatusAPIView.as_view(), name='api-toggle-user-status'),
     path('api/delete-user/<int:user_id>/', DeleteUserAPIView.as_view(), name='api-delete-user'),
     path('api/user-profile/', UserProfileView.as_view(), name='api-user-profile'),
+    path('api/user-info/', UserInfoView.as_view(), name='user-info'),
 ]
