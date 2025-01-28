@@ -4,6 +4,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Sum, Case, When, Value, Max
+from django.db.models.functions import Coalesce
+from django.http import JsonResponse
 
 class CourseTypeAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -196,3 +199,64 @@ class SchedulerAPIView(APIView):
             return Response({"message": "Scheduler deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Scheduler.DoesNotExist:
             return Response({"error": "Scheduler not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class SchedulerCalendarAPIView(APIView):
+    """
+    API to fetch Scheduler data with annotated fields: `status_sum` and `completion_date`.
+    """
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        try:
+            # Annotate the Scheduler queryset with additional calculated fields
+            schedulers = Scheduler.objects.annotate(
+                status_sum=Coalesce(Sum('schedulerstatus__status'), Value(0)),
+                completion_date=Case(
+                    When(status_sum__gte=100, then=Max('schedulerstatus__date')),
+                    default=Value(None),
+                )
+            )
+
+            # Serialize the data with annotations
+            serialized_data = []
+            for scheduler in schedulers:
+                serialized_data.append({
+                    "id": scheduler.id,
+                    "trainer": scheduler.trainer.id if scheduler.trainer else None,
+                    "type": scheduler.type,
+                    "subject": scheduler.subject.id if scheduler.subject else None,
+                    "chapter": scheduler.chapter.id if scheduler.chapter else None,
+                    "topic": scheduler.topic.id if scheduler.topic else None,
+                    "start": scheduler.start,
+                    "end": scheduler.end,
+                    "eventdetails": scheduler.eventdetails,
+                    "meeting_link": scheduler.meeting_link,
+                    "status_sum": scheduler.status_sum,
+                    "completion_date": scheduler.completion_date,
+                })
+
+            return Response(serialized_data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+def get_meetings(request):
+    """
+    API to fetch all Scheduler meetings and return them as a JSON response.
+    """
+    try:
+        # Query all meetings from the Scheduler model
+        meetings = Scheduler.objects.all()
+
+        # Prepare events list
+        events = [
+            {
+                "title": f"{meeting.subject.subject_name if meeting.subject else meeting.eventdetails}",
+                "start": meeting.start.isoformat(),
+                "end": meeting.end.isoformat(),
+                "meeting_link": meeting.meeting_link,
+            }
+            for meeting in meetings
+        ]
+        return JsonResponse(events, safe=False, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

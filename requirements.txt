@@ -9,10 +9,8 @@ djangorestframework
 djangorestframework-simplejwt
 requests
 humanize
-social-auth-app-django
 google-api-python-client 
 django-environ
-django-cors-headers
 # pyodbc
 # django-mssql-backend
 # mssql-django

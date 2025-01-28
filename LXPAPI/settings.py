@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'rest_framework',
     'rest_framework_simplejwt',
-    'social_django',
-    'corsheaders',   # social_django for OAuth
+    'social_django',   # social_django for OAuth
 ]
 
 
@@ -76,7 +75,6 @@ MIDDLEWARE = [
     'lxpapiapp.userlinktraking.RequestMiddleware',
     'lxpapiapp.userlinktraking.ErrorMiddleware',
     'lxpapiapp.userlinktraking.UserActivityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 CSRF_COOKIE_SECURE=False
 ROOT_URLCONF = 'LXPAPI.urls'
@@ -208,20 +206,3 @@ MESSAGE_TAGS = {
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '747343296194-cdlksf9iptmrmm6t87igfnfiqe989jsd.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
-
-import environ
-
-# Initialize environment variables
-env = environ.Env()
-
-# Specify the custom .envsettings file path
-env_file_path = ".envsettings"
-environ.Env.read_env(env_file_path)
-
-# Load the YouTube API key
-# YOUTUBE_API_KEY = env("YOUTUBE_API_KEY")
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
