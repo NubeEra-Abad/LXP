@@ -66,6 +66,7 @@ class Chapter(models.Model):  # Chapter
 
 class Topic(models.Model):
     topic_name = models.CharField(max_length=200)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
 
     def save(self, *args, **kwargs):
@@ -77,25 +78,25 @@ class Topic(models.Model):
     def __str__(self):
         return self.topic_name
         
-class MainHead(models.Model):
-    mainhead_name = models.CharField(max_length=200)
+class Category(models.Model):
+    category_name = models.CharField(max_length=200)
 
     def __str__(self):
         try:
-            return self.mainhead_name
+            return self.category_name
         except:
             return self
 
-class SubHead(models.Model):
-    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
-    subhead_name = models.CharField(max_length=200)
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    subcategory_name = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.subhead_name
+        return self.subcategory_name
     
 class Course(models.Model):
-    mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
-    subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True)
     course_name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000,default='')
     whatlearn = models.CharField(max_length=1000,default='')
@@ -390,20 +391,33 @@ class K8STerminalLearnerCount(models.Model):
     
 
 class Scheduler(models.Model):
-    
-    trainer=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    cat=(('1','Session'),('2','Interview'),('3','Client Requirment'),('4','Lab Call'),('5','Meeting'),('6','Others'))
-    type=models.CharField(max_length=200,choices=cat,null=True)
+    TRAINING_SESSION = '1'
+    INTERVIEW = '2'
+    CLIENT_REQUIREMENT = '3'
+    LAB_CALL = '4'
+    MEETING = '5'
+    OTHERS = '6'
+
+    SCHEDULER_TYPES = [
+        (TRAINING_SESSION, 'Session'),
+        (INTERVIEW, 'Interview'),
+        (CLIENT_REQUIREMENT, 'Client Requirement'),
+        (LAB_CALL, 'Lab Call'),
+        (MEETING, 'Meeting'),
+        (OTHERS, 'Others'),
+    ]
+
+    trainer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    type = models.CharField(max_length=2, choices=SCHEDULER_TYPES, null=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
-    eventdetails=models.CharField(max_length=200,null=True)
+    eventdetails = models.CharField(max_length=200, null=True)
     meeting_link = models.URLField(max_length=500, null=True, blank=True)
-    
+
     def __str__(self):
-        # Return a formatted string instead of a datetime object
         return f"Schedule on {self.start.strftime('%Y-%m-%d %H:%M:%S')}"
 
 class SchedulerStatus(models.Model): 

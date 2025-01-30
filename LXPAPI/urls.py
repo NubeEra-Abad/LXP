@@ -1,5 +1,7 @@
 from django.urls import path, include
+
 from lxpapiapp.lxpappApiViews import *
+
 urlpatterns = [
     path('api/cto/', include('cto.urls')),
     path('api/cfo/', include('cfo.urls')),
@@ -13,4 +15,5 @@ urlpatterns = [
     path('api/delete-user/<int:user_id>/', DeleteUserAPIView.as_view(), name='api-delete-user'),
     path('api/user-profile/', UserProfileView.as_view(), name='api-user-profile'),
     path('api/user-info/', UserInfoView.as_view(), name='user-info'),
+
 ]

@@ -347,6 +347,42 @@ class LogoutAPIView(APIView):
             return Response({"message": "User logged out successfully."}, status=200)
         except Exception as e:
             return Response({"error": str(e)}, status=500)        
+          
+class ChangePasswordAPIView(APIView):
+    """
+    API view to handle password changes for authenticated users using JWT.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        current_password = request.data.get('current_password')
+        new_password = request.data.get('new_password')
+
+        if not current_password or not new_password:
+            return Response({"error": "Both current and new passwords are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user.check_password(current_password):
+            return Response({"error": "Current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Set the new password
+        user.set_password(new_password)
+
+        try:
+            user.save()  # Save the updated password
+
+            # Create a new JWT token after the password change
+            refresh = RefreshToken.for_user(user)
+            access_token = refresh.access_token
+
+            return Response({
+                "message": "Password updated successfully.",
+                "access_token": str(access_token),  # Send the new access token
+                "refresh_token": str(refresh),      # Optionally, send the refresh token as well
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+          
 class AdminViewUserList(APIView):
     """
     API View for retrieving the list of regular users (non-admins).
@@ -460,89 +496,6 @@ class AdminViewUserList(APIView):
         except Exception as e:
             return Response({'detail': str(e)}, status=500)
 
-class ChangePasswordAPIView(APIView):
-    """
-    API View for Changing User Password
-
-    POST:
-    - Allows authenticated users to change their password.
-    - Requires the user to be logged in.
-    - Validates the new password and updates it for the current user.
-
-    Request Body:
-    {
-        "new_password": "new_secure_password"
-    }
-
-    Responses:
-    - 200 OK: When the password is successfully updated.
-    - 400 Bad Request: If the `new_password` is missing or invalid.
-    - 401 Unauthorized: If the user is not logged in.
-    - 500 Internal Server Error: If there is an unexpected error during the update.
-
-    Example Response (Success):
-    {
-        "message": "Password updated successfully!"
-    }
-
-    Example Response (Failure - Missing Password):
-    {
-        "error": "New password is required."
-    }
-
-    Example Response (Failure - Not Authenticated):
-    {
-        "detail": "Authentication credentials were not provided."
-    }
-
-    How to Use:
-    1. Send a `POST` request to `/api/change-password/` with the `new_password` field in the request body.
-    2. The user must be logged in (authenticated) to use this endpoint.
-    3. If successful, the password is updated, and the user remains logged in using their updated credentials.
-    4. If there are validation issues or errors, the response will contain an appropriate error message.
-
-    Example HTML Usage (Change Password):
-    <script>
-      const changePassword = async () => {
-        const response = await fetch('/api/change-password/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Token <your_auth_token>' // Replace with the user's actual token
-          },
-          body: JSON.stringify({
-            new_password: 'new_secure_password'
-          })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Password change successful:', data);
-        } else {
-          console.error('Password change failed:', await response.json());
-        }
-      };
-
-      // Call the function when needed
-      changePassword();
-    </script>
-    """
-    
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        new_password = request.data.get("new_password")
-        if not new_password:
-            return Response({"error": "New password is required."}, status=400)
-
-        try:
-            user = request.user
-            user.set_password(new_password)
-            user.save()
-            update_session_auth_hash(request, user)
-            return Response({"message": "Password updated successfully!"}, status=200)
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
 
 class AdminViewUserLogDetailsAPIView(APIView):
     """
@@ -776,7 +729,7 @@ class AdminToggleUserStatusAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, user_id, *args, **kwargs):
-        if not request.user.is_staff:
+        if not request.user.is_superuser:
             return Response({"error": "Access denied. Admin privileges required."}, status=403)
 
         try:
@@ -1053,6 +1006,8 @@ class UserInfoView(APIView):
                 'created': user.created,
                 'skills': user.skills,
                 'bio': user.bio,
+                'regdate':user.regdate,
+                'is_superuser':user.is_superuser
             }
             return Response(user_data, status=status.HTTP_200_OK)
         except User.DoesNotExist:

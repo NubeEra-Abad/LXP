@@ -8,67 +8,8 @@ from pathlib import Path
 from rest_framework.permissions import IsAuthenticated
 class SubjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    
-    """
-    API to handle CRUD operations for the Subject model.
-    """
-
     def get(self, request, subject_id=None):
-        """
-        Retrieve all subjects or a specific subject by ID.
-
-        GET:
-        - If `subject_id` is provided, retrieve a single subject.
-        - If no `subject_id` is provided, retrieve a list of all subjects.
-
-        Path Parameter (Optional):
-        - subject_id: ID of the subject to retrieve.
-
-        Example Request (Single Subject):
-        GET /api/cto/subject/1/
-
-        Example Request (All Subjects):
-        GET /api/cto/subject/
-
-        Example Response (Single Subject):
-        {
-            "id": 1,
-            "subject_name": "Mathematics"
-        }
-
-        Example Response (All Subjects):
-        [
-            {
-                "id": 1,
-                "subject_name": "Mathematics"
-            },
-            {
-                "id": 2,
-                "subject_name": "Science"
-            }
-        ]
-
-        Returns:
-        - 200 OK: On successful retrieval.
-        - 404 Not Found: If the subject with the provided ID does not exist.
         
-        Explanation of Paths:
-        GET /api/cto/subject/
-
-        Retrieves all subjects in the database.
-        POST /api/cto/subject/
-
-        Creates a new subject by accepting a JSON payload in the body.
-        GET /api/cto/subject/<int:subject_id>/
-
-        Retrieves a single subject by its ID.
-        PUT /api/cto/subject/<int:subject_id>/
-
-        Updates an existing subject with the provided subject_id using the JSON payload.
-        DELETE /api/cto/subject/<int:subject_id>/
-
-        Deletes the subject corresponding to the subject_id.
-        """
         if subject_id:
             try:
                 subject = Subject.objects.get(id=subject_id)
@@ -81,28 +22,7 @@ class SubjectAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        """
-        Create a new subject.
-
-        POST:
-        - Add a new subject by providing the required data.
-
-        Request Body:
-        {
-            "subject_name": "Physics"
-        }
-
-        Example Response:
-        {
-            "id": 3,
-            "subject_name": "Physics"
-        }
-
-        Returns:
-        - 201 Created: On successful creation.
-        - 400 Bad Request: If the request data is invalid.
-        
-        """
+       
         serializer = SubjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -110,31 +30,7 @@ class SubjectAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, subject_id):
-        """
-        Update an existing subject by ID.
-
-        PUT:
-        - Update the `subject_name` of an existing subject.
-
-        Path Parameter:
-        - subject_id: ID of the subject to update.
-
-        Request Body:
-        {
-            "subject_name": "Updated Subject Name"
-        }
-
-        Example Response:
-        {
-            "id": 1,
-            "subject_name": "Updated Subject Name"
-        }
-
-        Returns:
-        - 200 OK: On successful update.
-        - 400 Bad Request: If the request data is invalid.
-        - 404 Not Found: If the subject with the provided ID does not exist.
-        """
+        
         try:
             subject = Subject.objects.get(id=subject_id)
         except Subject.DoesNotExist:
@@ -147,27 +43,7 @@ class SubjectAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, subject_id):
-        """
-        Delete a subject by ID.
-
-        DELETE:
-        - Removes the subject with the given ID.
-
-        Path Parameter:
-        - subject_id: ID of the subject to delete.
-
-        Example Request:
-        DELETE /api/cto/subject/1/
-
-        Example Response:
-        {
-            "message": "Subject deleted successfully"
-        }
-
-        Returns:
-        - 200 OK: On successful deletion.
-        - 404 Not Found: If the subject with the provided ID does not exist.
-        """
+        
         try:
             subject = Subject.objects.get(id=subject_id)
             subject.delete()
@@ -177,52 +53,7 @@ class SubjectAPIView(APIView):
 
 class ChapterAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    """
-    API for CRUD operations on Chapter model.
-
-    GET:
-    - Retrieves all chapters.
-    - Optional query parameter: `subject` (to filter by subject ID).
-
-    POST:
-    - Creates a new chapter.
-
-    PUT:
-    - Updates an existing chapter.
-
-    DELETE:
-    - Deletes an existing chapter.
-
-    Example Request (POST):
-    {
-        "chapter_name": "Introduction to Physics",
-        "subject": 1
-    }
-
-    Example Response (Success):
-    {
-        "id": 1,
-        "chapter_name": "Introduction to Physics",
-        "subject": 1
-    }
-
-    Example Response (Error):
-    {
-        "error": "Chapter not found."
-    }
-    
-    Examples
-        Filter Chapters by Subject
-        Request: GET /api/chapter/?subject=1
-        Response:
-        [
-            {
-                "id": 1,
-                "chapter_name": "Introduction to Physics",
-                "subject": 1
-            }
-        ]
-    """
+   
     def get(self, request, chapter_id=None):
         if chapter_id:
             try:
@@ -266,82 +97,7 @@ class ChapterAPIView(APIView):
 
 class TopicAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    """
-    API for CRUD operations on Topic model.
-
-    GET:
-    - Retrieves all topics.
-    - Optional query parameters:
-        - `subject` (filter by subject ID).
-        - `chapter` (filter by chapter ID).
-        - `subject` and `chapter` combined.
-
-    POST:
-    - Creates a new topic.
-
-    PUT:
-    - Updates an existing topic.
-
-    DELETE:
-    - Deletes an existing topic.
-
-    Example Request (POST):
-    {
-        "topic_name": "Kinematics",
-        "chapter": 1
-    }
-
-    Example Response (Success):
-    {
-        "id": 1,
-        "topic_name": "Kinematics",
-        "chapter": 1,
-        "subject": 1
-    }
-
-    Example Response (Error):
-    {
-        "error": "Topic not found."
-    }
-    
-    Filter Topics by Subject
-    Request: GET /api/cto/topic/?subject=1
-    Response:
-    [
-        {
-            "id": 1,
-            "topic_name": "Kinematics",
-            "chapter": 1,
-            "subject": 1
-        }
-    ]
-    
-    Filter Topics by Chapter
-    Request: GET /api/cto/topic/?chapter=2
-    Response:
-    [
-        {
-            "id": 2,
-            "topic_name": "Newton's Laws",
-            "chapter": 2,
-            "subject": 1
-        }
-    ]
-    
-    Filter Topics by Subject and Chapter
-    Request: GET /api/cto/topic/?subject=1&chapter=2
-    Response:
-    [
-        {
-            "id": 2,
-            "topic_name": "Newton's Laws",
-            "chapter": 2,
-            "subject": 1
-        }
-    ]
-
-
-    """
+   
     def get(self, request, topic_id=None):
         if topic_id:
             try:
@@ -391,185 +147,98 @@ class TopicAPIView(APIView):
         except Topic.DoesNotExist:
             return Response({"error": "Topic not found."}, status=status.HTTP_404_NOT_FOUND)                    
         
-class MainHeadAPIView(APIView):
+class CategoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    """
-    API for CRUD operations on MainHead model.
-
-    GET:
-    - Retrieves all mainheads.
-
-    POST:
-    - Creates a new mainhead.
-
-    PUT:
-    - Updates an existing mainhead.
-
-    DELETE:
-    - Deletes an existing mainhead.
-    """
-    def get(self, request, mainhead_id=None):
-        if mainhead_id:
+   
+  
+    def get(self, request, category_id=None):
+        if category_id:
             try:
-                mainhead = MainHead.objects.get(id=mainhead_id)
-                serializer = MainHeadSerializer(mainhead)
+                category = Category.objects.get(id=category_id)
+                serializer = CategorySerializer(category)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            except MainHead.DoesNotExist:
-                return Response({"error": "MainHead not found."}, status=status.HTTP_404_NOT_FOUND)
+            except Category.DoesNotExist:
+                return Response({"error": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
         else:
-            mainheads = MainHead.objects.all()
-            serializer = MainHeadSerializer(mainheads, many=True)
+            categorys = Category.objects.all()
+            serializer = CategorySerializer(categorys, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = MainHeadSerializer(data=request.data)
+        serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, mainhead_id):
+    def put(self, request, category_id):
         try:
-            mainhead = MainHead.objects.get(id=mainhead_id)
-        except MainHead.DoesNotExist:
-            return Response({"error": "MainHead not found."}, status=status.HTTP_404_NOT_FOUND)
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = MainHeadSerializer(mainhead, data=request.data, partial=True)
+        serializer = CategorySerializer(category, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, mainhead_id):
+    def delete(self, request, category_id):
         try:
-            mainhead = MainHead.objects.get(id=mainhead_id)
-            mainhead.delete()
-            return Response({"message": "MainHead deleted successfully."}, status=status.HTTP_200_OK)
-        except MainHead.DoesNotExist:
-            return Response({"error": "MainHead not found."}, status=status.HTTP_404_NOT_FOUND)
+            category = Category.objects.get(id=category_id)
+            category.delete()
+            return Response({"message": "Category deleted successfully."}, status=status.HTTP_200_OK)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-class SubHeadAPIView(APIView):
+class SubCategoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    """
-    API for CRUD operations on SubHead model.
-
-    GET:
-    - Retrieves all subheads.
-    - Optional query parameter: `mainhead` (filter by mainhead ID).
-
-    POST:
-    - Creates a new subhead.
-
-    PUT:
-    - Updates an existing subhead.
-
-    DELETE:
-    - Deletes an existing subhead.
-    """
-    def get(self, request, subhead_id=None):
-        if subhead_id:
+  
+    def get(self, request, subcategory_id=None):
+        if subcategory_id:
             try:
-                subhead = SubHead.objects.get(id=subhead_id)
-                serializer = SubHeadSerializer(subhead)
+                subcategory = SubCategory.objects.get(id=subcategory_id)
+                serializer = SubCategorySerializer(subcategory)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            except SubHead.DoesNotExist:
-                return Response({"error": "SubHead not found."}, status=status.HTTP_404_NOT_FOUND)
+            except SubCategory.DoesNotExist:
+                return Response({"error": "Sub Categorynot found."}, status=status.HTTP_404_NOT_FOUND)
         else:
-            mainhead = request.query_params.get('mainhead')
-            subheads = SubHead.objects.filter(mainhead=mainhead) if mainhead else SubHead.objects.all()
-            serializer = SubHeadSerializer(subheads, many=True)
+            category = request.query_params.get('category')
+            subcategorys = SubCategory.objects.filter(category=category) if category else SubCategory.objects.all()
+            serializer = SubCategorySerializer(subcategorys, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = SubHeadSerializer(data=request.data)
+        serializer = SubCategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, subhead_id):
+    def put(self, request, subcategory_id):
         try:
-            subhead = SubHead.objects.get(id=subhead_id)
-        except SubHead.DoesNotExist:
-            return Response({"error": "SubHead not found."}, status=status.HTTP_404_NOT_FOUND)
+            subcategory = SubCategory.objects.get(id=subcategory_id)
+        except SubCategory.DoesNotExist:
+            return Response({"error": "Sub Categorynot found."}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = SubHeadSerializer(subhead, data=request.data, partial=True)
+        serializer = SubCategorySerializer(subcategory, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, subhead_id):
+    def delete(self, request, subcategory_id):
         try:
-            subhead = SubHead.objects.get(id=subhead_id)
-            subhead.delete()
-            return Response({"message": "SubHead deleted successfully."}, status=status.HTTP_200_OK)
-        except SubHead.DoesNotExist:
-            return Response({"error": "SubHead not found."}, status=status.HTTP_404_NOT_FOUND)
+            subcategory = SubCategory.objects.get(id=subcategory_id)
+            subcategory.delete()
+            return Response({"message": "Sub Categorydeleted successfully."}, status=status.HTTP_200_OK)
+        except SubCategory.DoesNotExist:
+            return Response({"error": "Sub Categorynot found."}, status=status.HTTP_404_NOT_FOUND)
 
 class CourseAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    """
-    for CRUD operations on Course model.
-
-    Endpoints:
-    - GET: Retrieve all courses or a single course with its chapters.
-    - POST: Create a new course with associated chapters.
-    - PUT: Update an existing course along with its chapters.
-    - DELETE: Delete a course and its associated chapters.
-
-    Example Request (POST):
-    {
-        "course_name": "Advanced Mathematics",
-        "description": "Learn advanced mathematics topics.",
-        "whatlearn": "Calculus, Algebra, Geometry",
-        "includes": "Video tutorials, Assignments",
-        "themecolor": "1",
-        "tags": "Math, Advanced",
-        "image": "math.png",
-        "banner": "math-banner.png",
-        "price": 200,
-        "mainhead": 1,
-        "subhead": 1,
-        "chapters": [
-            {"subject": 1, "chapter": 1},
-            {"subject": 2, "chapter": 3}
-        ]
-    }
-
-    Example Response (Success):
-    {
-        "id": 1,
-        "course_name": "Advanced Mathematics",
-        "description": "Learn advanced mathematics topics.",
-        "whatlearn": "Calculus, Algebra, Geometry",
-        "includes": "Video tutorials, Assignments",
-        "themecolor": "1",
-        "tags": "Math, Advanced",
-        "image": "math.png",
-        "banner": "math-banner.png",
-        "price": 200,
-        "mainhead": 1,
-        "subhead": 1,
-        "chapters": [
-            {
-                "id": 1,
-                "subject": 1,
-                "subject_name": "Mathematics",
-                "chapter": 1,
-                "chapter_name": "Algebra"
-            },
-            {
-                "id": 2,
-                "subject": 2,
-                "subject_name": "Science",
-                "chapter": 3,
-                "chapter_name": "Chemistry Basics"
-            }
-        ]
-    }
-"""
+   
     def get(self, request, pk=None):
         if pk:
             try:
@@ -607,7 +276,26 @@ class CourseAPIView(APIView):
             return Response({"message": "Course deleted successfully"}, status=status.HTTP_200_OK)
         except Course.DoesNotExist:
             return Response({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
+class CourseChapterDetailView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            try:
+                # Get CourseChapter with the provided pk and course_id
+                course_chapter = CourseChapter.objects.filter(course_id=pk)
+                if course_chapter.exists():
+                    serializer = CourseChapterSerializer(course_chapter, many=True)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response({"error": "No chapters found for this course"}, status=status.HTTP_404_NOT_FOUND)
+            except Course.DoesNotExist:
+                return Response({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # If no pk is provided, return all course chapters
+            course_chapters = CourseChapter.objects.all()
+            serializer = CourseChapterSerializer(course_chapters, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
 class SyncYouTubeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 

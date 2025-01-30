@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum, Case, When, Value, Max
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
+from django.conf import settings
+from urllib.parse import quote_plus
 
 class CourseTypeAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -140,12 +142,27 @@ class BatchAPIView(APIView):
         except Batch.DoesNotExist:
             return Response({"error": "Batch not found"}, status=status.HTTP_404_NOT_FOUND)        
 
+def generate_meeting_link(request, meeting_type):
+        # Map meeting types to labels if needed (you can use the model choices)
+        type_dict = dict(Scheduler.SCHEDULER_TYPES)
+        now = datetime.datetime.now()
+        timestamp = now.strftime("%Y%m%d%H%M%S") + f"{now.microsecond // 1000:03d}"
+        
+        base_url = settings.MEET_BASE_URL  # Assuming this is the base URL for the meeting service
+        meeting_type_label = type_dict.get(meeting_type, 'Unknown')  # Fallback to 'Unknown' if invalid type
+        encoded_meeting_type = quote_plus(meeting_type_label)
+        
+        meeting_url = f"{base_url}{encoded_meeting_type}-{timestamp}"
+        print(meeting_url)
+        return meeting_url
+    
 class SchedulerAPIView(APIView):
     """
     API for managing Scheduler events
     """
-
+    
     def get(self, request, pk=None):
+        
         """
         Retrieve a single scheduler event or a list of all events.
         Optional: Filter by `trainer`, `subject`, `chapter`, or `type`.
@@ -159,17 +176,21 @@ class SchedulerAPIView(APIView):
                 return Response({"error": "Scheduler not found"}, status=status.HTTP_404_NOT_FOUND)
         
         # Filtering based on query parameters
-        filters = {k: v for k, v in request.query_params.items() if k in ['trainer', 'subject', 'chapter', 'type']}
+        filters = {k: v for k, v in request.query_params.items() if v and k in ['trainer', 'subject', 'chapter', 'type']}
+
         schedulers = Scheduler.objects.filter(**filters)
         serializer = SchedulerSerializer(schedulers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        """
-        Create a new scheduler event.
-        """
         serializer = SchedulerSerializer(data=request.data)
         if serializer.is_valid():
+            # Generate meeting link if the type is 'Meeting' (or another condition)
+            meeting_type = serializer.validated_data.get('type')
+            if meeting_type == Scheduler.MEETING:
+                meeting_link = generate_meeting_link(request, meeting_type)
+                serializer.validated_data['meeting_link'] = meeting_link
+            
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -199,6 +220,8 @@ class SchedulerAPIView(APIView):
             return Response({"message": "Scheduler deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Scheduler.DoesNotExist:
             return Response({"error": "Scheduler not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    
 
 class SchedulerCalendarAPIView(APIView):
     """
