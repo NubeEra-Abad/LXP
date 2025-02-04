@@ -181,21 +181,12 @@ STATIC_DIR,
  ]
 
 
-#for contact us give your gmail id and password
-EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'apikey' # this email will be used to send emails
-EMAIL_HOST_PASSWORD = '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' # host email password required
 # now sign in with your host gmail account in your browser
 # open following link and turn it ON
 # https://myaccount.google.com/lesssecureapps
 # otherwise you will get SMTPAuthenticationError at /contactus
 # this process is required because google blocks apps authentication by default
-EMAIL_RECEIVING_USER = ['info@nubeera.com'] # email on which you will receive messages sent from website
 AUTH_USER_MODEL = 'lxpapiapp.User'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
@@ -208,7 +199,6 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
 }
 
-
-
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '747343296194-cdlksf9iptmrmm6t87igfnfiqe989jsd.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+MEET_BASE_URL = "https://13.126.67.216"

@@ -8,12 +8,14 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'subject_name']
         
 class ChapterSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer()
     class Meta:
         model = Chapter
         fields = ['id', 'chapter_name', 'subject']
         
 class TopicSerializer(serializers.ModelSerializer):
-    subject = serializers.SerializerMethodField()
+    subject = SubjectSerializer()
+    chapter = ChapterSerializer()
 
     class Meta:
         model = Topic
@@ -24,17 +26,17 @@ class TopicSerializer(serializers.ModelSerializer):
             return obj.chapter.subject.id if obj.chapter.subject else None
         return None
 
-class MainHeadSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = MainHead
-        fields = ['id', 'mainhead_name']
+        model = Category
+        fields = ['id', 'category_name']
 
-class SubHeadSerializer(serializers.ModelSerializer):
-    mainhead_name = serializers.ReadOnlyField(source='mainhead.mainhead_name')
+class SubCategorySerializer(serializers.ModelSerializer):
+    category_name = serializers.ReadOnlyField(source='category.category_name')
 
     class Meta:
-        model = SubHead
-        fields = ['id', 'mainhead', 'mainhead_name', 'subhead_name']
+        model = SubCategory
+        fields = ['id', 'category', 'category_name', 'subcategory_name']
 
 class CourseChapterSerializer(serializers.ModelSerializer):
     subject_name = serializers.CharField(source='subject.subject_name', read_only=True)
@@ -45,13 +47,18 @@ class CourseChapterSerializer(serializers.ModelSerializer):
         fields = ['id', 'course', 'subject', 'subject_name', 'chapter', 'chapter_name']
 
 class CourseSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.category_name', read_only=True)
+    subcategory_name = serializers.CharField(source='subcategory.subcategory_name', read_only=True)
+
+    # Serialize the chapters related to the course
     chapters = CourseChapterSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
         fields = [
             'id', 'course_name', 'description', 'whatlearn', 'includes',
-            'themecolor', 'tags', 'image', 'banner', 'price', 'mainhead', 'subhead', 'chapters'
+            'themecolor', 'tags', 'image', 'banner', 'price', 'category', 'subcategory',
+            'category_name', 'subcategory_name', 'chapters'
         ]
 
 class CourseCreateUpdateSerializer(serializers.ModelSerializer):
@@ -65,7 +72,7 @@ class CourseCreateUpdateSerializer(serializers.ModelSerializer):
         model = Course
         fields = [
             'id', 'course_name', 'description', 'whatlearn', 'includes',
-            'themecolor', 'tags', 'image', 'banner', 'price', 'mainhead', 'subhead', 'chapters'
+            'themecolor', 'tags', 'image', 'banner', 'price', 'category', 'subcategory', 'chapters'
         ]
 
     def create(self, validated_data):
