@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'social_django',   # social_django for OAuth
+    'corsheaders',
 ]
 
 
@@ -75,10 +76,15 @@ MIDDLEWARE = [
     'lxpapiapp.userlinktraking.RequestMiddleware',
     'lxpapiapp.userlinktraking.ErrorMiddleware',
     'lxpapiapp.userlinktraking.UserActivityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 CSRF_COOKIE_SECURE=False
 ROOT_URLCONF = 'LXPAPI.urls'
-CSRF_TRUSTED_ORIGINS = ['https://live.nubeera.com','https://*.nubeera.com']
+CSRF_TRUSTED_ORIGINS = ['https://live.nubeera.com','https://*.nubeera.com', "http://localhost:3000"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 TEMPLATES = [
     {
