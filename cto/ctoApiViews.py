@@ -8,16 +8,26 @@ from pathlib import Path
 from rest_framework.permissions import IsAuthenticated
 class SubjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    def get(self, request, subject_id=None):
-        
-        if subject_id:
-            try:
-                subject = Subject.objects.get(id=subject_id)
-                serializer = SubjectSerializer(subject)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except Subject.DoesNotExist:
-                return Response({"error": "Subject not found"}, status=status.HTTP_404_NOT_FOUND)
-        subjects = Subject.objects.all()
+
+    def get(self, request):
+        subject_id = request.query_params.get('subject_id', None)
+        subject_name = request.query_params.get('subject_name', None)
+
+        # Filter the queryset based on the presence of subject_id and subject_name
+        if subject_id and subject_name:
+            subjects = Subject.objects.filter(id=subject_id, subject_name=subject_name)
+        elif subject_id:
+            subjects = Subject.objects.filter(id=subject_id)
+        elif subject_name:
+            subjects = Subject.objects.filter(subject_name=subject_name)
+        else:
+            subjects = Subject.objects.all()
+
+        # Check if any subjects are found
+        if not subjects.exists():
+            return Response({"error": "No subjects found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Serialize the result
         serializer = SubjectSerializer(subjects, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -54,19 +64,29 @@ class SubjectAPIView(APIView):
 class ChapterAPIView(APIView):
     permission_classes = [IsAuthenticated]
    
-    def get(self, request, chapter_id=None):
+    def get(self, request):
+        subject_id = request.query_params.get('subject_id')
+        chapter_id = request.query_params.get('chapter_id')
+        chapter_name = request.query_params.get('chapter_name')
+
         if chapter_id:
             try:
-                chapter = Chapter.objects.get(id=chapter_id)
+                chapter = Chapter.objects.get(pk=chapter_id)
                 serializer = ChapterSerializer(chapter)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except Chapter.DoesNotExist:
                 return Response({"error": "Chapter not found."}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            subject = request.query_params.get('subject')
-            chapters = Chapter.objects.filter(subject=subject) if subject else Chapter.objects.all()
-            serializer = ChapterSerializer(chapters, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        chapters = Chapter.objects.all()
+
+        if subject_id:
+            chapters = chapters.filter(subject_id=subject_id)
+
+        if chapter_name:
+            chapters = chapters.filter(chapter_name__icontains=chapter_name)
+
+        serializer = ChapterSerializer(chapters, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = ChapterSerializer(data=request.data)
@@ -97,28 +117,35 @@ class ChapterAPIView(APIView):
 
 class TopicAPIView(APIView):
     permission_classes = [IsAuthenticated]
-   
-    def get(self, request, topic_id=None):
+    def get(self, request):
+        subject_id = request.query_params.get('subject_id')
+        chapter_id = request.query_params.get('chapter_id')
+        topic_id = request.query_params.get('topic_id')
+        topic_name = request.query_params.get('topic_name')
+
+        # Fetch a specific topic if topic_id is provided
         if topic_id:
             try:
-                topic = Topic.objects.get(id=topic_id)
+                topic = Topic.objects.get(pk=topic_id)
                 serializer = TopicSerializer(topic)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except Topic.DoesNotExist:
                 return Response({"error": "Topic not found."}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            subject = request.query_params.get('subject')
-            chapter = request.query_params.get('chapter')
-            if subject and chapter:
-                topics = Topic.objects.filter(chapter__subject=subject, chapter=chapter)
-            elif subject:
-                topics = Topic.objects.filter(chapter__subject=subject)
-            elif chapter:
-                topics = Topic.objects.filter(chapter=chapter)
-            else:
-                topics = Topic.objects.all()
-            serializer = TopicSerializer(topics, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Fetch topics based on filters
+        topics = Topic.objects.all()
+
+        if subject_id:
+            topics = topics.filter(chapter__subject=subject_id)  # Assuming Topic has a ForeignKey to Subject
+
+        if chapter_id:
+            topics = topics.filter(chapter_id=chapter_id)  # Assuming Topic has a ForeignKey to Chapter
+
+        if topic_name:
+            topics = topics.filter(topic_name=topic_name)
+
+        serializer = TopicSerializer(topics, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = TopicSerializer(data=request.data)
@@ -149,22 +176,31 @@ class TopicAPIView(APIView):
         
 class CategoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
-   
-  
-    def get(self, request, category_id=None):
-        if category_id:
-            try:
-                category = Category.objects.get(id=category_id)
-                serializer = CategorySerializer(category)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except Category.DoesNotExist:
-                return Response({"error": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request):
+        category_id = request.query_params.get('category_id', None)
+        category_name = request.query_params.get('category_name', None)
+
+        # Filter the queryset based on the presence of category_id and category_name
+        if category_id and category_name:
+            categorys = Category.objects.filter(id=category_id, category_name=category_name)
+        elif category_id:
+            categorys = Category.objects.filter(id=category_id)
+        elif category_name:
+            categorys = Category.objects.filter(category_name=category_name)
         else:
             categorys = Category.objects.all()
-            serializer = CategorySerializer(categorys, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Check if any categorys are found
+        if not categorys.exists():
+            return Response({"error": "No categorys found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Serialize the result
+        serializer = CategorySerializer(categorys, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+       
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -172,42 +208,53 @@ class CategoryAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, category_id):
+        
         try:
             category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:
-            return Response({"error": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = CategorySerializer(category, data=request.data, partial=True)
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CategorySerializer(category, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, category_id):
+        
         try:
             category = Category.objects.get(id=category_id)
             category.delete()
-            return Response({"message": "Category deleted successfully."}, status=status.HTTP_200_OK)
+            return Response({"message": "Category deleted successfully"}, status=status.HTTP_200_OK)
         except Category.DoesNotExist:
-            return Response({"error": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
-
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class SubCategoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
-  
-    def get(self, request, subcategory_id=None):
+   
+    def get(self, request):
+        category_id = request.query_params.get('category_id')
+        subcategory_id = request.query_params.get('subcategory_id')
+        subcategory_name = request.query_params.get('subcategory_name')
+
         if subcategory_id:
             try:
-                subcategory = SubCategory.objects.get(id=subcategory_id)
+                subcategory = SubCategory.objects.get(pk=subcategory_id)
                 serializer = SubCategorySerializer(subcategory)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except SubCategory.DoesNotExist:
-                return Response({"error": "Sub Categorynot found."}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            category = request.query_params.get('category')
-            subcategorys = SubCategory.objects.filter(category=category) if category else SubCategory.objects.all()
-            serializer = SubCategorySerializer(subcategorys, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response({"error": "Sub Category not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        subcategorys = SubCategory.objects.all()
+
+        if category_id:
+            subcategorys = subcategorys.filter(category_id=category_id)
+
+        if subcategory_name:
+            subcategorys = subcategorys.filter(subcategory_name__icontains=subcategory_name)
+
+        serializer = SubCategorySerializer(subcategorys, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = SubCategorySerializer(data=request.data)
@@ -220,7 +267,7 @@ class SubCategoryAPIView(APIView):
         try:
             subcategory = SubCategory.objects.get(id=subcategory_id)
         except SubCategory.DoesNotExist:
-            return Response({"error": "Sub Categorynot found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Sub Category not found."}, status=status.HTTP_404_NOT_FOUND)
         
         serializer = SubCategorySerializer(subcategory, data=request.data, partial=True)
         if serializer.is_valid():
@@ -232,22 +279,30 @@ class SubCategoryAPIView(APIView):
         try:
             subcategory = SubCategory.objects.get(id=subcategory_id)
             subcategory.delete()
-            return Response({"message": "Sub Categorydeleted successfully."}, status=status.HTTP_200_OK)
+            return Response({"message": "Sub Category deleted successfully."}, status=status.HTTP_200_OK)
         except SubCategory.DoesNotExist:
-            return Response({"error": "Sub Categorynot found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Sub Category not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class CourseAPIView(APIView):
     permission_classes = [IsAuthenticated]
    
-    def get(self, request, pk=None):
-        if pk:
-            try:
-                course = Course.objects.get(pk=pk)
-                serializer = CourseSerializer(course)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except Course.DoesNotExist:
-                return Response({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+    def get(self, request):
+        category_id = request.query_params.get('category_id')
+        subcategory_id = request.query_params.get('subcategory_id')
+        course_name = request.query_params.get('course_name')
+
+        # Fetch courses based on filters
         courses = Course.objects.all()
+
+        if category_id:
+            courses = courses.filter(category_id=category_id)  # Assuming Course has a ForeignKey to Category
+
+        if subcategory_id:
+            courses = courses.filter(subcategory_id=subcategory_id)  # Assuming Course has a ForeignKey to SubCategory
+
+        if course_name:
+            courses = courses.filter(course_name=course_name)  
+
         serializer = CourseSerializer(courses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

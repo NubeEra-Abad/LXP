@@ -118,12 +118,6 @@ class CourseChapter(models.Model):
     def __str__(self):
         return self.chapter.chapter_name
 
-
-
-
-
-    
-
 class Material(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True)
@@ -200,17 +194,7 @@ class BatchRecordedVDOList(models.Model):
     def __str__(self):
         return f"{self.batch.batch_name} - {self.subject.subject_name}"
 
-
-class Exam(models.Model):
-   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
-   exam_name = models.CharField(max_length=50)
-   cat=(('MCQ','MCQ'),('ShortAnswer','ShortAnswer'))
-   questiontpye=models.CharField(max_length=200,choices=cat,default='')
-   def __str__(self):
-        return self.exam_name
-
 class McqQuestion(models.Model):
-   exam=models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
    question=models.CharField(max_length=600)
    option1=models.CharField(max_length=200)
    option2=models.CharField(max_length=200)
@@ -219,6 +203,26 @@ class McqQuestion(models.Model):
    cat=(('1','Option1'),('2','Option2'),('3','Option3'),('4','Option4'))
    answer=models.CharField(max_length=200,choices=cat)
    marks=models.IntegerField(default=0)
+
+class ShortQuestion(models.Model):
+   question=models.CharField(max_length=600)
+   marks=models.IntegerField(default=0)
+
+class Exam(models.Model):
+   batch=models.ForeignKey(Batch,on_delete=models.SET_NULL, null=True)
+   exam_name = models.CharField(max_length=50)
+   cat=(('MCQ','MCQ'),('ShortAnswer','ShortAnswer'))
+   questiontpye=models.CharField(max_length=200,choices=cat,default='')
+   def __str__(self):
+        return self.exam_name
+    
+class ExamQuestionDettails(models.Model):
+   exam=models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
+   mcqquestion=models.ForeignKey(McqQuestion,on_delete=models.SET_NULL, null=True)
+   shortquestion=models.ForeignKey(ShortQuestion,on_delete=models.SET_NULL, null=True)
+   
+
+
 
 class McqResult(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
@@ -234,10 +238,7 @@ class McqResultDetails(models.Model):
     question = models.ForeignKey(McqQuestion,on_delete=models.SET_NULL, null=True)
     selected=models.CharField(max_length=200)
 
-class ShortQuestion(models.Model):
-   exam=models.ForeignKey(Exam,on_delete=models.SET_NULL, null=True)
-   question=models.CharField(max_length=600)
-   marks=models.IntegerField(default=0)
+
 
 class ShortResult(models.Model):
     learner=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
@@ -298,7 +299,7 @@ class LearnerSubjectCount(models.Model):
 class SessionMaterial(models.Model):
     Subject=models.ForeignKey(Subject,on_delete=models.SET_NULL, null=True)
     Chapter=models.ForeignKey(Chapter,on_delete=models.SET_NULL, null=True)
-    cat=(('PDF','PDF'),('HTML','HTML'),('Chapter','Chapter'),('URL','URL'))
+    cat=(('PDF','PDF'),('HTML','HTML'),('Video','Video'),('URL','URL'))
     mtype=models.CharField(max_length=200,choices=cat, default= 'PDF')
     urlvalue=models.CharField(max_length=200)
     description=models.CharField(max_length=200)

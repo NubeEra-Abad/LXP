@@ -363,7 +363,7 @@ class ChangePasswordAPIView(APIView):
             return Response({"error": "Both current and new passwords are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         if not user.check_password(current_password):
-            return Response({"error": "Current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid -- Authentication credentials were not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Set the new password
         user.set_password(new_password)

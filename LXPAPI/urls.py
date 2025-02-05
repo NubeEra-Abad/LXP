@@ -5,6 +5,7 @@ from lxpapiapp.lxpappApiViews import *
 urlpatterns = [
     path('api/cto/', include('cto.urls')),
     path('api/cfo/', include('cfo.urls')),
+    path('api/staff/', include('staff.urls')),
     path('api/signup/', SignupAPIView.as_view(), name='api-signup'),
     path('api/login/', LoginAPI.as_view(), name='api-login'),
     path('api/change-password/', ChangePasswordAPIView.as_view(), name='api-change-password'),
