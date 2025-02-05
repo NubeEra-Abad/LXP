@@ -659,7 +659,7 @@ class LearnerShowChapterView(APIView):
             url = "https://www.youtube.com/embed/" + x.chapter_id
         return Response({"topicname": topicname, "url": url, "subjectname": subjectname})
 
-class ChapterQuestionListCreate(APIView):
+class ChapterQuestionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -707,7 +707,7 @@ class ChapterQuestionDetail(APIView):
         question.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ChapterResultListCreate(APIView):
+class ChapterResultAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -755,7 +755,7 @@ class ChapterResultDetail(APIView):
         result.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ChapterResultDetailsListCreate(APIView):
+class ChapterResultDetailsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -844,7 +844,7 @@ class ActivityAPIView(APIView):
         except Activity.DoesNotExist:
             return Response({"error": "Activity not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class ActivityUploadDetailsCSVView(APIView):
+class ActivityUploadDetailsCSVAPIView(APIView):
     permission_classes = [IsAuthenticated]  # Ensures only authenticated users can access
 
     def post(self, request):
@@ -899,3 +899,23 @@ class ActivityUploadDetailsCSVView(APIView):
             )
 
         return Response({'message': 'CSV data uploaded successfully'}, status=status.HTTP_201_CREATED)
+
+class K8STerminalAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        K8STerminal_id = request.query_params.get('K8STerminal_id')
+        terminals = K8STerminal.objects.all()
+        if K8STerminal_id:
+            terminals = terminals.filter(id = K8STerminal_id)
+        serializer = K8STerminalSerializer(terminals, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = K8STerminalSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

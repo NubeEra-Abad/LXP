@@ -36,14 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'lxpapiapp',
-    'widget_tweaks',
-    'django.contrib.humanize',  # A set of Django template filters useful for adding a “human touch” to data.
     'django.contrib.sites',
-    'ckeditor',
     'rest_framework',
     'rest_framework_simplejwt',
-    'social_django',   # social_django for OAuth
-    'corsheaders',
 ]
 
 
@@ -62,7 +57,6 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',  # Using Google OAuth2 for authentication
     'django.contrib.auth.backends.ModelBackend',  # Default backend for normal auth
 )
 MIDDLEWARE = [
@@ -199,6 +193,4 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
 }
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '747343296194-cdlksf9iptmrmm6t87igfnfiqe989jsd.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 MEET_BASE_URL = "https://13.126.67.216"

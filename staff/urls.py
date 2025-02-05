@@ -24,9 +24,9 @@ urlpatterns = [
     path('learner-approve-all-chapter/<int:userid>/<int:subject_id>/', LearnerApproveAllChapterView.as_view(), name='api-learner-approve-all-chapter'),
     path('learner-show-chapter/<int:subject_id>/<int:chapter_id>/', LearnerShowChapterView.as_view(), name='api-learner-show-chapter'),
     ###################################
-    path('chapter-questions/', ChapterQuestionListCreate.as_view(), name='api-chapter-question'),
-    path('chapter-results/', ChapterResultListCreate.as_view(), name='api-chapter-result'),
-    path('chapter-result-details/', ChapterResultDetailsListCreate.as_view(), name='api-chapter-result-details'),
+    path('chapter-questions/', ChapterQuestionAPIView.as_view(), name='api-chapter-question'),
+    path('chapter-results/', ChapterResultAPIView.as_view(), name='api-chapter-result'),
+    path('chapter-result-details/', ChapterResultDetailsAPIView.as_view(), name='api-chapter-result-details'),
     path('activity/', ActivityAPIView.as_view(), name='api-activity'),
-    path('activity-upload-csv/', ActivityUploadDetailsCSVView.as_view(), name='api-activity-upload-csv'),
+    path('activity-upload-csv/', ActivityUploadDetailsCSVAPIView.as_view(), name='api-activity-upload-csv'),
 ]

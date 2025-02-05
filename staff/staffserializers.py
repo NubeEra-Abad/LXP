@@ -99,3 +99,13 @@ class ChapterResultDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChapterResultDetails
         fields = ['id', 'chapterresult', 'question', 'selected']
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = '__all__'
+
+class K8STerminalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = K8STerminal
+        fields = ['id', 'trainer', 'learner', 'Password', 'usagevalue']

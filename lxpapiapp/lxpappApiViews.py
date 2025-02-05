@@ -31,7 +31,7 @@ def post_login(sender, user, request, **kwargs):
 
     Purpose:
     - Tracks the login time for the user.
-    - Optionally fetches the user's profile picture if the user is not a staff member (for example, if using social authentication).
+    - Optionally fetches the user's profile picture if the user is not a staff member 
     - Stores the login time for use in subsequent events (e.g., when the user logs out).
 
     Args:
@@ -44,7 +44,7 @@ def post_login(sender, user, request, **kwargs):
 
     Example Use Case:
     - This signal can be used to track when users log in, which is useful for auditing, user activity logs, or tracking session durations.
-    - If you're using social login integrations, this could be used to retrieve the user's social profile picture.
+    
 
     Example Flow:
     1. User logs in.
