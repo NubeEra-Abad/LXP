@@ -111,8 +111,7 @@ def user_change_password_view(request):
             u = request.user
             u.set_password(request.POST['passid'])
             u.save() # Add this line
-            update_session_auth_hash(request, u)
-            return HttpResponseRedirect('indexpage')  
+            logout()
         return render(request, 'loginrelated/changepassword.html')
     except:
         return render(request,'lxpapp/404page.html')

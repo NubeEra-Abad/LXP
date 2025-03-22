@@ -808,64 +808,6 @@ def trainer_activity_learner_list(request):
     
 def trainer_activity_learner_batch_list(request,learner_id):
     if str(request.session['utype']) == 'trainer':
-        # # Get the specific Batch objects where the trainer_id = 6
-        # batches = Batch.objects.filter(batchtrainer__trainer_id=6)
-
-        # # Get the Batchlearner objects where batch is in the filtered batches and learner_id = 4
-        # batchlearners = Batchlearner.objects.filter(batch__in=batches, learner_id=4)
-
-        # # Now filter ActivityAnswers based on the Batchlearner's learners and join other related models
-        # activity_answers = ActivityAnswers.objects.filter(
-        #     learner__in=batchlearners.values('learner_id')
-        # ).select_related(
-        #     'activity', 'activity__chapter', 'activity__chapter__subject', 'course', 'activity__chapter__topic',
-        #     'batchlearner'
-        # ).distinct()
-
-        # # Now we can filter and retrieve the necessary data:
-        # results = activity_answers.values(
-        #     'learner__batchlearner__batch__batch_name',
-        #     'course__course_name',
-        #     'activity__description',
-        #     'activity__chapter__subject__subject_name',
-        #     'activity__chapter__chapter_name',
-        #     'activity__chapter__topic__topic_name',  # Correct reference to topic_name
-        #     'remarks',
-        #     'status',
-        #     'marks',
-        #     'id'
-        # ).distinct().order_by(
-        #     'course__course_name',
-        #     'activity__chapter__subject__subject_name',
-        #     'activity__chapter__chapter_name',
-        #     'activity__chapter__topic__topic_name'
-        # )
-        # result_list = list(results)
-
-        # # Remove duplicates based on key fields (e.g., course_name, subject_name, etc.)
-        # seen = set()
-        # unique_results = []
-        # for item in result_list:
-            
-        #     # Create a unique key based on fields that define uniqueness (adjust fields as needed)
-        #     key = (
-        #         item['learner__batchlearner__batch__batch_name'],
-        #         item['course__course_name'],
-        #         item['activity__description'],
-        #         item['activity__chapter__subject__subject_name'],
-        #         item['activity__chapter__chapter_name'],
-        #         item['activity__chapter__topic__topic_name']
-        #     )
-
-        #     # If the key is not in the seen set, it's a unique entry
-        #     if key not in seen:
-        #         if key[0] == None:
-        #             continue
-        #         seen.add(key)
-        #         unique_results.append(item)
-
-        # results = unique_results
-        
         results = ActivityAnswers.objects.raw("""
                                                  SELECT DISTINCT 
                 lxpapp_batch.batch_name,
@@ -938,7 +880,7 @@ def trainer_activity_learner_batch_activity_update(request):
             answer.remarks = remarks
 
             # Save the changes
-            answer.save()
+            answer.save() # imran Ali Khan
 
             # Return a success response
             return JsonResponse({'status': 'success', 'message': 'Answer updated successfully'})

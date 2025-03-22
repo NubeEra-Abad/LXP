@@ -6,12 +6,7 @@ import requests
 import humanize
 import datetime
 
-class UserLog(models.Model):
-    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    login =  models.DateTimeField(default=datetime.datetime.now)
-    logout = models.DateTimeField(default=datetime.datetime.now)
-    dur = models.CharField(default='',max_length=200)
-    session_id = models.CharField(default='',max_length=200)
+
     
 class UserProfile(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
@@ -33,6 +28,12 @@ class LearnerDetails(models.Model):
         whatsappno = models.CharField(max_length=10,default='')
         profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     
+class UserLog(models.Model):
+    user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    login =  models.DateTimeField(default=datetime.datetime.now)
+    logout = models.DateTimeField(default=datetime.datetime.now)
+    dur = models.CharField(default='',max_length=200)
+    session_id = models.CharField(default='',max_length=200)
 class IsFirstLogIn(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     def __str__(self):
@@ -76,6 +77,7 @@ class SubHead(models.Model):
 
     def __str__(self):
         return self.subhead_name
+    
 class Course(models.Model):
     mainhead = models.ForeignKey(MainHead, on_delete=models.SET_NULL, null=True)
     subhead = models.ForeignKey(SubHead, on_delete=models.SET_NULL, null=True)
