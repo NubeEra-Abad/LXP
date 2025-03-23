@@ -39,6 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'rest_framework_simplejwt',
+    
+    "corsheaders",
+    "django_extensions",
+    
+    "rest_framework.authtoken",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "dj_rest_auth.registration",
 ]
 
 
@@ -59,11 +69,51 @@ SIMPLE_JWT = {
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # Default backend for normal auth
 )
+
+# django-allauth
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # Use Email / Password authentication
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"  # Do not require email confirmation
+
+
+# django-allauth social
+GOOGLE_OAUTH_CLIENT_ID = '699466001074-nja2mi4fl48gcb1l90lj9fq8mtamqvu2.apps.googleusercontent.com'
+GOOGLE_OAUTH_CLIENT_SECRET = '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'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '699466001074-nja2mi4fl48gcb1l90lj9fq8mtamqvu2.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'email',
+    'profile',
+    'openid',
+]
+GOOGLE_OAUTH_CALLBACK_URL = 'http://127.0.0.1:5566/complete/google/'
+
+# Authenticate if local account with this email address already exists
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+# Connect local account and social account if local account with that email address already exists
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APPS": [
+            {
+                "client_id": GOOGLE_OAUTH_CLIENT_ID,
+                "secret": GOOGLE_OAUTH_CLIENT_SECRET,
+                "key": "",
+            },
+        ],
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -71,6 +121,8 @@ MIDDLEWARE = [
     'lxpapiapp.userlinktraking.ErrorMiddleware',
     'lxpapiapp.userlinktraking.UserActivityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    
+    "allauth.account.middleware.AccountMiddleware",
 ]
 CSRF_COOKIE_SECURE=False
 ROOT_URLCONF = 'LXPAPI.urls'
@@ -183,7 +235,7 @@ STATIC_DIR,
 AUTH_USER_MODEL = 'lxpapiapp.User'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
-LOGOUT_URL = 'logout'
+LOGOUT_URL = '/'
 LOGOUT_REDIRECT_URL = 'login'
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
@@ -194,3 +246,9 @@ MESSAGE_TAGS = {
 }
 
 MEET_BASE_URL = "https://13.126.67.216"
+SESSION_ENGINE = 'django.contrib.sessions.backends.db' 
+# Clear session on logout
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Set session cookie age (optional, for extra control)
+SESSION_COOKIE_AGE = 3600  # Time in seconds (1 hour)

@@ -11,6 +11,9 @@ requests
 humanize
 google-api-python-client 
 django-environ
+django-cors-headers
+dj-rest-auth[with_social]
+python-dotenv
 # pyodbc
 # django-mssql-backend
 # mssql-django

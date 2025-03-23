@@ -22,6 +22,110 @@ from django.apps import apps
 from django.db import transaction
 from django.core.files.storage import default_storage
 import os
+from django.conf import settings
+from django.contrib.auth import login
+from django.views import View
+from django.shortcuts import render
+from urllib.parse import urljoin
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from django.urls import reverse
+from django.shortcuts import redirect
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = settings.GOOGLE_OAUTH_CALLBACK_URL
+    client_class = OAuth2Client
+
+
+class GoogleLoginCallback(APIView):
+    def get(self, request, *args, **kwargs):
+        """Accept callback request from Google OAuth screen.
+        Extract code and send a POST request to Google authentication endpoint.
+
+        If you are building a fullstack application (eg. with React app next to Django)
+        you can place this endpoint in your frontend application to receive
+        the JWT tokens there - and store them in the state
+        """
+
+        code = request.GET.get("code")
+
+        if code is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        token_endpoint_url = urljoin("http://127.0.0.1:5566", reverse("google_login"))
+        response = requests.post(url=token_endpoint_url, data={"code": code})
+
+        return Response(response.json(), status=status.HTTP_200_OK)
+
+def google_complete(request):
+    # Get the authorization code from the query string
+    code = request.GET.get('code')
+    
+    if not code:
+        return JsonResponse({'error': 'Authorization code missing'}, status=400)
+
+    # Step 1: Exchange the authorization code for an access token and refresh token
+    token_url = 'https://oauth2.googleapis.com/token'
+
+    data = {
+        'code': code,
+        'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+        'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+        'redirect_uri': settings.GOOGLE_OAUTH_CALLBACK_URL,
+        'grant_type': 'authorization_code',
+    }
+
+    response = requests.post(token_url, data=data)
+    tokens = response.json()
+
+    if response.status_code != 200:
+        return JsonResponse({'error': 'Failed to get tokens'}, status=400)
+
+    access_token = tokens.get('access_token')
+    refresh_token = tokens.get('refresh_token')
+
+    if not access_token or not refresh_token:
+        return JsonResponse({'error': 'Tokens not found'}, status=400)
+
+    # Step 2: Use the access token to fetch user information from Google
+    user_info_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+    }
+
+    user_info_response = requests.get(user_info_url, headers=headers)
+    user_info = user_info_response.json()
+
+    # Get or create the user (based on the email returned from Google)
+    user, created = User.objects.get_or_create(email=user_info.get('email'))
+
+    # You can save the tokens in the user model or another table
+    # user.profile.google_access_token = access_token
+    # user.profile.google_refresh_token = refresh_token
+    # user.profile.save()
+
+    # Log the user in
+    login(request, user)
+
+    # Return a success response or redirect to the appropriate page
+    return JsonResponse({'message': 'Google login successful', 'user_info': user_info})
+  
+def custom_logout(request):
+    logout(request)  # Log the user out
+    return redirect('login')  # Redirect to login page or homepage after logout
+  
+class LoginPage(View):
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            "pages/login.html",
+            {
+                "google_callback_uri": settings.GOOGLE_OAUTH_CALLBACK_URL,
+                "google_client_id": settings.GOOGLE_OAUTH_CLIENT_ID,
+            },
+        )
 @receiver(user_logged_in)
 def post_login(sender, user, request, **kwargs):
     """
@@ -236,7 +340,7 @@ class LoginAPI(APIView):
     }
 
     How to Use:
-    1. Send a `POST` request to `/api/login/` with the `username` and `password` of the user you want to authenticate.
+    1. Send a `POST` request to `/api/userlogin/` with the `username` and `password` of the user you want to authenticate.
     2. The response will include an `access` token and a `refresh` token if the credentials are correct.
     3. Store the `access` token securely, as it will be required for making authenticated requests to other protected endpoints.
     4. For expired tokens, use the `refresh` token to request a new `access` token via a refresh token API (if implemented).

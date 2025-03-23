@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from urllib.parse import quote_plus
 import csv
-
+import random
 class MaterialAPIView(APIView):
     permission_classes = [IsAuthenticated]  # Ensures only authenticated users can access
     def get(self, request):
@@ -375,6 +375,77 @@ class ExamQuestionDetailsAPIView(APIView):
         except ExamQuestionDettails.DoesNotExist:
             return Response({"error": "Exam Question Detail not found"}, status=status.HTTP_404_NOT_FOUND)
 
+class RandomMcqQuestionsView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Get the total marks from the query parameters
+        total_marks = request.query_params.get('total_marks', None)
+        
+        if not total_marks:
+            return Response({"error": "Please provide the total_marks parameter."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            total_marks = int(total_marks)
+        except ValueError:
+            return Response({"error": "total_marks must be an integer."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Fetch all questions from the database
+        all_questions = McqQuestion.objects.all()
+        
+        # Shuffle the questions to randomize the selection
+        shuffled_questions = list(all_questions)
+        random.shuffle(shuffled_questions)
+        
+        selected_questions = []
+        current_total_marks = 0
+        
+        # Select questions until the total marks is reached or exceeded
+        for question in shuffled_questions:
+            if current_total_marks + question.marks <= total_marks:
+                selected_questions.append(question)
+                current_total_marks += question.marks
+            if current_total_marks >= total_marks:
+                break
+        
+        # Serialize the selected questions
+        serializer = McqQuestionSerializer(selected_questions, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class RandomShortQuestionsView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Get the total marks from the query parameters
+        total_marks = request.query_params.get('total_marks', None)
+        
+        if not total_marks:
+            return Response({"error": "Please provide the total_marks parameter."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            total_marks = int(total_marks)
+        except ValueError:
+            return Response({"error": "total_marks must be an integer."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Fetch all questions from the database
+        all_questions = ShortQuestion.objects.all()
+        
+        # Shuffle the questions to randomize the selection
+        shuffled_questions = list(all_questions)
+        random.shuffle(shuffled_questions)
+        
+        selected_questions = []
+        current_total_marks = 0
+        
+        # Select questions until the total marks is reached or exceeded
+        for question in shuffled_questions:
+            if current_total_marks + question.marks <= total_marks:
+                selected_questions.append(question)
+                current_total_marks += question.marks
+            if current_total_marks >= total_marks:
+                break
+        
+        # Serialize the selected questions
+        serializer = ShortQuestionSerializer(selected_questions, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
 class ShortResultAPIView(APIView):
     permission_classes = [IsAuthenticated]  # Ensures only authenticated users can access
     def get(self, request):
