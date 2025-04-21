@@ -82,6 +82,7 @@ def session_expire_view(request):
     return render(request, 'loginrelated/user_session_expire.html')
 
 def login(request):
+    
     return render(request, 'loginrelated/userlogin.html')
 
 @receiver(user_logged_in)
@@ -129,6 +130,8 @@ def afterlogin_view(request):
     user = UserSocialAuth.objects.all().filter(user_id = request.user.id)
     if not user:
         request.session['utype'] = 'admin'
+        import requests
+        # response = requests.get('http://127.0.0.1:5566/login/')
         return redirect('admin-view-user-list')
     elif user:
         for xx in user:

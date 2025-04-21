@@ -1,0 +1,369 @@
+{% extends 'cfo/cfobase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <link rel="stylesheet" href="/static/getskills/css/style.css">
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    a:link {
+      text-decoration: none;
+    }
+  </style>
+  <style>
+    th {
+      text-align: center;
+    }
+
+    #select2,
+    #select1 {
+      height: 300px;
+      width: 200px;
+    }
+
+    .approveTermsContainer {
+      display: flex;
+      justify-content: center;
+    }
+
+    .transferBtns {
+      margin-right: 30px;
+      margin-left: 30px;
+    }
+
+    .transferBtns {
+      float: left;
+      align-self: center;
+    }
+
+    input[type="date"]::-webkit-datetime-edit,
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-clear-button {
+      color: #fff;
+      position: relative;
+    }
+
+    input[type="date"]::-webkit-datetime-edit-year-field {
+      position: absolute !important;
+      border-left: 1px solid #8c8c8c;
+      padding: 2px;
+      color: #000;
+      left: 56px;
+    }
+
+    input[type="date"]::-webkit-datetime-edit-month-field {
+      position: absolute !important;
+      border-left: 1px solid #8c8c8c;
+      padding: 2px;
+      color: #000;
+      left: 26px;
+    }
+
+
+    input[type="date"]::-webkit-datetime-edit-day-field {
+      position: absolute !important;
+      color: #000;
+      padding: 2px;
+      left: 4px;
+
+    }
+  </style>
+
+  <script>
+    var products = [];
+    var jsonData = [];
+    function generateJSON(e) {
+      debugger;
+      //Store HTML Table Values into Multidimensional Javascript Array Object
+      var TableData = new Array();
+      $('#tblData tr').each(function (row, tr) {
+        TableData[row] = {
+          "id": $(tr).find('td:eq(0)').text(),
+          "fee": $(tr).find('td:eq(2)').text()
+        }//tableData[row]
+      });
+      TableData.shift(); // first row will be empty - so remove
+      if (TableData == false) {
+        alert("Please Add Learners and Fee");
+        e.preventDefault();
+        return false;
+      }
+      JsonObject = JSON.parse(JSON.stringify(TableData));
+      const jsonString = JSON.stringify(Object.assign({}, TableData))
+      const json_obj = JSON.parse(jsonString);
+      var textbox3 = document.getElementById('myvalue');
+      textbox3.value = jsonString;
+      return true;
+    }
+
+    function addProduct() {
+      var productID = document.getElementById("productID").value;
+      var efield1 = document.getElementById("productID");
+      var field1 = efield1.options[efield1.selectedIndex].innerHTML;
+      var product_desc = document.getElementById("product_desc").value;
+      var newProduct = {
+        product_id: null,
+        product_name: null,
+        product_desc: null,
+      };
+      var subject_id = efield1.options[efield1.selectedIndex].value;
+      newProduct.product_id = productID;
+      newProduct.product_name = field1;
+      newProduct.product_desc = product_desc;
+      if (productID <= 0) {
+        alert('Please Select Learner Name')
+        return
+      }
+      if (product_desc <= 0) {
+        alert('Please Enter fee')
+        return
+      }
+      debugger;
+      products.push(newProduct);
+      var html = "<table class='p-2' id='tblData' border='1|1' >";
+      html += "<td hidden>ID</td>";
+      html += "<td>Name</td>";
+      html += "<td hidden>Fee</td>";
+      html += "<td>Action</td>";
+      for (var i = 0; i < products.length; i++) {
+        html += "<tr>";
+        html += "<td hidden>" + products[i].product_id + "</td>";
+        html += "<td>" + products[i].product_name + "</td>";
+        html += "<td hidden>" + products[i].product_desc + "</td>";
+        html += "<td><button class='btn btn-danger btn-sm' type='submit' onClick='deleteProduct(\"" + products[i].product_id + "\", this);'/>Delete Item</button></td>";
+        html += "</tr>";
+      }
+      html += "</table>";
+      document.getElementById("demo").innerHTML = html;
+    }
+    function deleteProduct(product_id, e) {
+      e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+      for (var i = 0; i < products.length; i++) {
+        if (products[i].product_id == product_id) {
+          // DO NOT CHANGE THE 1 HERE
+          products.splice(i, 1);
+        }
+      }
+    }
+
+    function removeItem(product_id) {
+      for (var i = 0; i < products.length; i++) {
+        if (products[i].product_id == product_id) {
+          // DO NOT CHANGE THE 1 HERE
+          products.splice(i, 1);
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class=""><a href="{% url 'cfo-dashboard'%}">Dashboard</a></li>
+        <li class=" " aria-current="page">Add Batch</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 style="text-align:center;">Add Batch</h2>
+    </div>
+    <div class="card-body">
+      <form method="POST" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="myvalue" id="myvalue" value="Sdf67Ghbsdf786afdsdf">
+
+        <div class="container">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="batch_name" class="form-label">Batch Name</label>
+              {% render_field batchForm.batch_name class="form-control" placeholder="Batch Name" %}
+            </div>
+            <div class="col-md-6">
+              <label for="coursetypeID" class="form-label">Course Type Name</label>
+              {% render_field batchForm.coursetypeID|attr:'required:true' class="form-control" %}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="stdate" class="form-label">Start Date</label>
+              {% render_field batchForm.stdate type="date" class="form-control" %}
+            </div>
+            <div class="col-md-6">
+              <label for="enddate" class="form-label">End Date</label>
+              {% render_field batchForm.enddate type="date" class="form-control" %}
+            </div>
+          </div>
+          <style>
+            .dropdown-container {
+                position: relative;
+                width: 300px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .dropdown-header {
+                padding: 10px;
+                background-color: #f0f0f0;
+                cursor: pointer;
+            }
+            .dropdown-body {
+                display: none;
+                border-top: 1px solid #ccc;
+                max-height: 200px;
+                overflow-y: auto;
+                background-color: #fff;
+                position: absolute;
+                width: 100%;
+                z-index: 1000;
+            }
+            .dropdown-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 5px;
+            }
+            .fee-input {
+                width: 60px;
+            }
+            </style>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="listbox3" class="form-label">Course Name</label>
+              <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDropdown()">Select Courses</div>
+                <div class="dropdown-body">
+                    {% for t in courses %}
+                    <label class="dropdown-item">
+                        <input type="checkbox" value="{{ t.id }}" data-fee="5000" onchange="selectCourse(this)">
+                        <span>{{ t.course_name }}</span>
+                        <input type="number" class="fee-input" value="5000" onchange="updateFee(this, '{{ t.id }}')">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+            <script>
+              let selectedCourses = {};
+
+function toggleDropdown() {
+    const dropdownBody = document.querySelector('.dropdown-body');
+    dropdownBody.style.display = dropdownBody.style.display === 'block' ? 'none' : 'block';
+}
+
+function selectCourse(checkbox) {
+    const courseId = checkbox.value;
+    const fee = checkbox.nextElementSibling.nextElementSibling.value;
+    if (checkbox.checked) {
+        selectedCourses[courseId] = fee;  // Add the selected course with default fee
+    } else {
+        delete selectedCourses[courseId];  // Remove unselected course
+    }
+    console.log("Selected Courses:", selectedCourses);
+}
+
+function updateFee(input, courseId) {
+    const newFee = input.value;
+    if (selectedCourses[courseId] !== undefined) {
+        selectedCourses[courseId] = newFee;  // Update fee for selected course
+    }
+    console.log("Updated Fee for Course:", courseId, "New Fee:", newFee);
+}
+              </script>
+            <div class="col-md-6">
+              <label for="vdolist" class="form-label">Recorded Video List</label>
+              <select class="form-control" name="vdolist" id="vdolist" multiple multiselect-search="true"
+                multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+                {% for t in PList %}
+                <option value="{{ t.id }}">{{ t.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="listbox1" class="form-label">Trainers</label>
+              <select class="form-control" name="listbox1" id="field1" multiple multiselect-search="true"
+                multiselect-select-all="true" multiselect-max-items="20" onchange="console.log(this.selectedOptions)">
+                {% for t in trainers %}
+                <option value="{{ t.id }}">{{ t.first_name }} {{ t.last_name }} ({{ t.email }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <form name="order" id="order">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="productID" class="form-label">Learner Name</label>
+                <select class="form-control" id="productID" name="product">
+                  {% for t in learners %}
+                  <option value="{{ t.id }}">{{ t.first_name }} {{ t.last_name }} ({{ t.email }}) {{ t.user.last_name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
+                <button type="button" id="btnAddProduct" class="btn btn-secondary" onclick="addProduct();">Add
+                  Learner</button>
+                <label for="product" hidden>Fee</label><BR>
+                <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
+                <p id="demo" class="mt-2"></p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <button class="btn btn-primary form-control" type="submit"
+                  onclick="return generateJSON(event);">SUBMIT</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- <form name="order" id="order">
+    <label for="productID">Learner Name</label>
+    <select class="form-control" id="productID" name="product">
+      {% for t in learners %}
+      <option value="{{ t.id }}">{{t.first_name}} {{t.last_name}} ({{t.email}})
+        {{t.user.last_name}}</option>
+      {% endfor %}
+    </select>
+    <label for="product" hidden>Fee</label><BR>
+    <input id="product_desc" name="product" type="number" size="28" value="1" hidden />
+    <input type="button" id="btnAddProduct" onclick="addProduct();" value="Add Learner">
+    <p id="demo"></p>
+    <button class="btn btn-primary form-control" type="submit"
+      onclick="return generateJSON(event);">SUBMIT</button>
+  </form> -->
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    crossorigin="anonymous"></script>
+  <script src="/static/multiselect-dropdown.js"></script>
+  <script>
+    $(function () {
+      $("#productID").select2();
+    }); 
+  </script>
+</body>
+{% endblock content %}
