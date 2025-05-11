@@ -74,3 +74,5 @@ EMAIL_RECEIVING_USER = 'youremail@gmail.com'
 ## Drawbacks/LoopHoles
 - Admin/Trainer can add any number of questions to any course, But while adding course, admin provide question number.
 
+## Docker File
+- Here i created a docker file and its name is **myimage_setting** so instead of using Dockerfile name use **myimage_setting** to build docker image
